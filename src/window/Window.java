@@ -7,14 +7,14 @@ import javax.swing.JFrame;
 
 public class Window extends JFrame implements Runnable {
 
-    private String version = "1.0";
+    private final String version = "1.1";
     private boolean running;
     private long lastUpdate = System.nanoTime();
 
     public Window() {
 
         setTitle("Garage " + version);
-        setMinimumSize(new Dimension(380, 75));
+        setMinimumSize(new Dimension(400, 80));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -30,6 +30,7 @@ public class Window extends JFrame implements Runnable {
         wnd.add(ui);
         wnd.start();
         wnd.pack();
+        ui.requestFocus();
 
     }
 
@@ -55,8 +56,6 @@ public class Window extends JFrame implements Runnable {
 
                 UI.tick(true);
                 lastUpdate = System.nanoTime();
-
-                //this.requestFocus();
 
             }
 
