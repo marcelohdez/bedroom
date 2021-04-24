@@ -16,16 +16,14 @@ import javax.swing.JTextArea;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Program Variables
-    private String bttnPressed;
+    private String bttn;
     private static double orders = 0;
     private static long totalSecClocked = 0;
     public static boolean clockedIn = false;
     private static String ln = "\n";
     private static DecimalFormat oph = new DecimalFormat("#.00");
     private static int key;
-
     private Color bg = Color.LIGHT_GRAY;
-    private Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 14);
 
     // Time Variables
     private static int hr = 0, min = 0, sec = 0;
@@ -48,7 +46,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         //addOrder.setFont(font);
         stats.setBackground(bg);
         stats.setEditable(false);
-        stats.setFont(font);
+        stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
  
         setBackground(bg);
         add(clockInOut, BorderLayout.WEST);
@@ -61,20 +59,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        this.requestFocus(); /* Get focus back on the UI panel every time an action is performed
-                                It is a workaround. */
-        bttnPressed = e.getActionCommand();
+        this.requestFocus(); /* Get focus back on the UI panel every time an action is performed.
+                                It's a workaround as buttons get the focus when clicked. */
+        bttn = e.getActionCommand();
 
-        if (bttnPressed == "Add order") {
+        if (bttn == "Add order") {
 
-            if (clockedIn)  { 
-                
-                orders++;
-                tick(false);
+            changeOrders(1);
 
-            }
-
-        } else if (bttnPressed == "Clock in" || bttnPressed == "Clock out") {
+        } else if (bttn == "Clock in" || bttn == "Clock out") {
 
             clockedIn = !clockedIn;
             updateBttns();
@@ -83,14 +76,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         
     }
 
-    public static void tick(boolean timeChange) {
+    public static void tick() {
 
-        if (timeChange) { 
-            
-            totalSecClocked++;
-            sec++;
-
-        }
+        totalSecClocked++;
+        sec++;
 
         if (sec > 59) {
 
@@ -139,16 +128,17 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         System.out.println(key);
 
         // ============ Shortcuts ============
-        if (key == 8) if (orders > 0) orders--; // Remove an order with backspace
+        if (key == 8) if (orders > 0) changeOrders(-1); // Remove an order with backspace
         if (key == 48)  { // Clock in/out with 0
             
             clockedIn = !clockedIn;
             updateBttns();
 
         }
-        if (key == 38) orders++; // Add orders with up arrow
+        if (key == 38) changeOrders(1); // Add orders with up arrow
+        if (key == 40) changeOrders(-1); // Remove orders with down arrow (again, i know)
 
-        tick(false);
+        getStats();
 		
 	}
 
@@ -161,6 +151,19 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             clockInOut.setText("Clock out");
 
         } else clockInOut.setText("Clock in");
+
+    }
+
+    private static void changeOrders(int amnt) {
+
+        if (clockedIn) {
+
+            orders += amnt;
+            if (orders < 0) orders = 0;
+
+            getStats();
+
+        }
 
     }
 

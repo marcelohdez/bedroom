@@ -14,9 +14,10 @@ public class Window extends JFrame implements Runnable {
     public Window() {
 
         setTitle("Garage " + version);
-        setMinimumSize(new Dimension(400, 80));
+        setMinimumSize(new Dimension(400, 75));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         setVisible(true);
 
@@ -54,7 +55,7 @@ public class Window extends JFrame implements Runnable {
 
             if (System.nanoTime() - lastUpdate >= 10e8 && UI.clockedIn) {
 
-                UI.tick(true);
+                UI.tick();
                 lastUpdate = System.nanoTime();
 
             }
