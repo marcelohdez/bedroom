@@ -1,5 +1,3 @@
-package window;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
@@ -41,9 +39,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         setLayout(new BorderLayout());
 
         clockInOut.addActionListener(this);
-        //clockInOut.setFont(font);
         addOrder.addActionListener(this);
-        //addOrder.setFont(font);
         stats.setBackground(bg);
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));

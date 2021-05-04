@@ -1,5 +1,3 @@
-package window;
-
 import java.awt.Dimension;
 import java.lang.Runnable;
 
@@ -26,12 +24,16 @@ public class Window extends JFrame implements Runnable {
     public static void main(String[] args) {
 
         Window wnd = new Window();
+        ClockInWindow cwnd = new ClockInWindow();
         UI ui = new UI();
+        ClockInUI cui = new ClockInUI();
 
         wnd.add(ui);
         wnd.start();
         wnd.pack();
-        ui.requestFocus();
+        cwnd.add(cui);
+        cwnd.pack();
+        cui.requestFocus();
 
     }
 
