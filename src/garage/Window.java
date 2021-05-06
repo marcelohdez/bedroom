@@ -8,32 +8,34 @@ public class Window extends JFrame implements Runnable {
     private final String version = "1.1";
     private boolean running;
     private long lastUpdate = System.nanoTime();
+    public static boolean timesChosen = false;
+    private static boolean doneLoading;
+
+    private static ClockInWindow cwnd = new ClockInWindow();
 
     public Window() {
 
+        UI ui = new UI();
+
         setTitle("Garage " + version);
-        setMinimumSize(new Dimension(400, 75));
+        setMinimumSize(new Dimension(380, 90));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        add(ui);
+
         setVisible(true);
+        pack();
+
+        doneLoading = true;
 
     }
 
     public static void main(String[] args) {
 
         Window wnd = new Window();
-        ClockInWindow cwnd = new ClockInWindow();
-        UI ui = new UI();
-        ClockInUI cui = new ClockInUI();
-
-        wnd.add(ui);
         wnd.start();
-        wnd.pack();
-        cwnd.add(cui);
-        cwnd.pack();
-        cui.requestFocus();
 
     }
 
@@ -55,7 +57,17 @@ public class Window extends JFrame implements Runnable {
 
         while (running) {
 
-            if (System.nanoTime() - lastUpdate >= 10e8 && UI.clockedIn) {
+            if (doneLoading) { // Give focus to time choosing window once main window loaded
+                
+                cwnd.requestFocus();
+                doneLoading = false; // Only request it once as to be on top, not 1,000 times
+                                     // a second, as that would eb annoying for other tasks.
+
+            }
+
+            if (timesChosen) cwnd.dispose(); // Close clockInWindow when times are chosen
+
+            if (System.nanoTime() - lastUpdate >= 10e8 && UI.clockedIn) { // Update every second
 
                 UI.tick();
                 lastUpdate = System.nanoTime();

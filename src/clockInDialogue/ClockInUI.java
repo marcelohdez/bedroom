@@ -1,14 +1,17 @@
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ClockInUI extends JPanel implements ActionListener {
 
-    private JButton choose = new JButton("Choose");
+    private JLabel text = new JLabel("When will/did you clock in?");
+    private JButton select = new JButton("Select");
     private String[] amPMOptions = {"AM","PM"}, hr = {"1:", "2:", "3:", "4:", "5:", "6:",
                                                     "7:", "8:", "9:", "10:", "11:", "12:"},
                                                 min = {"00", "01", "02", "03", "04", "05",
@@ -30,19 +33,29 @@ public class ClockInUI extends JPanel implements ActionListener {
         setFocusable(true);
         setLayout(new BorderLayout());
 
-        choose.addActionListener(this);
-        //amPM.addActionListener(this);
+        select.addActionListener(this);
+        text.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
 
-        add(choose, BorderLayout.SOUTH);
+        add(text, BorderLayout.NORTH);
+        add(select, BorderLayout.SOUTH);
         add(hrBox, BorderLayout.WEST);
         add(minBox, BorderLayout.CENTER);
         add(amPM, BorderLayout.EAST);
+
+        requestFocus();
 
     }
 
     public void actionPerformed(ActionEvent e) {
 
+        String bttn = e.getActionCommand();
 
+        if (bttn == "Select") {
+
+            UI.timesChosen = true;
+            Window.timesChosen = true;
+
+        }
 
     }
 

@@ -6,13 +6,18 @@ public class ClockInWindow extends JFrame {
     
     public ClockInWindow() {
 
-        setTitle("When will you clock in?");
+        ClockInUI cui = new ClockInUI();
+
+        setTitle("Select times");
         setMinimumSize(new Dimension(320, 160));
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        add(cui);
+
         setVisible(true);
+        pack();
 
     }
     

@@ -1,6 +1,6 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,10 +14,6 @@ import javax.swing.JTextArea;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Program Variables
-    private String bttn;
-    private static double orders = 0;
-    private static long totalSecClocked = 0;
-    public static boolean clockedIn = false;
     private static String ln = "\n";
     private static DecimalFormat oph = new DecimalFormat("#.00");
     private static int key;
@@ -28,26 +24,33 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static StringBuilder shr, smin, ssec;
 
     // Buttons
-    private JButton clockInOut = new JButton("Clock in");
+    private JButton clockInOut = new JButton("Enter break");
     private JButton addOrder = new JButton("Add order");
     private static JTextArea stats = new JTextArea();
+
+    // Stats
+    private static double orders = 0;
+    private static long totalSecClocked = 0;
+    public static boolean clockedIn = false;
+    public static boolean timesChosen = false;
 
     public UI() {
 
         setFocusable(true);
         addKeyListener(this);
-        setLayout(new BorderLayout());
 
         clockInOut.addActionListener(this);
+        clockInOut.setPreferredSize(new Dimension(100, 45));
         addOrder.addActionListener(this);
+        addOrder.setPreferredSize(new Dimension(120, 45));
         stats.setBackground(bg);
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
  
         setBackground(bg);
-        add(clockInOut, BorderLayout.WEST);
-        add(addOrder, BorderLayout.CENTER);
-        add(stats, BorderLayout.EAST);
+        add(clockInOut);
+        add(addOrder);
+        add(stats);
 
         getStats();
         
@@ -57,16 +60,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed.
                                 It's a workaround as buttons get the focus when clicked. */
-        bttn = e.getActionCommand();
+        String bttn = e.getActionCommand();
 
         if (bttn == "Add order") {
 
             changeOrders(1);
 
-        } else if (bttn == "Clock in" || bttn == "Clock out") {
+        } else if (bttn == "Enter break" || bttn == "Leave break") {
 
-            clockedIn = !clockedIn;
-            updateBttns();
+            clockInOrOut();
 
         }
         
@@ -127,8 +129,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (key == 8) if (orders > 0) changeOrders(-1); // Remove an order with backspace
         if (key == 48)  { // Clock in/out with 0
             
-            clockedIn = !clockedIn;
-            updateBttns();
+            clockInOrOut();
 
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
@@ -140,13 +141,24 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
 	public void keyReleased(KeyEvent e) {}
 
+    private void clockInOrOut() {
+
+        if (timesChosen) {
+
+            clockedIn = !clockedIn;
+            updateBttns();
+
+        }
+
+    }
+
     private void updateBttns() {
 
         if (clockedIn)  { 
             
-            clockInOut.setText("Clock out");
+            clockInOut.setText("Leave break");
 
-        } else clockInOut.setText("Clock in");
+        } else clockInOut.setText("Enter break");
 
     }
 
