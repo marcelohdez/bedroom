@@ -8,7 +8,7 @@ The clock in/out button is used to begin/stop the timer, therefore it can be use
 and leaving breaks as well.
 
 **_Shortcuts:_** 
-* _Backspace_ decreases current orders by 1.
+* _Backspace & Down Arrow_ decrease current orders by 1.
 * _Up Arrow_ increases current orders by 1.
 * _0_ Clocks in/out.
 
