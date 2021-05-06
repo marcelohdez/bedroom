@@ -12,5 +12,5 @@ and leaving breaks as well.
 * _Up Arrow_ increases current orders by 1.
 * _0_ Clocks in/out.
 
-_These shortcuts are meant to be non intrusive to work applications,
+_These shortcuts are meant to be unintrusive to work applications,
 hence their seemingly random keyboard placements._
