@@ -9,7 +9,7 @@ public class ClockInWindow extends JFrame {
         ClockInUI cui = new ClockInUI();
 
         setTitle("Select times");
-        setMinimumSize(new Dimension(320, 160));
+        setMinimumSize(new Dimension(320, 130));
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);

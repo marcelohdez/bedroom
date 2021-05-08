@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -20,8 +22,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private Color bg = Color.LIGHT_GRAY;
 
     // Time Variables
-    private static int hr = 0, min = 0, sec = 0;
+    private static int hr = 0, min = 0;
     private static StringBuilder shr, smin, ssec;
+    private static long totalSecClocked = 0, sec = 0;
 
     // Buttons
     private JButton clockInOut = new JButton("Enter break");
@@ -30,9 +33,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Stats
     private static double orders = 0;
-    private static long totalSecClocked = 0;
     public static boolean clockedIn = false;
-    public static boolean timesChosen = false;
+    public static boolean freeze = false;
+    public static LocalTime clockInTime = LocalTime.parse("00:00");
+    public static boolean clockInTimePassed = false;
 
     public UI() {
 
@@ -40,9 +44,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         addKeyListener(this);
 
         clockInOut.addActionListener(this);
-        clockInOut.setPreferredSize(new Dimension(100, 45));
+        clockInOut.setPreferredSize(new Dimension(110, 45));
         addOrder.addActionListener(this);
-        addOrder.setPreferredSize(new Dimension(120, 45));
+        addOrder.setPreferredSize(new Dimension(110, 45));
         stats.setBackground(bg);
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
@@ -68,7 +72,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         } else if (bttn == "Enter break" || bttn == "Leave break") {
 
-            clockInOrOut();
+            enterLeaveBreak();
 
         }
         
@@ -79,14 +83,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         totalSecClocked++;
         sec++;
 
-        if (sec > 59) {
+        while (sec > 59) {
 
             min++;
             sec -= 60;
 
         }
 
-        if (min > 59) {
+        while (min > 59) {
 
             hr++;
             min -= 60;
@@ -99,7 +103,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static void getStats() {
 
-        shr = new StringBuilder();
+        shr = new StringBuilder(); // Reset values
         smin = new StringBuilder();
         ssec = new StringBuilder();
 
@@ -125,15 +129,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         key = e.getKeyCode();
         System.out.println(key);
 
-        // ============ Shortcuts ============
-        if (key == 8) if (orders > 0) changeOrders(-1); // Remove an order with backspace
+        // ======= Shortcuts =======
+        if (key == 8 || key == 40) changeOrders(-1); // Remove an order with backspace
         if (key == 48)  { // Clock in/out with 0
             
-            clockInOrOut();
+            enterLeaveBreak();
 
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
-        if (key == 40) changeOrders(-1); // Remove orders with down arrow (again, i know)
 
         getStats();
 		
@@ -141,9 +144,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
 	public void keyReleased(KeyEvent e) {}
 
-    private void clockInOrOut() {
+    private void enterLeaveBreak() { // Enter/Leave break
 
-        if (timesChosen) {
+        if (!freeze) {
 
             clockedIn = !clockedIn;
             updateBttns();
@@ -156,13 +159,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (clockedIn)  { 
             
-            clockInOut.setText("Leave break");
+            clockInOut.setText("Enter Break");
 
-        } else clockInOut.setText("Enter break");
+        } else clockInOut.setText("Leave break");
 
     }
 
-    private static void changeOrders(int amnt) {
+    private void changeOrders(int amnt) {
 
         if (clockedIn) {
 
@@ -170,6 +173,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (orders < 0) orders = 0;
 
             getStats();
+
+        }
+
+    }
+
+    public static void getTime() {
+
+        if (clockInTime.compareTo(LocalTime.now()) <= 0) {
+
+            freeze = false;
+            clockedIn = true;
+            clockInTimePassed = true;
+            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
 
         }
 

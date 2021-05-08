@@ -57,6 +57,21 @@ public class Window extends JFrame implements Runnable {
 
         while (running) {
 
+            if (System.nanoTime() - lastUpdate >= 10e8) { // Update every second
+
+                if (UI.clockedIn) {
+
+                    UI.tick();
+                    lastUpdate = System.nanoTime();
+
+                } else if (timesChosen && !UI.clockInTimePassed) {
+
+                    UI.getTime();
+    
+                }
+
+            }
+
             if (doneLoading) { // Give focus to time choosing window once main window loaded
                 
                 cwnd.requestFocus();
@@ -66,13 +81,6 @@ public class Window extends JFrame implements Runnable {
             }
 
             if (timesChosen) cwnd.dispose(); // Close clockInWindow when times are chosen
-
-            if (System.nanoTime() - lastUpdate >= 10e8 && UI.clockedIn) { // Update every second
-
-                UI.tick();
-                lastUpdate = System.nanoTime();
-
-            }
 
             try { 
 
