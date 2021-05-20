@@ -27,7 +27,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long totalSecClocked = 0, sec = 0;
 
     // Buttons
-    private JButton clockInOut = new JButton("Enter break");
+    private JButton clockInOut = new JButton("Enter Break");
     private JButton addOrder = new JButton("Add order");
     private static JTextArea stats = new JTextArea();
 
@@ -35,8 +35,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static double orders = 0;
     public static boolean clockedIn = false;
     public static boolean freeze = false;
-    public static LocalTime clockInTime = LocalTime.parse("00:00");
     public static boolean clockInTimePassed = false;
+
+    public static LocalTime clockInTime = LocalTime.parse("00:00");
+    public static LocalTime clockOutTime = LocalTime.parse("00:00");
 
     public UI() {
 
@@ -70,7 +72,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             changeOrders(1);
 
-        } else if (bttn == "Enter break" || bttn == "Leave break") {
+        } else if (bttn == "Enter Break" || bttn == "Leave Break") {
 
             enterLeaveBreak();
 
@@ -78,7 +80,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         
     }
 
-    public static void tick() {
+    public static void tick() { // Change time values
 
         totalSecClocked++;
         sec++;
@@ -127,11 +129,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 
         key = e.getKeyCode();
-        System.out.println(key);
 
         // ======= Shortcuts =======
-        if (key == 8 || key == 40) changeOrders(-1); // Remove an order with backspace
-        if (key == 48)  { // Clock in/out with 0
+        if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
+        if (key == 48)  { // Enter/leave break with 0
             
             enterLeaveBreak();
 
@@ -155,30 +156,31 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    private void updateBttns() {
+    private void updateBttns() { // Update buttons
 
         if (clockedIn)  { 
             
             clockInOut.setText("Enter Break");
 
-        } else clockInOut.setText("Leave break");
+        } else clockInOut.setText("Leave Break");
+
+        Window.packNow = true;
 
     }
 
-    private void changeOrders(int amnt) {
+    private void changeOrders(int amnt) { // Change orders
 
         if (clockedIn) {
-
             orders += amnt;
             if (orders < 0) orders = 0;
-
             getStats();
-
         }
+
+        Window.packNow = true; // Call the Window to .pack()
 
     }
 
-    public static void getTime() {
+    public static void getTime() { // See if clock-in time has passed, if so get the difference
 
         if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 

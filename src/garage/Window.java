@@ -1,4 +1,3 @@
-import java.awt.Dimension;
 import java.lang.Runnable;
 
 import javax.swing.JFrame;
@@ -8,25 +7,27 @@ public class Window extends JFrame implements Runnable {
     private final String version = "1.1";
     private boolean running;
     private long lastUpdate = System.nanoTime();
-    public static boolean timesChosen = false;
+    private int secCount = 0;
     private static boolean doneLoading;
+    public static boolean packNow = false;
 
-    private static ClockInWindow cwnd = new ClockInWindow();
+    private static ClockInWindow cwnd = new ClockInWindow(0); // Clock in time
+
+    public static boolean timesChosen = false;
 
     public Window() {
 
         UI ui = new UI();
 
         setTitle("Garage " + version);
-        setMinimumSize(new Dimension(380, 90));
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
         add(ui);
+        pack();
+        setLocationRelativeTo(null);
 
         setVisible(true);
-        pack();
 
         doneLoading = true;
 
@@ -42,14 +43,14 @@ public class Window extends JFrame implements Runnable {
     public void start() {
 
         Thread thread = new Thread(this);
-        thread.start();
+        thread.start(); // Start thread
         running = true;
 
     }
     
-    public void stop() {
+    public void stop() { // When application is stopped:
 
-        running = false;
+        running = false; // Stop "while (running)"
 
     }
 
@@ -70,6 +71,16 @@ public class Window extends JFrame implements Runnable {
     
                 }
 
+                this.pack();
+
+                secCount++;
+                if (secCount > 59) { // Run GC every 60 seconds
+
+                    System.gc();
+                    secCount = 0;
+
+                }
+
             }
 
             if (doneLoading) { // Give focus to time choosing window once main window loaded
@@ -81,6 +92,13 @@ public class Window extends JFrame implements Runnable {
             }
 
             if (timesChosen) cwnd.dispose(); // Close clockInWindow when times are chosen
+
+            if (packNow) {
+
+                this.pack();
+                packNow = false;
+
+            }
 
             try { 
 

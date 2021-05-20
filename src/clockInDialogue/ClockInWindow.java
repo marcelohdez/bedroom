@@ -4,20 +4,32 @@ import javax.swing.JFrame;
 
 public class ClockInWindow extends JFrame {
     
-    public ClockInWindow() {
+    public ClockInWindow(int type) {
 
-        ClockInUI cui = new ClockInUI();
+        Dimension size = new Dimension(260, 150);
 
-        setTitle("Select times");
-        setMinimumSize(new Dimension(320, 130));
+        switch (type) {
+
+            case 1: // ====== Clock out window ======
+
+            ClockInUI outui = new ClockInUI(1);
+            setTitle("Clocking out:");
+            add(outui);
+            break;
+
+            default: // ====== Clock in window ======
+            
+            ClockInUI inui = new ClockInUI(0);
+            setTitle("Clocking in:");
+            add(inui);
+
+        }
+
+        setSize(size);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        add(cui);
-
-        setVisible(true);
-        pack();
+        if (type == 0) setVisible(true); // Set visible after fully loading
 
     }
     
