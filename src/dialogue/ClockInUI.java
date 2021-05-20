@@ -12,7 +12,10 @@ import java.time.LocalTime;
 
 public class ClockInUI extends JPanel implements ActionListener {
 
+    // Button(s)
     private JButton select = new JButton("Select");
+
+    // Lists (for the list boxes)
     private String[] amPMOptions = {"AM","PM"}, hr = {"01:", "02:", "03:", "04:", "05:", "06:",
                                                     "07:", "08:", "09:", "10:", "11:", "12:"},
                                                 min = {"00", "01", "02", "03", "04", "05",
@@ -24,11 +27,20 @@ public class ClockInUI extends JPanel implements ActionListener {
                                                     "36", "37", "38", "39", "40", "41", 
                                                     "42", "43", "44", "45", "46", "47", 
                                                     "48", "49", "50", "51", "52", "53", 
-                                                    "54", "55", "56", "57", "58", "59"};
-                                                    
+                                                    "54", "55", "56", "57", "58", "59"},
+                                                targets = {"01", "02", "03", "04", "05",
+                                                    "06","07", "08", "09", "10", "11", 
+                                                    "12", "13", "14", "15", "16", "17", 
+                                                    "18", "19", "20", "21", "22", "23", 
+                                                    "24"};
+                                
+    // List boxes:
     private JComboBox<String> amPM = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
-            minBox = new JComboBox<>(min);
-    private static int windowType;
+            minBox = new JComboBox<>(min), setTarget = new JComboBox<>(targets);
+
+    // Labels
+    private JLabel targetText = new JLabel("Target:");
+    private JLabel targetText2 = new JLabel("orders per hour");
 
     public ClockInUI(int type) {
 
@@ -55,18 +67,29 @@ public class ClockInUI extends JPanel implements ActionListener {
 
         }
 
+        // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(selectSize);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPM.setPreferredSize(ampmSize);
+        amPM.setSelectedIndex(1); // Default to PM
+        setTarget.setPreferredSize(new Dimension(45, 25));
+        setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
+        // Add components in order
         add(hrBox);
         add(minBox);
         add(amPM);
+        if (type == 1) {
+
+            add(targetText);
+            add(setTarget);
+            add(targetText2);
+
+        }
         add(select);
 
-        windowType = type;
         requestFocus();
 
     }
@@ -79,7 +102,7 @@ public class ClockInUI extends JPanel implements ActionListener {
             int min = minBox.getSelectedIndex() + 1;
             int realHr = 0;
 
-            if (windowType == 0) { // ======= Clock in UI type =======
+            if (!Window.ciChosen) { // ======= Clock in UI type =======
 
                 // ======= Translate time into 24-hour clock for LocalTime =======
                 if (amPM.getSelectedIndex() == 0) { // AM is selected
@@ -101,9 +124,7 @@ public class ClockInUI extends JPanel implements ActionListener {
                 if (min < 10) minString = ":0" + min;
 
                 UI.clockInTime = LocalTime.parse(hrString + minString);
-
-                UI.getTime();
-                Window.timesChosen = true;
+                Window.ciChosen = true;
 
             } else { // ======= Clock out UI type =======
 
@@ -127,9 +148,10 @@ public class ClockInUI extends JPanel implements ActionListener {
                 if (min < 10) minString = ":0" + min;
 
                 UI.clockOutTime = LocalTime.parse(hrString + minString);
+                UI.target = setTarget.getSelectedIndex() + 1;
 
                 UI.getTime();
-                Window.timesChosen = true;
+                Window.coChosen = true;
 
             }
 

@@ -16,7 +16,6 @@ import javax.swing.JTextArea;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Program Variables
-    private static String ln = "\n";
     private static DecimalFormat oph = new DecimalFormat("#.00");
     private static int key;
     private Color bg = Color.LIGHT_GRAY;
@@ -29,6 +28,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Buttons
     private JButton clockInOut = new JButton("Enter Break");
     private JButton addOrder = new JButton("Add order");
+
+    // Labels
     private static JTextArea stats = new JTextArea();
 
     // Stats
@@ -39,6 +40,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static LocalTime clockInTime = LocalTime.parse("00:00");
     public static LocalTime clockOutTime = LocalTime.parse("00:00");
+    public static int target = 0; // Target orders/hr
+    private static long ordersNeeded = 0;
 
     public UI() {
 
@@ -48,7 +51,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         clockInOut.addActionListener(this);
         clockInOut.setPreferredSize(new Dimension(110, 45));
         addOrder.addActionListener(this);
-        addOrder.setPreferredSize(new Dimension(110, 45));
+        addOrder.setPreferredSize(new Dimension(100, 45));
         stats.setBackground(bg);
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
@@ -86,17 +89,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         sec++;
 
         while (sec > 59) {
-
             min++;
             sec -= 60;
-
         }
 
         while (min > 59) {
-
             hr++;
             min -= 60;
-
         }
 
         getStats();
@@ -118,9 +117,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (hr < 10) shr.append("0" + hr);
         else shr.append(hr);
 
-        stats.setText("Time: " + shr + ":" + smin + ":" + ssec + ln
-                    + "Orders: " + (int)orders + " (" 
-                    + oph.format((orders*3600)/totalSecClocked) + "/hr)");
+        stats.setText("Time: " + shr + ":" + smin + ":" + ssec
+                    + "\nOrders: " + (int)orders + " (" 
+                    + oph.format((orders*3600)/totalSecClocked) 
+                    + "/hr)" + "\nNeeded: " + ordersNeeded + ", "
+                    + (int)(ordersNeeded-orders) + " left");
 
     }
 
@@ -187,8 +188,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             freeze = false;
             clockedIn = true;
             clockInTimePassed = true;
-            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
-            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;
+            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;
+            tick();
+            ordersNeeded = clockInTime.until(clockOutTime, ChronoUnit.HOURS) * target;
 
         }
 

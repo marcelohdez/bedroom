@@ -6,8 +6,6 @@ public class ClockInWindow extends JFrame {
     
     public ClockInWindow(int type) {
 
-        Dimension size = new Dimension(260, 150);
-
         switch (type) {
 
             case 1: // ====== Clock out window ======
@@ -15,6 +13,7 @@ public class ClockInWindow extends JFrame {
             ClockInUI outui = new ClockInUI(1);
             setTitle("Clocking out:");
             add(outui);
+            setSize(new Dimension(260, 180));
             break;
 
             default: // ====== Clock in window ======
@@ -22,10 +21,10 @@ public class ClockInWindow extends JFrame {
             ClockInUI inui = new ClockInUI(0);
             setTitle("Clocking in:");
             add(inui);
+            setSize(new Dimension(260, 150));
 
         }
 
-        setSize(size);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);

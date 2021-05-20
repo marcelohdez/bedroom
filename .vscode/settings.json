@@ -1,6 +1,6 @@
 {
     "java.project.sourcePaths": [
-        "src/clockInDialogue",
-        "src/garage"
+        "src/garage",
+        "src/dialogue"
     ]
 }

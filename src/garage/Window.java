@@ -11,9 +11,10 @@ public class Window extends JFrame implements Runnable {
     private static boolean doneLoading;
     public static boolean packNow = false;
 
-    private static ClockInWindow cwnd = new ClockInWindow(0); // Clock in time
+    private static ClockInWindow ciwnd = new ClockInWindow(0),
+                    cownd = new ClockInWindow(1); // Clock in/out time windows
 
-    public static boolean timesChosen = false;
+    public static boolean ciChosen = false, coChosen = false;
 
     public Window() {
 
@@ -65,7 +66,7 @@ public class Window extends JFrame implements Runnable {
                     UI.tick();
                     lastUpdate = System.nanoTime();
 
-                } else if (timesChosen && !UI.clockInTimePassed) {
+                } else if (coChosen && !UI.clockInTimePassed) {
 
                     UI.getTime();
     
@@ -85,13 +86,25 @@ public class Window extends JFrame implements Runnable {
 
             if (doneLoading) { // Give focus to time choosing window once main window loaded
                 
-                cwnd.requestFocus();
+                ciwnd.requestFocus();
                 doneLoading = false; // Only request it once as to be on top, not 1,000 times
                                      // a second, as that would eb annoying for other tasks.
 
             }
 
-            if (timesChosen) cwnd.dispose(); // Close clockInWindow when times are chosen
+            if (ciChosen && cownd.isEnabled()) {
+
+                ciwnd.dispose(); // Close clock-in time window when finished
+                if (!cownd.isVisible()) cownd.setVisible(true); // Show clock-out time window
+
+            }
+
+            if (coChosen) {
+
+                cownd.setEnabled(false);
+                cownd.dispose(); // Clock clock-out time window when finished
+
+            }
 
             if (packNow) {
 
