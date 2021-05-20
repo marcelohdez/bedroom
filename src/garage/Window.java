@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 public class Window extends JFrame implements Runnable {
 
-    private final String version = "1.1";
+    private final String version = "1.1 (Beta)";
     private boolean running;
     private long lastUpdate = System.nanoTime();
     private int secCount = 0;
