@@ -2,7 +2,7 @@
 Garage is an open source Java application developed in order to aid call center agents 
 in keeping track of their orders and orders per hour in order to meet their quotas effectively.
 
-## Documentation for v1.1
+## Documentation for v1.1 (currently unreleased, so latest commit)
 Orders can only be modified while clocked in, so shortcuts for them will only work while so.
 
 **_Shortcuts:_** 
