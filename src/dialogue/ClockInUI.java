@@ -82,7 +82,7 @@ public class ClockInUI extends JPanel implements ActionListener {
         
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
-        // Set colors
+        // ======= Set colors =======
         select.setBackground(UI.myGray);
         select.setForeground(UI.myWhite);
         hrBox.setBackground(UI.myGray);

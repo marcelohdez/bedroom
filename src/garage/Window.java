@@ -1,18 +1,18 @@
 import java.lang.Runnable;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 public class Window extends JFrame implements Runnable {
 
-    private final String version = "1.1 (Beta)";
+    private final String version = "1.1 (Beta 1)";
     private boolean running;
     private long lastUpdate = System.nanoTime();
     private int secCount = 0;
     private static boolean doneLoading;
     public static boolean packNow = false;
 
-    private static ClockInWindow ciwnd = new ClockInWindow(0),
-                    cownd = new ClockInWindow(1); // Clock in/out time windows
+    private static ClockInWindow ciwnd, cownd;
 
     public static boolean ciChosen = false, coChosen = false;
 
@@ -35,6 +35,15 @@ public class Window extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
+
+        try{
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }catch(Exception e){
+           e.printStackTrace(); 
+        }
+
+        ciwnd = new ClockInWindow(0); // Clock in/out time windows
+        cownd = new ClockInWindow(1);
 
         Window wnd = new Window();
         wnd.start();
