@@ -21,7 +21,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Time Variables
     private static int hr = 0, min = 0;
-    private static StringBuilder shr, smin, ssec;
     private static long totalSecClocked = 0, sec = 0;
 
     // Buttons
@@ -29,13 +28,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private JButton addOrder = new JButton("Add order");
 
     // Labels
-    private static JTextArea stats = new JTextArea();
+    private static JTextArea stats = 
+        new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
 
     // Stats
     private static double orders = 0;
     public static boolean inBreak = true;
     public static boolean freeze = true;
     public static boolean clockInTimePassed = false;
+    private static long secondsTillCI = -1;
 
     public static LocalTime clockInTime = LocalTime.parse("00:00");
     public static LocalTime clockOutTime = LocalTime.parse("00:00");
@@ -116,24 +117,58 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static void getStats() {
 
-        shr = new StringBuilder(); // Reset values
-        smin = new StringBuilder();
-        ssec = new StringBuilder();
+        if (clockInTimePassed) { // Get stats =======
 
-        if (sec < 10) ssec.append("0" + sec);
-        else ssec.append(sec);
+            StringBuilder sb = new StringBuilder();
 
-        if (min < 10) smin.append("0" + min);
-        else smin.append(min);
+            if (hr < 10) sb.append("0" + hr);
+            else sb.append(hr);
+            sb.append(":");
+            if (min < 10) sb.append("0" + min);
+            else sb.append(min);
+            sb.append(":");
+            if (sec < 10) sb.append("0" + sec);
+            else sb.append(sec);
 
-        if (hr < 10) shr.append("0" + hr);
-        else shr.append(hr);
+            stats.setText("Time: " + sb + "\nOrders: " + (int)orders + " (" 
+                        + oph.format((orders*3600)/totalSecClocked) 
+                        + "/hr)" + "\nNeeded: " + ordersNeeded + ", "
+                        + (int)(ordersNeeded-orders) + " left");
 
-        stats.setText("Time: " + shr + ":" + smin + ":" + ssec
-                    + "\nOrders: " + (int)orders + " (" 
-                    + oph.format((orders*3600)/totalSecClocked) 
-                    + "/hr)" + "\nNeeded: " + ordersNeeded + ", "
-                    + (int)(ordersNeeded-orders) + " left");
+        } else if (Window.coChosen) { // Get "Time till clock in" =======
+
+            secondsTillCI -= 1;
+            long seconds = secondsTillCI;
+            int hours = 0;
+            int minutes = 0;
+
+            StringBuilder sb = new StringBuilder();
+
+            while (seconds > 59) {
+
+                minutes++;
+                seconds -= 60;
+
+            }
+            while (minutes > 59) {
+
+                hours++;
+                minutes -= 60;
+
+            }
+
+            if (hours < 10) { sb.append("0" + hours); 
+            } else sb.append(hours);
+            sb.append(":");
+            if (minutes < 10) { sb.append("0" + minutes); 
+            } else sb.append(minutes);
+            sb.append(":");
+            if (seconds < 10) { sb.append("0" + seconds);
+            } else sb.append(seconds);
+
+            stats.setText("Time until clocked in:\n" + sb);
+
+        }
 
     }
 
@@ -194,16 +229,21 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     }
 
     public static void getTime() { // See if clock-in time has passed, if so get the difference
-
-        if (clockInTime.compareTo(LocalTime.now()) <= 0) {
+        
+        if (clockInTime.compareTo(LocalTime.now().plusMinutes(1)) <= 0) {
 
             freeze = false;
             inBreak = false;
             clockInTimePassed = true;
-            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;
-            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;
+            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
             tick();
             ordersNeeded = clockInTime.until(clockOutTime, ChronoUnit.HOURS) * target;
+
+        } else {
+
+            if (secondsTillCI == -1) secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) - 59;
+            getStats();
 
         }
 

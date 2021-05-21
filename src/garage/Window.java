@@ -64,7 +64,6 @@ public class Window extends JFrame implements Runnable {
                 if (!UI.inBreak) {
 
                     UI.tick();
-                    lastUpdate = System.nanoTime();
 
                 } else if (coChosen && !UI.clockInTimePassed) {
 
@@ -82,6 +81,7 @@ public class Window extends JFrame implements Runnable {
 
                 }
 
+                lastUpdate = System.nanoTime(); // Reset timer
             }
 
             if (doneLoading) { // Give focus to time choosing window once main window loaded
@@ -102,7 +102,7 @@ public class Window extends JFrame implements Runnable {
             if (coChosen) {
 
                 cownd.setEnabled(false);
-                cownd.dispose(); // Clock clock-out time window when finished
+                cownd.dispose(); // Close clock-out time window when finished
 
             }
 
