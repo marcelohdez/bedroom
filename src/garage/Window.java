@@ -36,11 +36,11 @@ public class Window extends JFrame implements Runnable {
 
     public static void main(String[] args) {
 
-        try{
+        try { // Set cross-platform look and feel, fixes MacOS buttons.
+
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }catch(Exception e){
-           e.printStackTrace(); 
-        }
+
+        } catch(Exception e) { e.printStackTrace(); }
 
         ciwnd = new ClockInWindow(0); // Clock in/out time windows
         cownd = new ClockInWindow(1);
@@ -83,9 +83,14 @@ public class Window extends JFrame implements Runnable {
                 this.pack();
 
                 secCount++;
-                if (secCount > 59) { // Run GC every 60 seconds
+                if (secCount > 59) { // Run every 60 seconds
 
-                    System.gc();
+                    System.gc(); // Garbage collect (clear up memory)
+
+                    if (!UI.clockInTimePassed) { UI.recheckTimeTill = true; // Recheck time left till clock in
+                    } else UI.recheckTime = true; // Recheck time clocked in
+                    UI.getTime();
+
                     secCount = 0;
 
                 }

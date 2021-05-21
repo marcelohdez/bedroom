@@ -22,6 +22,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Time Variables
     private static int hr = 0, min = 0;
     private static long totalSecClocked = 0, sec = 0;
+    private static long secondsTillCI = -1;
+    public static boolean recheckTimeTill = false; // In case computer goes to sleep
+    public static boolean recheckTime = false; // Increase time accuracy
 
     // Buttons
     private JButton clockInOut = new JButton("Enter Break");
@@ -36,7 +39,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean inBreak = true;
     public static boolean freeze = true;
     public static boolean clockInTimePassed = false;
-    private static long secondsTillCI = -1;
 
     public static LocalTime clockInTime = LocalTime.parse("00:00");
     public static LocalTime clockOutTime = LocalTime.parse("00:00");
@@ -230,19 +232,27 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void getTime() { // See if clock-in time has passed, if so get the difference
         
-        if (clockInTime.compareTo(LocalTime.now().plusMinutes(1)) <= 0) {
+        if (clockInTime.compareTo(LocalTime.now().plusMinutes(1)) <= 0 || recheckTime) {
 
             freeze = false;
             inBreak = false;
             clockInTimePassed = true;
             totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
-            sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            sec = totalSecClocked;
+            min = 0;
+            hr = 0;
             tick();
             ordersNeeded = clockInTime.until(clockOutTime, ChronoUnit.HOURS) * target;
+            recheckTime = false;
 
         } else {
 
-            if (secondsTillCI == -1) secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) - 59;
+            if (secondsTillCI == -1 || recheckTimeTill) { // Set secondsTillCI to difference in time
+
+                secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) - 59;
+                recheckTimeTill = false;
+
+            }
             getStats();
 
         }
