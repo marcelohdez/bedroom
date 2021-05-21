@@ -18,7 +18,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Program Variables
     private static DecimalFormat oph = new DecimalFormat("#.00");
     private static int key;
-    private Color bg = Color.LIGHT_GRAY;
 
     // Time Variables
     private static int hr = 0, min = 0;
@@ -34,8 +33,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Stats
     private static double orders = 0;
-    public static boolean clockedIn = false;
-    public static boolean freeze = false;
+    public static boolean inBreak = true;
+    public static boolean freeze = true;
     public static boolean clockInTimePassed = false;
 
     public static LocalTime clockInTime = LocalTime.parse("00:00");
@@ -43,19 +42,32 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
 
+    // Colors
+    public static Color myWhite = new Color(240, 240, 240);
+    public static Color bg = new Color(70, 70, 70);
+    public static Color myGray = new Color(95, 95, 95);
+
     public UI() {
 
         setFocusable(true);
         addKeyListener(this);
 
-        clockInOut.addActionListener(this);
-        clockInOut.setPreferredSize(new Dimension(110, 45));
-        addOrder.addActionListener(this);
-        addOrder.setPreferredSize(new Dimension(100, 45));
-        stats.setBackground(bg);
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
+        addOrder.addActionListener(this);
+        addOrder.setPreferredSize(new Dimension(100, 45));
+        clockInOut.addActionListener(this);
+        clockInOut.setPreferredSize(new Dimension(110, 45));
+
+        // Set colors
+        clockInOut.setBackground(myGray);
+        clockInOut.setForeground(myWhite);
+        addOrder.setBackground(myGray);
+        addOrder.setForeground(myWhite);
+        stats.setBackground(bg);
+        stats.setForeground(myWhite);
  
+        // Add components
         setBackground(bg);
         add(clockInOut);
         add(addOrder);
@@ -150,7 +162,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (!freeze) {
 
-            clockedIn = !clockedIn;
+            inBreak = !inBreak;
             updateBttns();
 
         }
@@ -159,7 +171,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void updateBttns() { // Update buttons
 
-        if (clockedIn)  { 
+        if (!inBreak)  { 
             
             clockInOut.setText("Enter Break");
 
@@ -171,7 +183,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void changeOrders(int amnt) { // Change orders
 
-        if (clockedIn) {
+        if (!inBreak) {
             orders += amnt;
             if (orders < 0) orders = 0;
             getStats();
@@ -186,7 +198,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 
             freeze = false;
-            clockedIn = true;
+            inBreak = false;
             clockInTimePassed = true;
             totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;
             sec = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 58;

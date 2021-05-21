@@ -39,7 +39,7 @@ public class ClockInUI extends JPanel implements ActionListener {
             minBox = new JComboBox<>(min), setTarget = new JComboBox<>(targets);
 
     // Labels
-    private JLabel targetText = new JLabel("Target:");
+    private JLabel targetText = new JLabel("Target:"); 
     private JLabel targetText2 = new JLabel("orders per hour");
 
     public ClockInUI(int type) {
@@ -48,12 +48,15 @@ public class ClockInUI extends JPanel implements ActionListener {
         Dimension ampmSize = new Dimension(68, 30);
         Dimension selectSize = new Dimension(180, 40);
 
+        setBackground(UI.bg);
+
         switch (type) {
 
             case 1: // ======= Clock out UI =======
 
             JLabel coText = new JLabel("  Select clock out time:  ");
             coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+            coText.setForeground(UI.myWhite);
 
             add(coText);
             break;
@@ -62,6 +65,7 @@ public class ClockInUI extends JPanel implements ActionListener {
 
             JLabel ciText = new JLabel("  Select clock in time:  ");
             ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+            ciText.setForeground(UI.myWhite);
 
             add(ciText);
 
@@ -75,7 +79,22 @@ public class ClockInUI extends JPanel implements ActionListener {
         amPM.setPreferredSize(ampmSize);
         amPM.setSelectedIndex(1); // Default to PM
         setTarget.setPreferredSize(new Dimension(45, 25));
+        
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
+
+        // Set colors
+        select.setBackground(UI.myGray);
+        select.setForeground(UI.myWhite);
+        hrBox.setBackground(UI.myGray);
+        hrBox.setForeground(UI.myWhite);
+        minBox.setBackground(UI.myGray);
+        minBox.setForeground(UI.myWhite);
+        amPM.setBackground(UI.myGray);
+        amPM.setForeground(UI.myWhite);
+        setTarget.setBackground(UI.myGray);
+        setTarget.setForeground(UI.myWhite);
+        targetText.setForeground(UI.myWhite);
+        targetText2.setForeground(UI.myWhite);
 
         // Add components in order
         add(hrBox);

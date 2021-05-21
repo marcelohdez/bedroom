@@ -61,7 +61,7 @@ public class Window extends JFrame implements Runnable {
 
             if (System.nanoTime() - lastUpdate >= 10e8) { // Update every second
 
-                if (UI.clockedIn) {
+                if (!UI.inBreak) {
 
                     UI.tick();
                     lastUpdate = System.nanoTime();
