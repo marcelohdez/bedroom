@@ -5,16 +5,17 @@ import javax.swing.UIManager;
 
 public class Window extends JFrame implements Runnable {
 
-    private final String version = "1.1 (Beta 1)";
-    private boolean running;
-    private long lastUpdate = System.nanoTime();
-    private int secCount = 0;
-    private static boolean doneLoading;
-    public static boolean packNow = false;
+    public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X");
 
-    private static ClockInWindow ciwnd, cownd;
+    private final String version = "1.1 (Beta 2)"; // Version
+    private boolean running; // Is program running
+    private long lastUpdate = System.nanoTime(); // Keep track of time updates (seconds)
+    private int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
+    private static boolean doneLoading; // To track main window finishing loading
+    public static boolean packNow = false; // Should this window pack right now?
 
-    public static boolean ciChosen = false, coChosen = false;
+    private static ClockInWindow ciwnd, cownd; // Clock in/out time windows
+    public static boolean ciChosen = false, coChosen = false; // Clock in/out times chosen?
 
     public Window() {
 

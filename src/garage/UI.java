@@ -123,6 +123,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             StringBuilder sb = new StringBuilder();
 
+            sb.append("Time: ");
+            // Get time into human readable format
             if (hr < 10) sb.append("0" + hr);
             else sb.append(hr);
             sb.append(":");
@@ -132,10 +134,18 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (sec < 10) sb.append("0" + sec);
             else sb.append(sec);
 
-            stats.setText("Time: " + sb + "\nOrders: " + (int)orders + " (" 
-                        + oph.format((orders*3600)/totalSecClocked) 
-                        + "/hr)" + "\nNeeded: " + ordersNeeded + ", "
-                        + (int)(ordersNeeded-orders) + " left");
+            // Add other stats
+            sb.append("\nOrders: ");
+            sb.append((int)orders);
+            sb.append(" (");
+            sb.append(oph.format((orders*3600)/totalSecClocked));
+            sb.append("/hr)\nNeeded: ");
+            sb.append(ordersNeeded);
+            sb.append(", ");
+            
+
+            stats.setText(sb.toString() + ", "
+                        + (int)(ordersNeeded - orders) + " left");
 
         } else if (Window.coChosen) { // Get "Time till clock in" =======
 
@@ -183,9 +193,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         // ======= Shortcuts =======
         if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
         if (key == 48)  { // Enter/leave break with 0
-            
             enterLeaveBreak();
-
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
 
@@ -232,12 +240,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void getTime() { // See if clock-in time has passed, if so get the difference
         
-        if (clockInTime.compareTo(LocalTime.now().plusMinutes(1)) <= 0 || recheckTime) {
+        if (clockInTime.compareTo(LocalTime.now()) <= 0 || recheckTime) {
 
             freeze = false;
             inBreak = false;
             clockInTimePassed = true;
-            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            if (Window.isOSX) { totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
+            } else totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
             sec = totalSecClocked;
             min = 0;
             hr = 0;

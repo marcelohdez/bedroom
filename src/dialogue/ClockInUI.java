@@ -64,6 +64,7 @@ public class ClockInUI extends JPanel implements ActionListener {
             default: // ======= Clock in UI =======
 
             JLabel ciText = new JLabel("  Select clock in time:  ");
+            if (Window.isOSX) ciText.setText("    Select clock in time:    ");
             ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
             ciText.setForeground(UI.myWhite);
 
@@ -118,53 +119,34 @@ public class ClockInUI extends JPanel implements ActionListener {
         if (e.getActionCommand() == "Select") {
 
             int hour = hrBox.getSelectedIndex() + 1;
-            int min = minBox.getSelectedIndex() + 1;
+            int min = minBox.getSelectedIndex();
             int realHr = 0;
 
+            // ======= Translate time into 24-hour clock for LocalTime =======
+            if (amPM.getSelectedIndex() == 0) { // AM is selected
+
+                if (hour == 12) { realHr = 0; 
+                } else realHr = hour;
+
+            } else { // PM is selected
+
+                if (hour == 12) { realHr = hour;
+                } else realHr = hour + 12;
+
+            }
+
+            // Make sure time is in format "00:00" so single digits get a 0 added
+            String hrString = "" + realHr;
+            if (realHr < 10) hrString = "0" + realHr;
+            String minString = ":" + min;
+            if (min < 10) minString = ":0" + min;
+
             if (!Window.ciChosen) { // ======= Clock in UI type =======
-
-                // ======= Translate time into 24-hour clock for LocalTime =======
-                if (amPM.getSelectedIndex() == 0) { // AM is selected
-
-                    if (hour == 12) { realHr = 0; 
-                    } else realHr = hour;
-
-                } else { // PM is selected
-
-                    if (hour == 12) { realHr = hour;
-                    } else realHr = hour + 12;
-
-                }
-
-                // Make sure time is in format "00:00" so single digits get a 0 added
-                String hrString = "" + realHr;
-                if (realHr < 10) hrString = "0" + realHr;
-                String minString = ":" + min;
-                if (min < 10) minString = ":0" + min;
 
                 UI.clockInTime = LocalTime.parse(hrString + minString);
                 Window.ciChosen = true;
 
             } else { // ======= Clock out UI type =======
-
-                // ======= Translate time into 24-hour clock for LocalTime =======
-                if (amPM.getSelectedIndex() == 0) { // AM is selected
-
-                    if (hour == 12) { realHr = 0; 
-                    } else realHr = hour;
-
-                } else { // PM is selected
-
-                    if (hour == 12) { realHr = hour;
-                    } else realHr = hour + 12;
-
-                }
-
-                // Make sure time is in format "00:00" so single digits get a 0 added
-                String hrString = "" + realHr;
-                if (realHr < 10) hrString = "0" + realHr;
-                String minString = ":" + min;
-                if (min < 10) minString = ":0" + min;
 
                 UI.clockOutTime = LocalTime.parse(hrString + minString);
                 UI.target = setTarget.getSelectedIndex() + 1;
