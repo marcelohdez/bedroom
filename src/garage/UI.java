@@ -1,23 +1,15 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 public class UI extends JPanel implements ActionListener, KeyListener {
 
-    // Program Variables
-    private static DecimalFormat oph = new DecimalFormat("#.00");
-    private static int key;
+    // Decimal format
+    private static final DecimalFormat oph = new DecimalFormat("#.00");
 
     // Time Variables
     private static int hr = 0, min = 0;
@@ -26,31 +18,30 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean recheckTimeTill = false; // In case computer goes to sleep
     public static boolean recheckTime = false; // Increase time accuracy
 
-    // Buttons
-    private JButton clockInOut = new JButton("Enter Break");
-    private JButton addOrder = new JButton("Add order");
-
     // Labels
-    private static JTextArea stats = 
+    private static final JTextArea stats =
         new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
 
     // Stats
     private static double orders = 0;
     public static boolean inBreak = true;
-    public static boolean freeze = true;
+    public static boolean freeze = true; // Ignore entering/leaving break and changing orders
     public static boolean clockInTimePassed = false;
 
-    public static LocalTime clockInTime = LocalTime.parse("00:00");
-    public static LocalTime clockOutTime = LocalTime.parse("00:00");
+    public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
+            breakInTime = LocalTime.parse("00:00"), breakOutTime = LocalTime.parse("00:00");
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
 
     // Colors
-    public static Color myWhite = new Color(240, 240, 240);
-    public static Color bg = new Color(70, 70, 70);
-    public static Color myGray = new Color(95, 95, 95);
+    public static Color textColor = new Color(240, 240, 240);
+    public static Color buttonColor = new Color(80, 80, 80);
+    public static Color bg = new Color(64, 64, 64);
 
-    public UI() {
+    public UI() { // Set UI's properties
+
+        JButton clockInOut = new JButton("Enter Break");
+        JButton addOrder = new JButton("Add order"); // Add Order button
 
         setFocusable(true);
         addKeyListener(this);
@@ -63,12 +54,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         clockInOut.setPreferredSize(new Dimension(110, 45));
 
         // Set colors
-        clockInOut.setBackground(myGray);
-        clockInOut.setForeground(myWhite);
-        addOrder.setBackground(myGray);
-        addOrder.setForeground(myWhite);
+        clockInOut.setBackground(buttonColor);
+        clockInOut.setForeground(textColor);
+        addOrder.setBackground(buttonColor);
+        addOrder.setForeground(textColor);
         stats.setBackground(bg);
-        stats.setForeground(myWhite);
+        stats.setForeground(textColor);
  
         // Add components
         setBackground(bg);
@@ -82,19 +73,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        this.requestFocus(); /* Get focus back on the UI panel every time an action is performed.
-                                It's a workaround as buttons get the focus when clicked. */
-        String bttn = e.getActionCommand();
+        String b = e.getActionCommand();
 
-        if (bttn == "Add order") {
+        if (b.equals("Add order")) {
 
             changeOrders(1);
 
-        } else if (bttn == "Enter Break" || bttn == "Leave Break") {
+        } else if (b.equals("Enter Break") || b.equals("Leave Break")) {
 
             enterLeaveBreak();
 
         }
+
+        this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
+                                it's a workaround as buttons get the focus when clicked. */
         
     }
 
@@ -125,14 +117,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             sb.append("Time: ");
             // Get time into human readable format
-            if (hr < 10) sb.append("0" + hr);
-            else sb.append(hr);
+            if (hr < 10) sb.append("0");
+            sb.append(hr);
             sb.append(":");
-            if (min < 10) sb.append("0" + min);
-            else sb.append(min);
+            if (min < 10) sb.append("0");
+            sb.append(min);
             sb.append(":");
-            if (sec < 10) sb.append("0" + sec);
-            else sb.append(sec);
+            if (sec < 10) sb.append("0");
+            sb.append(sec);
 
             // Add other stats
             sb.append("\nOrders: ");
@@ -142,10 +134,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             sb.append("/hr)\nNeeded: ");
             sb.append(ordersNeeded);
             sb.append(", ");
-            
+            if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
+            } else sb.append("0");
+            sb.append(" left");
 
-            stats.setText(sb.toString() + ", "
-                        + (int)(ordersNeeded - orders) + " left");
+            stats.setText(sb.toString());
 
         } else if (Window.coChosen) { // Get "Time till clock in" =======
 
@@ -169,14 +162,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             }
 
-            if (hours < 10) { sb.append("0" + hours); 
-            } else sb.append(hours);
+            if (hours < 10) sb.append("0");
+            sb.append(hours);
             sb.append(":");
-            if (minutes < 10) { sb.append("0" + minutes); 
-            } else sb.append(minutes);
+            if (minutes < 10) sb.append("0");
+            sb.append(minutes);
             sb.append(":");
-            if (seconds < 10) { sb.append("0" + seconds);
-            } else sb.append(seconds);
+            if (seconds < 10) sb.append("0");
+            sb.append(seconds);
 
             stats.setText("Time until clocked in:\n" + sb);
 
@@ -188,7 +181,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
 	public void keyPressed(KeyEvent e) {
 
-        key = e.getKeyCode();
+        int key = e.getKeyCode();
 
         // ======= Shortcuts =======
         if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
@@ -206,35 +199,34 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private void enterLeaveBreak() { // Enter/Leave break
 
         if (!freeze) {
-
-            inBreak = !inBreak;
-            updateBttns();
-
+            if (!inBreak) { Window.enterBreakWnd.setVisible(true);
+            } else Window.leaveBreakWnd.setVisible(true);
+            updateButtons();
         }
 
     }
 
-    private void updateBttns() { // Update buttons
+    private void updateButtons() { // Update buttons
 
         if (!inBreak)  { 
             
-            clockInOut.setText("Enter Break");
+            Window.selectBreakStart = true;
 
-        } else clockInOut.setText("Leave Break");
+        } else Window.selectBreakEnd = true;
 
         Window.packNow = true;
 
     }
 
-    private void changeOrders(int amnt) { // Change orders
+    private void changeOrders(int amount) { // Change orders
 
         if (!inBreak) {
-            orders += amnt;
+            orders += amount;
             if (orders < 0) orders = 0;
             getStats();
         }
 
-        Window.packNow = true; // Call the Window to .pack()
+        Window.packNow = true; // Call the Window to pack itself
 
     }
 
@@ -245,8 +237,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             freeze = false;
             inBreak = false;
             clockInTimePassed = true;
-            if (Window.isOSX) { totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
-            } else totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) + 59;
+            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
             sec = totalSecClocked;
             min = 0;
             hr = 0;
@@ -257,14 +248,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         } else {
 
             if (secondsTillCI == -1 || recheckTimeTill) { // Set secondsTillCI to difference in time
-
-                secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) - 59;
+                secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
                 recheckTimeTill = false;
-
             }
             getStats();
 
         }
+
+        Window.packNow = true;
 
     }
 
