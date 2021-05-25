@@ -1,22 +1,13 @@
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.time.LocalTime;
 
-public class ClockInUI extends JPanel implements ActionListener {
-
-    // Button(s)
-    private JButton select = new JButton("Select");
+public class SelectTimeUI extends JPanel implements ActionListener {
 
     // Lists (for the list boxes)
-    private String[] amPMOptions = {"AM","PM"}, hr = {"01:", "02:", "03:", "04:", "05:", "06:",
+    private final String[] amPMOptions = {"AM","PM"}, hr = {"01:", "02:", "03:", "04:", "05:", "06:",
                                                     "07:", "08:", "09:", "10:", "11:", "12:"},
                                                 min = {"00", "01", "02", "03", "04", "05",
                                                     "06","07", "08", "09", "10", "11", 
@@ -35,41 +26,54 @@ public class ClockInUI extends JPanel implements ActionListener {
                                                     "24"};
                                 
     // List boxes:
-    private JComboBox<String> amPM = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
+    private final JComboBox<String> amPM = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
             minBox = new JComboBox<>(min), setTarget = new JComboBox<>(targets);
 
-    // Labels
-    private JLabel targetText = new JLabel("Target:"); 
-    private JLabel targetText2 = new JLabel("orders per hour");
+    public SelectTimeUI(int type) {
 
-    public ClockInUI(int type) {
-
+        JButton select = new JButton("Select"); // Select button
+        JLabel targetText = new JLabel("Target:"); // Target label
+        JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
         Dimension listSize = new Dimension(80, 30);
-        Dimension ampmSize = new Dimension(68, 30);
         Dimension selectSize = new Dimension(180, 40);
 
         setBackground(UI.bg);
 
-        switch (type) {
+        switch (type) { // ======= Clock out UI =======
 
-            case 1: // ======= Clock out UI =======
+            case 1 -> {
 
-            JLabel coText = new JLabel("  Select clock out time:  ");
-            coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-            coText.setForeground(UI.myWhite);
+                JLabel coText = new JLabel("  Select clock out time:  ");
+                coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+                coText.setForeground(UI.myWhite);
+                add(coText);
 
-            add(coText);
-            break;
+            }
+            case 2 -> { // ======= Enter break UI =======
 
-            default: // ======= Clock in UI =======
+                JLabel ebText = new JLabel("  Select enter break time:  ");
+                ebText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+                ebText.setForeground(UI.myWhite);
+                add(ebText);
 
-            JLabel ciText = new JLabel("  Select clock in time:  ");
-            if (Window.isOSX) ciText.setText("    Select clock in time:    ");
-            ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-            ciText.setForeground(UI.myWhite);
+            }
+            case 3 -> { // ======= Leave break UI =======
 
-            add(ciText);
+                JLabel lbText = new JLabel("  Select leave break time:  ");
+                lbText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+                lbText.setForeground(UI.myWhite);
+                add(lbText);
 
+            }
+            default -> { // ======= Clock in UI =======
+
+                JLabel ciText = new JLabel("  Select clock in time:  ");
+                if (Window.isOSX) ciText.setText("    Select clock in time:    ");
+                ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+                ciText.setForeground(UI.myWhite);
+                add(ciText);
+
+            }
         }
 
         // Set component sizes and action listeners (for clicks)
@@ -77,10 +81,9 @@ public class ClockInUI extends JPanel implements ActionListener {
         select.setPreferredSize(selectSize);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
-        amPM.setPreferredSize(ampmSize);
+        amPM.setPreferredSize(new Dimension(68, 30));
         amPM.setSelectedIndex(1); // Default to PM
         setTarget.setPreferredSize(new Dimension(45, 25));
-        
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
@@ -95,7 +98,7 @@ public class ClockInUI extends JPanel implements ActionListener {
         setTarget.setBackground(UI.myGray);
         setTarget.setForeground(UI.myWhite);
         targetText.setForeground(UI.myWhite);
-        targetText2.setForeground(UI.myWhite);
+        ordersPerHrText.setForeground(UI.myWhite);
 
         // Add components in order
         add(hrBox);
@@ -105,7 +108,7 @@ public class ClockInUI extends JPanel implements ActionListener {
 
             add(targetText);
             add(setTarget);
-            add(targetText2);
+            add(ordersPerHrText);
 
         }
         add(select);
@@ -116,7 +119,7 @@ public class ClockInUI extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand() == "Select") {
+        if (e.getActionCommand().equals("Select")) {
 
             int hour = hrBox.getSelectedIndex() + 1;
             int min = minBox.getSelectedIndex();
@@ -124,15 +127,9 @@ public class ClockInUI extends JPanel implements ActionListener {
 
             // ======= Translate time into 24-hour clock for LocalTime =======
             if (amPM.getSelectedIndex() == 0) { // AM is selected
-
-                if (hour == 12) { realHr = 0; 
-                } else realHr = hour;
-
+                if (hour != 12) realHr = hour;
             } else { // PM is selected
-
-                if (hour == 12) { realHr = hour;
-                } else realHr = hour + 12;
-
+                if (hour != 12) realHr = hour + 12;
             }
 
             // Make sure time is in format "00:00" so single digits get a 0 added
@@ -146,7 +143,7 @@ public class ClockInUI extends JPanel implements ActionListener {
                 UI.clockInTime = LocalTime.parse(hrString + minString);
                 Window.ciChosen = true;
 
-            } else { // ======= Clock out UI type =======
+            } else if (!Window.coChosen) { // ======= Clock out UI type =======
 
                 UI.clockOutTime = LocalTime.parse(hrString + minString);
                 UI.target = setTarget.getSelectedIndex() + 1;

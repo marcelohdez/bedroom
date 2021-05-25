@@ -1,27 +1,25 @@
 import java.lang.Runnable;
 
-import javax.swing.JFrame;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 public class Window extends JFrame implements Runnable {
 
-    public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X");
+    public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
-    private final String version = "1.1 (Beta 2)"; // Version
     private boolean running; // Is program running
     private long lastUpdate = System.nanoTime(); // Keep track of time updates (seconds)
     private int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
     private static boolean doneLoading; // To track main window finishing loading
     public static boolean packNow = false; // Should this window pack right now?
 
-    private static ClockInWindow ciwnd, cownd; // Clock in/out time windows
+    private static SelectTimeWindow ciwnd, cownd; // Clock in/out time windows
     public static boolean ciChosen = false, coChosen = false; // Clock in/out times chosen?
 
     public Window() {
 
         UI ui = new UI();
 
-        setTitle("Garage " + version);
+        setTitle("Garage 1.1 (Beta 2)");
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -43,8 +41,8 @@ public class Window extends JFrame implements Runnable {
 
         } catch(Exception e) { e.printStackTrace(); }
 
-        ciwnd = new ClockInWindow(0); // Clock in/out time windows
-        cownd = new ClockInWindow(1);
+        ciwnd = new SelectTimeWindow(0); // Clock in/out time windows
+        cownd = new SelectTimeWindow(1);
 
         Window wnd = new Window();
         wnd.start();
@@ -130,7 +128,7 @@ public class Window extends JFrame implements Runnable {
 
             try { 
 
-                Thread.sleep(1);
+                Thread.sleep(1); // Busy-waiting, may be removed in the future
 
             } catch (InterruptedException e) { e.printStackTrace(); }
 
