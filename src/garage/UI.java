@@ -208,12 +208,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void updateButtons() { // Update buttons
 
-        if (!inBreak)  { 
-            
-            Window.selectBreakStart = true;
-
-        } else Window.selectBreakEnd = true;
-
         Window.packNow = true;
 
     }

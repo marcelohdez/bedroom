@@ -13,9 +13,7 @@ public class Window extends JFrame implements Runnable {
     public static boolean packNow = false; // Should this window pack right now?
 
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
-    public static boolean ciChosen = false, coChosen = false, // Clock in/out times chosen?
-        selectBreakStart = false, selectBreakEnd = false,
-            bsChosen = false, beChosen = false; // Break enter/leave times
+    public static boolean ciChosen = false, coChosen = false; // Has clock in/clock out time been chosen?
 
     public Window() {
 
