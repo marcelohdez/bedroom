@@ -9,7 +9,7 @@ import javax.swing.*;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Decimal format
-    private static final DecimalFormat oph = new DecimalFormat("#.00");
+    private static final DecimalFormat oph = new DecimalFormat("#.00"); // orders/hr
 
     // Time Variables
     private static int hr = 0, min = 0;
@@ -236,7 +236,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             min = 0;
             hr = 0;
             tick();
-            ordersNeeded = clockInTime.until(clockOutTime, ChronoUnit.HOURS) * target;
+            ordersNeeded = Math.round(target * ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60) - 1);
             recheckTime = false;
 
         } else {
