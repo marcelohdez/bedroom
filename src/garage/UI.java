@@ -30,6 +30,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
             breakInTime = LocalTime.parse("00:00"), breakOutTime = LocalTime.parse("00:00");
+    public static boolean clockOutSkipped = false;
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
 
@@ -118,22 +119,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             sb.append("Time: ");
             // Get time into human readable format
             if (hr < 10) sb.append("0");
-            sb.append(hr);
-            sb.append(":");
+            sb.append(hr).append(":");
             if (min < 10) sb.append("0");
-            sb.append(min);
-            sb.append(":");
+            sb.append(min).append(":");
             if (sec < 10) sb.append("0");
             sb.append(sec);
 
             // Add other stats
-            sb.append("\nOrders: ");
-            sb.append((int)orders);
-            sb.append(" (");
-            sb.append(oph.format((orders*3600)/totalSecClocked));
-            sb.append("/hr)\nNeeded: ");
-            sb.append(ordersNeeded);
-            sb.append(", ");
+            sb.append("\nOrders: ").append((int)orders).append(" (")
+                    .append(oph.format((orders*3600)/totalSecClocked))
+                    .append("/hr)\nNeeded: ").append(ordersNeeded).append(", ");
             if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
             } else sb.append("0");
             sb.append(" left");
@@ -163,11 +158,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             }
 
             if (hours < 10) sb.append("0");
-            sb.append(hours);
-            sb.append(":");
+            sb.append(hours).append(":");
             if (minutes < 10) sb.append("0");
-            sb.append(minutes);
-            sb.append(":");
+            sb.append(minutes).append(":");
             if (seconds < 10) sb.append("0");
             sb.append(seconds);
 
@@ -236,7 +229,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             min = 0;
             hr = 0;
             tick();
-            ordersNeeded = Math.round(target * ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60) - 1);
+            if (!clockOutSkipped) ordersNeeded = Math.round(target * ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60) - 1);
             recheckTime = false;
 
         } else {

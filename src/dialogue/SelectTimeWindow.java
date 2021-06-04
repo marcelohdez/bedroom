@@ -11,12 +11,11 @@ public class SelectTimeWindow extends JFrame {
         switch (type) {
             case 1 -> { // ======= Clock out window =======
 
-
                 SelectTimeUI clockOutUI = new SelectTimeUI(1);
                 setTitle("Clocking out:");
                 add(clockOutUI);
-                setSize(new Dimension(260, 180));
-                if (Window.isOSX) setSize(new Dimension(260, 170)); // Fix size on MacOS
+                setSize(new Dimension(260, 225));
+                if (Window.isOSX) setSize(new Dimension(260, 215)); // Fix size on MacOS
 
             }
             case 2 -> { // ======= Enter break window =======

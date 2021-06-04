@@ -80,7 +80,7 @@ public class Window extends JFrame implements Runnable {
                 this.pack();
 
                 secCount++;
-                if (secCount > 119) { // Run every 2 minutes
+                if (secCount > 59) { // Run every minute
 
                     System.gc(); // Garbage collect
 

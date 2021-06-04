@@ -25,6 +25,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(int type) {
 
         JButton select = new JButton("Select"); // Select button
+        JButton skip = new JButton("Skip"); // Skip button for clock out time
         JLabel targetText = new JLabel("Target:"); // Target label
         JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
         Dimension listSize = new Dimension(80, 30);
@@ -32,7 +33,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg);
 
         switch (type) { // ======= Clock out UI =======
-
             case 1 -> {
 
                 JLabel coText = new JLabel("  Select clock out time:  ");
@@ -71,6 +71,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(180, 40));
+        skip.addActionListener(this);
+        skip.setPreferredSize(new Dimension(180, 40));
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPM.setPreferredSize(new Dimension(68, 30));
@@ -81,6 +83,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // ======= Set colors =======
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
+        skip.setBackground(UI.buttonColor);
+        skip.setForeground(UI.textColor);
         hrBox.setBackground(UI.buttonColor);
         hrBox.setForeground(UI.textColor);
         minBox.setBackground(UI.buttonColor);
@@ -96,12 +100,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPM);
-        if (type == 1) {
-
+        if (type == 1) { // Clock out time UI
             add(targetText);
             add(setTarget);
             add(ordersPerHrText);
-
+            add(skip);
         }
         add(select);
 
@@ -111,7 +114,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals("Select")) {
+        if (e.getActionCommand().equals("Select")) { // Select time
 
             int hour = hrBox.getSelectedIndex() + 1;
             int min = minBox.getSelectedIndex();
@@ -158,6 +161,14 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 Window.leaveBreakWnd.dispose();
 
             }
+
+        } else if (e.getActionCommand().equals("Skip")) {
+
+            UI.clockOutSkipped = true;
+
+            UI.getTime();
+            Window.coChosen = true;
+            Window.clockOutWnd.dispose();
 
         }
 
