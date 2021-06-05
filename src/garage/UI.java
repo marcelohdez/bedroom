@@ -22,6 +22,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static final JTextArea stats =
         new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
 
+    private static final JButton clockInOut = new JButton("Enter Break");
+
     // Stats
     private static double orders = 0;
     public static boolean inBreak = true;
@@ -35,13 +37,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long ordersNeeded = 0;
 
     // Colors
-    public static Color textColor = new Color(240, 240, 240);
-    public static Color buttonColor = new Color(80, 80, 80);
-    public static Color bg = new Color(64, 64, 64);
+    public static Color textColor = new Color(240, 240, 240),
+            buttonColor = new Color(80, 80, 80),
+            bg = new Color(64, 64, 64);
 
     public UI() { // Set UI's properties
 
-        JButton clockInOut = new JButton("Enter Break");
         JButton addOrder = new JButton("Add order"); // Add Order button
 
         setFocusable(true);
@@ -201,7 +202,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void updateButtons() { // Update buttons
 
-        Window.packNow = true;
+        if (inBreak) { clockInOut.setText("Leave Break");
+        } else clockInOut.setText("Enter Break");
+        Window.wnd.pack();
 
     }
 
@@ -211,9 +214,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             orders += amount;
             if (orders < 0) orders = 0;
             getStats();
+
         }
 
-        Window.packNow = true; // Call the Window to pack itself
+        Window.wnd.pack(); // Call the Window to pack itself
 
     }
 
@@ -242,7 +246,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         }
 
-        Window.packNow = true;
+        Window.wnd.pack();
 
     }
 

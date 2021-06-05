@@ -10,8 +10,8 @@ public class Window extends JFrame implements Runnable {
     private long lastUpdate = System.nanoTime(); // Keep track of time updates (seconds)
     private int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
     private static boolean doneLoading; // To track main window finishing loading
-    public static boolean packNow = false; // Should this window pack right now?
 
+    public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
     public static boolean ciChosen = false, coChosen = false; // Has clock in/clock out time been chosen?
 
@@ -44,21 +44,18 @@ public class Window extends JFrame implements Runnable {
         enterBreakWnd = new SelectTimeWindow(2);
         leaveBreakWnd = new SelectTimeWindow(3);
         // Open main window
-        new Window().start();
+        wnd = new Window();
+        wnd.start();
     }
 
     public void start() {
-
         Thread thread = new Thread(this);
         thread.start(); // Start thread
         running = true;
-
     }
     
     public void stop() { // When application is stopped:
-
         running = false; // Stop "while (running)"
-
     }
 
     public void run() {
@@ -101,12 +98,7 @@ public class Window extends JFrame implements Runnable {
                                      // a second, as that would eb annoying for other tasks.
             }
 
-            if (packNow) {
-                this.pack();
-                packNow = false;
-            }
-
-            try { 
+            try {
 
                 Thread.sleep(1); // Busy-waiting, may be removed in the future
 
