@@ -81,7 +81,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (b.equals("Add order")) {
             changeOrders(1);
         } else if (b.equals("Enter Break")) {
-            Window.enterBreakWnd.setVisible(true);
+            if (!freeze) Window.enterBreakWnd.setVisible(true);
         }
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
