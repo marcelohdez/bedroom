@@ -6,8 +6,8 @@ public class SelectTimeWindow extends JFrame {
 
     public SelectTimeWindow(int type) {
 
-        setSize(new Dimension(260, 180)); // Default window size
-        if (Window.isOSX) setSize(new Dimension(new Dimension(260, 170)));
+        setSize(new Dimension(260, 150)); // Default window size
+        if (Window.isOSX) setSize(new Dimension(new Dimension(260, 140)));
                                                     // Default window size on MacOS (smaller due to
                                                     // the title bar & fonts on Mac being different)
 
