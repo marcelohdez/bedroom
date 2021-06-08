@@ -24,11 +24,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public SelectTimeUI(int type) {
 
-        JButton select = new JButton("Select");                 // Select button
-        JButton skip = new JButton("Skip");                     // Skip button
-        JLabel targetText = new JLabel("Target orders per hour:");              // Target label
-        JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
-        Dimension listSize = new Dimension(80, 30);     // List box size
+        JButton select = new JButton("Select");                     // Select button
+        JButton skip = new JButton("Skip");                         // Skip button
+        JLabel targetText = new JLabel("Target orders per hour:");  // Target label
+        JLabel ordersPerHrText = new JLabel("orders per hour");     // "Order per hour"
+        Dimension listSize = new Dimension(80, 30);         // List box size
 
         setBackground(UI.bg);
 
