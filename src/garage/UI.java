@@ -233,7 +233,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             min = 0;
             hr = 0;
             tick();
-            if (!clockOutSkipped) ordersNeeded = Math.round(target * ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60) - 1);
+            if (!clockOutSkipped) ordersNeeded = Math.round(target *
+                    ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
             recheckTime = false;
 
         } else {
