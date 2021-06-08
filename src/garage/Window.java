@@ -1,5 +1,3 @@
-import java.lang.Runnable;
-
 import javax.swing.*;
 
 public class Window extends JFrame implements Runnable {

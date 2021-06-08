@@ -5,44 +5,41 @@ import javax.swing.JFrame;
 public class SelectTimeWindow extends JFrame {
 
     public SelectTimeWindow(int type) {
-        Dimension smallWindow = new Dimension(260, 150), // Small window size
-            smallWindowMac = new Dimension(new Dimension(260, 140)); // On MacOS
+
+        setSize(new Dimension(260, 180)); // Default window size
+        if (Window.isOSX) setSize(new Dimension(new Dimension(260, 170)));
+                                                    // Default window size on MacOS (smaller due to
+                                                    // the title bar & fonts on Mac being different)
 
         switch (type) {
-            case 1 -> { // ======= Clock out window =======
+            case 1 -> { // ======= For clock out window =======
 
                 SelectTimeUI clockOutUI = new SelectTimeUI(1);
                 setTitle("Clocking out:");
                 add(clockOutUI);
-                setSize(new Dimension(260, 225));
-                if (Window.isOSX) setSize(new Dimension(260, 215)); // Fix size on MacOS
+                setSize(new Dimension(260, 210)); // Specific sizing for this window
+                if (Window.isOSX) setSize(new Dimension(260, 200)); // MacOS version
 
             }
-            case 2 -> { // ======= Enter break window =======
+            case 2 -> { // ======= For enter break window =======
 
                 SelectTimeUI enterBreakUI = new SelectTimeUI(2);
                 setTitle("Enter break:");
                 add(enterBreakUI);
-                setSize(smallWindow);
-                if (Window.isOSX) setSize(smallWindowMac); // Fix size on MacOS
 
             }
-            case 3 -> { // ======= Leave break window =======
+            case 3 -> { // ======= For leave break window =======
 
                 SelectTimeUI leaveBreakUI = new SelectTimeUI(3);
                 setTitle("Leave break:");
                 add(leaveBreakUI);
-                setSize(smallWindow);
-                if (Window.isOSX) setSize(smallWindowMac); // Fix size on MacOS
 
             }
-            default -> { // ======= Clock in window =======
+            default -> { // ======= For clock in window =======
 
                 SelectTimeUI clockInUI = new SelectTimeUI(0);
                 setTitle("Clocking in:");
                 add(clockInUI);
-                setSize(smallWindow);
-                if (Window.isOSX) setSize(smallWindowMac); // Fix size on MacOS
                 setVisible(true);
 
             }

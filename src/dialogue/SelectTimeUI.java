@@ -19,21 +19,22 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     "24"};
 
     // List boxes:
-    private final JComboBox<String> amPM = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
+    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
             minBox = new JComboBox<>(min), setTarget = new JComboBox<>(targets);
 
     public SelectTimeUI(int type) {
 
-        JButton select = new JButton("Select"); // Select button
-        JButton skip = new JButton("Skip"); // Skip button for clock out time
-        JLabel targetText = new JLabel("Target:"); // Target label
+        JButton select = new JButton("Select");                 // Select button
+        JButton skip = new JButton("Skip");                     // Skip setting clock out time
+        JButton now = new JButton("Now");                       // Select current time
+        JLabel targetText = new JLabel("Target:");              // Target label
         JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
         Dimension listSize = new Dimension(80, 30);
 
         setBackground(UI.bg);
 
-        switch (type) { // ======= Clock out UI =======
-            case 1 -> {
+        switch (type) {
+            case 1 -> { // ======= Clock out UI =======
 
                 JLabel coText = new JLabel("  Select clock out time:  ");
                 coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
@@ -72,11 +73,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(180, 40));
         skip.addActionListener(this);
-        skip.setPreferredSize(new Dimension(180, 40));
+        now.addActionListener(this);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
-        amPM.setPreferredSize(new Dimension(68, 30));
-        amPM.setSelectedIndex(1); // Default to PM
+        amPMBox.setPreferredSize(new Dimension(68, 30));
+        amPMBox.setSelectedIndex(1); // Default to PM
         setTarget.setPreferredSize(new Dimension(45, 25));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
@@ -85,26 +86,30 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.setForeground(UI.textColor);
         skip.setBackground(UI.buttonColor);
         skip.setForeground(UI.textColor);
+        now.setBackground(UI.buttonColor);
+        now.setForeground(UI.textColor);
         hrBox.setBackground(UI.buttonColor);
         hrBox.setForeground(UI.textColor);
         minBox.setBackground(UI.buttonColor);
         minBox.setForeground(UI.textColor);
-        amPM.setBackground(UI.buttonColor);
-        amPM.setForeground(UI.textColor);
+        amPMBox.setBackground(UI.buttonColor);
+        amPMBox.setForeground(UI.textColor);
         setTarget.setBackground(UI.buttonColor);
         setTarget.setForeground(UI.textColor);
         targetText.setForeground(UI.textColor);
         ordersPerHrText.setForeground(UI.textColor);
 
-        // Add components in order
+        // Add components in order for flow layout
         add(hrBox);
         add(minBox);
-        add(amPM);
+        add(amPMBox);
         if (type == 1) { // Clock out time UI
             add(targetText);
             add(setTarget);
             add(ordersPerHrText);
             add(skip);
+        } else {
+            add (now);
         }
         add(select);
 
@@ -114,62 +119,82 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals("Select")) { // Select time
+        switch (e.getActionCommand()) {
+            case "Select" -> {  // Setting time to selected values
 
-            int hour = hrBox.getSelectedIndex() + 1;
-            int min = minBox.getSelectedIndex();
-            int realHr = 0;
+                int hour = hrBox.getSelectedIndex() + 1;
+                int min = minBox.getSelectedIndex();
+                int realHr = 0;
 
-            // ======= Translate time into 24-hour clock for LocalTime =======
-            if (amPM.getSelectedIndex() == 0) { // AM is selected
-                if (hour != 12) realHr = hour;
-            } else { // PM is selected
-                realHr = hour + 12;
-                if (hour == 12) realHr = hour;
+                // ======= Translate time into 24-hour clock for LocalTime =======
+                if (amPMBox.getSelectedIndex() == 0) { // AM is selected
+                    if (hour != 12) realHr = hour;
+                } else { // PM is selected
+                    realHr = hour + 12;
+                    if (hour == 12) realHr = hour;
+                }
+
+                // Make sure time is in format "00:00" so single digits get a 0 added
+                String hrString = "" + realHr;
+                if (realHr < 10) hrString = "0" + realHr;
+                String minString = ":" + min;
+                if (min < 10) minString = ":0" + min;
+                if (!Window.ciChosen) { // ======= For clock in UI =======
+
+                    UI.clockInTime = LocalTime.parse(hrString + minString); // Set clock in time
+                    Window.ciChosen = true;                 // Clock in time is now chosen
+                    Window.clockInWnd.dispose();            // Get rid of clock-in window
+                    Window.clockOutWnd.setVisible(true);    // Set clock-out window visible
+
+                } else if (!Window.coChosen) { // ======= For clock out UI =======
+
+                    UI.clockOutTime = LocalTime.parse(hrString + minString); // Set clock out time
+                    UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+
+                    UI.getTime();                           // Tell UI to update times
+                    Window.coChosen = true;                 // Clock out time is now chosen
+                    Window.clockOutWnd.dispose();           // Close clock out time window
+
+                } else if (!UI.inBreak) { // ======= For enter break UI =======
+
+                    UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
+                    Window.enterBreakWnd.dispose();         // Close enter break window
+                    UI.getTime();
+
+                } else { // ======= For leave break UI =======
+
+                    UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
+                    Window.leaveBreakWnd.dispose();         // Close leave break window
+                    UI.getTime();
+
+                }
             }
+            case "Skip" -> {
 
-            // Make sure time is in format "00:00" so single digits get a 0 added
-            String hrString = "" + realHr;
-            if (realHr < 10) hrString = "0" + realHr;
-            String minString = ":" + min;
-            if (min < 10) minString = ":0" + min;
-
-            if (!Window.ciChosen) { // ======= Clock in UI type =======
-
-                UI.clockInTime = LocalTime.parse(hrString + minString);
-                Window.ciChosen = true;
-                Window.clockInWnd.dispose();
-                Window.clockOutWnd.setVisible(true);
-
-            } else if (!Window.coChosen) { // ======= Clock out UI type =======
-
-                UI.clockOutTime = LocalTime.parse(hrString + minString);
-                UI.target = setTarget.getSelectedIndex() + 1;
-
+                UI.clockOutSkipped = true;
                 UI.getTime();
                 Window.coChosen = true;
                 Window.clockOutWnd.dispose();
 
-            } else if (!UI.inBreak) {
+            }
+            case "Now" -> {  // For getting current time
 
-                UI.breakInTime = LocalTime.parse(hrString + minString);
-                Window.enterBreakWnd.dispose();
+                int currentHour = LocalTime.now().getHour();
 
-            } else {
-
-                UI.breakOutTime = LocalTime.parse(hrString + minString);
-                Window.leaveBreakWnd.dispose();
+                if (currentHour >= 12) {
+                    amPMBox.setSelectedIndex(1);        // Set AM/PM list box to PM
+                    if (currentHour != 12) {
+                        hrBox.setSelectedIndex(currentHour - 13);
+                    } else hrBox.setSelectedIndex(11);
+                } else {
+                    amPMBox.setSelectedIndex(0);        // Set AM/PM list box to AM
+                    if (currentHour != 0) {
+                        hrBox.setSelectedIndex(currentHour - 1);
+                    } else hrBox.setSelectedIndex(11);
+                }
+                minBox.setSelectedIndex(LocalTime.now().getMinute());
 
             }
-
-        } else if (e.getActionCommand().equals("Skip")) {
-
-            UI.clockOutSkipped = true;
-
-            UI.getTime();
-            Window.coChosen = true;
-            Window.clockOutWnd.dispose();
-
         }
 
     }
