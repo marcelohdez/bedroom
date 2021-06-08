@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Window extends JFrame implements Runnable {
 
@@ -15,13 +16,11 @@ public class Window extends JFrame implements Runnable {
 
     public Window() {
 
-        UI ui = new UI();
-
-        setTitle("Garage 1.1 (Beta 2)");
+        setTitle("Garage 1.1 (Beta 3)");
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        add(ui);
+        add(new UI());
         pack();
         setLocationRelativeTo(null);
 

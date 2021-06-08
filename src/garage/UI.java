@@ -18,11 +18,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean recheckTimeTill = false; // In case computer goes to sleep
     public static boolean recheckTime = false; // Increase time accuracy
 
-    // Labels
+    // Components
     private static final JTextArea stats =
         new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
 
-    private static final JButton clockInOut = new JButton("Enter Break");
+    private static final JButton breakButton = new JButton("Enter Break");
 
     // Stats
     private static double orders = 0;
@@ -53,12 +53,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         addOrder.addActionListener(this);
         addOrder.setPreferredSize(new Dimension(100, 45));
-        clockInOut.addActionListener(this);
-        clockInOut.setPreferredSize(new Dimension(110, 45));
+        breakButton.addActionListener(this);
+        breakButton.setPreferredSize(new Dimension(110, 45));
 
         // Set colors
-        clockInOut.setBackground(buttonColor);
-        clockInOut.setForeground(textColor);
+        breakButton.setBackground(buttonColor);
+        breakButton.setForeground(textColor);
         addOrder.setBackground(buttonColor);
         addOrder.setForeground(textColor);
         stats.setBackground(bg);
@@ -66,7 +66,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
  
         // Add components
         setBackground(bg);
-        add(clockInOut);
+        add(breakButton);
         add(addOrder);
         add(stats);
 
@@ -143,16 +143,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             StringBuilder sb = new StringBuilder();
 
             while (seconds > 59) {
-
                 minutes++;
                 seconds -= 60;
-
             }
             while (minutes > 59) {
-
                 hours++;
                 minutes -= 60;
-
             }
 
             if (hours < 10) sb.append("0");
@@ -186,12 +182,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void keyReleased(KeyEvent e) {}
-
-    private static void updateButtons() { // Update buttons
-
-        Window.wnd.pack();
-
-    }
 
     private void changeOrders(int amount) { // Change orders
 
