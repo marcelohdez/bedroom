@@ -169,12 +169,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 }
             }
-            case "Skip" -> {
+            case "Skip" -> { // For skipping clock out time input
 
-                UI.clockOutSkipped = true;
-                UI.getTime();
-                Window.coChosen = true;
-                Window.clockOutWnd.dispose();
+                UI.clockOutSkipped = true;              // Clock out time skipped
+                UI.getTime();                           // Tell UI to update times
+                Window.coChosen = true;                 // Clock out time is now "chosen"
+                Window.clockOutWnd.dispose();           // Close clock out window
 
             }
             case "Now" -> {  // For getting current time
@@ -183,15 +183,20 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 if (currentHour >= 12) {
                     amPMBox.setSelectedIndex(1);        // Set AM/PM list box to PM
-                    if (currentHour != 12) {
+                    // This if statement sets the list box index to current hour,
+                    // since LocalTime is in 24hr format, we have to do some maths
+                    // to get it to 12hr am/pm.
+                    if (currentHour != 12) {            // Set hour to 1-11pm
                         hrBox.setSelectedIndex(currentHour - 13);
-                    } else hrBox.setSelectedIndex(11);
+                    } else hrBox.setSelectedIndex(11);  // Set hour to 12pm
                 } else {
                     amPMBox.setSelectedIndex(0);        // Set AM/PM list box to AM
-                    if (currentHour != 0) {
+                    if (currentHour != 0) {             // Set hour to 1-11am
                         hrBox.setSelectedIndex(currentHour - 1);
-                    } else hrBox.setSelectedIndex(11);
+                    } else hrBox.setSelectedIndex(11);  // Set hour to 12am (or 0 in 24hr)
                 }
+
+                // Set minute list box index to current minute count
                 minBox.setSelectedIndex(LocalTime.now().getMinute());
 
             }
