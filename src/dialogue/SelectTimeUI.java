@@ -103,22 +103,37 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             add(targetText);
             add(setTarget);
             add (skip);
-            setListBoxIndexes(true); // Set list box indexes to 4hrs after clock in time
-        } else setListBoxIndexes(false); // Set list box to current time
+            setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
+        } else if (type == 3) { // For leave break window
+            setListBoxIndexes(2); // Set list box indexes to 30 min after break start
+        } else setListBoxIndexes(0); // Set list box to current time
         add(select);
 
         requestFocus();
 
     }
 
-    private void setListBoxIndexes(boolean addTime) {
+    private void setListBoxIndexes(int type) {
         // ======= Set list box times to current/clock out time =======
-        int hour; // Store hour to not be rechecked
-        if (!addTime) {
-            hour = LocalTime.now().getHour(); // Get current hour
-        } else {
-            hour = UI.clockInTime.getHour() + 4;
-            if (hour >= 24) hour -= 24;
+        int hour = LocalTime.now().getHour(); // Store hour to not be rechecked
+        int minute; // Store minute
+
+        switch (type) { // Set minBox depending on type and get wanted hour int
+            // Case 0 is to get current time, for hour it is already stored above
+            case 0 -> minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set minBox to current minute
+            case 1 -> { // Get 4hrs after clock in time, for clock out window
+                hour = UI.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
+                if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
+                minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
+            }
+            case 2 -> { // Set leave break window's default minutes to 30 above break in time.
+                minute = UI.breakInTime.getMinute() + 30; // Get 30 minutes after break start
+                if (minute > 59) {                      // If it is over 59, loop it
+                    minute -= 59;
+                    hour = UI.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
+                }
+                minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
+            }
         }
 
         if (hour >= 12) {
@@ -136,10 +151,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
         }
 
-        // Set minute list box index to wanted minute
-        if (!addTime) {
-            minBox.setSelectedIndex(LocalTime.now().getMinute());   // Current minute
-        } else minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Clock in time's minute
     }
 
     public void actionPerformed(ActionEvent e) {
