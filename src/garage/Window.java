@@ -35,10 +35,9 @@ public class Window extends JFrame implements Runnable {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
-        // Start clock in/out time windows
+        // Create clock in window
         clockInWnd = new SelectTimeWindow(0);
-        clockOutWnd = new SelectTimeWindow(1);
-        // Start break enter/leave time windows
+        // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
         leaveBreakWnd = new SelectTimeWindow(3);
         // Open main window

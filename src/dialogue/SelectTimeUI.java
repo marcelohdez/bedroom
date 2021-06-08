@@ -8,8 +8,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     // Lists (for the list boxes)
     private final String[] amPMOptions = {"AM","PM"},
-            hr = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"},
-            min = {"00", "01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11",
+            hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"},
+            minutes = {"00", "01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11",
                     "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
                     "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35",
                     "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47",
@@ -19,8 +19,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     "24"};
 
     // List boxes:
-    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hr),
-            minBox = new JComboBox<>(min), setTarget = new JComboBox<>(targets);
+    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hours),
+            minBox = new JComboBox<>(minutes), setTarget = new JComboBox<>(targets);
 
     public SelectTimeUI(int type) {
 
@@ -99,37 +99,47 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        if (type == 1) { // Clock out time UI specific components
+        if (type == 1) { // Add clock out UI specific components
             add(targetText);
             add(setTarget);
             add (skip);
-        } else { // ======= Set list box times to current time =======
-            int currentHour = LocalTime.now().getHour(); // Store hour to not be rechecked
-
-            if (currentHour >= 12) {
-                amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
-                // This if statement sets the list box index to current hour,
-                // since LocalTime is in 24hr format, we have to do some maths
-                // to get it to 12hr am/pm.
-                if (currentHour != 12) {                // Set hour to 1-11pm
-                    hrBox.setSelectedIndex(currentHour - 13);
-                } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
-            } else {
-                amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
-                if (currentHour != 0) {                 // Set hour to 1-11am
-                    hrBox.setSelectedIndex(currentHour - 1);
-                } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
-            }
-
-            // Set minute list box index to current minute count
-            minBox.setSelectedIndex(LocalTime.now().getMinute());
-        }
+            setListBoxIndexes(true); // Set list box indexes to 4hrs after clock in time
+        } else setListBoxIndexes(false); // Set list box to current time
         add(select);
-
-
 
         requestFocus();
 
+    }
+
+    private void setListBoxIndexes(boolean clockOut) {
+        // ======= Set list box times to current/clock out time =======
+        int hour; // Store hour to not be rechecked
+        if (!clockOut) {
+            hour = LocalTime.now().getHour(); // Get current hour
+        } else {
+            hour = UI.clockInTime.getHour() + 4;
+            if (hour >= 24) hour -= 24;
+        }
+
+        if (hour >= 12) {
+            amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
+            // This if statement sets the list box index to current hour,
+            // since LocalTime is in 24hr format, we have to do some maths
+            // to get it to 12hr am/pm.
+            if (hour != 12) {                       // Set hour to 1-11pm
+                hrBox.setSelectedIndex(hour - 13);
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
+        } else {
+            amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
+            if (hour != 0) {                        // Set hour to 1-11am
+                hrBox.setSelectedIndex(hour - 1);
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
+        }
+
+        // Set minute list box index to wanted minute
+        if (!clockOut) {
+            minBox.setSelectedIndex(LocalTime.now().getMinute());   // Current minute
+        } else minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Clock in time's minute
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -142,9 +152,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 int realHr = 0;
 
                 // ======= Translate time into 24-hour clock for LocalTime =======
-                if (amPMBox.getSelectedIndex() == 0) { // AM is selected
+                if (amPMBox.getSelectedIndex() == 0) {  // if AM is selected
                     if (hour != 12) realHr = hour;
-                } else { // PM is selected
+                } else {                                // if PM is selected
                     realHr = hour + 12;
                     if (hour == 12) realHr = hour;
                 }
@@ -154,14 +164,15 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 if (realHr < 10) hrString = "0" + realHr;
                 String minString = ":" + min;
                 if (min < 10) minString = ":0" + min;
-                if (!Window.ciChosen) { // ======= For clock in UI =======
+                if (!Window.ciChosen) { // ======= For clock in time=======
 
                     UI.clockInTime = LocalTime.parse(hrString + minString); // Set clock in time
                     Window.ciChosen = true;                 // Clock in time is now chosen
                     Window.clockInWnd.dispose();            // Get rid of clock-in window
+                    Window.clockOutWnd = new SelectTimeWindow(1); // Create clock out window
                     Window.clockOutWnd.setVisible(true);    // Set clock-out window visible
 
-                } else if (!Window.coChosen) { // ======= For clock out UI =======
+                } else if (!Window.coChosen) { // ======= For clock out time =======
 
                     UI.clockOutTime = LocalTime.parse(hrString + minString); // Set clock out time
                     UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
@@ -170,13 +181,13 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     Window.coChosen = true;                 // Clock out time is now chosen
                     Window.clockOutWnd.dispose();           // Close clock out time window
 
-                } else if (!UI.inBreak) { // ======= For enter break UI =======
+                } else if (!UI.inBreak) { // ======= For entering break =======
 
                     UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
                     Window.enterBreakWnd.dispose();         // Close enter break window
                     UI.getTime();
 
-                } else { // ======= For leave break UI =======
+                } else { // ======= For leaving break =======
 
                     UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
                     Window.leaveBreakWnd.dispose();         // Close leave break window
