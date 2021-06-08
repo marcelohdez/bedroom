@@ -26,7 +26,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         JButton select = new JButton("Select");                 // Select button
         JButton skip = new JButton("Skip");                     // Skip button
-        JLabel targetText = new JLabel("Target:");              // Target label
+        JLabel targetText = new JLabel("Target orders per hour:");              // Target label
         JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
         Dimension listSize = new Dimension(80, 30);     // List box size
 
@@ -102,7 +102,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         if (type == 1) { // Clock out time UI specific components
             add(targetText);
             add(setTarget);
-            add(ordersPerHrText);
             add (skip);
         } else { // ======= Set list box times to current time =======
             int currentHour = LocalTime.now().getHour(); // Store hour to not be rechecked
