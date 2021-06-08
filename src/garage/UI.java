@@ -26,12 +26,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Stats
     private static double orders = 0;
-    public static boolean inBreak = true;
+    public static boolean inBreak = false;
     public static boolean freeze = true; // Ignore entering/leaving break and changing orders
     public static boolean clockInTimePassed = false;
 
     public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
-            breakInTime = LocalTime.parse("00:00"), breakOutTime = LocalTime.parse("00:00");
+            breakInTime, breakOutTime;
+    public static boolean breakTimeChosen = false;
     public static boolean clockOutSkipped = false;
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
@@ -78,13 +79,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         String b = e.getActionCommand();
 
         if (b.equals("Add order")) {
-
             changeOrders(1);
-
-        } else if (b.equals("Enter Break") || b.equals("Leave Break")) {
-
-            enterLeaveBreak();
-
+        } else if (b.equals("Enter Break")) {
+            Window.enterBreakWnd.setVisible(true);
         }
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
@@ -180,7 +177,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         // ======= Shortcuts =======
         if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
         if (key == 48)  { // Enter/leave break with 0
-            enterLeaveBreak();
+            Window.enterBreakWnd.setVisible(true); // Show enter break window
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
 
@@ -190,31 +187,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
 	public void keyReleased(KeyEvent e) {}
 
-    private void enterLeaveBreak() { // Enter/Leave break
+    private static void updateButtons() { // Update buttons
 
-        if (!freeze) {
-            if (!inBreak) { Window.enterBreakWnd.setVisible(true);
-            } else Window.leaveBreakWnd.setVisible(true);
-            updateButtons();
-        }
-
-    }
-
-    private void updateButtons() { // Update buttons
-
-        if (inBreak) { clockInOut.setText("Leave Break");
-        } else clockInOut.setText("Enter Break");
         Window.wnd.pack();
 
     }
 
     private void changeOrders(int amount) { // Change orders
 
-        if (!inBreak) {
-            orders += amount;
-            if (orders < 0) orders = 0;
-            getStats();
-
+        if (!freeze) {
+            if (!inBreak) {
+                orders += amount;
+                if (orders < 0) orders = 0;
+                getStats();
+            }
         }
 
         Window.wnd.pack(); // Call the Window to pack itself
@@ -226,15 +212,37 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (clockInTime.compareTo(LocalTime.now()) <= 0 || recheckTime) {
 
             freeze = false;
-            inBreak = false;
             clockInTimePassed = true;
-            totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+            if (breakTimeChosen) { // Have we chosen break times?
+                if (breakInTime.compareTo(LocalTime.now()) <= 0) { // Has our break started?
+                    if (breakOutTime.compareTo(LocalTime.now()) <= 0) { // Has our break ended?
+                        inBreak = false; // If so, we are not in break.
+                        // Set totalSecClocked to the seconds from clocking in to the break's start,
+                        // then from break end to the current time.
+                        totalSecClocked = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
+                                breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1);
+                    } else { // If our break has not ended:
+                        inBreak = true; // We are still in break
+                        // Set totalSecClocked to the seconds from clocking in to the break's start
+                        totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
+                    }
+                }
+            } else // If not, set totalSecClocked to time from clock in to now
+                totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
             sec = totalSecClocked;
             min = 0;
             hr = 0;
             tick();
-            if (!clockOutSkipped) ordersNeeded = Math.round(target *
-                    ((double)clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+            if (!clockOutSkipped) // If we did not skip clock out times:
+                if (!breakTimeChosen) { // Check if we have not chosen break times
+                    ordersNeeded = Math.round(target *
+                            // If so, get ordersNeeded with clock in and out times
+                            ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+                } else ordersNeeded = Math.round(target *
+                        // If we did choose break times, then get ordersNeeded from clock in
+                        // and clock out times minus the difference of our break's start and end times
+                        (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
+                                (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
             recheckTime = false;
 
         } else {

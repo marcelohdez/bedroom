@@ -39,7 +39,6 @@ public class Window extends JFrame implements Runnable {
         clockInWnd = new SelectTimeWindow(0);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
-        leaveBreakWnd = new SelectTimeWindow(3);
         // Open main window
         wnd = new Window();
         wnd.start();
@@ -65,10 +64,10 @@ public class Window extends JFrame implements Runnable {
 
                     UI.tick();
 
-                } else if (coChosen && !UI.clockInTimePassed) {
+                } else {
 
                     UI.getTime();
-    
+
                 }
 
                 this.pack();

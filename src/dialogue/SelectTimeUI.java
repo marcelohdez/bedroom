@@ -35,7 +35,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         switch (type) {
             case 1 -> { // ======= Clock out UI =======
 
-                JLabel coText = new JLabel("  Select clock out time:  ");
+                JLabel coText = new JLabel("  Select CLOCK OUT time:  ");
                 coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
                 coText.setForeground(UI.textColor);
                 add(coText);
@@ -43,7 +43,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
             case 2 -> { // ======= Enter break UI =======
 
-                JLabel ebText = new JLabel("  Select enter break time:  ");
+                JLabel ebText = new JLabel("  Select ENTER BREAK time:  ");
                 ebText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
                 ebText.setForeground(UI.textColor);
                 add(ebText);
@@ -51,7 +51,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
             case 3 -> { // ======= Leave break UI =======
 
-                JLabel lbText = new JLabel("  Select leave break time:  ");
+                JLabel lbText = new JLabel("  Select LEAVE BREAK time:  ");
                 lbText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
                 lbText.setForeground(UI.textColor);
                 add(lbText);
@@ -59,8 +59,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
             default -> { // ======= Clock in UI =======
 
-                JLabel ciText = new JLabel("  Select clock in time:  ");
-                if (Window.isOSX) ciText.setText("    Select clock in time:    ");
+                JLabel ciText = new JLabel("  Select CLOCK IN time:  ");
+                if (Window.isOSX) ciText.setText("    Select CLOCK IN time:    ");
                 ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
                 ciText.setForeground(UI.textColor);
                 add(ciText);
@@ -111,10 +111,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    private void setListBoxIndexes(boolean clockOut) {
+    private void setListBoxIndexes(boolean addTime) {
         // ======= Set list box times to current/clock out time =======
         int hour; // Store hour to not be rechecked
-        if (!clockOut) {
+        if (!addTime) {
             hour = LocalTime.now().getHour(); // Get current hour
         } else {
             hour = UI.clockInTime.getHour() + 4;
@@ -137,7 +137,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         }
 
         // Set minute list box index to wanted minute
-        if (!clockOut) {
+        if (!addTime) {
             minBox.setSelectedIndex(LocalTime.now().getMinute());   // Current minute
         } else minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Clock in time's minute
     }
@@ -181,15 +181,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     Window.coChosen = true;                 // Clock out time is now chosen
                     Window.clockOutWnd.dispose();           // Close clock out time window
 
-                } else if (!UI.inBreak) { // ======= For entering break =======
+                } else if (Window.enterBreakWnd.isVisible()) { // ======= For entering break =======
 
                     UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
                     Window.enterBreakWnd.dispose();         // Close enter break window
+                    Window.leaveBreakWnd = new SelectTimeWindow(3);
+                    Window.leaveBreakWnd.setVisible(true);
                     UI.getTime();
 
                 } else { // ======= For leaving break =======
 
                     UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
+                    UI.breakTimeChosen = true;
                     Window.leaveBreakWnd.dispose();         // Close leave break window
                     UI.getTime();
 
