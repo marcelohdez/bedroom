@@ -25,8 +25,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(int type) {
 
         JButton select = new JButton("Select");                 // Select button
-        JButton skip = new JButton("Skip");                     // Skip setting clock out time
-        JButton now = new JButton("Now");                       // Select current time
+        JButton smallButton = new JButton("Now");               // Skip and Now button
         JLabel targetText = new JLabel("Target:");              // Target label
         JLabel ordersPerHrText = new JLabel("orders per hour"); // "Order per hour"
         Dimension listSize = new Dimension(80, 30);
@@ -72,8 +71,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(180, 40));
-        skip.addActionListener(this);
-        now.addActionListener(this);
+        smallButton.addActionListener(this);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPMBox.setPreferredSize(new Dimension(68, 30));
@@ -84,10 +82,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // ======= Set colors =======
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
-        skip.setBackground(UI.buttonColor);
-        skip.setForeground(UI.textColor);
-        now.setBackground(UI.buttonColor);
-        now.setForeground(UI.textColor);
+        smallButton.setBackground(UI.buttonColor);
+        smallButton.setForeground(UI.textColor);
         hrBox.setBackground(UI.buttonColor);
         hrBox.setForeground(UI.textColor);
         minBox.setBackground(UI.buttonColor);
@@ -103,14 +99,13 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        if (type == 1) { // Clock out time UI
+        if (type == 1) { // Clock out time UI specific components
             add(targetText);
             add(setTarget);
             add(ordersPerHrText);
-            add(skip);
-        } else {
-            add (now);
+            smallButton.setText("Skip");
         }
+        add (smallButton);
         add(select);
 
         requestFocus();
@@ -171,10 +166,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
             case "Skip" -> { // For skipping clock out time input
 
-                UI.clockOutSkipped = true;              // Clock out time skipped
-                UI.getTime();                           // Tell UI to update times
-                Window.coChosen = true;                 // Clock out time is now "chosen"
-                Window.clockOutWnd.dispose();           // Close clock out window
+                UI.clockOutSkipped = true;                  // Clock out time skipped
+                UI.getTime();                               // Tell UI to update times
+                Window.coChosen = true;                     // Clock out time is now "chosen"
+                Window.clockOutWnd.dispose();               // Close clock out window
 
             }
             case "Now" -> {  // For getting current time
@@ -182,18 +177,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 int currentHour = LocalTime.now().getHour();
 
                 if (currentHour >= 12) {
-                    amPMBox.setSelectedIndex(1);        // Set AM/PM list box to PM
+                    amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
                     // This if statement sets the list box index to current hour,
                     // since LocalTime is in 24hr format, we have to do some maths
                     // to get it to 12hr am/pm.
-                    if (currentHour != 12) {            // Set hour to 1-11pm
+                    if (currentHour != 12) {                // Set hour to 1-11pm
                         hrBox.setSelectedIndex(currentHour - 13);
-                    } else hrBox.setSelectedIndex(11);  // Set hour to 12pm
+                    } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
                 } else {
-                    amPMBox.setSelectedIndex(0);        // Set AM/PM list box to AM
-                    if (currentHour != 0) {             // Set hour to 1-11am
+                    amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
+                    if (currentHour != 0) {                 // Set hour to 1-11am
                         hrBox.setSelectedIndex(currentHour - 1);
-                    } else hrBox.setSelectedIndex(11);  // Set hour to 12am (or 0 in 24hr)
+                    } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
                 }
 
                 // Set minute list box index to current minute count
