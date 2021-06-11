@@ -45,6 +45,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public UI() { // Set UI's properties
 
         JButton addOrder = new JButton("Add order"); // Add Order button
+        Dimension buttonSize = new Dimension(110, 55);
 
         setFocusable(true);
         addKeyListener(this);
@@ -52,9 +53,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         addOrder.addActionListener(this);
-        addOrder.setPreferredSize(new Dimension(100, 45));
+        addOrder.setPreferredSize(buttonSize);
         breakButton.addActionListener(this);
-        breakButton.setPreferredSize(new Dimension(110, 45));
+        breakButton.setPreferredSize(buttonSize);
 
         // Set colors
         breakButton.setBackground(buttonColor);

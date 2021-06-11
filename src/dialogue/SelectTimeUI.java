@@ -70,11 +70,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
-        select.setPreferredSize(new Dimension(180, 40));
+        select.setPreferredSize(new Dimension(235, 40));
         skip.addActionListener(this);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
-        amPMBox.setPreferredSize(new Dimension(68, 30));
+        amPMBox.setPreferredSize(new Dimension(65, 30));
         amPMBox.setSelectedIndex(1); // Default to PM
         setTarget.setPreferredSize(new Dimension(45, 25));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
