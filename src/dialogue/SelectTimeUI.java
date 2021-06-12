@@ -24,50 +24,29 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public SelectTimeUI(int type) {
 
+        setBackground(UI.bg); // Set background color
         JButton select = new JButton("Select");                     // Select button
         JButton skip = new JButton("Skip");                         // Skip button
         JLabel targetText = new JLabel("Target orders per hour:");  // Target label
         JLabel ordersPerHrText = new JLabel("orders per hour");     // "Order per hour"
         Dimension listSize = new Dimension(80, 30);         // List box size
+        JLabel topText = new JLabel();                                  // Top text
 
-        setBackground(UI.bg);
-
-        switch (type) {
-            case 1 -> { // ======= Clock out UI =======
-
-                JLabel coText = new JLabel("  Select CLOCK OUT time:  ");
-                coText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-                coText.setForeground(UI.textColor);
-                add(coText);
-
-            }
-            case 2 -> { // ======= Enter break UI =======
-
-                JLabel ebText = new JLabel("  Select ENTER BREAK time:  ");
-                ebText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-                ebText.setForeground(UI.textColor);
-                add(ebText);
-
-            }
-            case 3 -> { // ======= Leave break UI =======
-
-                JLabel lbText = new JLabel("  Select LEAVE BREAK time:  ");
-                lbText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-                lbText.setForeground(UI.textColor);
-                add(lbText);
-
-            }
+        switch (type) { // Change top text depending on window
+            case 1 -> // ======= Clock out UI =======
+                topText.setText("  Select CLOCK OUT time:  ");
+            case 2 -> // ======= Enter break UI =======
+                topText.setText("  Select ENTER BREAK time:  ");
+            case 3 -> // ======= Leave break UI =======
+                topText.setText("  Select LEAVE BREAK time:  ");
             default -> { // ======= Clock in UI =======
-
-                JLabel ciText = new JLabel("  Select CLOCK IN time:  ");
-                if (Window.isOSX) ciText.setText("    Select CLOCK IN time:    ");
-                ciText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-                ciText.setForeground(UI.textColor);
-                add(ciText);
-
+                topText.setText("  Select CLOCK IN time:  ");
+                if (Window.isOSX) topText.setText("    Select CLOCK IN time:    ");
             }
         }
 
+        // Set top text font
+        topText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
@@ -80,6 +59,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
+        topText.setForeground(UI.textColor);
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
         skip.setBackground(UI.buttonColor);
@@ -96,6 +76,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         ordersPerHrText.setForeground(UI.textColor);
 
         // Add components in order for flow layout
+        add(topText);
         add(hrBox);
         add(minBox);
         add(amPMBox);
