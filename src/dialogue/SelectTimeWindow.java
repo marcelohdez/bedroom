@@ -13,28 +13,21 @@ public class SelectTimeWindow extends JFrame {
                                                     // Default window size on MacOS (smaller due to
                                                     // the title bar & fonts on Mac being different)
 
-        ui = new SelectTimeUI(type);
+        ui = new SelectTimeUI(type);                // Create ui based on window type
+        add(ui);                                    // Add the UI
 
         switch (type) {
             case 1 -> { // ======= For clock out window =======
                 setTitle("Clocking out:");
-                add(ui);
                 setSize(new Dimension(260, 210)); // Specific sizing for this window
                 if (Window.isOSX) setSize(new Dimension(260, 200)); // MacOS version
             }
-            case 2 -> { // ======= For enter break window =======
-                setTitle("Enter break:");
-                add(ui);
-            }
-            case 3 -> { // ======= For leave break window =======
-                setTitle("Leave break:");
-                add(ui);
-            }
-            default -> { // ======= For clock in window =======
+            case 2 -> // ======= For enter break window =======
+                    setTitle("Enter break:");
+            case 3 -> // ======= For leave break window =======
+                    setTitle("Leave break:");
+            default -> // ======= For clock in window =======
                 setTitle("Clocking in:");
-                add(ui);
-
-            }
         }
 
         if (type != 2) setVisible(true); // Automatically show window except enter break
