@@ -82,7 +82,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (b.equals("Add order")) {
             changeOrders(1);
         } else if (b.equals("Enter Break")) {
-            if (!freeze) Window.enterBreakWnd.setVisible(true);
+            enterBreak();
         }
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
@@ -165,6 +165,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
+    private void enterBreak() {
+        if (!freeze) {
+            Window.enterBreakWnd.setUIToCurrentTime();
+            Window.enterBreakWnd.setVisible(true);
+        }
+    }
+
 	public void keyTyped(KeyEvent e) {}
 
 	public void keyPressed(KeyEvent e) {
@@ -174,7 +181,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         // ======= Shortcuts =======
         if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
         if (key == 48)  { // Enter/leave break with 0
-            Window.enterBreakWnd.setVisible(true); // Show enter break window
+            enterBreak();
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
 

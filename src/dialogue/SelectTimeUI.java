@@ -80,13 +80,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        if (type == 1) { // Add clock out UI specific components
+        if (type == 1) { // Do clock out UI specific stuff
             add(targetText);
             add(setTarget);
-            add (skip);
+            add(skip);
             setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
-        } else if (type == 3) { // For leave break window
-            setListBoxIndexes(2); // Set list box indexes to 30 min after break start
         } else setListBoxIndexes(0); // Set list box to current time
         add(select);
 
@@ -94,7 +92,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    private void setListBoxIndexes(int type) {
+    public void setListBoxIndexes(int type) {
         // ======= Set list box times to current/clock out time =======
         int hour = LocalTime.now().getHour(); // Store hour to not be rechecked
         int minute; // Store minute
@@ -162,7 +160,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     Window.ciChosen = true;                 // Clock in time is now chosen
                     Window.clockInWnd.dispose();            // Get rid of clock-in window
                     Window.clockOutWnd = new SelectTimeWindow(1); // Create clock out window
-                    Window.clockOutWnd.setVisible(true);    // Set clock-out window visible
 
                 } else if (!Window.coChosen) { // ======= For clock out time =======
 
@@ -178,7 +175,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
                     Window.enterBreakWnd.dispose();         // Close enter break window
                     Window.leaveBreakWnd = new SelectTimeWindow(3);
-                    Window.leaveBreakWnd.setVisible(true);
                     UI.getTime();
 
                 } else { // ======= For leaving break =======
