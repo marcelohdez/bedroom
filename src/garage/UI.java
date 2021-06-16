@@ -180,12 +180,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         // ======= Shortcuts =======
         if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-        if (key == 48)  { // Enter/leave break with 0
+        if (key == 48)  { // Enter break with 0
             enterBreak();
         }
         if (key == 38) changeOrders(1); // Add orders with up arrow
-
-        getStats();
 		
 	}
 
@@ -194,11 +192,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private void changeOrders(int amount) { // Change orders
 
         if (!freeze) {
-            if (!inBreak) {
-                orders += amount;
-                if (orders < 0) orders = 0;
-                getStats();
-            }
+            orders += amount;
+            if (orders < 0) orders = 0;
+            getStats();
         }
 
         Window.wnd.pack(); // Call the Window to pack itself
