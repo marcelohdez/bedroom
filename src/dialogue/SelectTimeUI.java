@@ -80,14 +80,16 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        if (type == 1) { // Do clock out UI specific stuff
-            add(targetText);
-            add(setTarget);
-            add(skip);
-            setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
-        } else if (type == 3) {
-            setListBoxIndexes(2); // Set list box indexes to 30mins after break start
-        } else setListBoxIndexes(0); // Set list box to current time
+        switch (type) { // Do UI type specific stuffs
+            case 1 -> { // For clock out UI
+                add(targetText);
+                add(setTarget);
+                add(skip);
+                setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
+            }
+            case 3 -> setListBoxIndexes(2); // Set to 30 minutes after break start (Leave break UI)
+            default -> setListBoxIndexes(0); // Set to current time
+        }
         add(select);
 
         requestFocus();
