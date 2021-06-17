@@ -18,11 +18,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean recheckTimeTill = false; // In case computer goes to sleep
     public static boolean recheckTime = false; // Increase time accuracy
 
-    // Components
+    // Components used outside of constructor
+    private static final JButton breakButton = new JButton("Enter Break");
     private static final JTextArea stats =
         new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
-
-    private static final JButton breakButton = new JButton("Enter Break");
 
     // Stats
     private static double orders = 0;
@@ -32,25 +31,26 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
 
-    // Keep track of times
+    // Time values
     public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
             breakInTime, breakOutTime;
     public static boolean breakTimeChosen = false;
     public static boolean clockOutSkipped = false;
 
-    // Colors
+    // Public reusable colors & fonts
     public static Color textColor = new Color(240, 240, 240),
             buttonColor = new Color(80, 80, 80),
             bg = new Color(64, 64, 64);
 
     public UI() { // Set UI's properties
 
-        JButton addOrder = new JButton("Add order"); // Add Order button
+        JButton addOrder = new JButton("Add Order"); // Add Order button
         Dimension buttonSize = new Dimension(110, 55);
 
         setFocusable(true);
         addKeyListener(this);
 
+        // Set components' properties
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         addOrder.addActionListener(this);
@@ -78,12 +78,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        String b = e.getActionCommand();
-
-        if (b.equals("Add order")) {
-            changeOrders(1);
-        } else if (b.equals("Enter Break")) {
-            enterBreak();
+        switch (e.getActionCommand()) {
+            case "Add Order" -> changeOrders(1);
+            case "Enter Break" -> enterBreak();
         }
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
@@ -112,9 +109,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static void getStats() {
 
-        if (clockInTimePassed) { // Get stats =======
+        StringBuilder sb = new StringBuilder();
 
-            StringBuilder sb = new StringBuilder();
+        if (clockInTimePassed) { // Get stats =======
 
             sb.append("Time: ");
             // Get time into human readable format
@@ -141,8 +138,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             long seconds = secondsTillCI;
             int hours = 0;
             int minutes = 0;
-
-            StringBuilder sb = new StringBuilder();
 
             while (seconds > 59) {
                 minutes++;
@@ -231,8 +226,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (!clockOutSkipped) // If we did not skip clock out times:
                 if (!breakTimeChosen) { // Check if we have not chosen break times
                     ordersNeeded = Math.round(target *
-                            // If so, get ordersNeeded with clock in and out times
-                            ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+                        // If so, get ordersNeeded with clock in and out times
+                        ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
                 } else ordersNeeded = Math.round(target *
                         // If we did choose break times, then get ordersNeeded from clock in
                         // and clock out times minus the difference of our break's start and end times
