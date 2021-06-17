@@ -47,10 +47,6 @@ public class Window extends JFrame implements Runnable {
         thread.start(); // Start thread
         running = true;
     }
-    
-    public void stop() { // When application is stopped:
-        running = false; // Stop "while (running)"
-    }
 
     public void run() {
 
