@@ -29,13 +29,14 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean inBreak = false;
     public static boolean freeze = true; // Ignore entering/leaving break and changing orders
     public static boolean clockInTimePassed = false;
+    public static int target = 0; // Target orders/hr
+    private static long ordersNeeded = 0;
 
+    // Keep track of times
     public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
             breakInTime, breakOutTime;
     public static boolean breakTimeChosen = false;
     public static boolean clockOutSkipped = false;
-    public static int target = 0; // Target orders/hr
-    private static long ordersNeeded = 0;
 
     // Colors
     public static Color textColor = new Color(240, 240, 240),
@@ -134,7 +135,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             stats.setText(sb.toString());
 
-        } else if (Window.coChosen) { // Get "Time till clock in" =======
+        } else if (Main.coChosen) { // Get "Time till clock in" =======
 
             secondsTillCI -= 1;
             long seconds = secondsTillCI;
@@ -167,8 +168,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze) {
-            Window.enterBreakWnd.setUIToCurrentTime();
-            Window.enterBreakWnd.setVisible(true);
+            Main.enterBreakWnd.setUIToCurrentTime();
+            Main.enterBreakWnd.setVisible(true);
         }
     }
 
@@ -197,7 +198,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             getStats();
         }
 
-        Window.wnd.pack(); // Call the Window to pack itself
+        Main.wnd.pack(); // Call the Window to pack itself
 
     }
 
@@ -249,7 +250,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         }
 
-        Window.wnd.pack();
+        Main.wnd.pack();
 
     }
 

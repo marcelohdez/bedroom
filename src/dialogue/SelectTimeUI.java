@@ -41,7 +41,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 topText.setText("  Select LEAVE BREAK time:  ");
             default -> { // ======= Clock in UI =======
                 topText.setText("  Select CLOCK IN time:  ");
-                if (Window.isOSX) topText.setText("    Select CLOCK IN time:    ");
+                if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
             }
         }
 
@@ -158,34 +158,34 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 if (realHr < 10) hrString = "0" + realHr;
                 String minString = ":" + min;
                 if (min < 10) minString = ":0" + min;
-                if (!Window.ciChosen) { // ======= For clock in time=======
+                if (!Main.ciChosen) { // ======= For clock in time=======
 
                     UI.clockInTime = LocalTime.parse(hrString + minString); // Set clock in time
-                    Window.ciChosen = true;                 // Clock in time is now chosen
-                    Window.clockInWnd.dispose();            // Get rid of clock-in window
-                    Window.clockOutWnd = new SelectTimeWindow(1); // Create clock out window
+                    Main.ciChosen = true;                 // Clock in time is now chosen
+                    Main.clockInWnd.dispose();            // Get rid of clock-in window
+                    Main.clockOutWnd = new SelectTimeWindow(1); // Create clock out window
 
-                } else if (!Window.coChosen) { // ======= For clock out time =======
+                } else if (!Main.coChosen) { // ======= For clock out time =======
 
                     UI.clockOutTime = LocalTime.parse(hrString + minString); // Set clock out time
                     UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
 
                     UI.getTime();                           // Tell UI to update times
-                    Window.coChosen = true;                 // Clock out time is now chosen
-                    Window.clockOutWnd.dispose();           // Close clock out time window
+                    Main.coChosen = true;                 // Clock out time is now chosen
+                    Main.clockOutWnd.dispose();           // Close clock out time window
 
-                } else if (Window.enterBreakWnd.isVisible()) { // ======= For entering break =======
+                } else if (Main.enterBreakWnd.isVisible()) { // ======= For entering break =======
 
                     UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
-                    Window.enterBreakWnd.dispose();         // Close enter break window
-                    Window.leaveBreakWnd = new SelectTimeWindow(3);
+                    Main.enterBreakWnd.dispose();         // Close enter break window
+                    Main.leaveBreakWnd = new SelectTimeWindow(3);
                     UI.getTime();
 
                 } else { // ======= For leaving break =======
 
                     UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
                     UI.breakTimeChosen = true;
-                    Window.leaveBreakWnd.dispose();         // Close leave break window
+                    Main.leaveBreakWnd.dispose();         // Close leave break window
                     UI.getTime();
 
                 }
@@ -194,8 +194,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 UI.clockOutSkipped = true;                  // Clock out time skipped
                 UI.getTime();                               // Tell UI to update times
-                Window.coChosen = true;                     // Clock out time is now "chosen"
-                Window.clockOutWnd.dispose();               // Close clock out window
+                Main.coChosen = true;                     // Clock out time is now "chosen"
+                Main.clockOutWnd.dispose();               // Close clock out window
 
             }
         }

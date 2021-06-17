@@ -9,7 +9,7 @@ public class SelectTimeWindow extends JFrame {
     public SelectTimeWindow(int type) {
 
         setSize(new Dimension(260, 150)); // Default window size
-        if (Window.isOSX) setSize(new Dimension(new Dimension(260, 140)));
+        if (Main.isOSX) setSize(new Dimension(new Dimension(260, 140)));
                                                     // Default window size on MacOS (smaller due to
                                                     // the title bar & fonts on Mac being different)
 
@@ -20,7 +20,7 @@ public class SelectTimeWindow extends JFrame {
             case 1 -> { // ======= For clock out window =======
                 setTitle("Clocking out:");
                 setSize(new Dimension(260, 210)); // Specific sizing for this window
-                if (Window.isOSX) setSize(new Dimension(260, 200)); // MacOS version
+                if (Main.isOSX) setSize(new Dimension(260, 200)); // MacOS version
             }
             case 2 -> // ======= For enter break window =======
                     setTitle("Enter break:");
