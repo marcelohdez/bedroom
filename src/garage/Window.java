@@ -7,7 +7,6 @@ public class Window extends JFrame implements Runnable {
     private boolean running; // Is program running
     private long lastUpdate = System.nanoTime(); // Keep track of time updates (seconds)
     private int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
-    private static boolean doneLoading; // To track main window finishing loading
 
     public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
@@ -25,20 +24,18 @@ public class Window extends JFrame implements Runnable {
 
         setVisible(true);
 
-        doneLoading = true;
-
     }
 
     public static void main(String[] args) {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
+        // Open main window
+        wnd = new Window();
         // Create clock in window
         clockInWnd = new SelectTimeWindow(0);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
-        // Open main window
-        wnd = new Window();
         wnd.start();
     }
 
@@ -80,12 +77,6 @@ public class Window extends JFrame implements Runnable {
                 }
 
                 lastUpdate = System.nanoTime(); // Reset timer
-            }
-
-            if (doneLoading) { // Give focus to time choosing window once main window loaded
-                clockInWnd.requestFocus();
-                doneLoading = false; // Only request it once as to be on top, not 1,000 times
-                                     // a second, as that would eb annoying for other tasks.
             }
 
             try {
