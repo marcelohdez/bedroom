@@ -121,7 +121,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 // Add other stats
                 .append(makeStatsIntoString());
 
-            } else { // Get time left until our break ends.
+            } else { // Get time left until our break ends =======
                 long seconds = secondsTillLeaveBreak;
                 int hours = 0;
                 int minutes = 0;
@@ -161,7 +161,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             }
 
             sb.append("Time until clocked in:\n")
-                    .append(makeTimeHumanReadable(hours, minutes, seconds));
+                    .append(makeTimeHumanReadable(hours, minutes, seconds))
+                    .append("\n");
 
             stats.setText(sb.toString());
         }
