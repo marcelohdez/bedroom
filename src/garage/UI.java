@@ -121,8 +121,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 // Add other stats
                 .append(makeStatsIntoString());
 
-            } else {
-                secondsTillLeaveBreak -= 1;
+            } else { // Get time left until our break ends.
                 long seconds = secondsTillLeaveBreak;
                 int hours = 0;
                 int minutes = 0;
