@@ -55,8 +55,7 @@ public class Main implements Runnable {
 
                     System.gc(); // Garbage collect
 
-                    if (!UI.clockInTimePassed) { UI.recheckTimeTill = true; // Recheck time left till clock in
-                    } else UI.recheckTime = true; // Recheck time clocked in
+                    if (UI.clockInTimePassed) UI.recheckTime = true; // Recheck time clocked in
                     UI.getTime();
 
                     secCount = 0;

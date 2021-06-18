@@ -18,9 +18,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long totalSecClocked = 0, sec = 0;
     private static long secondsTillClockIn = -1;
     private static long secondsTillLeaveBreak = -1;
-    public static boolean recheckTimeTill = false; // In case computer goes to sleep
     public static boolean recheckTime = false; // Increase time accuracy
-
 
     // Components used outside of constructor
     private static final JButton breakButton = new JButton("Enter Break");
@@ -138,7 +136,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                     minutes -= 60;
                 }
 
-                sb.append("Currently in break, ")
+                sb.append("On break, ")
                         // Get time left to be human readable
                         .append(makeTimeHumanReadable(hours, minutes, seconds))
                         .append(" left")
@@ -168,8 +166,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             stats.setText(sb.toString());
         }
-
-
 
     }
 
@@ -236,8 +232,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    public static void getTime() { // See if clock-in time has passed, if so get the difference
-        
+    public static void getTime() {
+
+        // Has our clock in time passed?
         if (clockInTime.compareTo(LocalTime.now()) <= 0 || recheckTime) {
 
             freeze = false;
@@ -254,16 +251,18 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         inBreak = true; // We are still in break
                         // Set totalSecClocked to the seconds from clocking in to the break's start
                         totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
-                        secondsTillLeaveBreak =
+                        secondsTillLeaveBreak = // Seconds until our break ends
                                 LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
                     }
                 }
-            } else // If not, set totalSecClocked to time from clock in to now
+            } else { // If not, set totalSecClocked to time from clock in to now
                 totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+            }
+
             sec = totalSecClocked;
             min = 0;
             hr = 0;
-            tick();
+            tick(); // Update time and show on screen
             if (!clockOutSkipped) // If we did not skip clock out times:
                 if (!breakTimeChosen) { // Check if we have not chosen break times
                     ordersNeeded = Math.round(target *
@@ -277,13 +276,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             recheckTime = false;
 
         } else {
-
-            if (secondsTillClockIn == -1 || recheckTimeTill) { // Set secondsTillCI to difference in time
-                secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
-                recheckTimeTill = false;
-            }
-            getStats();
-
+            // Get seconds till we have to clock in
+            secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
+            getStats(); // Display it on screen
         }
 
         Main.wnd.pack();

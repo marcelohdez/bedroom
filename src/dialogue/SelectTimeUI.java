@@ -110,7 +110,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
             case 2 -> { // Set leave break window's default minutes to 30 above break in time.
-                minute = UI.breakInTime.getMinute() + 29; // Since indexes start at 0, it needs to be 29 for +30
+                minute = UI.breakInTime.getMinute() + 30; // +30 minutes after break start
                 if (minute > 59) {                      // If it is over 59, loop it
                     minute -= 59;
                     hour = UI.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
