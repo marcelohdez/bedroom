@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
@@ -14,14 +16,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Time Variables
     private static int hr = 0, min = 0;
     private static long totalSecClocked = 0, sec = 0;
-    private static long secondsTillCI = -1;
+    private static long secondsTillClockIn = -1;
+    private static long secondsTillLeaveBreak = -1;
     public static boolean recheckTimeTill = false; // In case computer goes to sleep
     public static boolean recheckTime = false; // Increase time accuracy
+
 
     // Components used outside of constructor
     private static final JButton breakButton = new JButton("Enter Break");
     private static final JTextArea stats =
-        new JTextArea("Time: 00:00:00\nOrders: 0 (.00/hr)\nNeeded: 0, 0 left");
+        new JTextArea("Please clock in.");
 
     // Stats
     private static double orders = 0;
@@ -113,29 +117,40 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (clockInTimePassed) { // Get stats =======
 
-            sb.append("Time: ");
-            // Get time into human readable format
-            if (hr < 10) sb.append("0");
-            sb.append(hr).append(":");
-            if (min < 10) sb.append("0");
-            sb.append(min).append(":");
-            if (sec < 10) sb.append("0");
-            sb.append(sec);
+            if (!inBreak) {
+                sb.append("Time: ")
+                        .append(makeTimeHumanReadable(hr, min, sec))
+                // Add other stats
+                .append(makeStatsIntoString());
 
-            // Add other stats
-            sb.append("\nOrders: ").append((int)orders).append(" (")
-                    .append(oph.format((orders*3600)/totalSecClocked))
-                    .append("/hr)\nNeeded: ").append(ordersNeeded).append(", ");
-            if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
-            } else sb.append("0");
-            sb.append(" left");
+            } else {
+                secondsTillLeaveBreak -= 1;
+                long seconds = secondsTillLeaveBreak;
+                int hours = 0;
+                int minutes = 0;
+
+                while (seconds > 59) {
+                    minutes++;
+                    seconds -= 60;
+                }
+                while (minutes > 59) {
+                    hours++;
+                    minutes -= 60;
+                }
+
+                sb.append("Currently in break, ")
+                        // Get time left to be human readable
+                        .append(makeTimeHumanReadable(hours, minutes, seconds))
+                        .append(" left")
+                        // Add current stats
+                        .append(makeStatsIntoString());
+            }
 
             stats.setText(sb.toString());
 
         } else if (Main.coChosen) { // Get "Time till clock in" =======
-
-            secondsTillCI -= 1;
-            long seconds = secondsTillCI;
+            secondsTillClockIn -= 1;
+            long seconds = secondsTillClockIn;
             int hours = 0;
             int minutes = 0;
 
@@ -148,17 +163,42 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 minutes -= 60;
             }
 
-            if (hours < 10) sb.append("0");
-            sb.append(hours).append(":");
-            if (minutes < 10) sb.append("0");
-            sb.append(minutes).append(":");
-            if (seconds < 10) sb.append("0");
-            sb.append(seconds);
+            sb.append("Time until clocked in:\n")
+                    .append(makeTimeHumanReadable(hours, minutes, seconds));
 
-            stats.setText("Time until clocked in:\n" + sb);
-
+            stats.setText(sb.toString());
         }
 
+
+
+    }
+
+    @NotNull
+    private static String makeTimeHumanReadable(int h, int m, long s) {
+        StringBuilder sb = new StringBuilder();
+
+        if (h < 10) sb.append("0");
+        sb.append(h).append(":");
+        if (m < 10) sb.append("0");
+        sb.append(m).append(":");
+        if (s < 10) sb.append("0");
+        sb.append(s);
+
+        return sb.toString();
+    }
+
+    @NotNull
+    private static String makeStatsIntoString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nOrders: ").append((int)orders).append(" (")
+                .append(oph.format((orders*3600)/totalSecClocked))
+                .append("/hr)\nNeeded: ").append(ordersNeeded).append(", ");
+        if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
+        } else sb.append("0");
+        sb.append(" left");
+
+        return sb.toString();
     }
 
     private void enterBreak() {
@@ -169,21 +209,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     }
 
 	public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
 
 	public void keyPressed(KeyEvent e) {
-
-        int key = e.getKeyCode();
-
         // ======= Shortcuts =======
-        if (key == 8 || key == 40) changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-        if (key == 48)  { // Enter break with 0
-            enterBreak();
+        switch (e.getKeyCode()) {
+            case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
+            case 48 -> enterBreak();                // Enter break with 0
+            case 38 -> changeOrders(1);     // Add orders with up arrow
         }
-        if (key == 38) changeOrders(1); // Add orders with up arrow
-		
 	}
-
-	public void keyReleased(KeyEvent e) {}
 
     private void changeOrders(int amount) { // Change orders
 
@@ -215,6 +250,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         inBreak = true; // We are still in break
                         // Set totalSecClocked to the seconds from clocking in to the break's start
                         totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
+                        secondsTillLeaveBreak =
+                                LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
                     }
                 }
             } else // If not, set totalSecClocked to time from clock in to now
@@ -226,8 +263,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (!clockOutSkipped) // If we did not skip clock out times:
                 if (!breakTimeChosen) { // Check if we have not chosen break times
                     ordersNeeded = Math.round(target *
-                        // If so, get ordersNeeded with clock in and out times
-                        ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+                            // If so, get ordersNeeded with clock in and out times
+                            ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
                 } else ordersNeeded = Math.round(target *
                         // If we did choose break times, then get ordersNeeded from clock in
                         // and clock out times minus the difference of our break's start and end times
@@ -237,8 +274,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         } else {
 
-            if (secondsTillCI == -1 || recheckTimeTill) { // Set secondsTillCI to difference in time
-                secondsTillCI = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
+            if (secondsTillClockIn == -1 || recheckTimeTill) { // Set secondsTillCI to difference in time
+                secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
                 recheckTimeTill = false;
             }
             getStats();
