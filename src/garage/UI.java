@@ -193,7 +193,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         sb.append("\nOrders: ").append((int)orders).append(" (")
                 .append(oph.format((orders*3600)/totalSecClocked))
-                .append("/hr)\nNeeded: ").append(ordersNeeded).append(", ");
+                .append("/hr)\nNeeded: ");
+        if (ordersNeeded > 0) {
+            sb.append(ordersNeeded);
+        } else sb.append("0");
+        sb.append(", ");
         if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
         } else sb.append("0");
         sb.append(" left");
