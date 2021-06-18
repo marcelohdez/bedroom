@@ -19,8 +19,8 @@ public class SelectTimeWindow extends JFrame {
         switch (type) {
             case 1 -> { // ======= For clock out window =======
                 setTitle("Clocking out:");
-                setSize(new Dimension(260, 210)); // Specific sizing for this window
-                if (Main.isOSX) setSize(new Dimension(260, 200)); // MacOS version
+                setSize(new Dimension(260, 185)); // Specific sizing for this window
+                if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
             }
             case 2 -> // ======= For enter break window =======
                     setTitle("Enter break:");

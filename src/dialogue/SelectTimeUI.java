@@ -27,21 +27,25 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg); // Set background color
         JButton select = new JButton("Select");                     // Select button
         JButton skip = new JButton("Skip");                         // Skip button
-        JLabel targetText = new JLabel("Target orders per hour:");  // Target label
-        JLabel ordersPerHrText = new JLabel("orders per hour");     // "Order per hour"
+        JLabel targetText = new JLabel("Target orders/hour:");      // Target label
         Dimension listSize = new Dimension(80, 30);         // List box size
         JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window
-            case 1 -> // ======= Clock out UI =======
+            case 1 -> { // ======= Clock out UI =======
                 topText.setText("  Select CLOCK OUT time:  ");
+                setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
+            }
             case 2 -> // ======= Enter break UI =======
                 topText.setText("  Select ENTER BREAK time:  ");
-            case 3 -> // ======= Leave break UI =======
+            case 3 -> { // ======= Leave break UI =======
                 topText.setText("  Select LEAVE BREAK time:  ");
+                setListBoxIndexes(2); // Set to 30 minutes after break start (Leave break UI)
+            }
             default -> { // ======= Clock in UI =======
                 topText.setText("  Select CLOCK IN time:  ");
                 if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
+                setListBoxIndexes(0); // Set to current time
             }
         }
 
@@ -51,11 +55,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         skip.addActionListener(this);
+        skip.setPreferredSize(new Dimension(70, 30));
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPMBox.setPreferredSize(new Dimension(65, 30));
         amPMBox.setSelectedIndex(1); // Default to PM
-        setTarget.setPreferredSize(new Dimension(45, 25));
+        setTarget.setPreferredSize(new Dimension(45, 30));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
@@ -73,22 +78,16 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setTarget.setBackground(UI.buttonColor);
         setTarget.setForeground(UI.textColor);
         targetText.setForeground(UI.textColor);
-        ordersPerHrText.setForeground(UI.textColor);
 
         // Add components in order for flow layout
         add(topText);
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        switch (type) { // Do UI type specific stuffs
-            case 1 -> { // For clock out UI
-                add(targetText);
-                add(setTarget);
-                add(skip);
-                setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
-            }
-            case 3 -> setListBoxIndexes(2); // Set to 30 minutes after break start (Leave break UI)
-            default -> setListBoxIndexes(0); // Set to current time
+        if (type == 1) {
+            add(targetText);
+            add(setTarget);
+            add(skip);
         }
         add(select);
 
