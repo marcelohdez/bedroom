@@ -221,7 +221,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void changeOrders(int amount) { // Change orders
 
-        if (!freeze) {
+        if (!freeze && !inBreak) {
             orders += amount;
             if (orders < 0) orders = 0;
             getStats();
