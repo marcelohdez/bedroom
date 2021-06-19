@@ -1,5 +1,7 @@
-import java.awt.Dimension;
+package dialogue;
 
+import garage.*;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 
 public class SelectTimeWindow extends JFrame {

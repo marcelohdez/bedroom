@@ -1,11 +1,10 @@
-import org.jetbrains.annotations.NotNull;
+package garage;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-
 import javax.swing.*;
 
 public class UI extends JPanel implements ActionListener, KeyListener {
@@ -167,7 +166,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    @NotNull
     private static String makeTimeHumanReadable(int h, int m, long s) {
         StringBuilder sb = new StringBuilder();
 
@@ -181,7 +179,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         return sb.toString();
     }
 
-    @NotNull
     private static String makeStatsIntoString() {
         StringBuilder sb = new StringBuilder();
 

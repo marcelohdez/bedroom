@@ -1,3 +1,6 @@
+package garage;
+
+import dialogue.*;
 import javax.swing.*;
 import java.util.concurrent.*;
 
