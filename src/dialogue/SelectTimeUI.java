@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
 
-
 public class SelectTimeUI extends JPanel implements ActionListener {
 
     // Lists (for the list boxes)
@@ -41,9 +40,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
             }
             case 2 -> // ======= Enter break UI =======
-                topText.setText("  Select ENTER BREAK time:  ");
+                topText.setText("  Select BREAK START time:  ");
             case 3 -> { // ======= Leave break UI =======
-                topText.setText("  Select LEAVE BREAK time:  ");
+                topText.setText("  Select BREAK END time:  ");
                 setListBoxIndexes(2); // Set to 30 minutes after break start (Leave break UI)
             }
             default -> { // ======= Clock in UI =======
