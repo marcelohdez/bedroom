@@ -20,7 +20,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long secondsTillLeaveBreak = -1;
 
     // Components used outside of constructor
-    private static final JButton breakButton = new JButton("Enter Break");
+    private static final JButton breakButton = new JButton("Set Break");
     private static final JTextArea stats =
         new JTextArea("Please clock in.\n\n");
 
@@ -81,7 +81,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         switch (e.getActionCommand()) {
             case "Add Order" -> changeOrders(1);
-            case "Enter Break" -> enterBreak();
+            case "Set Break" -> enterBreak();
         }
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
@@ -213,7 +213,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-            case 48 -> enterBreak();                // Enter break with 0
+            case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
         }
 	}
