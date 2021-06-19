@@ -1,8 +1,8 @@
 package garage;
 
 import dialogue.*;
+import java.awt.event.*;
 import javax.swing.*;
-import java.util.concurrent.*;
 
 public class Main {
 
@@ -28,8 +28,8 @@ public class Main {
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
 
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
-
+        // Update that occurs every second
+        ActionListener update = e -> {
             if (coChosen) // If we have passed clock in/out time windows:
                 if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
                 } else UI.getTime(); // To get time until clock in
@@ -45,8 +45,12 @@ public class Main {
             }
 
             wnd.pack();
+        };
 
-        }, 0 ,1, TimeUnit.SECONDS);
+        // Start updating every second
+        Timer t = new Timer(1000, update);
+        t.setRepeats(true);
+        t.start();
     }
 
 }
