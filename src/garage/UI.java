@@ -34,7 +34,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long ordersNeeded = 0;
 
     // Time values
-    public static LocalTime clockInTime = LocalTime.parse("00:00"),  clockOutTime = LocalTime.parse("00:00"),
+    public static LocalTime clockInTime, clockOutTime,
             breakInTime, breakOutTime;
     public static boolean breakTimeChosen = false;
     public static boolean clockOutSkipped = false;

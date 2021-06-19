@@ -1,12 +1,11 @@
 import javax.swing.*;
+import java.util.concurrent.*;
 
-public class Main implements Runnable {
+public class Main {
 
     public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
-    private boolean running; // Is program running
-    private long lastUpdate = System.nanoTime(); // Keep track of time updates (seconds)
-    private int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
+    private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
 
     public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
@@ -16,63 +15,37 @@ public class Main implements Runnable {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
+
         // Open main window
         wnd = new Window();
         // Create clock in window
         clockInWnd = new SelectTimeWindow(0);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
-        // Start main thread
-        new Main().start();
-    }
 
-    public void start() {
-        Thread thread = new Thread(this);
-        thread.start(); // Start thread
-        running = true;
-    }
+        try {
 
-    public void run() {
+            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
 
-        while (running) {
-
-            if (System.nanoTime() - lastUpdate >= 10e8) { // Update every second
-
-                if (!UI.inBreak) {
-
-                    UI.tick();
-
-                } else {
-
-                    UI.getTime();
-
-                }
-
-                wnd.pack();
+                if (!UI.inBreak) { UI.tick();
+                } else UI.getTime();
 
                 secCount++;
-                if (secCount > 59) { // Run every minute
 
+                if (secCount > 59) { // Run every minute
                     System.gc(); // Garbage collect
 
                     if (UI.clockInTimePassed) UI.recheckTime = true; // Recheck time clocked in
                     UI.getTime();
 
                     secCount = 0;
-
                 }
 
-                lastUpdate = System.nanoTime(); // Reset timer
-            }
+                wnd.pack();
 
-            try {
+            }, 0 ,1, TimeUnit.SECONDS);
 
-                Thread.sleep(1); // Busy-waiting, may be removed in the future
-
-            } catch (InterruptedException e) { e.printStackTrace(); }
-
-        }
-
+        } catch (Throwable t) { t.printStackTrace(); }
     }
 
 }
