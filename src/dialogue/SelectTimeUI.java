@@ -59,7 +59,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPMBox.setPreferredSize(new Dimension(65, 30));
-        amPMBox.setSelectedIndex(1); // Default to PM
         setTarget.setPreferredSize(new Dimension(45, 30));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
