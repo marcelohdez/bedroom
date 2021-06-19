@@ -4,7 +4,7 @@ public class Window extends JFrame {
 
     public Window() {
 
-        setTitle("Garage 1.1 (Beta 3)");
+        setTitle("Bedroom " + Main.version);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

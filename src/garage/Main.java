@@ -3,6 +3,8 @@ import java.util.concurrent.*;
 
 public class Main {
 
+    public static String version = "2 (Beta 3)";
+
     public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
