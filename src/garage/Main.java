@@ -23,29 +23,25 @@ public class Main {
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(2);
 
-        try {
+        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
 
-            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+            if (coChosen) // If we have passed clock in/out time windows:
+                if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
+                } else UI.getTime(); // To get time until clock in
 
-                if (!UI.inBreak) { UI.tick();
-                } else UI.getTime();
+            secCount++;
 
-                secCount++;
+            if (secCount > 59) { // Run every minute
+                System.gc(); // Garbage collect
 
-                if (secCount > 59) { // Run every minute
-                    System.gc(); // Garbage collect
+                UI.getTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
 
-                    if (UI.clockInTimePassed) UI.recheckTime = true; // Recheck time clocked in
-                    UI.getTime();
+                secCount = 0;
+            }
 
-                    secCount = 0;
-                }
+            wnd.pack();
 
-                wnd.pack();
-
-            }, 0 ,1, TimeUnit.SECONDS);
-
-        } catch (Throwable t) { t.printStackTrace(); }
+        }, 0 ,1, TimeUnit.SECONDS);
     }
 
 }

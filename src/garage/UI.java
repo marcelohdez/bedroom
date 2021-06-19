@@ -18,7 +18,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long totalSecClocked = 0, sec = 0;
     private static long secondsTillClockIn = -1;
     private static long secondsTillLeaveBreak = -1;
-    public static boolean recheckTime = false; // Increase time accuracy
 
     // Components used outside of constructor
     private static final JButton breakButton = new JButton("Enter Break");
@@ -146,7 +145,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             stats.setText(sb.toString());
 
         } else if (Main.coChosen) { // Get "Time till clock in" =======
-            secondsTillClockIn -= 1;
             long seconds = secondsTillClockIn;
             int hours = 0;
             int minutes = 0;
@@ -235,7 +233,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static void getTime() {
 
         // Has our clock in time passed?
-        if (clockInTime.compareTo(LocalTime.now()) <= 0 || recheckTime) {
+        if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 
             freeze = false;
             clockInTimePassed = true;
@@ -273,10 +271,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         // and clock out times minus the difference of our break's start and end times
                         (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
                                 (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
-            recheckTime = false;
 
         } else {
-            // Get seconds till we have to clock in
+            // Get seconds left until we have to clock in
             secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
             getStats(); // Display it on screen
         }
