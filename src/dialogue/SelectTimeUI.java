@@ -58,11 +58,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         skip.addActionListener(this);
-        skip.setPreferredSize(new Dimension(70, 30));
+        skip.setPreferredSize(new Dimension(65, 30));
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
         amPMBox.setPreferredSize(new Dimension(65, 30));
-        setTarget.setPreferredSize(new Dimension(45, 30));
+        setTarget.setPreferredSize(new Dimension(50, 30));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
