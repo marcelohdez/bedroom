@@ -42,7 +42,8 @@ public class SelectTimeWindow extends JFrame {
     }
 
     public void setUIToCurrentTime() { // Pass through to UI
-        ui.setListBoxIndexes(0);
+        // Set to current time, for windows opened up after program start up like break start window
+        ui.setListBoxIndexes(SelectTimeUI.GET_TIME_TYPE.CURRENT);
     }
     
 }

@@ -9,6 +9,12 @@ import java.time.LocalTime;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
 
+    public enum GET_TIME_TYPE { // What time to get and set to list boxes:
+        CURRENT,                // Current time
+        BREAK_START_PLUS_30M,   // Get 30 minutes after break start
+        CLOCK_IN_PLUS_4H        // Get 4 hours after clock in
+    }
+
     // Lists (for the list boxes)
     private final String[] amPMOptions = {"AM","PM"},
             hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"},
@@ -38,18 +44,20 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         switch (type) { // Change top text depending on window
             case CLOCK_OUT -> { // ======= Clock out UI =======
                 topText.setText("  Select CLOCK OUT time:  ");
-                setListBoxIndexes(1); // Set list box indexes to 4hrs after clock in time
+                // Set list box indexes to 4hrs after clock in time
+                setListBoxIndexes(GET_TIME_TYPE.CLOCK_IN_PLUS_4H);
             }
             case START_BREAK -> // ======= Enter break UI =======
                 topText.setText("  Select BREAK START time:  ");
             case END_BREAK -> { // ======= Leave break UI =======
                 topText.setText("  Select BREAK END time:  ");
-                setListBoxIndexes(2); // Set to 30 minutes after break start (Leave break UI)
+                // Set to 30 minutes after break start
+                setListBoxIndexes(GET_TIME_TYPE.BREAK_START_PLUS_30M);
             }
             case CLOCK_IN -> { // ======= Clock in UI =======
                 topText.setText("  Select CLOCK IN time:  ");
                 if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
-                setListBoxIndexes(0); // Set to current time
+                setListBoxIndexes(GET_TIME_TYPE.CURRENT); // Set to current time
             }
         }
 
@@ -99,20 +107,21 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    public void setListBoxIndexes(int type) {
+    public void setListBoxIndexes(GET_TIME_TYPE type) { // Set time list boxes:
         // ======= Set list box times to current/clock out time =======
         int hour = LocalTime.now().getHour(); // Store hour to not be rechecked
         int minute; // Store minute
 
         switch (type) { // Set minBox depending on type and get wanted hour int
             // Case 0 is to get current time, for hour it is already stored above
-            case 0 -> minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set minBox to current minute
-            case 1 -> { // Get 4hrs after clock in time, for clock out window
+            case CURRENT -> // Set minBox to current minute
+                    minBox.setSelectedIndex(LocalTime.now().getMinute());
+            case CLOCK_IN_PLUS_4H -> { // Get 4hrs after clock in time, for clock out window
                 hour = UI.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
                 minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
-            case 2 -> { // Set leave break window's default minutes to 30 above break in time.
+            case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
                 minute = UI.breakInTime.getMinute() + 30; // +30 minutes after break start
                 if (minute > 59) {                      // If it is over 59, loop it
                     minute -= 60;
