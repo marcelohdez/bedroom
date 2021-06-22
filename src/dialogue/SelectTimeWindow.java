@@ -8,7 +8,7 @@ public class SelectTimeWindow extends JFrame {
 
     private final SelectTimeUI ui;
 
-    public SelectTimeWindow(int type) {
+    public SelectTimeWindow(Main.TIME_WINDOW_TYPE type) {
 
         setSize(new Dimension(260, 150)); // Default window size
         if (Main.isOSX) setSize(new Dimension(new Dimension(260, 140)));
@@ -19,20 +19,22 @@ public class SelectTimeWindow extends JFrame {
         add(ui);                                    // Add the UI
 
         switch (type) {
-            case 1 -> { // ======= For clock out window =======
+            case CLOCK_OUT -> { // ======= For clock out window =======
                 setTitle("Clocking out:");
                 setSize(new Dimension(260, 185)); // Specific sizing for this window
                 if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
             }
-            case 2 -> // ======= For enter break window =======
+            case START_BREAK -> // ======= For start break window =======
                     setTitle("Enter break:");
-            case 3 -> // ======= For leave break window =======
+            case END_BREAK -> // ======= For leave break window =======
                     setTitle("Leave break:");
-            default -> // ======= For clock in window =======
+            case CLOCK_IN -> // ======= For clock in window =======
                 setTitle("Clocking in:");
         }
 
-        if (type != 2) setVisible(true); // Automatically show window except enter break
+        if (!type.equals(Main.TIME_WINDOW_TYPE.START_BREAK))
+            setVisible(true); // Automatically show window except enter break
+
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);

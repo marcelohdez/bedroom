@@ -16,6 +16,13 @@ public class Main {
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
     public static boolean ciChosen = false, coChosen = false; // Has clock in/clock out time been chosen?
 
+    public enum TIME_WINDOW_TYPE { // Type of select time windows
+        CLOCK_IN,
+        CLOCK_OUT,
+        START_BREAK,
+        END_BREAK
+    }
+
     public static void main(String[] args) {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -24,9 +31,9 @@ public class Main {
         // Open main window
         wnd = new Window();
         // Create clock in window
-        clockInWnd = new SelectTimeWindow(0);
+        clockInWnd = new SelectTimeWindow(TIME_WINDOW_TYPE.CLOCK_IN);
         // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(2);
+        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW_TYPE.START_BREAK);
 
         // Update that occurs every second
         ActionListener update = e -> {
