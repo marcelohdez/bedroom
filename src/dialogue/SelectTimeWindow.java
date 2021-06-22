@@ -8,7 +8,7 @@ public class SelectTimeWindow extends JFrame {
 
     private final SelectTimeUI ui;
 
-    public SelectTimeWindow(Main.TIME_WINDOW_TYPE type) {
+    public SelectTimeWindow(Main.TIME_WINDOW type) {
 
         setSize(new Dimension(260, 150)); // Default window size
         if (Main.isOSX) setSize(new Dimension(new Dimension(260, 140)));
@@ -19,20 +19,20 @@ public class SelectTimeWindow extends JFrame {
         add(ui);                                    // Add the UI
 
         switch (type) {
-            case CLOCK_OUT -> { // ======= For clock out window =======
+            case CLOCK_OUT_WINDOW -> { // ======= For clock out window =======
                 setTitle("Clocking out:");
                 setSize(new Dimension(260, 185)); // Specific sizing for this window
                 if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
             }
-            case START_BREAK -> // ======= For start break window =======
+            case START_BREAK_WINDOW -> // ======= For start break window =======
                     setTitle("Enter break:");
-            case END_BREAK -> // ======= For leave break window =======
+            case END_BREAK_WINDOW -> // ======= For leave break window =======
                     setTitle("Leave break:");
-            case CLOCK_IN -> // ======= For clock in window =======
+            case CLOCK_IN_WINDOW -> // ======= For clock in window =======
                 setTitle("Clocking in:");
         }
 
-        if (!type.equals(Main.TIME_WINDOW_TYPE.START_BREAK))
+        if (!type.equals(Main.TIME_WINDOW.START_BREAK_WINDOW))
             setVisible(true); // Automatically show window except enter break
 
         setResizable(false);
@@ -43,7 +43,7 @@ public class SelectTimeWindow extends JFrame {
 
     public void setUIToCurrentTime() { // Pass through to UI
         // Set to current time, for windows opened up after program start up like break start window
-        ui.setListBoxIndexes(SelectTimeUI.GET_TIME_TYPE.CURRENT);
+        ui.setListBoxIndexes(SelectTimeUI.GET_TIME.CURRENT);
     }
     
 }

@@ -16,11 +16,11 @@ public class Main {
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
     public static boolean ciChosen = false, coChosen = false; // Has clock in/clock out time been chosen?
 
-    public enum TIME_WINDOW_TYPE { // Type of select time windows
-        CLOCK_IN,
-        CLOCK_OUT,
-        START_BREAK,
-        END_BREAK
+    public enum TIME_WINDOW { // Type of select time windows
+        CLOCK_IN_WINDOW,
+        CLOCK_OUT_WINDOW,
+        START_BREAK_WINDOW,
+        END_BREAK_WINDOW
     }
 
     public static void main(String[] args) {
@@ -31,9 +31,9 @@ public class Main {
         // Open main window
         wnd = new Window();
         // Create clock in window
-        clockInWnd = new SelectTimeWindow(TIME_WINDOW_TYPE.CLOCK_IN);
+        clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_WINDOW);
         // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW_TYPE.START_BREAK);
+        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_WINDOW);
 
         // Update that occurs every second
         ActionListener update = e -> {
