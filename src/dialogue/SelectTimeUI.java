@@ -32,6 +32,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         JButton skip = new JButton("Skip");                         // Skip button
         JLabel targetText = new JLabel("Target orders/hour:");      // Target label
         Dimension listSize = new Dimension(80, 30);         // List box size
+        Dimension skipAndAMPMSize = new Dimension(65, 30);  // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window
@@ -58,10 +59,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         skip.addActionListener(this);
-        skip.setPreferredSize(new Dimension(65, 30));
+        skip.setPreferredSize(skipAndAMPMSize);
         hrBox.setPreferredSize(listSize);
         minBox.setPreferredSize(listSize);
-        amPMBox.setPreferredSize(new Dimension(65, 30));
+        amPMBox.setPreferredSize(skipAndAMPMSize);
         setTarget.setPreferredSize(new Dimension(50, 30));
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
