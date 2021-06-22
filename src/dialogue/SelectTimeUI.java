@@ -42,19 +42,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window
-            case CLOCK_OUT_WINDOW -> { // ======= Clock out UI =======
+            case CLOCK_OUT_WINDOW -> {
                 topText.setText("  Select CLOCK OUT time:  ");
                 // Set list box indexes to 4hrs after clock in time
                 setListBoxIndexes(GET_TIME.CLOCK_IN_PLUS_4H);
             }
-            case START_BREAK_WINDOW -> // ======= Enter break UI =======
-                topText.setText("  Select BREAK START time:  ");
-            case END_BREAK_WINDOW -> { // ======= Leave break UI =======
+            case START_BREAK_WINDOW -> topText.setText("  Select BREAK START time:  ");
+            case END_BREAK_WINDOW -> {
                 topText.setText("  Select BREAK END time:  ");
                 // Set to 30 minutes after break start
                 setListBoxIndexes(GET_TIME.BREAK_START_PLUS_30M);
             }
-            case CLOCK_IN_WINDOW -> { // ======= Clock in UI =======
+            case CLOCK_IN_WINDOW -> {
                 topText.setText("  Select CLOCK IN time:  ");
                 if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
                 setListBoxIndexes(GET_TIME.CURRENT); // Set to current time

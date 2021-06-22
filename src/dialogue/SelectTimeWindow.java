@@ -19,17 +19,14 @@ public class SelectTimeWindow extends JFrame {
         add(ui);                                    // Add the UI
 
         switch (type) {
-            case CLOCK_OUT_WINDOW -> { // ======= For clock out window =======
+            case CLOCK_OUT_WINDOW -> {
                 setTitle("Clocking out:");
                 setSize(new Dimension(260, 185)); // Specific sizing for this window
                 if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
             }
-            case START_BREAK_WINDOW -> // ======= For start break window =======
-                    setTitle("Enter break:");
-            case END_BREAK_WINDOW -> // ======= For leave break window =======
-                    setTitle("Leave break:");
-            case CLOCK_IN_WINDOW -> // ======= For clock in window =======
-                setTitle("Clocking in:");
+            case START_BREAK_WINDOW -> setTitle("Enter break:");
+            case END_BREAK_WINDOW -> setTitle("Leave break:");
+            case CLOCK_IN_WINDOW -> setTitle("Clocking in:");
         }
 
         if (!type.equals(Main.TIME_WINDOW.START_BREAK_WINDOW))
