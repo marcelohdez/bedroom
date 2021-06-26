@@ -2,9 +2,11 @@ package dialogue;
 
 import garage.*;
 import java.awt.Dimension;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
-public class SelectTimeWindow extends JFrame {
+public class SelectTimeWindow extends JFrame implements WindowListener {
 
     private final SelectTimeUI ui;
 
@@ -35,6 +37,7 @@ public class SelectTimeWindow extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        addWindowListener(this);
 
     }
 
@@ -42,5 +45,29 @@ public class SelectTimeWindow extends JFrame {
         // Set to current time, for windows opened up after program start up like break start window
         ui.setListBoxIndexes(SelectTimeUI.GET_TIME.CURRENT);
     }
-    
+
+    // Cancel setting break times if user tries to close window
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+        if (Main.enterBreakWnd.isVisible()) {   // If setting break start time:
+
+            Main.enterBreakWnd.dispose();       // Close the window
+
+        } else if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
+
+            UI.breakInTime = null;              // Delete break start time that was set
+            Main.leaveBreakWnd.dispose();       // Close the window
+
+        }
+
+    }
+
+    public void windowOpened(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {}
+    public void windowActivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {}
+
 }
