@@ -12,7 +12,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     public SelectTimeWindow(Main.TIME_WINDOW type) {
 
-        // Set window sizes
+        // Set window size
         setSize(new Dimension(260, 150)); // Default window size
         if (Main.isOSX) setSize(new Dimension(new Dimension(260, 140)));
                                                 // Default window size on MacOS (smaller due to
@@ -53,16 +53,15 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if (Main.enterBreakWnd.isVisible()) {   // If setting break start time:
+        if (Main.enterBreakWnd != null)
+            if ( Main.enterBreakWnd.isVisible()) // If setting break start time:
+                Main.enterBreakWnd.dispose();   // Close the window
 
-            Main.enterBreakWnd.dispose();       // Close the window
-
-        } else if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
-
-            UI.breakInTime = null;              // Delete break start time that was set
-            Main.leaveBreakWnd.dispose();       // Close the window
-
-        }
+        if (Main.leaveBreakWnd != null)
+            if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
+                UI.breakInTime = null;          // Delete break start time that was set
+                Main.leaveBreakWnd.dispose();   // Close the window
+            }
 
     }
 
