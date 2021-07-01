@@ -1,5 +1,7 @@
 package garage;
 
+import dialogue.SelectTimeUI;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
@@ -198,7 +200,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze) {
-            Main.enterBreakWnd.setUIToCurrentTime();
+            Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
             Main.enterBreakWnd.setVisible(true);
         }
     }

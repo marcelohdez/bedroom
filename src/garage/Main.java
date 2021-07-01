@@ -30,10 +30,12 @@ public class Main {
 
         // Open main window
         wnd = new Window();
-        // Create clock in window
+        // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_WINDOW);
+        clockOutWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_OUT_WINDOW);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_WINDOW);
+        leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_WINDOW);
 
         // Update that occurs every second
         ActionListener update = e -> {

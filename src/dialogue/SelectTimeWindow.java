@@ -39,14 +39,14 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
             case CLOCK_IN_WINDOW -> setTitle("Clocking in:");
         }
 
-        if (!type.equals(Main.TIME_WINDOW.START_BREAK_WINDOW))
-            setVisible(true); // Automatically show window except enter break
+        if (type.equals(Main.TIME_WINDOW.CLOCK_IN_WINDOW))
+            setVisible(true); // Automatically show clock in window
 
     }
 
-    public void setUIToCurrentTime() { // Pass through to UI
+    public void setUITime(SelectTimeUI.GET_TIME type) { // Pass through to UI
         // Set to current time, for windows opened up after program start up like break start window
-        ui.setListBoxIndexes(SelectTimeUI.GET_TIME.CURRENT);
+        ui.setListBoxIndexes(type);
     }
 
     // Cancel setting break times if user tries to close window
