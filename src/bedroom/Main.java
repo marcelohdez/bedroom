@@ -1,4 +1,4 @@
-package garage;
+package bedroom;
 
 import dialogue.*;
 import java.awt.event.*;

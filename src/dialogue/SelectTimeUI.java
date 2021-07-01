@@ -1,6 +1,6 @@
 package dialogue;
 
-import garage.*;
+import bedroom.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
