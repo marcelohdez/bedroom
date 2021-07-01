@@ -36,7 +36,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Time values
     public static LocalTime clockInTime, clockOutTime,
             breakInTime, breakOutTime;
-    public static boolean breakTimeChosen = false;
+    public static boolean breakTimesChosen = false;
     public static boolean clockOutSkipped = false;
 
     // Public reusable colors & fonts
@@ -236,7 +236,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             freeze = false;
             clockInTimePassed = true;
-            if (breakTimeChosen) { // Have we chosen break times?
+            if (breakTimesChosen) { // Have we chosen break times?
                 if (breakInTime.compareTo(LocalTime.now()) <= 0) { // Has our break started?
                     if (breakOutTime.compareTo(LocalTime.now()) <= 0) { // Has our break ended?
                         inBreak = false; // If so, we are not in break.
@@ -261,7 +261,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             hr = 0;
             tick(); // Update time and show on screen
             if (!clockOutSkipped) // If we did not skip clock out times:
-                if (!breakTimeChosen) { // Check if we have not chosen break times
+                if (!breakTimesChosen) { // Check if we have not chosen break times
                     ordersNeeded = Math.round(target *
                             // If so, get ordersNeeded with clock in and out times
                             ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));

@@ -189,7 +189,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 } else { // ======= For leaving break =======
 
                     UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
-                    UI.breakTimeChosen = true;
+                    UI.breakTimesChosen = true;
                     Main.leaveBreakWnd.dispose();         // Close leave break window
                     UI.getTime();
 
