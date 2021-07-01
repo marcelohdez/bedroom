@@ -19,7 +19,6 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
                                                 // the title bar & fonts on Mac being different)
 
         // Initial properties
-        setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -41,6 +40,13 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         if (type.equals(Main.TIME_WINDOW.CLOCK_IN_WINDOW))
             setVisible(true); // Automatically show clock in window
+
+    }
+
+    public void setToCenterOfMainWindow() {
+
+        setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
+                Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
 
     }
 

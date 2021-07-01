@@ -200,6 +200,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze) {
+            Main.enterBreakWnd.setToCenterOfMainWindow(); // Set to current center of main window
             Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
             Main.enterBreakWnd.setVisible(true);
         }

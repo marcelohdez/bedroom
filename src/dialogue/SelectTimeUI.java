@@ -166,6 +166,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     UI.clockInTime = LocalTime.parse(hrString + minString); // Set clock in time
                     Main.ciChosen = true;                   // Clock in time is now chosen
                     Main.clockInWnd.dispose();              // Get rid of clock-in window
+                    Main.clockOutWnd.setToCenterOfMainWindow();
                     Main.clockOutWnd.setUITime(GET_TIME.CLOCK_IN_PLUS_4H);
                     Main.clockOutWnd.setVisible(true);      // Show clock out window
 
@@ -173,7 +174,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                     UI.clockOutTime = LocalTime.parse(hrString + minString); // Set clock out time
                     UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-
                     UI.getTime();                           // Tell UI to update times
                     Main.coChosen = true;                   // Clock out time is now chosen
                     Main.clockOutWnd.dispose();             // Close clock out time window
@@ -182,6 +182,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                     UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
                     Main.enterBreakWnd.dispose();           // Close enter break window
+                    Main.leaveBreakWnd.setToCenterOfMainWindow();
                     Main.leaveBreakWnd.setUITime(GET_TIME.BREAK_START_PLUS_30M);
                     Main.leaveBreakWnd.setVisible(true);    // Show end break window
                     UI.getTime();
