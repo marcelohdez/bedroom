@@ -53,15 +53,16 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if (Main.enterBreakWnd != null)
-            if ( Main.enterBreakWnd.isVisible()) // If setting break start time:
-                Main.enterBreakWnd.dispose();   // Close the window
+        if ( Main.enterBreakWnd.isVisible()) { // If setting break start time:
 
-        if (Main.leaveBreakWnd != null)
-            if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
-                UI.breakInTime = null;          // Delete break start time that was set
-                Main.leaveBreakWnd.dispose();   // Close the window
-            }
+            Main.enterBreakWnd.dispose();   // Close the window
+
+        } else if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
+
+            UI.breakInTime = null;          // Delete break start time that was set
+            Main.leaveBreakWnd.dispose();   // Close the window
+
+        }
 
     }
 
