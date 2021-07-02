@@ -237,40 +237,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             freeze = false;
             clockInTimePassed = true;
+
             if (breakTimesChosen) { // Have we chosen break times?
-                if (breakInTime.compareTo(LocalTime.now()) <= 0) { // Has our break started?
-                    if (breakOutTime.compareTo(LocalTime.now()) <= 0) { // Has our break ended?
-                        inBreak = false; // If so, we are not in break.
-                        // Set totalSecClocked to the seconds from clocking in to the break's start,
-                        // then from break end to the current time.
-                        totalSecClocked = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
-                                breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1);
-                    } else { // If our break has not ended:
-                        inBreak = true; // We are still in break
-                        // Set totalSecClocked to the seconds from clocking in to the break's start
-                        totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
-                        secondsTillLeaveBreak = // Seconds until our break ends
-                                LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
-                    }
-                }
+                getBreakTime();
             } else { // If not, set totalSecClocked to time from clock in to now
                 totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
             }
+
+            if (!clockOutSkipped) // If we did not skip clock out times:
+                getOrdersNeeded();
 
             sec = totalSecClocked;
             min = 0;
             hr = 0;
             tick(); // Update time and show on screen
-            if (!clockOutSkipped) // If we did not skip clock out times:
-                if (!breakTimesChosen) { // Check if we have not chosen break times
-                    ordersNeeded = Math.round(target *
-                            // If so, get ordersNeeded with clock in and out times
-                            ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
-                } else ordersNeeded = Math.round(target *
-                        // If we did choose break times, then get ordersNeeded from clock in
-                        // and clock out times minus the difference of our break's start and end times
-                        (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
-                                (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
 
         } else {
             // Get seconds left until we have to clock in
@@ -279,6 +259,40 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         }
 
         Main.wnd.pack();
+
+    }
+
+    private static void getBreakTime() {
+
+        if (breakInTime.compareTo(LocalTime.now()) <= 0) { // Has our break started?
+            if (breakOutTime.compareTo(LocalTime.now()) <= 0) { // Has our break ended?
+                inBreak = false; // If so, we are not in break.
+                // Set totalSecClocked to the seconds from clocking in to the break's start,
+                // then from break end to the current time.
+                totalSecClocked = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
+                        breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1);
+            } else { // If our break has not ended:
+                inBreak = true; // We are still in break
+                // Set totalSecClocked to the seconds from clocking in to the break's start
+                totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
+                secondsTillLeaveBreak = // Seconds until our break ends
+                        LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
+            }
+        }
+
+    }
+
+    private static void getOrdersNeeded() {
+
+        if (!breakTimesChosen) { // Check if we have not chosen break times
+            ordersNeeded = Math.round(target *
+                    // If so, get ordersNeeded with clock in and out times
+                    ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+        } else ordersNeeded = Math.round(target *
+                // If we did choose break times, then get ordersNeeded from clock in
+                // and clock out times minus the difference of our break's start and end times
+                (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
+                        (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
 
     }
 
