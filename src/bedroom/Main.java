@@ -49,7 +49,8 @@ public class Main {
             if (secCount > 59) { // Run every minute
                 System.gc(); // Garbage collect
 
-                UI.getTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
+                if (coChosen)
+                    UI.getTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
 
                 secCount = 0;
             }
