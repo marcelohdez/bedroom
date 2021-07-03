@@ -56,7 +56,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
 
         switch(e) { // (Limit of 6 words per line)
             case BREAK_OUT_OF_SHIFT -> {
-                return "Breaks can not extend outside of\nshifts.";
+                return "Breaks can not start or end\noutside of shifts.";
             }
             case BREAK_WITHOUT_CLOCK_OUT_TIME -> {
                 return "Chosen break time is outside of\nyour shift.";
@@ -65,7 +65,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
                 return "Chosen break end time is before\nthe break's start time.";
             }
             case NEGATIVE_SHIFT_TIME -> {
-                return "Clock out time can not be\nbefore your clock in time.";
+                return "Clock out time has to be\nafter your clock in time.";
             }
         }
 
