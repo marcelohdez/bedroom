@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
 
@@ -144,67 +145,83 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         switch (e.getActionCommand()) {
             case "Select" -> {  // Setting time to selected values
 
-                int hour = hrBox.getSelectedIndex() + 1;
-                int min = minBox.getSelectedIndex();
-                int realHr = 0;
+                String time24Hour = makeTime24Hour(hrBox.getSelectedIndex() + 1,
+                        minBox.getSelectedIndex(),
+                        Objects.requireNonNull(amPMBox.getSelectedItem()).toString());
 
-                // ======= Translate time into 24-hour clock for LocalTime =======
-                if (amPMBox.getSelectedIndex() == 0) {  // if AM is selected
-                    if (hour != 12) realHr = hour;
-                } else {                                // if PM is selected
-                    realHr = hour + 12;
-                    if (hour == 12) realHr = hour;
-                }
-
-                // Make sure time is in format "00:00" so single digits get a 0 added
-                String hrString = "" + realHr;
-                if (realHr < 10) hrString = "0" + realHr;
-                String minString = ":" + min;
-                if (min < 10) minString = ":0" + min;
                 if (!Main.ciChosen) { // ======= For clock in time=======
 
-                    UI.clockInTime = LocalTime.parse(hrString + minString); // Set clock in time
+                    UI.clockInTime = LocalTime.parse(time24Hour); // Set clock in time
                     Main.ciChosen = true;                   // Clock in time is now chosen
-                    Main.clockInWnd.dispose();              // Get rid of clock-in window
-                    Main.clockOutWnd.setToCenterOfMainWindow();
-                    Main.clockOutWnd.setUITime(GET_TIME.CLOCK_IN_PLUS_4H);
-                    Main.clockOutWnd.setVisible(true);      // Show clock out window
+                    closeAndProceed(Main.clockInWnd, Main.clockOutWnd, GET_TIME.CLOCK_IN_PLUS_4H);
 
                 } else if (!Main.coChosen) { // ======= For clock out time =======
 
-                    UI.clockOutTime = LocalTime.parse(hrString + minString); // Set clock out time
+                    UI.clockOutTime = LocalTime.parse(time24Hour); // Set clock out time
                     UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-                    UI.getTime();                           // Tell UI to update times
                     Main.coChosen = true;                   // Clock out time is now chosen
                     Main.clockOutWnd.dispose();             // Close clock out time window
 
                 } else if (Main.enterBreakWnd.isVisible()) { // ======= For entering break =======
 
-                    UI.breakInTime = LocalTime.parse(hrString + minString); // Set enter break time
-                    Main.enterBreakWnd.dispose();           // Close enter break window
-                    Main.leaveBreakWnd.setToCenterOfMainWindow();
-                    Main.leaveBreakWnd.setUITime(GET_TIME.BREAK_START_PLUS_30M);
-                    Main.leaveBreakWnd.setVisible(true);    // Show end break window
-                    UI.getTime();
+                    UI.breakInTime = LocalTime.parse(time24Hour); // Set enter break time
+                    closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd, GET_TIME.BREAK_START_PLUS_30M);
 
                 } else { // ======= For leaving break =======
 
-                    UI.breakOutTime = LocalTime.parse(hrString + minString); // Set leave break time
+                    UI.breakOutTime = LocalTime.parse(time24Hour); // Set leave break time
                     UI.breakTimesChosen = true;
                     Main.leaveBreakWnd.dispose();         // Close leave break window
-                    UI.getTime();
 
                 }
+
+                if (Main.coChosen) UI.getTime();
+
             }
             case "Skip" -> { // For skipping clock out time input
 
                 UI.clockOutSkipped = true;                  // Clock out time skipped
-                UI.getTime();                               // Tell UI to update times
                 Main.coChosen = true;                     // Clock out time is now "chosen"
                 Main.clockOutWnd.dispose();               // Close clock out window
 
             }
         }
+
+    }
+
+    private String makeTime24Hour(int oldHr, int min, String amPM) {
+
+        StringBuilder sb = new StringBuilder();
+        int newHr = 0;
+
+        // Convert hour to 24-hours from 12
+        switch (amPM) {
+            case "AM" -> {
+                if (oldHr != 12) newHr = oldHr;
+            }
+            case "PM" -> {
+                newHr = oldHr + 12;
+                if (oldHr == 12) newHr = oldHr;
+            }
+        }
+
+        // Make sure time is in format "00:00" so single digits get a 0 added
+        if (newHr < 10) sb.append("0");
+        sb.append(newHr).append(":");
+        if (min < 10) sb.append("0");
+        sb.append(min);
+
+        return sb.toString();
+
+    }
+
+    private void closeAndProceed(SelectTimeWindow windowToClose,
+                                   SelectTimeWindow windowToShow, GET_TIME newWindowType) {
+
+        windowToClose.dispose();
+        windowToShow.centerOnMainWindow();
+        windowToShow.setUITime(newWindowType);
+        windowToShow.setVisible(true);
 
     }
 
