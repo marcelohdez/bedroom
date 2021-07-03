@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static String version = "2";
+    public static String version = "2 (Beta 4)";
 
     public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
@@ -23,6 +23,13 @@ public class Main {
         END_BREAK_WINDOW
     }
 
+    public enum ERROR { // Types of user errors we can catch
+        BREAK_OUT_OF_SHIFT,
+        BREAK_WITHOUT_CLOCK_OUT_TIME,
+        NEGATIVE_BREAK_TIME,
+        NEGATIVE_SHIFT_TIME
+    }
+
     public static void main(String[] args) {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -32,7 +39,7 @@ public class Main {
         wnd = new Window();
         // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_WINDOW);
-        clockInWnd.setToCenterOfMainWindow(); // Center clock in window on main window
+        clockInWnd.centerOnMainWindow(); // Center clock in window on main window
         clockOutWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_OUT_WINDOW);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_WINDOW);

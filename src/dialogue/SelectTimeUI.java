@@ -54,7 +54,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         }
 
         // Set top text font
-        topText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        topText.setFont(UI.boldText);
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
@@ -145,33 +145,47 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         switch (e.getActionCommand()) {
             case "Select" -> {  // Setting time to selected values
 
-                String time24Hour = makeTime24Hour(hrBox.getSelectedIndex() + 1,
+                LocalTime newTime =
+                        LocalTime.parse(makeTime24Hour(hrBox.getSelectedIndex() + 1,
                         minBox.getSelectedIndex(),
-                        Objects.requireNonNull(amPMBox.getSelectedItem()).toString());
+                        Objects.requireNonNull(amPMBox.getSelectedItem()).toString()));
 
-                if (!Main.ciChosen) { // ======= For clock in time=======
+                if (Main.clockInWnd.isVisible()) { // ======= For clock in time=======
 
-                    UI.clockInTime = LocalTime.parse(time24Hour); // Set clock in time
-                    Main.ciChosen = true;                   // Clock in time is now chosen
+                    UI.clockInTime = newTime; // Set clock in time
+                    Main.ciChosen = true;           // Clock in time is now chosen
                     closeAndProceed(Main.clockInWnd, Main.clockOutWnd, GET_TIME.CLOCK_IN_PLUS_4H);
 
-                } else if (!Main.coChosen) { // ======= For clock out time =======
+                } else if (Main.clockOutWnd.isVisible()) { // ======= For clock out time =======
 
-                    UI.clockOutTime = LocalTime.parse(time24Hour); // Set clock out time
-                    UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-                    Main.coChosen = true;                   // Clock out time is now chosen
-                    Main.clockOutWnd.dispose();             // Close clock out time window
+                    if (newTime.isAfter(UI.clockInTime)) {
+
+                        UI.clockOutTime = newTime; // Set clock out time
+                        UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+                        Main.coChosen = true;               // Clock out time is now chosen
+                        Main.clockOutWnd.dispose();         // Close clock out time window
+
+                    } else new ErrorWindow(Main.ERROR.NEGATIVE_SHIFT_TIME);
 
                 } else if (Main.enterBreakWnd.isVisible()) { // ======= For entering break =======
 
-                    UI.breakInTime = LocalTime.parse(time24Hour); // Set enter break time
-                    closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd, GET_TIME.BREAK_START_PLUS_30M);
+                    if (newTime.isBefore(UI.clockOutTime) && newTime.isAfter(UI.clockInTime)) {
 
-                } else { // ======= For leaving break =======
+                        UI.breakInTime = newTime; // Set enter break time
+                        closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
+                                GET_TIME.BREAK_START_PLUS_30M);
 
-                    UI.breakOutTime = LocalTime.parse(time24Hour); // Set leave break time
-                    UI.breakTimesChosen = true;
-                    Main.leaveBreakWnd.dispose();         // Close leave break window
+                    } else new ErrorWindow(Main.ERROR.BREAK_OUT_OF_SHIFT);
+
+                } else if (Main.leaveBreakWnd.isVisible()) { // ======= For leaving break =======
+
+                    if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime)) {
+
+                        UI.breakOutTime = newTime; // Set leave break time
+                        UI.breakTimesChosen = true;
+                        Main.leaveBreakWnd.dispose();       // Close leave break window
+
+                    } else new ErrorWindow(Main.ERROR.NEGATIVE_BREAK_TIME);
 
                 }
 
@@ -180,9 +194,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
             case "Skip" -> { // For skipping clock out time input
 
-                UI.clockOutSkipped = true;                  // Clock out time skipped
-                Main.coChosen = true;                     // Clock out time is now "chosen"
-                Main.clockOutWnd.dispose();               // Close clock out window
+                UI.clockOutSkipped = true;              // Clock out time skipped
+                Main.coChosen = true;                   // Clock out time is now "chosen"
+                Main.clockOutWnd.dispose();             // Close clock out window
 
             }
         }

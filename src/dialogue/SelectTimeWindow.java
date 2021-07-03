@@ -43,7 +43,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     }
 
-    public void setToCenterOfMainWindow() {
+    public void centerOnMainWindow() {
 
         setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
                 Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));

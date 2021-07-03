@@ -1,5 +1,6 @@
 package bedroom;
 
+import dialogue.ErrorWindow;
 import dialogue.SelectTimeUI;
 
 import java.awt.*;
@@ -40,6 +41,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean clockOutSkipped = false;
 
     // Public reusable colors & fonts
+    public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
     public static Color textColor = new Color(240, 240, 240),
             buttonColor = new Color(80, 80, 80),
             bg = new Color(64, 64, 64);
@@ -200,9 +202,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze) {
-            Main.enterBreakWnd.setToCenterOfMainWindow(); // Set to current center of main window
-            Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
-            Main.enterBreakWnd.setVisible(true);
+            if (!clockOutSkipped) { // If we didn't skip clock out time:
+
+                Main.enterBreakWnd.centerOnMainWindow(); // Set to current center of main window
+                Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
+                Main.enterBreakWnd.setVisible(true);
+
+            } else new ErrorWindow(Main.ERROR.BREAK_WITHOUT_CLOCK_OUT_TIME);
         }
     }
 
