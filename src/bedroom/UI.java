@@ -117,57 +117,54 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (clockInTimePassed) { // Get stats =======
 
-            if (!inBreak) {
+            if (!inBreak) { // Get time clocked in
+
                 sb.append("Time: ")
                         .append(makeTimeHumanReadable(hr, min, sec))
                 // Add other stats
                 .append(makeStatsIntoString());
 
             } else { // Get time left until our break ends =======
-                long seconds = secondsTillLeaveBreak;
-                int hours = 0;
-                int minutes = 0;
-
-                while (seconds > 59) {
-                    minutes++;
-                    seconds -= 60;
-                }
-                while (minutes > 59) {
-                    hours++;
-                    minutes -= 60;
-                }
 
                 sb.append("On break, ")
-                        // Get time left to be human readable
-                        .append(makeTimeHumanReadable(hours, minutes, seconds))
+                        .append(shrinkTime(secondsTillLeaveBreak))
                         .append(" left")
                         // Add current stats
                         .append(makeStatsIntoString());
+
             }
 
             stats.setText(sb.toString());
 
         } else if (Main.coChosen) { // Get "Time till clock in" =======
-            long seconds = secondsTillClockIn;
-            int hours = 0;
-            int minutes = 0;
-
-            while (seconds > 59) {
-                minutes++;
-                seconds -= 60;
-            }
-            while (minutes > 59) {
-                hours++;
-                minutes -= 60;
-            }
 
             sb.append("Time until clocked in:\n")
-                    .append(makeTimeHumanReadable(hours, minutes, seconds))
+                    .append(shrinkTime(secondsTillClockIn))
                     .append("\n");
 
             stats.setText(sb.toString());
         }
 
+    }
+
+    private static String shrinkTime(long seconds) { // Convert big number of seconds into time
+        StringBuilder sb = new StringBuilder();
+
+        int hours = 0;
+        int minutes = 0;
+
+        while (seconds > 59) {
+            minutes++;
+            seconds -= 60;
+        }
+        while (minutes > 59) {
+            hours++;
+            minutes -= 60;
+        }
+
+        sb.append(makeTimeHumanReadable(hours, minutes, seconds));
+
+        return sb.toString();
     }
 
     private static String makeTimeHumanReadable(int h, int m, long s) {
