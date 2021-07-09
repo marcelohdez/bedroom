@@ -1,10 +1,9 @@
-package dialogue;
+package dialog;
 
 import bedroom.*;
 import java.awt.Dimension;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import javax.swing.JFrame;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class SelectTimeWindow extends JFrame implements WindowListener {
 

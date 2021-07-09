@@ -1,7 +1,6 @@
 package bedroom;
 
-import dialogue.*;
-import java.awt.event.*;
+import dialog.*;
 import javax.swing.*;
 
 public class Main {

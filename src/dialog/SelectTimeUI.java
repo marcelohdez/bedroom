@@ -1,4 +1,4 @@
-package dialogue;
+package dialog;
 
 import bedroom.*;
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package bedroom;
 
-import dialogue.ErrorWindow;
-import dialogue.SelectTimeUI;
+import dialog.ErrorWindow;
+import dialog.SelectTimeUI;
 
 import java.awt.*;
 import java.awt.event.*;

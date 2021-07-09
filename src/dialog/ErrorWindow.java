@@ -1,4 +1,4 @@
-package dialogue;
+package dialog;
 
 import bedroom.Main;
 import bedroom.UI;
