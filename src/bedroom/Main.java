@@ -44,28 +44,26 @@ public class Main {
         enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_WINDOW);
         leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_WINDOW);
 
-        // Update that occurs every second
-        ActionListener update = e -> {
-            if (coChosen) // If we have passed clock in/out time windows:
-                if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
-                } else UI.getTime(); // To get time until clock in
+        // Start updating every second
+        Timer t = new Timer(1000, e -> {
+
+            if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
+            } else UI.getTime(); // To get time until clock in
 
             secCount++;
 
             if (secCount > 59) { // Run every minute
                 System.gc(); // Garbage collect
 
-                if (coChosen)
-                    UI.getTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
+                UI.getTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
 
                 secCount = 0;
             }
 
             wnd.pack();
-        };
 
-        // Start updating every second
-        Timer t = new Timer(1000, update);
+        });
+
         t.setRepeats(true);
         t.start();
     }

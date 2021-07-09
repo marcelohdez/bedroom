@@ -238,31 +238,32 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void getTime() {
 
-        // Has our clock in time passed?
-        if (clockInTime.compareTo(LocalTime.now()) <= 0) {
+        if (Main.coChosen) // Have we chosen clock in and out times?
+            // Has our clock in time passed?
+            if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 
-            freeze = false;
-            clockInTimePassed = true;
+                freeze = false;
+                clockInTimePassed = true;
 
-            if (breakTimesChosen) { // Have we chosen break times?
-                getBreakTime();
-            } else { // If not, set totalSecClocked to time from clock in to now
-                totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+                if (breakTimesChosen) { // Have we chosen break times?
+                    getBreakTime();
+                } else { // If not, set totalSecClocked to time from clock in to now
+                    totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+                }
+
+                if (!clockOutSkipped) // If we did not skip clock out times:
+                    getOrdersNeeded();
+
+                sec = totalSecClocked;
+                min = 0;
+                hr = 0;
+                tick(); // Update time and show on screen
+
+            } else {
+                // Get seconds left until we have to clock in
+                secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
+                getStats(); // Display it on screen
             }
-
-            if (!clockOutSkipped) // If we did not skip clock out times:
-                getOrdersNeeded();
-
-            sec = totalSecClocked;
-            min = 0;
-            hr = 0;
-            tick(); // Update time and show on screen
-
-        } else {
-            // Get seconds left until we have to clock in
-            secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
-            getStats(); // Display it on screen
-        }
 
         Main.wnd.pack();
 
