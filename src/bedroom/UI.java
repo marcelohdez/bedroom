@@ -23,8 +23,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Components used outside of constructor
     private static final JButton breakButton = new JButton("Set Break");
-    private static final JTextArea stats =
-        new JTextArea("Please clock in.\n\n");
+    private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
 
     // Stats
     private static double orders = 0;

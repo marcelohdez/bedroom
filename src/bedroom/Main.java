@@ -44,7 +44,7 @@ public class Main {
         enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_TYPE);
         leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_TYPE);
 
-        // Start updating every second
+        // Create a timer to run every second
         Timer t = new Timer(1000, e -> {
 
             if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
@@ -65,7 +65,7 @@ public class Main {
         });
 
         t.setRepeats(true);
-        t.start();
+        t.start(); // Start timer
     }
 
 }
