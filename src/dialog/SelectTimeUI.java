@@ -154,7 +154,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 if (Main.clockInWnd.isVisible()) { // ======= For clock in time=======
 
                     UI.clockInTime = newTime; // Set clock in time
-                    Main.ciChosen = true;           // Clock in time is now chosen
                     closeAndProceed(Main.clockInWnd, Main.clockOutWnd, GET_TIME.CLOCK_IN_PLUS_4H);
 
                 } else if (Main.clockOutWnd.isVisible()) { // ======= For clock out time =======
