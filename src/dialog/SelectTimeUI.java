@@ -43,10 +43,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window
-            case CLOCK_OUT_WINDOW -> topText.setText("  Select CLOCK OUT time:  ");
-            case START_BREAK_WINDOW -> topText.setText("  Select BREAK START time:  ");
-            case END_BREAK_WINDOW -> topText.setText("  Select BREAK END time:  ");
-            case CLOCK_IN_WINDOW -> {
+            case CLOCK_OUT_TYPE -> topText.setText("  Select CLOCK OUT time:  ");
+            case START_BREAK_TYPE -> topText.setText("  Select BREAK START time:  ");
+            case END_BREAK_TYPE -> topText.setText("  Select BREAK END time:  ");
+            case CLOCK_IN_TYPE -> {
                 topText.setText("  Select CLOCK IN time:  ");
                 if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
                 setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
@@ -87,7 +87,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         add(hrBox);
         add(minBox);
         add(amPMBox);
-        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_WINDOW)) {
+        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) {
             // Clock out window specific stuff
             add(targetText);
             add(setTarget);

@@ -16,10 +16,10 @@ public class Main {
     public static boolean coChosen = false; // Has clock in/clock out time been chosen?
 
     public enum TIME_WINDOW { // Type of select time windows
-        CLOCK_IN_WINDOW,
-        CLOCK_OUT_WINDOW,
-        START_BREAK_WINDOW,
-        END_BREAK_WINDOW
+        CLOCK_IN_TYPE,
+        CLOCK_OUT_TYPE,
+        START_BREAK_TYPE,
+        END_BREAK_TYPE
     }
 
     public enum ERROR { // Types of user errors we can catch
@@ -37,12 +37,12 @@ public class Main {
         // Open main window
         wnd = new Window();
         // Create clock in/out windows
-        clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_WINDOW);
+        clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_TYPE);
         clockInWnd.centerOnMainWindow(); // Center clock in window on main window
-        clockOutWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_OUT_WINDOW);
+        clockOutWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_OUT_TYPE);
         // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_WINDOW);
-        leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_WINDOW);
+        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_TYPE);
+        leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_TYPE);
 
         // Start updating every second
         Timer t = new Timer(1000, e -> {

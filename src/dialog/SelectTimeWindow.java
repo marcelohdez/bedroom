@@ -27,17 +27,17 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         // Set window title per window type
         switch (type) {
-            case CLOCK_OUT_WINDOW -> { // Also resize it for the bigger clock out window:
+            case CLOCK_OUT_TYPE -> { // Also resize it for the bigger clock out window:
                 setTitle("Clocking out:");
                 setSize(new Dimension(260, 185)); // Specific sizing for this window
                 if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
             }
-            case START_BREAK_WINDOW -> setTitle("Enter break:");
-            case END_BREAK_WINDOW -> setTitle("Leave break:");
-            case CLOCK_IN_WINDOW -> setTitle("Clocking in:");
+            case START_BREAK_TYPE -> setTitle("Enter break:");
+            case END_BREAK_TYPE -> setTitle("Leave break:");
+            case CLOCK_IN_TYPE -> setTitle("Clocking in:");
         }
 
-        if (type.equals(Main.TIME_WINDOW.CLOCK_IN_WINDOW))
+        if (type.equals(Main.TIME_WINDOW.CLOCK_IN_TYPE))
             setVisible(true); // Automatically show clock in window
 
     }
