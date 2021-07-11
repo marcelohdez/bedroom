@@ -118,30 +118,26 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             if (!inBreak) { // Get time clocked in
 
-                sb.append("Time: ")
+                stats.setText(
+                        sb.append("Time: ")
                         .append(makeTimeHumanReadable(hr, min, sec))
-                // Add other stats
-                .append(makeStatsIntoString());
+                        // Add other stats
+                        .append(makeStatsIntoString()).toString());
 
             } else { // Get time left until our break ends =======
-
-                sb.append("On break, ")
+                stats.setText(
+                        sb.append("On break, ")
                         .append(shrinkTime(secondsTillLeaveBreak))
                         .append(" left")
                         // Add current stats
-                        .append(makeStatsIntoString());
-
+                        .append(makeStatsIntoString()).toString());
             }
 
-            stats.setText(sb.toString());
-
         } else if (Main.coChosen) { // Get "Time till clock in" =======
-
-            sb.append("Time until clocked in:\n")
+            stats.setText(
+                    sb.append("Time until clocked in:\n")
                     .append(shrinkTime(secondsTillClockIn))
-                    .append("\n");
-
-            stats.setText(sb.toString());
+                    .append("\n").toString());
         }
 
     }
