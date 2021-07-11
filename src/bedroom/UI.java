@@ -147,7 +147,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     }
 
     private static String shrinkTime(long seconds) { // Convert big number of seconds into time
-        StringBuilder sb = new StringBuilder();
 
         int hours = 0;
         int minutes = 0;
@@ -161,9 +160,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             minutes -= 60;
         }
 
-        sb.append(makeTimeHumanReadable(hours, minutes, seconds));
-
-        return sb.toString();
+        return makeTimeHumanReadable(hours, minutes, seconds);
     }
 
     private static String makeTimeHumanReadable(int h, int m, long s) {
