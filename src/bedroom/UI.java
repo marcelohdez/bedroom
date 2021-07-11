@@ -17,7 +17,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Time Variables
     private static int hr = 0, min = 0;
-    private static long totalSecClocked = 0, sec = 0;
+    private static long totalSecClockedIn = 0, sec = 0;
     private static long secondsTillClockIn = -1;
     private static long secondsTillLeaveBreak = -1;
 
@@ -26,12 +26,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
 
     // Stats
-    private static double orders = 0;
+    private static long orders = 0;
     public static boolean inBreak = false;
     public static boolean freeze = true; // Ignore entering/leaving break and changing orders
     public static boolean clockInTimePassed = false;
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
+    private static double percentOfShift = 0; // How much of our shift have we done (in percent)
 
     // Time values
     public static LocalTime clockInTime, clockOutTime,
@@ -47,7 +48,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public UI() { // Set UI's properties
 
-        JButton addOrder = new JButton("Add Order"); // Add Order button
         Dimension buttonSize = new Dimension(110, 55);
 
         setFocusable(true);
@@ -93,7 +93,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void tick() { // Change time values
 
-        totalSecClocked++;
+        totalSecClockedIn++;
         sec++;
 
         while (sec > 59) {
@@ -176,7 +176,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nOrders: ").append((int)orders).append(" (")
-                .append(oph.format((orders*3600)/totalSecClocked))
+                .append(oph.format((orders*3600)/ totalSecClockedIn))
                 .append("/hr)\nNeeded: ");
         if (ordersNeeded > 0) {
             sb.append(ordersNeeded);
@@ -237,13 +237,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 if (breakTimesChosen) { // Have we chosen break times?
                     getBreakTime();
                 } else { // If not, set totalSecClocked to time from clock in to now
-                    totalSecClocked = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+                    totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
                 }
 
                 if (!clockOutSkipped) // If we did not skip clock out times:
                     getOrdersNeeded();
 
-                sec = totalSecClocked;
+                sec = totalSecClockedIn;
                 min = 0;
                 hr = 0;
                 tick(); // Update time and show on screen
@@ -265,12 +265,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 inBreak = false; // If so, we are not in break.
                 // Set totalSecClocked to the seconds from clocking in to the break's start,
                 // then from break end to the current time.
-                totalSecClocked = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
+                totalSecClockedIn = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
                         breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1);
             } else { // If our break has not ended:
                 inBreak = true; // We are still in break
                 // Set totalSecClocked to the seconds from clocking in to the break's start
-                totalSecClocked = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
+                totalSecClockedIn = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
                 secondsTillLeaveBreak = // Seconds until our break ends
                         LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
             }
