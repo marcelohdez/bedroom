@@ -22,8 +22,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long secondsTillLeaveBreak = -1;
 
     // Components used outside of constructor
-    private static final JButton breakButton = new JButton("Set Break");
     private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
+    private static final JButton breakButton = new JButton("Set Break"),
+            addOrder = new JButton("Add Order"); // Add Order button;
 
     // Stats
     private static long orders = 0;
@@ -32,7 +33,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean clockInTimePassed = false;
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
-    private static double percentOfShift = 0; // How much of our shift have we done (in percent)
+    private static double percentOfShift = 0;   // How much of our shift have we done (in decimal,
+                                                // ex: 80% is 0.8)
 
     // Time values
     public static LocalTime clockInTime, clockOutTime,
@@ -106,6 +108,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             min -= 60;
         }
 
+        if (!clockOutSkipped)
+            percentOfShift = ((double) totalSecClockedIn / // Set percent of shift done
+                clockInTime.until(clockOutTime, ChronoUnit.SECONDS));
+
         getStats();
 
     }
@@ -117,13 +123,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (clockInTimePassed) { // Get stats =======
 
             if (!inBreak) { // Get time clocked in
-
                 stats.setText(
                         sb.append("Time: ")
                         .append(makeTimeHumanReadable(hr, min, sec))
                         // Add other stats
                         .append(makeStatsIntoString()).toString());
-
             } else { // Get time left until our break ends =======
                 stats.setText(
                         sb.append("On break, ")
@@ -132,6 +136,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         // Add current stats
                         .append(makeStatsIntoString()).toString());
             }
+
+            if (!clockOutSkipped) getOnTrackText();
 
         } else if (Main.coChosen) { // Get "Time till clock in" =======
             stats.setText(
@@ -176,7 +182,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nOrders: ").append((int)orders).append(" (")
-                .append(oph.format((orders*3600)/ totalSecClockedIn))
+                .append(oph.format((double) (orders*3600)/ totalSecClockedIn))
                 .append("/hr)\nNeeded: ");
         if (ordersNeeded > 0) {
             sb.append(ordersNeeded);
@@ -290,6 +296,28 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
                         (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
 
+    }
+
+    private static void getOnTrackText() {
+
+        double neededForTarget = (double) totalSecClockedIn/3600 * target;
+        if (neededForTarget > orders) {
+
+            StringBuilder sb = new StringBuilder();
+            int amountMissing = (int) Math.round(Math.ceil(neededForTarget - orders));
+            addOrder.setToolTipText(sb.append("You are ")
+                    .append(amountMissing)
+                    .append(" order")
+                    .append(isPlural(amountMissing))
+                    .append(" behind your hourly target.").toString());
+
+        } else addOrder.setToolTipText("You are on track with your hourly target.");
+
+    }
+
+    private static String isPlural(int number) {
+        if (number > 1) return "s";
+        return "";
     }
 
 }
