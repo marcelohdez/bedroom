@@ -58,9 +58,6 @@ public class ErrorWindow extends JDialog implements ActionListener {
             case BREAK_OUT_OF_SHIFT -> {
                 return "Breaks can not start or end\noutside of shifts.";
             }
-            case BREAK_WITHOUT_CLOCK_OUT_TIME -> {
-                return "Chosen break time is outside of\nyour shift.";
-            }
             case NEGATIVE_BREAK_TIME -> {
                 return "Chosen break end time is before\nthe break's start time.";
             }
