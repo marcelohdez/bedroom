@@ -64,7 +64,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         addOrder.setPreferredSize(buttonSize);
         breakButton.addActionListener(this);
         breakButton.setPreferredSize(buttonSize);
-        breakButton.setToolTipText("Currently no break is set"); // Default tooltip
+        breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
 
         // Set colors
         breakButton.setBackground(buttonColor);
@@ -308,13 +308,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             StringBuilder sb = new StringBuilder();
             int amountMissing = (int) Math.round(Math.ceil(neededForTarget - orders));
-            addOrder.setToolTipText(sb.append("You are ")
+            addOrder.setToolTipText(sb.append("<html><b>You are ")
                     .append(amountMissing)
                     .append(" order")
                     .append(isPlural(amountMissing))
-                    .append(" behind your hourly target.").toString());
+                    .append(" behind your hourly target</b></html>").toString());
 
-        } else addOrder.setToolTipText("You are on track with your hourly target.");
+        } else addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
 
         if (breakTimesChosen) { // If we have chosen break times, change the tooltip to them.
 
