@@ -1,6 +1,5 @@
 package bedroom;
 
-import dialog.ErrorWindow;
 import dialog.SelectTimeUI;
 
 import java.awt.*;
@@ -40,7 +39,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static LocalTime clockInTime, clockOutTime,
             breakInTime, breakOutTime;
     public static boolean breakTimesChosen = false;
-    public static boolean clockOutSkipped = false;
 
     // Public reusable colors & fonts
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
@@ -54,8 +52,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         setFocusable(true);
         addKeyListener(this);
-
-
 
         // Set components' properties
         stats.setEditable(false);
@@ -111,8 +107,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             min -= 60;
         }
 
-        if (!clockOutSkipped)
-            percentOfShift = ((double) totalSecClockedIn / // Set percent of shift done
+        percentOfShift = ((double) totalSecClockedIn / // Set percent of shift done
                 clockInTime.until(clockOutTime, ChronoUnit.SECONDS));
 
         getStats();
@@ -140,7 +135,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         .append(makeStatsIntoString()).toString());
             }
 
-            if (!clockOutSkipped) setTooltips();
+            setTooltips();
 
         } else if (Main.coChosen) { // Get "Time till clock in" =======
             stats.setText(
@@ -200,13 +195,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze) {
-            if (!clockOutSkipped) { // If we didn't skip clock out time:
-
-                Main.enterBreakWnd.centerOnMainWindow(); // Set to current center of main window
-                Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
-                Main.enterBreakWnd.setVisible(true);
-
-            } else new ErrorWindow(Main.ERROR.BREAK_WITHOUT_CLOCK_OUT_TIME);
+            Main.enterBreakWnd.centerOnMainWindow(); // Set to current center of main window
+            Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
+            Main.enterBreakWnd.setVisible(true);
         }
     }
 
@@ -249,9 +240,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                     totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
                 }
 
-                if (!clockOutSkipped) // If we did not skip clock out times:
-                    getOrdersNeeded();
-
+                getOrdersNeeded();
                 sec = totalSecClockedIn;
                 min = 0;
                 hr = 0;

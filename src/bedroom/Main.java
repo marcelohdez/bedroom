@@ -24,7 +24,6 @@ public class Main {
 
     public enum ERROR { // Types of user errors we can catch
         BREAK_OUT_OF_SHIFT,
-        BREAK_WITHOUT_CLOCK_OUT_TIME,
         NEGATIVE_BREAK_TIME,
         NEGATIVE_SHIFT_TIME
     }

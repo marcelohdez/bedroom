@@ -37,9 +37,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg); // Set background color
         JButton select = new JButton("Select");                     // Select button
         JButton skip = new JButton("Skip");                         // Skip button
-        JLabel targetText = new JLabel("Target orders/hour:");      // Target label
-        Dimension listSize = new Dimension(80, 30);         // List box size
-        Dimension skipAndAMPMSize = new Dimension(65, 30);  // Skip and am/pm components
+        JLabel targetText = new JLabel("Please set your hourly target:"); // Target label
+        Dimension listBoxSize = new Dimension(80, 30);      // List box size
+        Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window
@@ -59,11 +59,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         skip.addActionListener(this);
-        skip.setPreferredSize(skipAndAMPMSize);
-        hrBox.setPreferredSize(listSize);
-        minBox.setPreferredSize(listSize);
-        amPMBox.setPreferredSize(skipAndAMPMSize);
-        setTarget.setPreferredSize(new Dimension(50, 30));
+        skip.setPreferredSize(smallListBoxSize);
+        hrBox.setPreferredSize(listBoxSize);
+        minBox.setPreferredSize(listBoxSize);
+        amPMBox.setPreferredSize(smallListBoxSize);
+        setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
@@ -91,7 +91,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             // Clock out window specific stuff
             add(targetText);
             add(setTarget);
-            add(skip);
+            //add(skip);
         }
         add(select);
 
@@ -130,8 +130,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        switch (e.getActionCommand()) {
-            case "Select" -> {  // Setting time to selected values
+        if (e.getActionCommand().equals("Select")) { // Setting time to selected values
 
                 LocalTime newTime =
                         LocalTime.parse(makeTime24Hour(hrBox.getSelectedIndex() + 1,
@@ -178,14 +177,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 if (Main.coChosen) UI.getTime();
 
-            }
-            case "Skip" -> { // For skipping clock out time input
-
-                UI.clockOutSkipped = true;              // Clock out time skipped
-                Main.coChosen = true;                   // Clock out time is now "chosen"
-                Main.clockOutWnd.dispose();             // Close clock out window
-
-            }
         }
 
     }
