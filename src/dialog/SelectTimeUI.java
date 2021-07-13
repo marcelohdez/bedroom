@@ -37,7 +37,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg); // Set background color
         JButton select = new JButton("Select");                     // Select button
         JButton skip = new JButton("Skip");                         // Skip button
-        JLabel targetText = new JLabel("Please set your hourly target:"); // Target label
+        JLabel targetText = new JLabel("  Please set an hourly target:"); // Target label
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
@@ -65,6 +65,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         amPMBox.setPreferredSize(smallListBoxSize);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
+        targetText.setPreferredSize(new Dimension(165, 25));
 
         // ======= Set colors =======
         topText.setForeground(UI.textColor);
