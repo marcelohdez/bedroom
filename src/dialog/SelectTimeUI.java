@@ -124,20 +124,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             }
         }
 
-        if (hour >= 12) {
-            amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
-            // This if statement sets the list box index to current hour,
-            // since LocalTime is in 24hr format, we have to do some maths
-            // to get it to 12hr am/pm.
-            if (hour != 12) {                       // Set hour to 1-11pm
-                hrBox.setSelectedIndex(hour - 13);
-            } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
-        } else {
-            amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
-            if (hour != 0) {                        // Set hour to 1-11am
-                hrBox.setSelectedIndex(hour - 1);
-            } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
-        }
+        setListBoxesByHour(hour);
 
     }
 
@@ -236,6 +223,25 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         windowToShow.centerOnMainWindow();
         windowToShow.setUITime(newWindowType);
         windowToShow.setVisible(true);
+
+    }
+
+    private void setListBoxesByHour(int hour) {
+
+        if (hour >= 12) {
+            amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
+            // This if statement sets the list box index to current hour,
+            // since LocalTime is in 24hr format, we have to do some maths
+            // to get it to 12hr am/pm.
+            if (hour != 12) {                       // Set hour to 1-11pm
+                hrBox.setSelectedIndex(hour - 13);
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
+        } else {
+            amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
+            if (hour != 0) {                        // Set hour to 1-11am
+                hrBox.setSelectedIndex(hour - 1);
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
+        }
 
     }
 
