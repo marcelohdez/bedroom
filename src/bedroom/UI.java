@@ -137,7 +137,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             setTooltips();
 
-        } else if (Main.coChosen) { // Get "Time till clock in" =======
+        } else if (Main.timesChosen) { // Get "Time till clock in" =======
             stats.setText(
                     sb.append("Time until clocked in:\n")
                     .append(shrinkTime(secondsTillClockIn))
@@ -227,7 +227,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void getTime() {
 
-        if (Main.coChosen) // Have we chosen clock in and out times?
+        if (Main.timesChosen) // Have we chosen clock in and out times?
             // Has our clock in time passed?
             if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 

@@ -13,7 +13,7 @@ public class Main {
 
     public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
-    public static boolean coChosen = false; // Has clock in/clock out time been chosen?
+    public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
     public enum TIME_WINDOW { // Type of select time windows
         CLOCK_IN_TYPE,
