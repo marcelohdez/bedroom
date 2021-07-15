@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Main {
 
-    public static String version = "2";
+    public static String version = "2.5 (Beta 1)";
 
     public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
