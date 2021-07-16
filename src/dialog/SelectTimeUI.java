@@ -35,6 +35,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(Main.TIME_WINDOW type) {
 
         setBackground(UI.bg); // Set background color
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        JPanel labelRow = new JPanel(),
+                timeBoxesRow = new JPanel(),
+                targetRow = new JPanel(),
+                selectRow = new JPanel();
 
         JButton select = new JButton("Select");                     // Select button
         JLabel targetText = new JLabel("  Please set an hourly target:"); // Target label
@@ -66,6 +72,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         targetText.setPreferredSize(new Dimension(165, 25));
 
         // ======= Set colors =======
+        labelRow.setBackground(UI.bg);
         topText.setForeground(UI.textColor);
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
@@ -77,19 +84,29 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         amPMBox.setForeground(UI.textColor);
         setTarget.setBackground(UI.buttonColor);
         setTarget.setForeground(UI.textColor);
+        targetRow.setBackground(UI.bg);
+        selectRow.setBackground(UI.bg);
         targetText.setForeground(UI.textColor);
+        timeBoxesRow.setBackground(UI.bg);
 
-        // Add components in order for flow layout
-        add(topText);
-        add(hrBox);
-        add(minBox);
-        add(amPMBox);
+
+        // Add components to their rows
+        labelRow.add(topText);
+        timeBoxesRow.add(hrBox);
+        timeBoxesRow.add(minBox);
+        timeBoxesRow.add(amPMBox);
         if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) {
             // Clock out window specific stuff
-            add(targetText);
-            add(setTarget);
+            targetRow.add(targetText);
+            targetRow.add(setTarget);
         }
-        add(select);
+        selectRow.add(select);
+
+        // Add rows to UI
+        add(labelRow);
+        add(timeBoxesRow);
+        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) add(targetRow);
+        add(selectRow);
 
         requestFocus();
 

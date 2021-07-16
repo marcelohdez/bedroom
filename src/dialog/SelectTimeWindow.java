@@ -25,6 +25,8 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         ui = new SelectTimeUI(type);            // Create ui based on window type
         add(ui);                                // Add the UI
 
+        pack();
+
         // Set window title per window type
         switch (type) {
             case CLOCK_OUT_TYPE -> { // Also resize it for the bigger clock out window:
