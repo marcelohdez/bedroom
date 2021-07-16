@@ -35,8 +35,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(Main.TIME_WINDOW type) {
 
         setBackground(UI.bg); // Set background color
+
         JButton select = new JButton("Select");                     // Select button
-        JButton skip = new JButton("Skip");                         // Skip button
         JLabel targetText = new JLabel("  Please set an hourly target:"); // Target label
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
@@ -58,8 +58,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
-        skip.addActionListener(this);
-        skip.setPreferredSize(smallListBoxSize);
         hrBox.setPreferredSize(listBoxSize);
         minBox.setPreferredSize(listBoxSize);
         amPMBox.setPreferredSize(smallListBoxSize);
@@ -71,8 +69,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         topText.setForeground(UI.textColor);
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
-        skip.setBackground(UI.buttonColor);
-        skip.setForeground(UI.textColor);
         hrBox.setBackground(UI.buttonColor);
         hrBox.setForeground(UI.textColor);
         minBox.setBackground(UI.buttonColor);
@@ -92,7 +88,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             // Clock out window specific stuff
             add(targetText);
             add(setTarget);
-            //add(skip);
         }
         add(select);
 
