@@ -9,7 +9,7 @@ To use the program, install the newest version of the JDK at [https://www.oracle
 (under Oracle JDK of the version you chose, select JDK download), the minimum version required is stated on the description 
 of the Bedroom release you are trying to run. After doing so, double click the jar file of Bedroom and begin.
 
-To build the program from source, install the newest version of the JDK (read above) and run gradle (read Compile From Source
+To build the program from source, install the newest version of the JDK (read above) and run gradle (read Compiling From Source
 section if you do not know how to do so.)
 
 ## How to use
@@ -37,7 +37,7 @@ the tool tip for the "Set Break" button will show you the times selected for the
 _These shortcuts are meant to be unintrusive to work applications,
 hence their seemingly random keyboard placements._
 
-## Compile From Source
+## Compiling From Source
 _This is not supported as there could be bugs or worse problems with things i am currently experimenting on._
 
 After installing the newest JDK (read Prerequisites on top) download the source code by clicking the green code button on the top
