@@ -37,22 +37,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JPanel labelRow = new JPanel(),
-                timeBoxesRow = new JPanel(),
-                targetRow = new JPanel(),
-                selectRow = new JPanel();
+        JPanel labelRow = new JPanel(), timeBoxesRow = new JPanel(), selectRow = new JPanel();
 
         JButton select = new JButton("Select");                     // Select button
-        JLabel targetText = new JLabel();                               // Target label
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
 
-        switch (type) { // Change top text depending on window
+        switch (type) { // Change top text  depending on window type
             case CLOCK_OUT_TYPE -> topText.setText("  Select CLOCK OUT time:  ");
             case START_BREAK_TYPE -> topText.setText("  Select BREAK START time:  ");
             case END_BREAK_TYPE -> topText.setText("  Select BREAK END time:  ");
-            case CLOCK_IN_TYPE -> {
+            case CLOCK_IN_TYPE -> { // Add clock in window specific stuffs
                 topText.setText("  Select CLOCK IN time:  ");
                 if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
                 setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
@@ -61,8 +57,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         // Set top text font
         topText.setFont(UI.boldText);
-        targetText.setText("  Please set an hourly target:");
-        if (Main.isOSX) targetText.setText(" Select your hourly target:");
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
@@ -71,7 +65,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         amPMBox.setPreferredSize(smallListBoxSize);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
-        targetText.setPreferredSize(new Dimension(165, 25));
 
         // ======= Set colors =======
         labelRow.setBackground(UI.bg);
@@ -86,9 +79,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         amPMBox.setForeground(UI.textColor);
         setTarget.setBackground(UI.buttonColor);
         setTarget.setForeground(UI.textColor);
-        targetRow.setBackground(UI.bg);
         selectRow.setBackground(UI.bg);
-        targetText.setForeground(UI.textColor);
         timeBoxesRow.setBackground(UI.bg);
 
         // Add components to their rows
@@ -96,17 +87,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         timeBoxesRow.add(hrBox);
         timeBoxesRow.add(minBox);
         timeBoxesRow.add(amPMBox);
-        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) {
-            // Clock out window specific stuff
-            targetRow.add(targetText);
-            targetRow.add(setTarget);
-        }
         selectRow.add(select);
 
         // Add rows to UI
         add(labelRow);
         add(timeBoxesRow);
-        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) add(targetRow);
+        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) add(createTargetRow());
         add(selectRow);
 
         requestFocus();
@@ -247,6 +233,26 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 hrBox.setSelectedIndex(hour - 1);
             } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
         }
+
+    }
+
+    private JPanel createTargetRow() {
+
+        JPanel targetRow = new JPanel(); // Create the target text/list box panel
+        JLabel targetText = new JLabel(); // Create target label
+
+        targetRow.setBackground(UI.bg);
+
+        targetText.setPreferredSize(new Dimension(165, 25));
+        targetText.setForeground(UI.textColor);
+        targetText.setText("  Please set an hourly target:"); // Due to diff mac font, set diff text:
+        if (Main.isOSX) targetText.setText(" Select your hourly target:");
+
+        // Add the specific stuffs
+        targetRow.add(targetText);
+        targetRow.add(setTarget);
+
+        return targetRow; // Return the new panel
 
     }
 
