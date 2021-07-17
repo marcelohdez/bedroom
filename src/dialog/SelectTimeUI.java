@@ -43,7 +43,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 selectRow = new JPanel();
 
         JButton select = new JButton("Select");                     // Select button
-        JLabel targetText = new JLabel("Please set an hourly target:"); // Target label
+        JLabel targetText = new JLabel("Select your hourly target:"); // Target label
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
@@ -88,7 +88,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         selectRow.setBackground(UI.bg);
         targetText.setForeground(UI.textColor);
         timeBoxesRow.setBackground(UI.bg);
-
 
         // Add components to their rows
         labelRow.add(topText);
