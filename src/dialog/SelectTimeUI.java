@@ -36,8 +36,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
 
-        JPanel labelRow = new JPanel(), timeBoxesRow = new JPanel(), selectRow = new JPanel();
+        JPanel labelRow = new JPanel(), // Create content rows
+                timeBoxesRow = new JPanel(), selectRow = new JPanel();
 
         JButton select = new JButton("Select");                     // Select button
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
@@ -48,10 +50,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
             case START_BREAK_TYPE -> topText.setText("Select BREAK START time:");
             case END_BREAK_TYPE -> topText.setText("Select BREAK END time:");
-            case CLOCK_IN_TYPE -> {
-                topText.setText("  Select CLOCK IN time:  ");
-                setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
-            }
+            case CLOCK_IN_TYPE -> topText.setText("  Select CLOCK IN time:  ");
         }
 
         // Set top text font
