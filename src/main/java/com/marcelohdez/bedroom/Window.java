@@ -1,4 +1,4 @@
-package bedroom;
+package com.marcelohdez.bedroom;
 
 import javax.swing.*;
 

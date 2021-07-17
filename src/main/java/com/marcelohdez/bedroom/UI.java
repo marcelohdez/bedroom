@@ -1,7 +1,6 @@
-package bedroom;
+package com.marcelohdez.bedroom;
 
-import dialog.SelectTimeUI;
-
+import com.marcelohdez.dialog.SelectTimeUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
