@@ -11,12 +11,6 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     public SelectTimeWindow(Main.TIME_WINDOW type) {
 
-        // Set window size
-        setSize(new Dimension(260, 150)); // Default window size
-        if (Main.isOSX) setSize(new Dimension(new Dimension(260, 140)));
-                                                // Default window size on MacOS (smaller due to
-                                                // the title bar & fonts on Mac being different)
-
         // Initial properties
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -25,20 +19,18 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         ui = new SelectTimeUI(type);            // Create ui based on window type
         add(ui);                                // Add the UI
 
+        pack();
+
         // Set window title per window type
         switch (type) {
-            case CLOCK_OUT_TYPE -> { // Also resize it for the bigger clock out window:
-                setTitle("Clocking out:");
-                setSize(new Dimension(260, 185)); // Specific sizing for this window
-                if (Main.isOSX) setSize(new Dimension(260, 175)); // MacOS version
-            }
+            case CLOCK_OUT_TYPE -> setTitle("Clocking out:");
             case START_BREAK_TYPE -> setTitle("Enter break:");
             case END_BREAK_TYPE -> setTitle("Leave break:");
-            case CLOCK_IN_TYPE -> setTitle("Clocking in:");
+            case CLOCK_IN_TYPE -> {
+                setTitle("Clocking in:");
+                setVisible(true); // Automatically show clock in window
+            }
         }
-
-        if (type.equals(Main.TIME_WINDOW.CLOCK_IN_TYPE))
-            setVisible(true); // Automatically show clock in window
 
     }
 

@@ -35,22 +35,22 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(Main.TIME_WINDOW type) {
 
         setBackground(UI.bg); // Set background color
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
+
+        JPanel labelRow = new JPanel(), // Create content rows
+                timeBoxesRow = new JPanel(), selectRow = new JPanel();
+
         JButton select = new JButton("Select");                     // Select button
-        JButton skip = new JButton("Skip");                         // Skip button
-        JLabel targetText = new JLabel("  Please set an hourly target:"); // Target label
         Dimension listBoxSize = new Dimension(80, 30);      // List box size
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
 
-        switch (type) { // Change top text depending on window
-            case CLOCK_OUT_TYPE -> topText.setText("  Select CLOCK OUT time:  ");
-            case START_BREAK_TYPE -> topText.setText("  Select BREAK START time:  ");
-            case END_BREAK_TYPE -> topText.setText("  Select BREAK END time:  ");
-            case CLOCK_IN_TYPE -> {
-                topText.setText("  Select CLOCK IN time:  ");
-                if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
-                setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
-            }
+        switch (type) { // Change top text depending on window type
+            case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
+            case START_BREAK_TYPE -> topText.setText("Select BREAK START time:");
+            case END_BREAK_TYPE -> topText.setText("Select BREAK END time:");
+            case CLOCK_IN_TYPE -> topText.setText("  Select CLOCK IN time:  ");
         }
 
         // Set top text font
@@ -58,21 +58,17 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
-        skip.addActionListener(this);
-        skip.setPreferredSize(smallListBoxSize);
         hrBox.setPreferredSize(listBoxSize);
         minBox.setPreferredSize(listBoxSize);
         amPMBox.setPreferredSize(smallListBoxSize);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
-        targetText.setPreferredSize(new Dimension(165, 25));
 
         // ======= Set colors =======
+        labelRow.setBackground(UI.bg);
         topText.setForeground(UI.textColor);
         select.setBackground(UI.buttonColor);
         select.setForeground(UI.textColor);
-        skip.setBackground(UI.buttonColor);
-        skip.setForeground(UI.textColor);
         hrBox.setBackground(UI.buttonColor);
         hrBox.setForeground(UI.textColor);
         minBox.setBackground(UI.buttonColor);
@@ -81,20 +77,21 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         amPMBox.setForeground(UI.textColor);
         setTarget.setBackground(UI.buttonColor);
         setTarget.setForeground(UI.textColor);
-        targetText.setForeground(UI.textColor);
+        selectRow.setBackground(UI.bg);
+        timeBoxesRow.setBackground(UI.bg);
 
-        // Add components in order for flow layout
-        add(topText);
-        add(hrBox);
-        add(minBox);
-        add(amPMBox);
-        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) {
-            // Clock out window specific stuff
-            add(targetText);
-            add(setTarget);
-            //add(skip);
-        }
-        add(select);
+        // Add components to their rows
+        labelRow.add(topText);
+        timeBoxesRow.add(hrBox);
+        timeBoxesRow.add(minBox);
+        timeBoxesRow.add(amPMBox);
+        selectRow.add(select);
+
+        // Add rows to UI
+        add(labelRow);
+        add(timeBoxesRow);
+        if (type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) add(createTargetRow());
+        add(selectRow);
 
         requestFocus();
 
@@ -234,6 +231,26 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 hrBox.setSelectedIndex(hour - 1);
             } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
         }
+
+    }
+
+    private JPanel createTargetRow() {
+
+        JPanel targetRow = new JPanel(); // Create the target text/list box panel
+        JLabel targetText = new JLabel(); // Create target label
+
+        targetRow.setBackground(UI.bg);
+
+        targetText.setPreferredSize(new Dimension(165, 25));
+        targetText.setForeground(UI.textColor);
+        targetText.setText("  Please set an hourly target:"); // Due to diff mac font, set diff text:
+        if (Main.isOSX) targetText.setText(" Select your hourly target:");
+
+        // Add the specific stuffs
+        targetRow.add(targetText);
+        targetRow.add(setTarget);
+
+        return targetRow; // Return the new panel
 
     }
 
