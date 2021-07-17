@@ -1,7 +1,7 @@
-package dialog;
+package com.marcelohdez.dialog;
 
-import bedroom.Main;
-import bedroom.UI;
+import com.marcelohdez.bedroom.Main;
+import com.marcelohdez.bedroom.UI;
 
 import javax.swing.*;
 import java.awt.*;

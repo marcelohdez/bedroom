@@ -1,6 +1,6 @@
-package dialog;
+package com.marcelohdez.dialog;
 
-import bedroom.*;
+import com.marcelohdez.bedroom.*;
 import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;

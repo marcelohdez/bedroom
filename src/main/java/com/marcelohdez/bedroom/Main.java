@@ -1,6 +1,6 @@
-package bedroom;
+package com.marcelohdez.bedroom;
 
-import dialog.*;
+import com.marcelohdez.dialog.*;
 import javax.swing.*;
 
 public class Main {
