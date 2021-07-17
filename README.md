@@ -4,14 +4,15 @@ in keeping track of their orders and orders per hour to meet their quotas effect
 Due to the pandemic people have started working remotely, working from the bedroom couldn't
 get any easier! Or... maybe it just did.
 
-## Documentation for _newest release_
+## Prerequisites
+To use the program, install the newest version of the JDK at [https://www.oracle.com/java/technologies/javase-downloads.html]
+(under Oracle JDK of the version you chose, select JDK download), the minimum version required is stated on the description 
+of the Bedroom release you are trying to run. After doing so, double click the jar file of Bedroom and begin.
 
-### Prerequisites
-To use the program, install the newest version of the Java SE at [https://www.oracle.com/java/technologies/javase-downloads.html],
-the minimum version required is stated on the description of the Bedroom release you are trying to run. After doing so, double click
-the jar file of Bedroom and begin.
+To build the program from source, install the newest version of the JDK (read above) and run gradle (read Compile From Source
+section if you do not know how to do so.)
 
-### How to use
+## How to use
 Upon start up, you will be asked for your clock in and clock out time, on the clock out window there is an extra section to choose
 your "hourly target" which is the amount of orders per hour you are aiming for. Once finished the program will start counting the time
 left until you clocking in or the time you have been clocked in for if your clock in time has already passed. Your break and orders 
@@ -35,3 +36,11 @@ the tool tip for the "Set Break" button will show you the times selected for the
 
 _These shortcuts are meant to be unintrusive to work applications,
 hence their seemingly random keyboard placements._
+
+## Compile From Source
+_This is not supported as there could be bugs or worse problems with things i am currently experimenting on._
+
+After installing the newest JDK (read Prerequisites on top) download the source code by clicking the green code button on the top
+of the page and selecting Download ZIP. Then open the downloaded file and copy the folder inside to anywhere else (like your
+desktop) and delete the original zipped file. Finally, open the folder you copied into a new location with Terminal/Command Prompt 
+(on Windows this can simply be done by selecting the address bar on top, typing ```cmd```, and pressing Enter) and run ```gradlew build```
