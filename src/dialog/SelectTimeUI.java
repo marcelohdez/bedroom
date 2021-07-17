@@ -44,13 +44,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
         JLabel topText = new JLabel();                                  // Top text
 
-        switch (type) { // Change top text  depending on window type
-            case CLOCK_OUT_TYPE -> topText.setText("  Select CLOCK OUT time:  ");
-            case START_BREAK_TYPE -> topText.setText("  Select BREAK START time:  ");
-            case END_BREAK_TYPE -> topText.setText("  Select BREAK END time:  ");
-            case CLOCK_IN_TYPE -> { // Add clock in window specific stuffs
+        switch (type) { // Change top text depending on window type
+            case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
+            case START_BREAK_TYPE -> topText.setText("Select BREAK START time:");
+            case END_BREAK_TYPE -> topText.setText("Select BREAK END time:");
+            case CLOCK_IN_TYPE -> {
                 topText.setText("  Select CLOCK IN time:  ");
-                if (Main.isOSX) topText.setText("    Select CLOCK IN time:    ");
                 setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
             }
         }
