@@ -24,6 +24,7 @@ public class SettingsWindow extends JDialog implements WindowListener {
                 Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
 
         pack();
+        setVisible(true);
 
     }
 
