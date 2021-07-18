@@ -336,8 +336,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             } else sb.append(12);   // Set to 12am
         }
 
+        sb.append(":");
         if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
-        sb.append(":").append(minute).append(amPM);
+        sb.append(minute).append(amPM);
 
         return sb.toString();
 
