@@ -1,11 +1,14 @@
 package com.marcelohdez.bedroom;
 
 import com.marcelohdez.dialog.*;
+import com.marcelohdez.settings.SettingsWindow;
+
 import javax.swing.*;
+import java.util.prefs.Preferences;
 
 public class Main {
 
-    public static String version = "2.1";
+    public static String version = "3 (Beta 1)";
 
     public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
 
@@ -13,7 +16,10 @@ public class Main {
 
     public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
+    public static SettingsWindow settings;
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
+
+    public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     public enum TIME_WINDOW { // Type of select time windows
         CLOCK_IN_TYPE,

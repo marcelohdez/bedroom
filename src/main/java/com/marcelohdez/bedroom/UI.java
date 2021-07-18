@@ -1,6 +1,8 @@
 package com.marcelohdez.bedroom;
 
 import com.marcelohdez.dialog.SelectTimeUI;
+import com.marcelohdez.settings.SettingsWindow;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
@@ -41,9 +43,19 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Public reusable colors & fonts
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
-    public static Color textColor = new Color(240, 240, 240),
-            buttonColor = new Color(80, 80, 80),
-            bg = new Color(64, 64, 64);
+
+    public static Color textColor = // Get color for text from user's prefs, default to 240 if not found
+            new Color(Main.userPrefs.getInt("textRed", 240),
+                    Main.userPrefs.getInt("textGreen", 240),
+                    Main.userPrefs.getInt("textBlue", 240)),
+            // Get color of buttons
+            buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
+                    Main.userPrefs.getInt("buttonGreen", 80),
+                    Main.userPrefs.getInt("buttonBlue", 80)),
+            // Get color of background
+            bg = new Color(Main.userPrefs.getInt("bgRed", 64),
+                    Main.userPrefs.getInt("bgGreen", 64),
+                    Main.userPrefs.getInt("bgBlue", 64));
 
     public UI() { // Set UI's properties
 
@@ -209,6 +221,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
+            case 27, 127 -> new SettingsWindow();  // Open settings with Del or Esc keys
         }
 	}
 
@@ -346,6 +359,23 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static String isPlural(int number) { // Return "s" if there is more than 1 of number
         if (number > 1) return "s";
         return "";
+    }
+
+    public static void reloadColors() {
+
+        // Get color for text from user's prefs, default to 240 if not found
+        textColor = new Color(Main.userPrefs.getInt("textRed", 240),
+                Main.userPrefs.getInt("textGreen", 240),
+                Main.userPrefs.getInt("textBlue", 240));
+        // Get color of buttons
+        buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
+                Main.userPrefs.getInt("buttonGreen", 80),
+                Main.userPrefs.getInt("buttonBlue", 80));
+        // Get color of background
+        bg = new Color(Main.userPrefs.getInt("bgRed", 64),
+                Main.userPrefs.getInt("bgGreen", 64),
+                Main.userPrefs.getInt("bgBlue", 64));
+
     }
 
 }
