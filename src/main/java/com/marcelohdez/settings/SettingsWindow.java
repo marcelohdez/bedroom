@@ -5,14 +5,13 @@ import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SettingsWindow extends JDialog implements WindowListener {
+public class SettingsWindow extends JFrame implements WindowListener {
 
-    private static SettingsUI sui;
+    private final SettingsUI sui;
 
     public SettingsWindow() {
 
         addWindowListener(this);
-        setModalityType(ModalityType.APPLICATION_MODAL); // Do not allow user to do anything outside of this window
         setTitle("Settings");
         setResizable(false);
 
@@ -32,7 +31,8 @@ public class SettingsWindow extends JDialog implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
-        sui.updateValues();
+        this.sui.updateValues();
+        UI.freeze = false;
 
     }
 

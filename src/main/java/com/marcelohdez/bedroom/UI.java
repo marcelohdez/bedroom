@@ -34,7 +34,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
     private static double percentOfShift = 0;   // How much of our shift have we done (in decimal,
-                                                // ex: 80% is 0.8)
+    // ex: 80% is 0.8)
 
     // Time values
     public static LocalTime clockInTime, clockOutTime,
@@ -74,21 +74,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
 
         // Set colors
-        breakButton.setBackground(buttonColor);
-        breakButton.setForeground(textColor);
-        addOrder.setBackground(buttonColor);
-        addOrder.setForeground(textColor);
-        stats.setBackground(bg);
-        stats.setForeground(textColor);
- 
+        colorComponents();
+
         // Add components
-        setBackground(bg);
         add(breakButton);
         add(addOrder);
         add(stats);
 
         getStats();
-        
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -100,7 +94,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
                                 it's a workaround as buttons get the focus when clicked. */
-        
+
     }
 
     public static void tick() { // Change time values
@@ -134,16 +128,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (!inBreak) { // Get time clocked in
                 stats.setText(
                         sb.append("Time: ")
-                        .append(makeTimeHumanReadable(hr, min, (int) sec))
-                        // Add other stats
-                        .append(makeStatsIntoString()).toString());
+                                .append(makeTimeHumanReadable(hr, min, (int) sec))
+                                // Add other stats
+                                .append(makeStatsIntoString()).toString());
             } else { // Get time left until our break ends =======
                 stats.setText(
                         sb.append("On break, ")
-                        .append(shrinkTime(secondsTillLeaveBreak))
-                        .append(" left")
-                        // Add current stats
-                        .append(makeStatsIntoString()).toString());
+                                .append(shrinkTime(secondsTillLeaveBreak))
+                                .append(" left")
+                                // Add current stats
+                                .append(makeStatsIntoString()).toString());
             }
 
             setTooltips();
@@ -151,8 +145,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         } else if (Main.timesChosen) { // Get "Time till clock in" =======
             stats.setText(
                     sb.append("Time until clocked in:\n")
-                    .append(shrinkTime(secondsTillClockIn))
-                    .append("\n").toString());
+                            .append(shrinkTime(secondsTillClockIn))
+                            .append("\n").toString());
         }
 
     }
@@ -212,18 +206,18 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-	public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}
 
-	public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> new SettingsWindow();  // Open settings with Del or Esc keys
+            case 27, 127 -> openSettings();  // Open settings with Del or Esc keys
         }
-	}
+    }
 
     private void changeOrders(int amount) { // Change orders
 
@@ -363,7 +357,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         return "";
     }
 
-    public static void reloadColors() {
+    private void openSettings() {
+
+        if (!freeze) {
+            new SettingsWindow();
+            freeze = true;
+        }
+
+    }
+
+    public void reloadColors() {
 
         // Get color for text from user's prefs, default to 240 if not found
         textColor = new Color(Main.userPrefs.getInt("textRed", 240),
@@ -377,6 +380,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         bg = new Color(Main.userPrefs.getInt("bgRed", 64),
                 Main.userPrefs.getInt("bgGreen", 64),
                 Main.userPrefs.getInt("bgBlue", 64));
+
+        this.colorComponents();
+
+    }
+
+    private void colorComponents() {
+
+        breakButton.setBackground(buttonColor);
+        breakButton.setForeground(textColor);
+        addOrder.setBackground(buttonColor);
+        addOrder.setForeground(textColor);
+        stats.setBackground(bg);
+        stats.setForeground(textColor);
+        setBackground(bg);
 
     }
 

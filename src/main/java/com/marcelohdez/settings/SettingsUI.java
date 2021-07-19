@@ -18,6 +18,9 @@ public class SettingsUI extends JPanel implements ActionListener {
     JSpinner buttonRed, buttonGreen, buttonBlue;    // Button color spinners
     JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
 
+    JComboBox<String> themeListBox;
+    String[] themes = {"Current", "Dark", "Light", "Pink+White", "Pink+Black"};
+
     public SettingsUI() { // Settings UI constructor
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -30,7 +33,7 @@ public class SettingsUI extends JPanel implements ActionListener {
         add(createTextSettings());
         add(createButtonSettings());
         add(createBgSettings());
-        add(createButtonRow("Default Colors"));
+        add(createThemesRow("Set to theme:"));
         add(createLabelRow("Misc."));
 
     }
@@ -161,22 +164,86 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private void setDefaultColors() {
+    private JPanel createThemesRow(String text) {
 
-        // Text colors
-        textRed.setValue(240);
-        textGreen.setValue(240);
-        textBlue.setValue(240);
+        // Create the components
+        JPanel row = new JPanel();
+        JLabel label = new JLabel(text);
+        themeListBox = new JComboBox<>(themes);
+        JButton button = new JButton("Apply");
 
-        // Button colors
-        buttonRed.setValue(80);
-        buttonGreen.setValue(80);
-        buttonBlue.setValue(80);
+        // Customize them
+        row.setBackground(UI.bg);
+        label.setForeground(UI.textColor);
+        themeListBox.setBackground(UI.buttonColor);
+        themeListBox.setForeground(UI.textColor);
+        themeListBox.setSelectedIndex(0);
+        button.setForeground(UI.textColor);
+        button.setBackground(UI.buttonColor);
 
-        // Background colors
-        bgRed.setValue(64);
-        bgGreen.setValue(64);
-        bgBlue.setValue(64);
+        // Add them to the row
+        row.add(label);
+        row.add(themeListBox);
+        row.add(button);
+
+        button.addActionListener(this);
+
+        return  row;
+
+    }
+
+    private void setTextColor(int amount) {
+
+        textRed.setValue(amount);
+        textGreen.setValue(amount);
+        textBlue.setValue(amount);
+
+    }
+
+    private void setButtonColor(int amount) {
+
+        buttonRed.setValue(amount);
+        buttonGreen.setValue(amount);
+        buttonBlue.setValue(amount);
+
+    }
+
+    private void setBgColor(int amount) {
+
+        bgRed.setValue(amount);
+        bgGreen.setValue(amount);
+        bgBlue.setValue(amount);
+
+    }
+
+    private void setTheme(String theme) {
+
+        switch (theme) {
+            case "Dark" -> {
+                setTextColor(240);
+                setButtonColor(80);
+                setBgColor(64);
+            }
+            case "Light" -> {
+                setTextColor(0);
+                setButtonColor(220);
+                setBgColor(240);
+            }
+            case "Pink+White" -> {
+                setTextColor(0);
+                setButtonColor(240);
+                bgRed.setValue(220);
+                bgGreen.setValue(150);
+                bgBlue.setValue(200);
+            }
+            case "Pink+Black" -> {
+                setTextColor(255);
+                setButtonColor(0);
+                bgRed.setValue(220);
+                bgGreen.setValue(150);
+                bgBlue.setValue(200);
+            }
+        }
 
     }
 
@@ -195,7 +262,7 @@ public class SettingsUI extends JPanel implements ActionListener {
                 (Integer) bgBlue.getValue()};
 
         saveSettings();
-        UI.reloadColors();
+        Main.ui.reloadColors();
 
     }
 
@@ -222,9 +289,19 @@ public class SettingsUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         switch (e.getActionCommand()) {
-            case "Default Colors" -> setDefaultColors();
-            case "Defaults" -> {
-                int x; // Really do nothing right now, just shutting up warning of having only one case.
+            case "Apply" -> {
+
+                String theme = themeListBox.getSelectedItem().toString();
+
+                if (theme.equals("Current"))  {
+                    updateValues();
+                } else setTheme(theme);
+
+                updateValues();
+
+            }
+            case "bruh" -> {
+                int x;
             }
         }
 

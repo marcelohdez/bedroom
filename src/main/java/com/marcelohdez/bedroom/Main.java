@@ -15,8 +15,8 @@ public class Main {
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
 
     public static Window wnd; // This window
+    public static UI ui; // UI of main window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
-    public static SettingsWindow settings;
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
@@ -39,8 +39,9 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
 
-        // Open main window
-        wnd = new Window();
+        // Create main window
+        ui = new UI();
+        wnd = new Window(ui);
         // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_TYPE);
         clockInWnd.centerOnMainWindow(); // Center clock in window on main window

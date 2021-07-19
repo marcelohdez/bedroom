@@ -16,6 +16,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         CLOCK_IN_PLUS_4H        // Get 4 hours after clock in
     }
 
+    private final Main.TIME_WINDOW type;
+
     // Lists (for the list boxes)
     private final String[] amPMOptions = {"AM","PM"},
             hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"},
@@ -29,11 +31,14 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     "24"};
 
     // List boxes:
-    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions), hrBox = new JComboBox<>(hours),
-            minBox = new JComboBox<>(minutes), setTarget = new JComboBox<>(targets);
+    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions),
+            hrBox = new JComboBox<>(hours),
+            minBox = new JComboBox<>(minutes),
+            setTarget = new JComboBox<>(targets);
 
     public SelectTimeUI(Main.TIME_WINDOW type) {
 
+        this.type = type;
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
@@ -130,52 +135,52 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         if (e.getActionCommand().equals("Select")) { // Setting time to selected values
 
-                LocalTime newTime =
-                        LocalTime.parse(makeTime24Hour(hrBox.getSelectedIndex() + 1,
-                        minBox.getSelectedIndex(),
-                        Objects.requireNonNull(amPMBox.getSelectedItem()).toString()));
+            LocalTime newTime =
+                    LocalTime.parse(makeTime24Hour(hrBox.getSelectedIndex() + 1,
+                            minBox.getSelectedIndex(),
+                            Objects.requireNonNull(amPMBox.getSelectedItem()).toString()));
 
-                if (Main.clockInWnd.isVisible()) { // ======= For clock in time=======
+            if (this.type.equals(Main.TIME_WINDOW.CLOCK_IN_TYPE)) { // ======= For clock in time=======
 
-                    UI.clockInTime = newTime; // Set clock in time
-                    closeAndProceed(Main.clockInWnd, Main.clockOutWnd, GET_TIME.CLOCK_IN_PLUS_4H);
+                UI.clockInTime = newTime; // Set clock in time
+                closeAndProceed(Main.clockInWnd, Main.clockOutWnd, GET_TIME.CLOCK_IN_PLUS_4H);
 
-                } else if (Main.clockOutWnd.isVisible()) { // ======= For clock out time =======
+            } else if (this.type.equals(Main.TIME_WINDOW.CLOCK_OUT_TYPE)) { // ======= For clock out time =======
 
-                    if (newTime.isAfter(UI.clockInTime)) {
+                if (newTime.isAfter(UI.clockInTime)) {
 
-                        UI.clockOutTime = newTime; // Set clock out time
-                        UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-                        Main.timesChosen = true;               // Clock out time is now chosen
-                        Main.clockOutWnd.dispose();         // Close clock out time window
+                    UI.clockOutTime = newTime; // Set clock out time
+                    UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+                    Main.timesChosen = true;               // Clock out time is now chosen
+                    Main.clockOutWnd.dispose();         // Close clock out time window
 
-                    } else new ErrorWindow(Main.ERROR.NEGATIVE_SHIFT_TIME);
+                } else new ErrorWindow(Main.ERROR.NEGATIVE_SHIFT_TIME);
 
-                } else if (Main.enterBreakWnd.isVisible()) { // ======= For entering break =======
+            } else if (this.type.equals(Main.TIME_WINDOW.START_BREAK_TYPE)) { // ======= For entering break =======
 
-                    if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
-                            newTime.equals(UI.clockInTime)) {
+                if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
+                        newTime.equals(UI.clockInTime)) {
 
-                        UI.breakInTime = newTime; // Set enter break time
-                        closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
-                                GET_TIME.BREAK_START_PLUS_30M);
+                    UI.breakInTime = newTime; // Set enter break time
+                    closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
+                            GET_TIME.BREAK_START_PLUS_30M);
 
-                    } else new ErrorWindow(Main.ERROR.BREAK_OUT_OF_SHIFT);
+                } else new ErrorWindow(Main.ERROR.BREAK_OUT_OF_SHIFT);
 
-                } else if (Main.leaveBreakWnd.isVisible()) { // ======= For leaving break =======
+            } else if (this.type.equals(Main.TIME_WINDOW.END_BREAK_TYPE)) { // ======= For leaving break =======
 
-                    if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
-                            newTime.equals(UI.clockOutTime)) {
+                if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
+                        newTime.equals(UI.clockOutTime)) {
 
-                        UI.breakOutTime = newTime; // Set leave break time
-                        UI.breakTimesChosen = true;
-                        Main.leaveBreakWnd.dispose();       // Close leave break window
+                    UI.breakOutTime = newTime; // Set leave break time
+                    UI.breakTimesChosen = true;
+                    Main.leaveBreakWnd.dispose();       // Close leave break window
 
-                    } else new ErrorWindow(Main.ERROR.NEGATIVE_BREAK_TIME);
+                } else new ErrorWindow(Main.ERROR.NEGATIVE_BREAK_TIME);
 
-                }
+            }
 
-                if (Main.timesChosen) UI.getTime();
+            if (Main.timesChosen) UI.getTime();
 
         }
 
@@ -208,7 +213,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     }
 
     private void closeAndProceed(SelectTimeWindow windowToClose,
-                                   SelectTimeWindow windowToShow, GET_TIME newWindowType) {
+                                 SelectTimeWindow windowToShow, GET_TIME newWindowType) {
 
         windowToClose.dispose();
         windowToShow.centerOnMainWindow();

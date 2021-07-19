@@ -8,8 +8,11 @@ import javax.swing.*;
 public class SelectTimeWindow extends JFrame implements WindowListener {
 
     private final SelectTimeUI ui;
+    private final Main.TIME_WINDOW type;
 
     public SelectTimeWindow(Main.TIME_WINDOW type) {
+
+        this.type = type;
 
         // Initial properties
         setResizable(false);
@@ -50,11 +53,11 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if ( Main.enterBreakWnd.isVisible()) { // If setting break start time:
+        if (this.type.equals(Main.TIME_WINDOW.START_BREAK_TYPE)) { // If setting break start time:
 
             Main.enterBreakWnd.dispose();   // Close the window
 
-        } else if (Main.leaveBreakWnd.isVisible()) { // If setting break end time:
+        } else if (this.type.equals(Main.TIME_WINDOW.END_BREAK_TYPE)) { // If setting break end time:
 
             UI.breakInTime = null;          // Delete break start time that was set
             Main.leaveBreakWnd.dispose();   // Close the window
