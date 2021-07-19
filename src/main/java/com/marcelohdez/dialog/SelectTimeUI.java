@@ -153,7 +153,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 } else if (Main.enterBreakWnd.isVisible()) { // ======= For entering break =======
 
-                    if (newTime.isBefore(UI.clockOutTime) && newTime.isAfter(UI.clockInTime)) {
+                    if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
+                            newTime.equals(UI.clockInTime)) {
 
                         UI.breakInTime = newTime; // Set enter break time
                         closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
@@ -163,7 +164,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 } else if (Main.leaveBreakWnd.isVisible()) { // ======= For leaving break =======
 
-                    if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime)) {
+                    if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
+                            newTime.equals(UI.clockOutTime)) {
 
                         UI.breakOutTime = newTime; // Set leave break time
                         UI.breakTimesChosen = true;
