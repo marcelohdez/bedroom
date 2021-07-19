@@ -19,11 +19,12 @@ public class SettingsWindow extends JDialog implements WindowListener {
         sui = new SettingsUI();
         add(sui);
 
+        pack();
+
         // Center on main window
         setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
                 Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
 
-        pack();
         setVisible(true);
 
     }
