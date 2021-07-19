@@ -43,7 +43,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     public void setUITime(SelectTimeUI.GET_TIME type) { // Pass through to UI
         // Set to current time, for windows opened up after program start up like break start window
-        ui.setListBoxIndexes(type);
+        this.ui.setListBoxIndexes(type);
     }
 
     // Cancel setting break times if user tries to close window
