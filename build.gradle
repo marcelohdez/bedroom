@@ -5,6 +5,9 @@ plugins {
 group 'com.marcelohdez'
 version '2.1'
 
+sourceCompatibility = "15"
+targetCompatibility = "15"
+
 repositories {
     mavenCentral()
 }

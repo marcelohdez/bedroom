@@ -320,10 +320,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (breakTimesChosen) { // If we have chosen break times, change the tooltip to them.
 
             StringBuilder sb = new StringBuilder();
-            breakButton.setToolTipText(sb.append("Current: ")
+            breakButton.setToolTipText(sb.append("<html><b>Current: ")
                     .append(makeTime12Hour(breakInTime))
                     .append("-")
                     .append(makeTime12Hour(breakOutTime))
+                    .append("</b></html>")
                     .toString());
 
         }
@@ -349,8 +350,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             } else sb.append(12);   // Set to 12am
         }
 
+        sb.append(":");
         if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
-        sb.append(":").append(minute).append(amPM);
+        sb.append(minute).append(amPM);
 
         return sb.toString();
 
