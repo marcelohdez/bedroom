@@ -5,12 +5,13 @@ import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SettingsWindow extends JFrame implements WindowListener {
+public class SettingsWindow extends JDialog implements WindowListener {
 
     private final SettingsUI sui;
 
     public SettingsWindow() {
 
+        setModalityType(ModalityType.APPLICATION_MODAL);
         addWindowListener(this);
         setTitle("Settings");
         setResizable(false);

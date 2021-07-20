@@ -215,7 +215,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> openSettings();  // Open settings with Del or Esc keys
+            case 27, 127 -> new SettingsWindow();  // Open settings with Del or Esc keys
         }
     }
 
@@ -355,15 +355,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static String isPlural(int number) { // Return "s" if there is more than 1 of number
         if (number > 1) return "s";
         return "";
-    }
-
-    private void openSettings() {
-
-        if (!freeze) {
-            new SettingsWindow();
-            freeze = true;
-        }
-
     }
 
     public void reloadColors() {
