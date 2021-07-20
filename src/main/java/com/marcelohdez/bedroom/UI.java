@@ -12,8 +12,7 @@ import javax.swing.*;
 
 public class UI extends JPanel implements ActionListener, KeyListener {
 
-    // Decimal format
-    private static final DecimalFormat oph = new DecimalFormat("#.00"); // orders/hr
+    private static final DecimalFormat firstTwoDecs = new DecimalFormat("#.00");
 
     // Time Variables
     private static int hr = 0, min = 0;
@@ -23,8 +22,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Components used outside of constructor
     private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
-    private static final JButton breakButton = new JButton("Set Break"),
-            addOrder = new JButton("Add Order"); // Add Order button;
+    private static final JButton breakButton = new JButton("Set Break");
+    private static final JButton addOrder = new JButton("Add Order");
 
     // Stats
     private static long orders = 0;
@@ -39,7 +38,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             breakInTime, breakOutTime;
     public static boolean breakTimesChosen = false;
 
-    // Public reusable colors & fonts
+    // ======= Public reusable colors & fonts =======
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
     // Get colors for UI from user's preferences
@@ -180,7 +179,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nOrders: ").append((int)orders).append(" (")
-                .append(oph.format((double) (orders*3600)/ totalSecClockedIn))
+                .append(firstTwoDecs.format((double) (orders*3600)/ totalSecClockedIn))
                 .append("/hr)\nNeeded: ");
         if (ordersNeeded > 0) {
             sb.append(ordersNeeded);
