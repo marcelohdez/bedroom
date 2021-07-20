@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.marcelohdez'
-version '2.1'
+version '3b1'
 
 sourceCompatibility = "15"
 targetCompatibility = "15"
