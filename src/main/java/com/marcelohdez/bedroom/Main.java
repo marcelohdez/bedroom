@@ -1,7 +1,6 @@
 package com.marcelohdez.bedroom;
 
 import com.marcelohdez.dialog.*;
-import com.marcelohdez.settings.SettingsWindow;
 
 import javax.swing.*;
 import java.util.prefs.Preferences;
