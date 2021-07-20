@@ -182,6 +182,7 @@ public class SettingsUI extends JPanel implements ActionListener {
         themeListBox.setSelectedIndex(0);
         button.setForeground(UI.textColor);
         button.setBackground(UI.buttonColor);
+        button.setToolTipText("<html><b>This window doesn't change until reopened.</b></html>");
 
         // Add them to the row
         row.add(label);
