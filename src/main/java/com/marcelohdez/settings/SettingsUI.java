@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class SettingsUI extends JPanel implements ActionListener {
 
@@ -19,7 +20,7 @@ public class SettingsUI extends JPanel implements ActionListener {
     JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
 
     JComboBox<String> themeListBox;
-    String[] themes = {"Current", "Dark", "Light", "Pink+White", "Pink+Black"};
+    String[] themes = {"Current", "Dark", "Demonic Red", "Light", "Pink+White", "Pastel Blue"};
 
     public SettingsUI() { // Settings UI constructor
 
@@ -33,8 +34,9 @@ public class SettingsUI extends JPanel implements ActionListener {
         add(createTextSettings());
         add(createButtonSettings());
         add(createBgSettings());
-        add(createThemesRow("Set to theme:"));
+        add(createThemesRow());
         add(createLabelRow("Misc."));
+        add(createButtonRow());
 
     }
 
@@ -148,10 +150,10 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createButtonRow(String text) {
+    private JPanel createButtonRow() {
 
         JPanel row = new JPanel();
-        JButton button = new JButton(text);
+        JButton button = new JButton("Set Defaults");
 
         row.setBackground(UI.bg);
         row.add(button);
@@ -164,11 +166,11 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createThemesRow(String text) {
+    private JPanel createThemesRow() {
 
         // Create the components
         JPanel row = new JPanel();
-        JLabel label = new JLabel(text);
+        JLabel label = new JLabel("Set to theme:");
         themeListBox = new JComboBox<>(themes);
         JButton button = new JButton("Apply");
 
@@ -192,27 +194,51 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private void setTextColor(int amount) {
+    private void setTextColorAll(int value) {
 
-        textRed.setValue(amount);
-        textGreen.setValue(amount);
-        textBlue.setValue(amount);
-
-    }
-
-    private void setButtonColor(int amount) {
-
-        buttonRed.setValue(amount);
-        buttonGreen.setValue(amount);
-        buttonBlue.setValue(amount);
+        textRed.setValue(value);
+        textGreen.setValue(value);
+        textBlue.setValue(value);
 
     }
 
-    private void setBgColor(int amount) {
+    private void setTextRGB(int r, int g, int b) {
 
-        bgRed.setValue(amount);
-        bgGreen.setValue(amount);
-        bgBlue.setValue(amount);
+        textRed.setValue(r);
+        textGreen.setValue(g);
+        textBlue.setValue(b);
+
+    }
+
+    private void setButtonColorAll(int value) {
+
+        buttonRed.setValue(value);
+        buttonGreen.setValue(value);
+        buttonBlue.setValue(value);
+
+    }
+
+    private void setButtonRGB(int r, int g, int b) {
+
+        buttonRed.setValue(r);
+        buttonGreen.setValue(g);
+        buttonBlue.setValue(b);
+
+    }
+
+    private void setBgColorAll(int value) {
+
+        bgRed.setValue(value);
+        bgGreen.setValue(value);
+        bgBlue.setValue(value);
+
+    }
+
+    private void setBgRGB(int r, int g, int b) {
+
+        bgRed.setValue(r);
+        bgGreen.setValue(g);
+        bgBlue.setValue(b);
 
     }
 
@@ -220,28 +246,29 @@ public class SettingsUI extends JPanel implements ActionListener {
 
         switch (theme) {
             case "Dark" -> {
-                setTextColor(240);
-                setButtonColor(80);
-                setBgColor(64);
+                setTextColorAll(240);
+                setButtonColorAll(80);
+                setBgColorAll(64);
+            }
+            case "Demonic Red" -> {
+                setTextColorAll(255);
+                setButtonColorAll(0);
+                setBgRGB(72, 0, 0);
             }
             case "Light" -> {
-                setTextColor(0);
-                setButtonColor(220);
-                setBgColor(240);
+                setTextColorAll(0);
+                setButtonColorAll(220);
+                setBgColorAll(240);
             }
             case "Pink+White" -> {
-                setTextColor(0);
-                setButtonColor(240);
-                bgRed.setValue(220);
-                bgGreen.setValue(150);
-                bgBlue.setValue(200);
+                setTextColorAll(0);
+                setButtonColorAll(240);
+                setBgRGB(220, 150, 200);
             }
-            case "Pink+Black" -> {
-                setTextColor(255);
-                setButtonColor(0);
-                bgRed.setValue(220);
-                bgGreen.setValue(150);
-                bgBlue.setValue(200);
+            case "Pastel Blue" -> {
+                setTextColorAll(255);
+                setButtonRGB(92, 153, 255);
+                setBgRGB(128, 176, 255);
             }
         }
 
@@ -291,7 +318,7 @@ public class SettingsUI extends JPanel implements ActionListener {
         switch (e.getActionCommand()) {
             case "Apply" -> {
 
-                String theme = themeListBox.getSelectedItem().toString();
+                String theme = Objects.requireNonNull(themeListBox.getSelectedItem()).toString();
 
                 if (theme.equals("Current"))  {
                     updateValues();
@@ -300,8 +327,8 @@ public class SettingsUI extends JPanel implements ActionListener {
                 updateValues();
 
             }
-            case "bruh" -> {
-                int x;
+            case "Set Defaults" -> {
+
             }
         }
 
