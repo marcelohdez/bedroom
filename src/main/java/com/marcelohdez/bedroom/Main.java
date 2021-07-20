@@ -74,4 +74,14 @@ public class Main {
         t.start(); // Start timer
     }
 
+    public static void updateColors() {
+
+        ui.reloadColors();
+        clockInWnd.reloadColors();
+        clockOutWnd.reloadColors();
+        enterBreakWnd.reloadColors();
+        leaveBreakWnd.reloadColors();
+
+    }
+
 }

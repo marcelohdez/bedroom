@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
@@ -19,22 +20,28 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private final Main.TIME_WINDOW type;
 
     // Lists (for the list boxes)
-    private final String[] amPMOptions = {"AM","PM"},
-            hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"},
-            minutes = {"00", "01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11",
-                    "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
-                    "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35",
-                    "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47",
-                    "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"},
-            targets = {"01", "02", "03", "04", "05", "06","07", "08", "09", "10", "11",
-                    "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
-                    "24"};
+    private final String[] amPMOptions = {"AM","PM"};
+    private final String[] hours = {"01:", "02:", "03:", "04:", "05:", "06:",
+            "07:", "08:", "09:", "10:", "11:", "12:"};
+    private final String[] minutes = createNumberList(0, 60);
+    private final String[] targets = createNumberList(1, 25);
 
     // List boxes:
-    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions),
-            hrBox = new JComboBox<>(hours),
-            minBox = new JComboBox<>(minutes),
-            setTarget = new JComboBox<>(targets);
+    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions);
+    private final JComboBox<String> hrBox = new JComboBox<>(hours);
+    private final JComboBox<String> minBox = new JComboBox<>(minutes);
+    private final JComboBox<String> setTarget = new JComboBox<>(targets);
+
+    // Other components:
+    private final JButton select = new JButton("Select");                     // Select button
+    private final Dimension listBoxSize = new Dimension(80, 30);      // List box size
+    private final Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
+    private final JLabel topText = new JLabel();                                  // Top text
+
+    // Component rows:
+    private final JPanel labelRow = new JPanel();
+    private final JPanel timeBoxesRow = new JPanel();
+    private final JPanel selectRow = new JPanel();
 
     public SelectTimeUI(Main.TIME_WINDOW type) {
 
@@ -42,14 +49,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
-
-        JPanel labelRow = new JPanel(), // Create content rows
-                timeBoxesRow = new JPanel(), selectRow = new JPanel();
-
-        JButton select = new JButton("Select");                     // Select button
-        Dimension listBoxSize = new Dimension(80, 30);      // List box size
-        Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
-        JLabel topText = new JLabel();                                  // Top text
 
         switch (type) { // Change top text depending on window type
             case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
@@ -70,20 +69,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
 
         // ======= Set colors =======
-        labelRow.setBackground(UI.bg);
-        topText.setForeground(UI.textColor);
-        select.setBackground(UI.buttonColor);
-        select.setForeground(UI.textColor);
-        hrBox.setBackground(UI.buttonColor);
-        hrBox.setForeground(UI.textColor);
-        minBox.setBackground(UI.buttonColor);
-        minBox.setForeground(UI.textColor);
-        amPMBox.setBackground(UI.buttonColor);
-        amPMBox.setForeground(UI.textColor);
-        setTarget.setBackground(UI.buttonColor);
-        setTarget.setForeground(UI.textColor);
-        selectRow.setBackground(UI.bg);
-        timeBoxesRow.setBackground(UI.bg);
+        colorSelf();
 
         // Add components to their rows
         labelRow.add(topText);
@@ -258,6 +244,41 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         targetRow.add(setTarget);
 
         return targetRow; // Return the new panel
+
+    }
+
+    private String[] createNumberList(int start, int end) {
+
+        ArrayList<String> list = new ArrayList<>();
+        StringBuilder sb;
+        for (int i = start; i < end; i++) {
+            sb = new StringBuilder();
+            if (i < 10) sb.append(0);
+            list.add(sb.append(i).toString());
+        }
+
+        // This line was gotten from Floern and Bozho's response on StackOverflow:
+        // https://stackoverflow.com/questions/4042434/converting-arrayliststring-to-string-in-java
+        return list.toArray(new String[0]);
+
+    }
+
+    public void colorSelf() {
+
+        this.labelRow.setBackground(UI.bg);
+        this.topText.setForeground(UI.textColor);
+        this.select.setBackground(UI.buttonColor);
+        this.select.setForeground(UI.textColor);
+        this.hrBox.setBackground(UI.buttonColor);
+        this.hrBox.setForeground(UI.textColor);
+        this.minBox.setBackground(UI.buttonColor);
+        this.minBox.setForeground(UI.textColor);
+        this.amPMBox.setBackground(UI.buttonColor);
+        this.amPMBox.setForeground(UI.textColor);
+        this.setTarget.setBackground(UI.buttonColor);
+        this.setTarget.setForeground(UI.textColor);
+        this.selectRow.setBackground(UI.bg);
+        this.timeBoxesRow.setBackground(UI.bg);
 
     }
 

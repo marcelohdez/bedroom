@@ -49,6 +49,12 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         this.ui.setListBoxIndexes(type);
     }
 
+    public void reloadColors() {
+
+        this.ui.colorSelf();
+
+    }
+
     // Cancel setting break times if user tries to close window
     @Override
     public void windowClosing(WindowEvent e) {

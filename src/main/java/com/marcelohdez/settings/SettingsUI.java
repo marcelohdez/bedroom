@@ -262,7 +262,7 @@ public class SettingsUI extends JPanel implements ActionListener {
                 (Integer) bgBlue.getValue()};
 
         saveSettings();
-        Main.ui.reloadColors();
+        Main.updateColors();
 
     }
 
