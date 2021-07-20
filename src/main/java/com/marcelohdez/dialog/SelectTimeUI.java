@@ -21,8 +21,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     // Lists (for the list boxes)
     private final String[] amPMOptions = {"AM","PM"};
-    private final String[] hours = {"01:", "02:", "03:", "04:", "05:", "06:",
-            "07:", "08:", "09:", "10:", "11:", "12:"};
+    private final String[] hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"};
     private final String[] minutes = createNumberList(0, 60);
     private final String[] targets = createNumberList(1, 25);
 
@@ -34,8 +33,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     // Other components:
     private final JButton select = new JButton("Select");                     // Select button
-    private final Dimension listBoxSize = new Dimension(80, 30);      // List box size
-    private final Dimension smallListBoxSize = new Dimension(65, 30); // Skip and am/pm components
     private final JLabel topText = new JLabel();                                  // Top text
 
     // Component rows:
@@ -50,6 +47,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(GET_TIME.CURRENT); // Set to current time
 
+        Dimension listBoxSize = new Dimension(80, 30);
+        Dimension smallListBoxSize = new Dimension(65, 30);
+
         switch (type) { // Change top text depending on window type
             case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
             case START_BREAK_TYPE -> topText.setText("Select BREAK START time:");
@@ -62,8 +62,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
+        // List box size
         hrBox.setPreferredSize(listBoxSize);
         minBox.setPreferredSize(listBoxSize);
+        // Target and am/pm components
         amPMBox.setPreferredSize(smallListBoxSize);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
@@ -96,11 +98,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         switch (type) { // Set minBox depending on type and get wanted hour int
             // Case 0 is to get current time, for hour it is already stored above
             case CURRENT -> // Set minBox to current minute
-                    minBox.setSelectedIndex(LocalTime.now().getMinute());
+                    this.minBox.setSelectedIndex(LocalTime.now().getMinute());
             case CLOCK_IN_PLUS_4H -> { // Get 4hrs after clock in time, for clock out window
                 hour = UI.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
-                minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
+                this.minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
             case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
                 minute = UI.breakInTime.getMinute() + 30; // +30 minutes after break start
@@ -109,7 +111,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     minute -= 60;
                     hour = UI.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
                 }
-                minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
+                this.minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
             }
         }
 
@@ -122,9 +124,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         if (e.getActionCommand().equals("Select")) { // Setting time to selected values
 
             LocalTime newTime =
-                    LocalTime.parse(makeTime24Hour(hrBox.getSelectedIndex() + 1,
-                            minBox.getSelectedIndex(),
-                            Objects.requireNonNull(amPMBox.getSelectedItem()).toString()));
+                    LocalTime.parse(makeTime24Hour(this.hrBox.getSelectedIndex() + 1,
+                            this.minBox.getSelectedIndex(),
+                            Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
 
             if (this.type.equals(Main.TIME_WINDOW.CLOCK_IN_TYPE)) { // ======= For clock in time=======
 
@@ -211,18 +213,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private void setListBoxesByHour(int hour) {
 
         if (hour >= 12) {
-            amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
+            this.amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
             // This if statement sets the list box index to current hour,
             // since LocalTime is in 24hr format, we have to do some maths
             // to get it to 12hr am/pm.
             if (hour != 12) {                       // Set hour to 1-11pm
-                hrBox.setSelectedIndex(hour - 13);
-            } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
+                this.hrBox.setSelectedIndex(hour - 13);
+            } else this.hrBox.setSelectedIndex(11); // Set hour to 12pm
         } else {
-            amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
+            this.amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
             if (hour != 0) {                        // Set hour to 1-11am
-                hrBox.setSelectedIndex(hour - 1);
-            } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
+                this.hrBox.setSelectedIndex(hour - 1);
+            } else this.hrBox.setSelectedIndex(11); // Set hour to 12am (or 0 in 24hr)
         }
 
     }

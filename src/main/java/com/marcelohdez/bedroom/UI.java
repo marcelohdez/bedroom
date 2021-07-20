@@ -33,8 +33,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static boolean clockInTimePassed = false;
     public static int target = 0; // Target orders/hr
     private static long ordersNeeded = 0;
-    private static double percentOfShift = 0;   // How much of our shift have we done (in decimal,
-    // ex: 80% is 0.8)
 
     // Time values
     public static LocalTime clockInTime, clockOutTime,
@@ -44,16 +42,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Public reusable colors & fonts
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
-    public static Color textColor = // Get color for text from user's prefs, default to 240 if not found
-            new Color(Main.userPrefs.getInt("textRed", 240),
+    // Get colors for UI from user's preferences
+    public static Color textColor = new Color(Main.userPrefs.getInt("textRed", 240),
                     Main.userPrefs.getInt("textGreen", 240),
-                    Main.userPrefs.getInt("textBlue", 240)),
-            // Get color of buttons
-            buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
+                    Main.userPrefs.getInt("textBlue", 240));
+    // Get color of buttons
+    public static Color buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
                     Main.userPrefs.getInt("buttonGreen", 80),
-                    Main.userPrefs.getInt("buttonBlue", 80)),
-            // Get color of background
-            bg = new Color(Main.userPrefs.getInt("bgRed", 64),
+                    Main.userPrefs.getInt("buttonBlue", 80));
+    // Get color of background
+    public static Color bg = new Color(Main.userPrefs.getInt("bgRed", 64),
                     Main.userPrefs.getInt("bgGreen", 64),
                     Main.userPrefs.getInt("bgBlue", 64));
 
@@ -111,9 +109,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             hr++;
             min -= 60;
         }
-
-        percentOfShift = ((double) totalSecClockedIn / // Set percent of shift done
-                clockInTime.until(clockOutTime, ChronoUnit.SECONDS));
 
         getStats();
 
