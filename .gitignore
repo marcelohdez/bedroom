@@ -24,3 +24,6 @@ hs_err_pid*
 
 # ignore intellij configs
 .idea/
+
+# ignore for MacOS
+*.DS_Store
