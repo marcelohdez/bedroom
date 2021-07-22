@@ -11,7 +11,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -22,5 +21,24 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# ignore intellij configs
+# ignore gradle stuffs
+.gradle/
+build/
+out/
+classes/
+
+# ignore intellij idea stuffs
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# ignore vscode stuffs
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# ignore for MacOS
+*.DS_Store
