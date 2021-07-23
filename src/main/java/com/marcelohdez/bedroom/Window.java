@@ -10,6 +10,7 @@ public class Window extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        ui.requestFocus();
         add(ui);
         pack();
         setLocationRelativeTo(null);
