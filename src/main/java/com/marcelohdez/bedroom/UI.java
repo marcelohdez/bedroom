@@ -1,6 +1,6 @@
 package com.marcelohdez.bedroom;
 
-import com.marcelohdez.dialog.SelectTimeUI;
+import com.marcelohdez.enums.SetTime;
 import com.marcelohdez.settings.SettingsWindow;
 
 import java.awt.*;
@@ -195,7 +195,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private void enterBreak() {
         if (!freeze) {
             Main.enterBreakWnd.centerOnMainWindow(); // Set to current center of main window
-            Main.enterBreakWnd.setUITime(SelectTimeUI.GET_TIME.CURRENT);
+            Main.enterBreakWnd.setUITime(SetTime.CURRENT);
             Main.enterBreakWnd.setVisible(true);
         }
     }

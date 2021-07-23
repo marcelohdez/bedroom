@@ -2,6 +2,7 @@ package com.marcelohdez.dialog;
 
 import com.marcelohdez.bedroom.Main;
 import com.marcelohdez.bedroom.UI;
+import com.marcelohdez.enums.ErrorType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class ErrorWindow extends JDialog implements ActionListener {
 
-    public ErrorWindow(Main.ERROR e) {
+    public ErrorWindow(ErrorType e) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -52,7 +53,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
     }
 
     // Get error message per error type
-    private String getErrorMessage(Main.ERROR e) {
+    private String getErrorMessage(ErrorType e) {
 
         switch(e) { // (Limit of 6 words per line)
             case BREAK_OUT_OF_SHIFT -> {

@@ -1,6 +1,7 @@
 package com.marcelohdez.bedroom;
 
 import com.marcelohdez.dialog.*;
+import com.marcelohdez.enums.TimeWindowType;
 
 import javax.swing.*;
 import java.util.prefs.Preferences;
@@ -20,19 +21,6 @@ public class Main {
 
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
-    public enum TIME_WINDOW { // Type of select time windows
-        CLOCK_IN_TYPE,
-        CLOCK_OUT_TYPE,
-        START_BREAK_TYPE,
-        END_BREAK_TYPE
-    }
-
-    public enum ERROR { // Types of user errors we can catch
-        BREAK_OUT_OF_SHIFT,
-        NEGATIVE_BREAK_TIME,
-        NEGATIVE_SHIFT_TIME
-    }
-
     public static void main(String[] args) {
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -42,12 +30,12 @@ public class Main {
         ui = new UI();
         wnd = new Window(ui);
         // Create clock in/out windows
-        clockInWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_IN_TYPE);
+        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN_TYPE);
         clockInWnd.centerOnMainWindow(); // Center clock in window on main window
-        clockOutWnd = new SelectTimeWindow(TIME_WINDOW.CLOCK_OUT_TYPE);
+        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT_TYPE);
         // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TIME_WINDOW.START_BREAK_TYPE);
-        leaveBreakWnd = new SelectTimeWindow(TIME_WINDOW.END_BREAK_TYPE);
+        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK_TYPE);
+        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK_TYPE);
 
         // Create a timer to run every second
         Timer t = new Timer(1000, e -> {
