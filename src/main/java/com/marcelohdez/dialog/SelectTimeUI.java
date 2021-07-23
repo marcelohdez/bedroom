@@ -133,40 +133,58 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
 
-            if (newTime.isAfter(UI.clockInTime)) {
-
-                UI.clockOutTime = newTime; // Set clock out time
-                UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-                Main.timesChosen = true;               // Clock out time is now chosen
-                Main.clockOutWnd.dispose();         // Close clock out time window
-
-            } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
+            setClockOutTime(newTime);
 
         } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
 
-            if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
-                    newTime.equals(UI.clockInTime)) {
-
-                UI.breakInTime = newTime; // Set enter break time
-                setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
-                        SetTime.BREAK_START_PLUS_30M);
-
-            } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
+            setBreakStartTime(newTime);
 
         } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
 
-            if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
-                    newTime.equals(UI.clockOutTime)) {
-
-                UI.breakOutTime = newTime; // Set leave break time
-                UI.breakTimesChosen = true;
-                Main.leaveBreakWnd.dispose();       // Close leave break window
-
-            } else new ErrorWindow(ErrorType.NEGATIVE_BREAK_TIME);
+            setBreakEndTime(newTime);
 
         }
 
         if (Main.timesChosen) UI.getTime();
+
+    }
+
+    private void setClockOutTime(LocalTime time) {
+
+        if (time.isAfter(UI.clockInTime)) {
+
+            UI.clockOutTime = time; // Set clock out time
+            UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+            Main.timesChosen = true;               // Clock out time is now chosen
+            Main.clockOutWnd.dispose();         // Close clock out time window
+
+        } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
+
+    }
+
+    private void setBreakStartTime(LocalTime time) {
+
+        if ((time.isAfter(UI.clockInTime)) && time.isBefore(UI.clockOutTime) ||
+                time.equals(UI.clockInTime)) {
+
+            UI.breakInTime = time; // Set enter break time
+            setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
+                    SetTime.BREAK_START_PLUS_30M);
+
+        } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
+
+    }
+
+    private void setBreakEndTime(LocalTime time) {
+
+        if (time.isAfter(UI.breakInTime) && time.isBefore(UI.clockOutTime) ||
+                time.equals(UI.clockOutTime)) {
+
+            UI.breakOutTime = time; // Set leave break time
+            UI.breakTimesChosen = true;
+            Main.leaveBreakWnd.dispose();       // Close leave break window
+
+        } else new ErrorWindow(ErrorType.NEGATIVE_BREAK_TIME);
 
     }
 
