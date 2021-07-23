@@ -19,19 +19,20 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     // Lists (for the list boxes)
     private final String[] amPMOptions = {"AM","PM"};
-    private final String[] hours = {"01:", "02:", "03:", "04:", "05:", "06:", "07:", "08:", "09:", "10:", "11:", "12:"};
-    private final String[] minutes = createNumberList(0, 60);
-    private final String[] targets = createNumberList(1, 25);
+    private final String[] hours =
+            {"01:", "02:", "03:", "04:", "05:", "06:",
+                    "07:", "08:", "09:", "10:", "11:", "12:"};
 
-    // List boxes:
+    // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions);
     private final JComboBox<String> hrBox = new JComboBox<>(hours);
-    private final JComboBox<String> minBox = new JComboBox<>(minutes);
-    private final JComboBox<String> setTarget = new JComboBox<>(targets);
+    // Create minutes (0-59) and hourly targets (1-24)
+    private final JComboBox<String> minBox = new JComboBox<>(createNumberList(0, 59));
+    private final JComboBox<String> setTarget = new JComboBox<>(createNumberList(1, 24));
 
     // Other components:
-    private final JButton select = new JButton("Select");                     // Select button
-    private final JLabel topText = new JLabel();                                  // Top text
+    private final JButton select = new JButton("Select");   // Select button
+    private final JLabel topText = new JLabel();                 // Top text
 
     // Component rows:
     private final JPanel labelRow = new JPanel();
@@ -248,7 +249,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         ArrayList<String> list = new ArrayList<>();
         StringBuilder sb;
-        for (int i = start; i < end; i++) {
+        for (int i = start; i <= end; i++) {
             sb = new StringBuilder();
             if (i < 10) sb.append(0);
             list.add(sb.append(i).toString());
