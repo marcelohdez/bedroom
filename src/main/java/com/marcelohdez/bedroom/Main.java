@@ -30,12 +30,12 @@ public class Main {
         ui = new UI();
         wnd = new Window(ui);
         // Create clock in/out windows
-        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN_TYPE);
+        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
         clockInWnd.centerOnMainWindow(); // Center clock in window on main window
-        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT_TYPE);
+        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
         // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK_TYPE);
-        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK_TYPE);
+        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
+        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK);
 
         // Create a timer to run every second
         Timer t = new Timer(1000, e -> {

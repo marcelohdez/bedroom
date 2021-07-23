@@ -47,10 +47,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         Dimension smallListBoxSize = new Dimension(65, 30);
 
         switch (type) { // Change top text depending on window type
-            case CLOCK_OUT_TYPE -> topText.setText("Select CLOCK OUT time:");
-            case START_BREAK_TYPE -> topText.setText("Select BREAK START time:");
-            case END_BREAK_TYPE -> topText.setText("Select BREAK END time:");
-            case CLOCK_IN_TYPE -> topText.setText("  Select CLOCK IN time:  ");
+            case CLOCK_OUT -> topText.setText("Select CLOCK OUT time:");
+            case START_BREAK -> topText.setText("Select BREAK START time:");
+            case END_BREAK -> topText.setText("Select BREAK END time:");
+            case CLOCK_IN -> topText.setText("  Select CLOCK IN time:  ");
         }
 
         // Set top text font
@@ -79,7 +79,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Add rows to UI
         add(labelRow);
         add(timeBoxesRow);
-        if (type.equals(TimeWindowType.CLOCK_OUT_TYPE)) add(createTargetRow());
+        if (type.equals(TimeWindowType.CLOCK_OUT)) add(createTargetRow());
         add(selectRow);
 
         requestFocus();
@@ -124,12 +124,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                             this.minBox.getSelectedIndex(),
                             Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
 
-            if (this.type.equals(TimeWindowType.CLOCK_IN_TYPE)) { // ======= For clock in time=======
+            if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
 
                 UI.clockInTime = newTime; // Set clock in time
                 closeAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
 
-            } else if (this.type.equals(TimeWindowType.CLOCK_OUT_TYPE)) { // ======= For clock out time =======
+            } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
 
                 if (newTime.isAfter(UI.clockInTime)) {
 
@@ -140,7 +140,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
 
-            } else if (this.type.equals(TimeWindowType.START_BREAK_TYPE)) { // ======= For entering break =======
+            } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
 
                 if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
                         newTime.equals(UI.clockInTime)) {
@@ -151,7 +151,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
 
-            } else if (this.type.equals(TimeWindowType.END_BREAK_TYPE)) { // ======= For leaving break =======
+            } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
 
                 if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
                         newTime.equals(UI.clockOutTime)) {

@@ -27,10 +27,10 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         // Set window title per window type
         switch (type) {
-            case CLOCK_OUT_TYPE -> setTitle("Clocking out:");
-            case START_BREAK_TYPE -> setTitle("Enter break:");
-            case END_BREAK_TYPE -> setTitle("Leave break:");
-            case CLOCK_IN_TYPE -> {
+            case CLOCK_OUT -> setTitle("Clocking out:");
+            case START_BREAK -> setTitle("Enter break:");
+            case END_BREAK -> setTitle("Leave break:");
+            case CLOCK_IN -> {
                 setTitle("Clocking in:");
                 setVisible(true); // Automatically show clock in window
             }
@@ -60,11 +60,11 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if (this.type.equals(TimeWindowType.START_BREAK_TYPE)) { // If setting break start time:
+        if (this.type.equals(TimeWindowType.START_BREAK)) { // If setting break start time:
 
             Main.enterBreakWnd.dispose();   // Close the window
 
-        } else if (this.type.equals(TimeWindowType.END_BREAK_TYPE)) { // If setting break end time:
+        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // If setting break end time:
 
             UI.breakInTime = null;          // Delete break start time that was set
             Main.leaveBreakWnd.dispose();   // Close the window
