@@ -21,6 +21,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         addWindowListener(this);
 
         ui = new SelectTimeUI(type);            // Create ui based on window type
+        ui.addKeyListener(ui);                  // Add key listener (itself) to ui
         add(ui);                                // Add the UI
 
         pack();
@@ -42,6 +43,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
                 Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
+        this.ui.requestFocus();
 
     }
 

@@ -7,11 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SelectTimeUI extends JPanel implements ActionListener {
+public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
 
     private final TimeWindowType type;
 
@@ -115,58 +117,55 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    public void actionPerformed(ActionEvent e) {
+    private void selectTime() {
 
-        if (e.getActionCommand().equals("Select")) { // Setting time to selected values
+        LocalTime newTime =
+                LocalTime.parse(makeTime24Hour(
+                        this.hrBox.getSelectedIndex() + 1,
+                        this.minBox.getSelectedIndex(),
+                        Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
 
-            LocalTime newTime =
-                    LocalTime.parse(makeTime24Hour(this.hrBox.getSelectedIndex() + 1,
-                            this.minBox.getSelectedIndex(),
-                            Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
+        if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
 
-            if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
+            UI.clockInTime = newTime; // Set clock in time
+            setTimeAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
 
-                UI.clockInTime = newTime; // Set clock in time
-                closeAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
+        } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
 
-            } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
+            if (newTime.isAfter(UI.clockInTime)) {
 
-                if (newTime.isAfter(UI.clockInTime)) {
+                UI.clockOutTime = newTime; // Set clock out time
+                UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+                Main.timesChosen = true;               // Clock out time is now chosen
+                Main.clockOutWnd.dispose();         // Close clock out time window
 
-                    UI.clockOutTime = newTime; // Set clock out time
-                    UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-                    Main.timesChosen = true;               // Clock out time is now chosen
-                    Main.clockOutWnd.dispose();         // Close clock out time window
+            } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
 
-                } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
+        } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
 
-            } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
+            if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
+                    newTime.equals(UI.clockInTime)) {
 
-                if ((newTime.isAfter(UI.clockInTime)) && newTime.isBefore(UI.clockOutTime) ||
-                        newTime.equals(UI.clockInTime)) {
+                UI.breakInTime = newTime; // Set enter break time
+                setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
+                        SetTime.BREAK_START_PLUS_30M);
 
-                    UI.breakInTime = newTime; // Set enter break time
-                    closeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
-                            SetTime.BREAK_START_PLUS_30M);
+            } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
 
-                } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
+        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
 
-            } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
+            if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
+                    newTime.equals(UI.clockOutTime)) {
 
-                if (newTime.isAfter(UI.breakInTime) && newTime.isBefore(UI.clockOutTime) ||
-                        newTime.equals(UI.clockOutTime)) {
+                UI.breakOutTime = newTime; // Set leave break time
+                UI.breakTimesChosen = true;
+                Main.leaveBreakWnd.dispose();       // Close leave break window
 
-                    UI.breakOutTime = newTime; // Set leave break time
-                    UI.breakTimesChosen = true;
-                    Main.leaveBreakWnd.dispose();       // Close leave break window
-
-                } else new ErrorWindow(ErrorType.NEGATIVE_BREAK_TIME);
-
-            }
-
-            if (Main.timesChosen) UI.getTime();
+            } else new ErrorWindow(ErrorType.NEGATIVE_BREAK_TIME);
 
         }
+
+        if (Main.timesChosen) UI.getTime();
 
     }
 
@@ -196,13 +195,13 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    private void closeAndProceed(SelectTimeWindow windowToClose,
-                                 SelectTimeWindow windowToShow, SetTime newWindowType) {
+    private void setTimeAndProceed(SelectTimeWindow oldWindow, SelectTimeWindow newWindow,
+                                   SetTime newWindowType) {
 
-        windowToClose.dispose();
-        windowToShow.centerOnMainWindow();
-        windowToShow.setUITime(newWindowType);
-        windowToShow.setVisible(true);
+        oldWindow.dispose();
+        newWindow.centerOnMainWindow();
+        newWindow.setUITime(newWindowType);
+        newWindow.setVisible(true);
 
     }
 
@@ -279,5 +278,22 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         this.timeBoxesRow.setBackground(UI.bg);
 
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Select")) selectTime();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == 13 || e.getKeyCode() == 10) // Enter selects time (return on MacOS)
+            selectTime();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
 
 }
