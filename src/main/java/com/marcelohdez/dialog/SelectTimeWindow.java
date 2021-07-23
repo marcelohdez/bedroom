@@ -58,15 +58,20 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     }
 
-    // Cancel setting break times if user tries to close window
     @Override
-    public void windowClosing(WindowEvent e) {
+    public void windowClosing(WindowEvent e) { // When closing select time windows
 
-        if (this.type.equals(TimeWindowType.START_BREAK)) { // If setting break start time:
+        if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // Go back to clock in time
+
+            Main.clockOutWnd.dispose();
+            Main.clockInWnd.setVisible(true);
+
+        }
+        if (this.type.equals(TimeWindowType.START_BREAK)) { // Cancel setting break start time
 
             Main.enterBreakWnd.dispose();   // Close the window
 
-        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // If setting break end time:
+        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // Cancel existing start time
 
             UI.breakInTime = null;          // Delete break start time that was set
             Main.leaveBreakWnd.dispose();   // Close the window
