@@ -16,9 +16,11 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         this.type = type;
 
         // Initial properties
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
+
 
         ui = new SelectTimeUI(type);            // Create ui based on window type
         ui.addKeyListener(ui);                  // Add key listener (itself) to ui

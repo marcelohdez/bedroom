@@ -10,17 +10,22 @@ import java.util.Objects;
 
 public class SettingsUI extends JPanel implements ActionListener {
 
-    private static final Dimension sizeOfSideLabels = new Dimension(100, 30);
+    private static final Dimension colorLabelsSize = new Dimension(100, 20);
 
     // RGB values already set
     public int[] textRGB, buttonRGB, bgRGB;
 
-    JSpinner textRed, textGreen, textBlue;          // Text color spinners
-    JSpinner buttonRed, buttonGreen, buttonBlue;    // Button color spinners
-    JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
+    // Spinners:
+    private JSpinner textRed, textGreen, textBlue;          // Text color spinners
+    private JSpinner buttonTextRed, buttonTextGreen, buttonTextBlue; // Button text color spinners
+    private JSpinner buttonRed, buttonGreen, buttonBlue;    // Button color spinners
+    private JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
 
-    JComboBox<String> themeListBox;
-    String[] themes = {"Current", "Dark", "Demonic Red", "Light", "Pink+White", "Pastel Blue"};
+    private final JComboBox<String> themeListBox =
+            new JComboBox<>(new String[]{"Banana", "Dark", "Demonic Red", "Contrast",
+                    "Light", "Pink+White", "Sky Blue"});
+
+    private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
 
     public SettingsUI() { // Settings UI constructor
 
@@ -30,13 +35,16 @@ public class SettingsUI extends JPanel implements ActionListener {
         setColorSpinners();
 
         // Add rows
-        add(createLabelRow("Colors (in RGB)"));
+        add(createLabelRow("Colors (Red, Green, Blue)"));
+        add(createThemeRow());
         add(createTextSettings());
+        add(createButtonTextSettings());
         add(createButtonSettings());
         add(createBgSettings());
-        add(createThemesRow());
-        add(createLabelRow("Misc."));
-        add(createButtonRow());
+        add(createLabelRow("Misc. (Changes need restart)"));
+        add(createFirstMiscRow());
+        add(createButtonRow("Manage Work Apps"));
+        add(createButtonRow("Set Defaults"));
 
     }
 
@@ -79,16 +87,21 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createTextSettings() { // Create text color settings row
+    private JPanel createTextSettings() {
 
+        // Create thingies
         JPanel row = new JPanel(); // Create panel to hold row of settings
         JLabel label = new JLabel("Text:");
-        label.setPreferredSize(sizeOfSideLabels);
+        label.setPreferredSize(colorLabelsSize);
 
-        // Color thingies
+        // Customize thingies
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
+        textRed.addChangeListener(this);
+        textGreen.addChangeListener(this);
+        textBlue.addChangeListener(this);
 
+        // Add thingies to row
         row.add(label);
         row.add(textRed);
         row.add(textGreen);
@@ -98,16 +111,42 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createButtonSettings() { // Create text color settings row
+    private JPanel createButtonTextSettings() {
 
+        // Create thingies
+        JPanel row = new JPanel(); // Create panel to hold row of settings
+        JLabel label = new JLabel("Button Text:");
+        label.setPreferredSize(colorLabelsSize);
+
+        // Customize thingies
+        row.setBackground(UI.bg);
+        label.setForeground(UI.textColor);
+        buttonTextRed.addChangeListener(this);
+        buttonTextGreen.addChangeListener(this);
+        buttonTextBlue.addChangeListener(this);
+
+        // Add thingies to row
+        row.add(label);
+        row.add(buttonTextRed);
+        row.add(buttonTextGreen);
+        row.add(buttonTextBlue);
+
+        return row;
+
+    }
+
+    private JPanel createButtonSettings() {
+
+        // Create thingies
         JPanel row = new JPanel(); // Create panel to hold row of settings
         JLabel label = new JLabel("Buttons:");
-        label.setPreferredSize(sizeOfSideLabels);
+        label.setPreferredSize(colorLabelsSize);
 
-        // Color thingies
+        // Customize thingies
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
 
+        // Add thingies to row
         row.add(label);
         row.add(buttonRed);
         row.add(buttonGreen);
@@ -117,13 +156,14 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createBgSettings() { // Create text color settings row
+    private JPanel createBgSettings() {
 
+        // Create thingies
         JPanel row = new JPanel(); // Create panel to hold row of settings
         JLabel label = new JLabel("Background:");
-        label.setPreferredSize(sizeOfSideLabels);
+        label.setPreferredSize(colorLabelsSize);
 
-        // Color thingies
+        // Customize thingies
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
 
@@ -150,46 +190,58 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createButtonRow() {
+    private JPanel createButtonRow(String buttonText) {
 
+        // Create the components
         JPanel row = new JPanel();
-        JButton button = new JButton("Set Defaults");
+        JButton button = new JButton(buttonText);
 
+        // Customize them
         row.setBackground(UI.bg);
         row.add(button);
         button.setForeground(UI.textColor);
         button.setBackground(UI.buttonColor);
-
         button.addActionListener(this);
+
+        // Add to row
+        row.add(button);
 
         return  row;
 
     }
 
-    private JPanel createThemesRow() {
+    private JPanel createThemeRow() {
 
         // Create the components
         JPanel row = new JPanel();
-        JLabel label = new JLabel("Set to theme:");
-        themeListBox = new JComboBox<>(themes);
-        JButton button = new JButton("Apply");
+        JLabel label = new JLabel("Theme:");
 
         // Customize them
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
         themeListBox.setBackground(UI.buttonColor);
-        themeListBox.setForeground(UI.textColor);
+        themeListBox.setForeground(UI.buttonTextColor);
         themeListBox.setSelectedIndex(0);
-        button.setForeground(UI.textColor);
-        button.setBackground(UI.buttonColor);
-        button.setToolTipText("<html><b>This window doesn't change until reopened.</b></html>");
+        themeListBox.addActionListener(this);
+        themeListBox.setSelectedIndex(Main.userPrefs.getInt("lastTheme", 0));
 
-        // Add them to the row
+        // Add to row
         row.add(label);
         row.add(themeListBox);
-        row.add(button);
 
-        button.addActionListener(this);
+        return row;
+
+    }
+
+    private JPanel createFirstMiscRow() {
+
+        JPanel row = new JPanel();
+
+        row.setBackground(UI.bg);
+        row.add(alwaysOnTop);
+        alwaysOnTop.setForeground(UI.textColor);
+        alwaysOnTop.setBackground(UI.bg);
+        alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
 
         return  row;
 
@@ -275,6 +327,12 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
+    private void setDefaultMisc() {
+
+        alwaysOnTop.setSelected(false);
+
+    }
+
     public void updateValues() {
 
         textRGB = new int[] {(Integer) textRed.getValue(),
@@ -310,6 +368,9 @@ public class SettingsUI extends JPanel implements ActionListener {
         Main.userPrefs.putInt("bgRed", bgRGB[0]);
         Main.userPrefs.putInt("bgGreen", bgRGB[1]);
         Main.userPrefs.putInt("bgBlue", bgRGB[2]);
+
+        // Misc options
+        Main.userPrefs.putBoolean("alwaysOnTop", alwaysOnTop.isSelected());
 
     }
 

@@ -38,6 +38,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
 
         // Set window properties
         setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from all other windows
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Error");

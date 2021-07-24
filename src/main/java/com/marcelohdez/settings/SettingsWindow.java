@@ -12,6 +12,7 @@ public class SettingsWindow extends JDialog implements WindowListener {
     public SettingsWindow() {
 
         setModalityType(ModalityType.APPLICATION_MODAL);
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         addWindowListener(this);
         setTitle("Settings");
         setResizable(false);
@@ -33,7 +34,7 @@ public class SettingsWindow extends JDialog implements WindowListener {
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
         this.sui.updateValues();
-        UI.freeze = false;
+        Main.ui.requestFocus();
 
     }
 

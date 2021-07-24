@@ -9,6 +9,7 @@ public class Window extends JFrame {
         setTitle("Bedroom " + Main.version);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
 
         ui.requestFocus();
         add(ui);
