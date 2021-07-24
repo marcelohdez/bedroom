@@ -25,6 +25,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
         message.setBackground(UI.bg);
         message.setForeground(UI.textColor);
         message.setFont(UI.boldText);
+        message.setEditable(false);
         ok.addActionListener(this);
         ok.setBackground(UI.buttonColor);
         ok.setForeground(UI.textColor);
