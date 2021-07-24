@@ -250,7 +250,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         setTargetRow = new JPanel();
         targetText = new JLabel("  Please set an hourly target:"); // Create target label
 
-        if (Main.isOSX) targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
+        if (System.getProperty("os.name").equals("Mac OS X"))
+            targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
         targetText.setPreferredSize(new Dimension(165, 25));
         targetText.setForeground(UI.textColor);
         setTargetRow.setBackground(UI.bg);

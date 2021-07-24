@@ -10,8 +10,6 @@ public class Main {
 
     public static String version = "3 (Beta 1)";
 
-    public static boolean isOSX = System.getProperty("os.name").contains("Mac OS X"); // Check if OS is MacOS
-
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
 
     public static Window wnd; // This window
