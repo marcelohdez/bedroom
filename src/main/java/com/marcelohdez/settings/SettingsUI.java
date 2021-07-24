@@ -2,7 +2,10 @@ package com.marcelohdez.settings;
 
 import com.marcelohdez.bedroom.Main;
 import com.marcelohdez.bedroom.UI;
+
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +16,7 @@ public class SettingsUI extends JPanel implements ActionListener {
     private static final Dimension colorLabelsSize = new Dimension(100, 20);
 
     // RGB values already set
-    public int[] textRGB, buttonRGB, bgRGB;
+    public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB;
 
     // Spinners:
     private JSpinner textRed, textGreen, textBlue;          // Text color spinners
@@ -56,6 +59,11 @@ public class SettingsUI extends JPanel implements ActionListener {
                 Main.userPrefs.getInt("textGreen", 240),
                 Main.userPrefs.getInt("textBlue", 240)};
 
+        buttonTextRGB = new int[] { // Get button text RGB values
+                Main.userPrefs.getInt("buttonTextRed", 240),
+                Main.userPrefs.getInt("buttonTextGreen", 240),
+                Main.userPrefs.getInt("buttonTextBlue", 240)};
+
         buttonRGB = new int[] { // Get button RGB values
                 Main.userPrefs.getInt("buttonRed", 80),
                 Main.userPrefs.getInt("buttonGreen", 80),
@@ -74,6 +82,11 @@ public class SettingsUI extends JPanel implements ActionListener {
         textRed = new JSpinner(new SpinnerNumberModel(textRGB[0], 0, 255, 1));
         textGreen = new JSpinner(new SpinnerNumberModel(textRGB[1], 0, 255, 1));
         textBlue = new JSpinner(new SpinnerNumberModel(textRGB[2], 0, 255, 1));
+
+        // Button text spinners
+        buttonTextRed = new JSpinner(new SpinnerNumberModel(buttonTextRGB[0], 0, 255, 1));
+        buttonTextGreen = new JSpinner(new SpinnerNumberModel(buttonTextRGB[1], 0, 255, 1));
+        buttonTextBlue = new JSpinner(new SpinnerNumberModel(buttonTextRGB[2], 0, 255, 1));
 
         // Button spinners
         buttonRed = new JSpinner(new SpinnerNumberModel(buttonRGB[0], 0, 255, 1));
@@ -198,8 +211,7 @@ public class SettingsUI extends JPanel implements ActionListener {
 
         // Customize them
         row.setBackground(UI.bg);
-        row.add(button);
-        button.setForeground(UI.textColor);
+        button.setForeground(UI.buttonTextColor);
         button.setBackground(UI.buttonColor);
         button.addActionListener(this);
 
@@ -247,6 +259,18 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
+    private void setButtonTextAndText(int value) {
+
+        textRed.setValue(value);
+        textGreen.setValue(value);
+        textBlue.setValue(value);
+
+        buttonTextRed.setValue(value);
+        buttonTextGreen.setValue(value);
+        buttonTextBlue.setValue(value);
+
+    }
+
     private void setTextColorAll(int value) {
 
         textRed.setValue(value);
@@ -255,11 +279,11 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private void setTextRGB(int r, int g, int b) {
+    private void setButtonTextAll(int value) {
 
-        textRed.setValue(r);
-        textGreen.setValue(g);
-        textBlue.setValue(b);
+        buttonTextRed.setValue(value);
+        buttonTextGreen.setValue(value);
+        buttonTextBlue.setValue(value);
 
     }
 
@@ -295,33 +319,44 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private void setTheme(String theme) {
+    private void setTheme(String theme, int index) {
 
         switch (theme) {
+            case "Banana" -> {
+                setTextColorAll(0);
+                setButtonTextAll(240);
+                setButtonRGB(54, 32, 0);
+                setBgRGB(240, 224, 53);
+            }
             case "Dark" -> {
-                setTextColorAll(240);
+                setButtonTextAndText(240);
                 setButtonColorAll(80);
                 setBgColorAll(64);
             }
             case "Demonic Red" -> {
-                setTextColorAll(255);
+                setButtonTextAndText(240);
                 setButtonColorAll(0);
                 setBgRGB(72, 0, 0);
             }
+            case "Contrast" -> {
+                setButtonTextAndText(255);
+                setButtonColorAll(0);
+                setBgColorAll(0);
+            }
             case "Light" -> {
-                setTextColorAll(0);
+                setButtonTextAndText(0);
                 setButtonColorAll(220);
                 setBgColorAll(240);
             }
             case "Pink+White" -> {
-                setTextColorAll(0);
+                setButtonTextAndText(0);
                 setButtonColorAll(240);
                 setBgRGB(220, 150, 200);
             }
-            case "Pastel Blue" -> {
-                setTextColorAll(255);
-                setButtonRGB(92, 153, 255);
-                setBgRGB(128, 176, 255);
+            case "Sky Blue" -> {
+                setButtonTextAndText(0);
+                setButtonRGB(100, 161, 240);
+                setBgRGB(150, 203, 255);
             }
         }
 
@@ -338,6 +373,10 @@ public class SettingsUI extends JPanel implements ActionListener {
         textRGB = new int[] {(Integer) textRed.getValue(),
                 (Integer) textGreen.getValue(),
                 (Integer) textBlue.getValue()};
+
+        buttonTextRGB = new int[] {(Integer) buttonTextRed.getValue(),
+                (Integer) buttonTextGreen.getValue(),
+                (Integer) buttonTextBlue.getValue()};
 
         buttonRGB = new int[] {(Integer) buttonRed.getValue(),
                 (Integer) buttonGreen.getValue(),
@@ -358,6 +397,11 @@ public class SettingsUI extends JPanel implements ActionListener {
         Main.userPrefs.putInt("textRed", textRGB[0]);
         Main.userPrefs.putInt("textGreen", textRGB[1]);
         Main.userPrefs.putInt("textBlue", textRGB[2]);
+
+        // Save button text colors
+        Main.userPrefs.putInt("buttonTextRed", buttonTextRGB[0]);
+        Main.userPrefs.putInt("buttonTextGreen", buttonTextRGB[1]);
+        Main.userPrefs.putInt("buttonTextBlue", buttonTextRGB[2]);
 
         // Save button colors
         Main.userPrefs.putInt("buttonRed", buttonRGB[0]);
@@ -390,7 +434,7 @@ public class SettingsUI extends JPanel implements ActionListener {
 
             }
             case "Set Defaults" -> {
-
+                setDefaultMisc();
             }
         }
 
