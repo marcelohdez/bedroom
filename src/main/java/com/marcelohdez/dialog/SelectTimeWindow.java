@@ -36,6 +36,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
             case CLOCK_IN -> {
                 setTitle("Clocking in:");
                 setVisible(true); // Automatically show clock in window
+                centerOnMainWindow();
             }
         }
 

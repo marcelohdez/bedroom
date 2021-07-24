@@ -31,7 +31,6 @@ public class Main {
         wnd = new Window(ui);
         // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
-        clockInWnd.centerOnMainWindow(); // Center clock in window on main window
         clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
