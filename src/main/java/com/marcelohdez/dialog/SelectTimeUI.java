@@ -33,10 +33,12 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button
     private final JLabel topText = new JLabel();                 // Top text
+    private JLabel targetText;                                  // Select target text
 
     // Component rows:
     private final JPanel labelRow = new JPanel();
     private final JPanel timeBoxesRow = new JPanel();
+    private JPanel setTargetRow = createTargetRow();
     private final JPanel selectRow = new JPanel();
 
     public SelectTimeUI(TimeWindowType type) {
@@ -82,15 +84,15 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         // Add rows to UI
         add(labelRow);
         add(timeBoxesRow);
-        if (type.equals(TimeWindowType.CLOCK_OUT)) add(createTargetRow());
+        if (type.equals(TimeWindowType.CLOCK_OUT)) add(setTargetRow);
         add(selectRow);
 
         requestFocus();
 
     }
 
-    public void setListBoxIndexes(SetTime type) { // Set time list boxes:
-        // ======= Set list box times to current/clock out time =======
+    public void setListBoxIndexes(SetTime type) { // Set list boxes to a time:
+
         int hour = LocalTime.now().getHour(); // Store hour to not be rechecked
         int minute; // Store minute
 
@@ -224,7 +226,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setListBoxesByHour(int hour) {
+    private void setListBoxesByHour(int hour) { // Convert time to 12 hour format for list boxes
 
         if (hour >= 12) {
             this.amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
@@ -245,21 +247,19 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private JPanel createTargetRow() {
 
-        JPanel targetRow = new JPanel(); // Create the target text/list box panel
-        JLabel targetText = new JLabel(); // Create target label
+        setTargetRow = new JPanel();
+        targetText = new JLabel("  Please set an hourly target:"); // Create target label
 
-        targetRow.setBackground(UI.bg);
-
+        if (Main.isOSX) targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
         targetText.setPreferredSize(new Dimension(165, 25));
         targetText.setForeground(UI.textColor);
-        targetText.setText("  Please set an hourly target:"); // Due to diff mac font, set diff text:
-        if (Main.isOSX) targetText.setText(" Select your hourly target:");
+        setTargetRow.setBackground(UI.bg);
 
         // Add the specific stuffs
-        targetRow.add(targetText);
-        targetRow.add(setTarget);
+        setTargetRow.add(targetText);
+        setTargetRow.add(setTarget);
 
-        return targetRow; // Return the new panel
+        return setTargetRow; // Return the new panel
 
     }
 
@@ -295,6 +295,11 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         this.setTarget.setForeground(UI.buttonTextColor);
         this.selectRow.setBackground(UI.bg);
         this.timeBoxesRow.setBackground(UI.bg);
+
+        if (this.type.equals(TimeWindowType.CLOCK_OUT)) {
+            this.setTargetRow.setBackground(UI.bg);
+            this.targetText.setForeground(UI.textColor);
+        }
 
     }
 
