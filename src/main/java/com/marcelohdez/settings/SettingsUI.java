@@ -277,19 +277,19 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void setTextColorAll(int value) {
+    private void setTextColorAll() {
 
-        textRed.setValue(value);
-        textGreen.setValue(value);
-        textBlue.setValue(value);
+        textRed.setValue(0);
+        textGreen.setValue(0);
+        textBlue.setValue(0);
 
     }
 
-    private void setButtonTextAll(int value) {
+    private void setButtonTextAll() {
 
-        buttonTextRed.setValue(value);
-        buttonTextGreen.setValue(value);
-        buttonTextBlue.setValue(value);
+        buttonTextRed.setValue(240);
+        buttonTextGreen.setValue(240);
+        buttonTextBlue.setValue(240);
 
     }
 
@@ -329,8 +329,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         switch (theme) {
             case "Banana" -> {
-                setTextColorAll(0);
-                setButtonTextAll(240);
+                setTextColorAll();
+                setButtonTextAll();
                 setButtonRGB(54, 32, 0);
                 setBgRGB(240, 224, 53);
             }
@@ -433,9 +433,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             case "comboBoxChanged" ->
                     setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
                             themeListBox.getSelectedIndex());
-            case "Set Defaults" -> {
-                setDefaultMisc();
-            }
+            case "Set Defaults" -> setDefaultMisc();
         }
 
     }
