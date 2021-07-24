@@ -284,15 +284,15 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         this.labelRow.setBackground(UI.bg);
         this.topText.setForeground(UI.textColor);
         this.select.setBackground(UI.buttonColor);
-        this.select.setForeground(UI.textColor);
+        this.select.setForeground(UI.buttonTextColor);
         this.hrBox.setBackground(UI.buttonColor);
-        this.hrBox.setForeground(UI.textColor);
+        this.hrBox.setForeground(UI.buttonTextColor);
         this.minBox.setBackground(UI.buttonColor);
-        this.minBox.setForeground(UI.textColor);
+        this.minBox.setForeground(UI.buttonTextColor);
         this.amPMBox.setBackground(UI.buttonColor);
-        this.amPMBox.setForeground(UI.textColor);
+        this.amPMBox.setForeground(UI.buttonTextColor);
         this.setTarget.setBackground(UI.buttonColor);
-        this.setTarget.setForeground(UI.textColor);
+        this.setTarget.setForeground(UI.buttonTextColor);
         this.selectRow.setBackground(UI.bg);
         this.timeBoxesRow.setBackground(UI.bg);
 

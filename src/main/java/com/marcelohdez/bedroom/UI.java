@@ -42,17 +42,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
     // Get colors for UI from user's preferences
-    public static Color textColor = new Color(Main.userPrefs.getInt("textRed", 240),
-                    Main.userPrefs.getInt("textGreen", 240),
-                    Main.userPrefs.getInt("textBlue", 240));
+    public static Color textColor = loadColorOf("text", 240);
+    // Get color of button text
+    public static Color buttonTextColor = loadColorOf("buttonText", 240);
     // Get color of buttons
-    public static Color buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
-                    Main.userPrefs.getInt("buttonGreen", 80),
-                    Main.userPrefs.getInt("buttonBlue", 80));
+    public static Color buttonColor = loadColorOf("button", 80);
     // Get color of background
-    public static Color bg = new Color(Main.userPrefs.getInt("bgRed", 64),
-                    Main.userPrefs.getInt("bgGreen", 64),
-                    Main.userPrefs.getInt("bgBlue", 64));
+    public static Color bg = loadColorOf("bg", 64);
 
     public UI() { // Set UI's properties
 
@@ -351,20 +347,20 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         return "";
     }
 
+    private static Color loadColorOf(String component, int def) {
+
+        return new Color(Main.userPrefs.getInt(component + "Red", def),
+                Main.userPrefs.getInt(component + "Green", def),
+                Main.userPrefs.getInt(component + "Blue", def));
+
+    }
+
     public void reloadColors() {
 
-        // Get color for text from user's prefs, default to 240 if not found
-        textColor = new Color(Main.userPrefs.getInt("textRed", 240),
-                Main.userPrefs.getInt("textGreen", 240),
-                Main.userPrefs.getInt("textBlue", 240));
-        // Get color of buttons
-        buttonColor = new Color(Main.userPrefs.getInt("buttonRed", 80),
-                Main.userPrefs.getInt("buttonGreen", 80),
-                Main.userPrefs.getInt("buttonBlue", 80));
-        // Get color of background
-        bg = new Color(Main.userPrefs.getInt("bgRed", 64),
-                Main.userPrefs.getInt("bgGreen", 64),
-                Main.userPrefs.getInt("bgBlue", 64));
+        textColor = loadColorOf("text", 240);
+        buttonTextColor = loadColorOf("buttonText", 240);
+        buttonColor = loadColorOf("button", 80);
+        bg = loadColorOf("bg", 64);
 
         this.colorComponents();
 
@@ -373,9 +369,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private void colorComponents() {
 
         breakButton.setBackground(buttonColor);
-        breakButton.setForeground(textColor);
+        breakButton.setForeground(buttonTextColor);
         addOrder.setBackground(buttonColor);
-        addOrder.setForeground(textColor);
+        addOrder.setForeground(buttonTextColor);
         stats.setBackground(bg);
         stats.setForeground(textColor);
         setBackground(bg);

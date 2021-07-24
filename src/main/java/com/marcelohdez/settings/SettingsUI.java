@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener {
+public class SettingsUI extends JPanel implements ActionListener, ChangeListener {
 
     private static final Dimension colorLabelsSize = new Dimension(100, 20);
 
@@ -34,7 +34,7 @@ public class SettingsUI extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        getTextRGBValues();
+        loadRGBValues();
         setColorSpinners();
 
         // Add rows
@@ -51,7 +51,7 @@ public class SettingsUI extends JPanel implements ActionListener {
 
     }
 
-    private void getTextRGBValues() {
+    private void loadRGBValues() {
 
         // Get already set RGB values
         textRGB = new int[] { // Get text RGB values
@@ -158,6 +158,9 @@ public class SettingsUI extends JPanel implements ActionListener {
         // Customize thingies
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
+        buttonRed.addChangeListener(this);
+        buttonGreen.addChangeListener(this);
+        buttonBlue.addChangeListener(this);
 
         // Add thingies to row
         row.add(label);
@@ -179,6 +182,9 @@ public class SettingsUI extends JPanel implements ActionListener {
         // Customize thingies
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
+        bgRed.addChangeListener(this);
+        bgGreen.addChangeListener(this);
+        bgBlue.addChangeListener(this);
 
         row.add(label);
         row.add(bgRed);
@@ -422,21 +428,19 @@ public class SettingsUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         switch (e.getActionCommand()) {
-            case "Apply" -> {
-
-                String theme = Objects.requireNonNull(themeListBox.getSelectedItem()).toString();
-
-                if (theme.equals("Current"))  {
-                    updateValues();
-                } else setTheme(theme);
-
-                updateValues();
-
-            }
+            case "comboBoxChanged" ->
+                    setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
+                            themeListBox.getSelectedIndex());
             case "Set Defaults" -> {
                 setDefaultMisc();
             }
         }
 
     }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        updateValues();
+    }
+
 }
