@@ -366,6 +366,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             }
         }
 
+        Main.userPrefs.putInt("lastTheme", index);
+
     }
 
     private void setDefaultMisc() {
