@@ -433,6 +433,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             case "comboBoxChanged" ->
                     setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
                             themeListBox.getSelectedIndex());
+            case "Manage Work Apps" -> new WorkAppsWindow();
             case "Set Defaults" -> setDefaultMisc();
         }
 

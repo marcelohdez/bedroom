@@ -67,6 +67,9 @@ public class ErrorWindow extends JDialog implements ActionListener {
             case NEGATIVE_SHIFT_TIME -> {
                 return "Clock out time has to be\nafter your clock in time.";
             }
+            case WORK_APPS_FULL -> {
+                return "You can not add any more\nwork apps.";
+            }
         }
 
         // If type is not recognized return the type itself
