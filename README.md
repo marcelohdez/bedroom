@@ -30,6 +30,8 @@ the tooltip for the "Add Order" button will show how many orders are needed to s
 * _Backspace & Down Arrow_ decrease orders by 1.
 * _Up Arrow_ increase orders by 1.
 * _0_ Opens window to set break times.
+* _Esc & Del_ keys open settings.
+* _Enter or Return in MacOS_ can be used as the "select" button in select time windows.
 
 _These shortcuts are meant to be unintrusive to work applications,
 hence their seemingly random keyboard placements._
@@ -37,8 +39,9 @@ hence their seemingly random keyboard placements._
 ## Compiling From Source
 _This is not supported; there could be loss of data or other bugs with things currently being experimented on._
 
-Download the source code by clicking the green code button on the top of the page and selecting Download ZIP. Then open 
+Download the source code by clicking the green code button on the top of the page and selecting Download ZIP. Open 
 the downloaded file and copy the folder inside to anywhere else (like your desktop) and delete the original zipped file. 
 Finally, open the folder you copied into a new location with Terminal/Command Prompt (on Windows this can simply be done 
-by selecting the address bar on top, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In MacOS, open 
-the Terminal in the location of the extracted folder and run ```./gradlew build```
+by selecting the address bar on top, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In MacOS, you
+may need to run ```chmod +x gradlew``` before this works, open the Terminal in the location of the extracted folder and 
+run ```./gradlew build```. Once finished, the resulting files will be in ```build > libs```. 
