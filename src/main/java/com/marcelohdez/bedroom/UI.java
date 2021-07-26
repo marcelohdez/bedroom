@@ -115,33 +115,30 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (clockInTimePassed) { // Get stats =======
 
-            if (!inBreak) { // Get time clocked in
-                stats.setText(
-                        sb.append("Time: ")
-                                .append(makeTimeHumanReadable(hr, min, (int) sec))
-                                // Add other stats
-                                .append(makeStatsIntoString()).toString());
-            } else { // Get time left until our break ends =======
-                stats.setText(
-                        sb.append("On break, ")
-                                .append(shrinkTime(secondsTillLeaveBreak))
-                                .append(" left")
-                                // Add current stats
-                                .append(makeStatsIntoString()).toString());
+            if (!inBreak) { // Show time clocked in
+                sb.append("Time: ");
+                appendReadableTimeTo(sb, hr, min, (int) sec);
+                appendStatsTo(sb);
+            } else { // Show time left until our break ends =======
+                sb.append("On break, ");
+                int[] t = shrinkTime(secondsTillLeaveBreak);
+                appendReadableTimeTo(sb, t[0], t[1], t[2]);
+                sb.append(" left");
             }
 
+            stats.setText(sb.toString());
             setTooltips();
 
-        } else if (Main.timesChosen) { // Get "Time till clock in" =======
-            stats.setText(
-                    sb.append("Time until clocked in:\n")
-                            .append(shrinkTime(secondsTillClockIn))
-                            .append("\n").toString());
+        } else if (Main.timesChosen) { // Show "Time till clock in" =======
+            sb.append("Time until clocked in:\n");
+            int[] t = shrinkTime(secondsTillClockIn);
+            appendReadableTimeTo(sb, t[0], t[1], t[2]);
+            stats.setText(sb.append("\n").toString());
         }
 
     }
 
-    private static String shrinkTime(long seconds) { // Convert big number of seconds into time
+    private static int[] shrinkTime(long seconds) { // Convert seconds into time
 
         int hours = 0;
         int minutes = 0;
@@ -154,12 +151,12 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             hours++;
             minutes -= 60;
         }
+        // A list of integers, each index represents hours, minutes, and seconds respectively:
+        return new int[]{hours, minutes, (int) seconds};
 
-        return makeTimeHumanReadable(hours, minutes, (int) seconds);
     }
 
-    private static String makeTimeHumanReadable(int h, int m, int s) { // Set time to "00:00:00" format
-        StringBuilder sb = new StringBuilder();
+    private static void appendReadableTimeTo(StringBuilder sb, int h, int m, int s) { // Set time to "00:00:00" format
 
         if (h < 10) sb.append("0");
         sb.append(h).append(":");
@@ -168,11 +165,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (s < 10) sb.append("0");
         sb.append(s);
 
-        return sb.toString();
     }
 
-    private static String makeStatsIntoString() {
-        StringBuilder sb = new StringBuilder();
+    private static void appendStatsTo(StringBuilder sb) {
 
         sb.append("\nOrders: ").append((int)orders).append(" (")
                 .append(firstTwoDecs.format((double) (orders*3600)/ totalSecClockedIn))
@@ -185,7 +180,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         } else sb.append("0");
         sb.append(" left");
 
-        return sb.toString();
     }
 
     private void enterBreak() {
