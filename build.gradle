@@ -31,6 +31,6 @@ sourceSets {
 
 jar {
     manifest {
-        attributes "Main-Class": 'com.marcelohdez.bedroom.Main'
+        attributes "Main-Class": 'com.marcelohdez.bedroom.main.Main'
     }
 }

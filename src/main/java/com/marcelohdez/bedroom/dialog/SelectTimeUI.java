@@ -1,7 +1,7 @@
-package com.marcelohdez.dialog;
+package com.marcelohdez.bedroom.dialog;
 
-import com.marcelohdez.bedroom.*;
-import com.marcelohdez.enums.*;
+import com.marcelohdez.bedroom.main.*;
+import com.marcelohdez.bedroom.enums.*;
 
 import javax.swing.*;
 import java.awt.*;

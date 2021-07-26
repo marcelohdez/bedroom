@@ -1,7 +1,7 @@
-package com.marcelohdez.bedroom;
+package com.marcelohdez.bedroom.main;
 
-import com.marcelohdez.enums.SetTime;
-import com.marcelohdez.settings.SettingsWindow;
+import com.marcelohdez.bedroom.enums.SetTime;
+import com.marcelohdez.bedroom.settings.SettingsWindow;
 
 import java.awt.*;
 import java.awt.event.*;

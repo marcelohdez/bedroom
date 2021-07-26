@@ -1,7 +1,7 @@
-package com.marcelohdez.bedroom;
+package com.marcelohdez.bedroom.main;
 
-import com.marcelohdez.dialog.*;
-import com.marcelohdez.enums.TimeWindowType;
+import com.marcelohdez.bedroom.dialog.*;
+import com.marcelohdez.bedroom.enums.TimeWindowType;
 
 import javax.swing.*;
 import java.util.prefs.Preferences;

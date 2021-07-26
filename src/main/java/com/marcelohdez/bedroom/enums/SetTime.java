@@ -1,4 +1,4 @@
-package com.marcelohdez.enums;
+package com.marcelohdez.bedroom.enums;
 
 public enum SetTime {
 

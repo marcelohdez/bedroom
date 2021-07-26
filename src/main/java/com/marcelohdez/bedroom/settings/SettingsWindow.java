@@ -1,6 +1,6 @@
-package com.marcelohdez.settings;
+package com.marcelohdez.bedroom.settings;
 
-import com.marcelohdez.bedroom.*;
+import com.marcelohdez.bedroom.main.*;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

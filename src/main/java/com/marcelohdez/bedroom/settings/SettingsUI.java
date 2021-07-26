@@ -1,7 +1,7 @@
-package com.marcelohdez.settings;
+package com.marcelohdez.bedroom.settings;
 
-import com.marcelohdez.bedroom.Main;
-import com.marcelohdez.bedroom.UI;
+import com.marcelohdez.bedroom.main.Main;
+import com.marcelohdez.bedroom.main.UI;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
