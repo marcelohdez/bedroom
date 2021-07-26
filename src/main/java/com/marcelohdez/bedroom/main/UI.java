@@ -125,6 +125,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 int[] t = shrinkTime(secondsTillLeaveBreak);
                 appendReadableTimeTo(str, t[0], t[1], t[2]);
                 str.append(" left");
+                appendStatsTo(str);
             }
 
             stats.setText(str.toString());
