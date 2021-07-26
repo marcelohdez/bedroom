@@ -122,29 +122,20 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void selectTime() {
 
-        LocalTime newTime =
-                LocalTime.parse(makeTime24Hour(
-                        this.hrBox.getSelectedIndex() + 1,
-                        this.minBox.getSelectedIndex(),
-                        Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
+        LocalTime newTime = LocalTime.parse(makeTime24Hour(
+                this.hrBox.getSelectedIndex() + 1,
+                this.minBox.getSelectedIndex(),
+                Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
 
         if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
-
             UI.clockInTime = newTime; // Set clock in time
             setTimeAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
-
         } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
-
             setClockOutTime(newTime);
-
         } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
-
             setBreakStartTime(newTime);
-
         } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
-
             setBreakEndTime(newTime);
-
         }
 
         if (Main.timesChosen) UI.getTime();
