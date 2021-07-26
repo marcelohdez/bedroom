@@ -13,6 +13,7 @@ import javax.swing.*;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static final DecimalFormat firstTwoDecs = new DecimalFormat("#.00");
+    private static StringBuilder str;
 
     // Time Variables
     private static int hr = 0, min = 0;
@@ -111,29 +112,29 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static void getStats() {
 
-        StringBuilder sb = new StringBuilder();
+        str = new StringBuilder();
 
         if (clockInTimePassed) { // Get stats =======
 
             if (!inBreak) { // Show time clocked in
-                sb.append("Time: ");
-                appendReadableTimeTo(sb, hr, min, (int) sec);
-                appendStatsTo(sb);
+                str.append("Time: ");
+                appendReadableTimeTo(str, hr, min, (int) sec);
+                appendStatsTo(str);
             } else { // Show time left until our break ends =======
-                sb.append("On break, ");
+                str.append("On break, ");
                 int[] t = shrinkTime(secondsTillLeaveBreak);
-                appendReadableTimeTo(sb, t[0], t[1], t[2]);
-                sb.append(" left");
+                appendReadableTimeTo(str, t[0], t[1], t[2]);
+                str.append(" left");
             }
 
-            stats.setText(sb.toString());
+            stats.setText(str.toString());
             setTooltips();
 
         } else if (Main.timesChosen) { // Show "Time till clock in" =======
-            sb.append("Time until clocked in:\n");
+            str.append("Time until clocked in:\n");
             int[] t = shrinkTime(secondsTillClockIn);
-            appendReadableTimeTo(sb, t[0], t[1], t[2]);
-            stats.setText(sb.append("\n").toString());
+            appendReadableTimeTo(str, t[0], t[1], t[2]);
+            stats.setText(str.append("\n").toString());
         }
 
     }
@@ -285,9 +286,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         double neededForTarget = (double) totalSecClockedIn/3600 * target;
         if (neededForTarget > orders) { // Tell us how many orders we need to reach our target
 
-            StringBuilder sb = new StringBuilder();
+            str = new StringBuilder();
             int amountMissing = (int) Math.round(Math.ceil(neededForTarget - orders));
-            addOrder.setToolTipText(sb.append("<html><b>You are ")
+            addOrder.setToolTipText(str.append("<html><b>You are ")
                     .append(amountMissing)
                     .append(" order")
                     .append(isPlural(amountMissing))
@@ -297,21 +298,21 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         if (breakTimesChosen) { // If we have chosen break times, change the tooltip to them.
 
-            StringBuilder sb = new StringBuilder();
-            breakButton.setToolTipText(sb.append("<html><b>Current: ")
-                    .append(makeTime12Hour(breakInTime))
-                    .append("-")
-                    .append(makeTime12Hour(breakOutTime))
-                    .append("</b></html>")
-                    .toString());
+            str = new StringBuilder();
+            str.append("<html><b>Current: ");
+            appendTime12HrTo(str, breakInTime);
+            str.append("-");
+            appendTime12HrTo(str, breakOutTime);
+            str.append("</b></html>");
+
+            breakButton.setToolTipText(str.toString());
 
         }
 
     }
 
-    private static String makeTime12Hour(LocalTime time) { // Convert from 24hr to 12hr (ex: 16:00 -> 4:00pm)
+    private static void appendTime12HrTo(StringBuilder sb, LocalTime time) { // Append time in 12hr (ex: 16:00 -> 4:00pm)
 
-        StringBuilder sb = new StringBuilder();
         int hour = time.getHour();
         int minute = time.getMinute();
         String amPM;
@@ -331,8 +332,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         sb.append(":");
         if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
         sb.append(minute).append(amPM);
-
-        return sb.toString();
 
     }
 
