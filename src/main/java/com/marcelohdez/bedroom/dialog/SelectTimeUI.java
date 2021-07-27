@@ -58,18 +58,19 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             case CLOCK_IN -> topText.setText("  Select CLOCK IN time:  ");
         }
 
-        // Set top text font
+        // Customize components
         topText.setFont(UI.boldText);
-        // Set component sizes and action listeners (for clicks)
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
-        // List box size
         hrBox.setPreferredSize(listBoxSize);
+        hrBox.addActionListener(this);
         minBox.setPreferredSize(listBoxSize);
-        // Target and am/pm components
+        minBox.addActionListener(this);
         amPMBox.setPreferredSize(smallListBoxSize);
+        amPMBox.addActionListener(this);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
+        setTarget.addActionListener(this);
 
         // ======= Set colors =======
         colorSelf();
@@ -298,6 +299,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Select")) selectTime();
+        this.requestFocus(); // Get focus back from component clicked (for shortcuts)
     }
 
     @Override
