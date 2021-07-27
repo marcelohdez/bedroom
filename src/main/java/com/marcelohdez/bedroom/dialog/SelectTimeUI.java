@@ -5,30 +5,20 @@ import com.marcelohdez.bedroom.enums.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
 
     private final TimeWindowType type;
 
-    // Lists (for the list boxes)
-    private final String[] amPMOptions = {"AM","PM"};
-    private final String[] hours =
-            {"01:", "02:", "03:", "04:", "05:", "06:",
-                    "07:", "08:", "09:", "10:", "11:", "12:"};
-
     // ======= List boxes: =======
-    private final JComboBox<String> amPMBox = new JComboBox<>(amPMOptions);
-    private final JComboBox<String> hrBox = new JComboBox<>(hours);
+    private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
+    private final JComboBox<String> hrBox = new JComboBox<>(createNumberList(1, 12, ":"));
     // Create minutes (0-59) and hourly targets (1-24)
-    private final JComboBox<String> minBox = new JComboBox<>(createNumberList(0, 59));
-    private final JComboBox<String> setTarget = new JComboBox<>(createNumberList(1, 24));
+    private final JComboBox<String> minBox = new JComboBox<>(createNumberList(0, 59, null));
+    private final JComboBox<String> setTarget = new JComboBox<>(createNumberList(1, 24, null));
 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button
@@ -256,14 +246,16 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private String[] createNumberList(int start, int end) {
+    private String[] createNumberList(int start, int end, String extraText) {
 
         ArrayList<String> list = new ArrayList<>();
         StringBuilder sb;
         for (int i = start; i <= end; i++) {
             sb = new StringBuilder();
             if (i < 10) sb.append(0);
-            list.add(sb.append(i).toString());
+            sb.append(i);
+            if (extraText != null) sb.append(extraText);
+            list.add(sb.toString());
         }
 
         // This line was gotten from Floern and Bozho's response on StackOverflow:
