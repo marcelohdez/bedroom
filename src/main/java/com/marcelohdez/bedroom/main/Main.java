@@ -20,6 +20,7 @@ public class Main {
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     public static void main(String[] args) {
+
         try { // Set cross-platform look and feel, fixes MacOS buttons.
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
@@ -56,6 +57,7 @@ public class Main {
 
         t.setRepeats(true);
         t.start(); // Start timer
+
     }
 
     public static void updateColors() {

@@ -50,8 +50,8 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
     }
 
-    public void setUITime(SetTime type) { // Pass through to UI
-        // Set to current time, for windows opened up after program start up like break start window
+    public void setUITime(SetTime type) {
+        // Set ui's list boxes to a time
         this.ui.setListBoxIndexes(type);
     }
 
@@ -62,23 +62,14 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
     }
 
     @Override
-    public void windowClosing(WindowEvent e) { // When closing select time windows
+    public void windowClosing(WindowEvent e) {
 
-        if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // Go back to clock in time
-
-            Main.clockOutWnd.dispose();
-            Main.clockInWnd.setVisible(true);
-
-        }
-        if (this.type.equals(TimeWindowType.START_BREAK)) { // Cancel setting break start time
-
-            Main.enterBreakWnd.dispose();   // Close the window
-
-        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // Cancel existing start time
-
-            UI.breakInTime = null;          // Delete break start time that was set
-            Main.leaveBreakWnd.dispose();   // Close the window
-
+        switch (this.type) {
+            case CLOCK_OUT -> { // Go back to clock in time window
+                Main.clockOutWnd.dispose();
+                Main.clockInWnd.setVisible(true);
+            }
+            case END_BREAK, START_BREAK -> this.dispose();   // Close window
         }
 
     }

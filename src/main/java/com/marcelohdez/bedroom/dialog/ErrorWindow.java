@@ -19,7 +19,7 @@ public class ErrorWindow extends JDialog implements ActionListener {
         JTextArea message = new JTextArea(getErrorMessage(e));
         JButton ok = new JButton("OK");
 
-        // Set component properties
+        // Customize components
         topUI.setBackground(UI.bg);
         botUI.setBackground(UI.bg);
         message.setBackground(UI.bg);
@@ -57,12 +57,12 @@ public class ErrorWindow extends JDialog implements ActionListener {
     // Get error message per error type
     private String getErrorMessage(ErrorType e) {
 
-        switch(e) { // (Limit of 6 words per line)
+        switch(e) {
             case BREAK_OUT_OF_SHIFT -> {
                 return "Breaks can not start or end\noutside of shifts.";
             }
             case NEGATIVE_BREAK_TIME -> {
-                return "Chosen break end time is before\nthe break's start time.";
+                return "A break's end time can not be\nbefore the break's start time.";
             }
             case NEGATIVE_SHIFT_TIME -> {
                 return "Clock out time has to be\nafter your clock in time.";

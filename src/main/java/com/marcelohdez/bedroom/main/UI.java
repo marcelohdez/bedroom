@@ -86,8 +86,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case "Set Break" -> enterBreak();
         }
 
-        this.requestFocus(); /* Get focus back on the UI panel every time an action is performed,
-                                it's a workaround as buttons get the focus when clicked. */
+        this.requestFocus(); // Get focus back from buttons when clicked (for shortcuts to work)
 
     }
 
@@ -119,14 +118,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             if (!inBreak) { // Show time clocked in
                 str.append("Time: ");
                 appendReadableTimeTo(str, hr, min, (int) sec);
-                appendStatsTo(str);
             } else { // Show time left until our break ends =======
                 str.append("On break, ");
                 int[] t = shrinkTime(secondsTillLeaveBreak);
                 appendReadableTimeTo(str, t[0], t[1], t[2]);
                 str.append(" left");
-                appendStatsTo(str);
             }
+            appendStatsTo(str);
 
             stats.setText(str.toString());
             setTooltips();

@@ -137,10 +137,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         if (time.isAfter(UI.clockInTime)) {
 
-            UI.clockOutTime = time; // Set clock out time
+            UI.clockOutTime = time;                 // Set clock out time
             UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
-            Main.timesChosen = true;               // Clock out time is now chosen
-            Main.clockOutWnd.dispose();         // Close clock out time window
+            Main.timesChosen = true;                // Clock out time is now chosen
+            Main.clockOutWnd.dispose();             // Close clock out time window
 
         } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
 
