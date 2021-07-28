@@ -2,6 +2,8 @@ package com.marcelohdez.bedroom.main;
 
 import com.marcelohdez.bedroom.enums.SetTime;
 import com.marcelohdez.bedroom.settings.SettingsWindow;
+import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Time;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -117,11 +119,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             if (!inBreak) { // Show time clocked in
                 str.append("Time: ");
-                appendReadableTimeTo(str, hr, min, (int) sec);
+                Time.appendReadableTimeTo(str, hr, min, (int) sec);
             } else { // Show time left until our break ends =======
                 str.append("On break, ");
-                int[] t = shrinkTime(secondsTillLeaveBreak);
-                appendReadableTimeTo(str, t[0], t[1], t[2]);
+                int[] t = Time.shrinkTime(secondsTillLeaveBreak);
+                Time.appendReadableTimeTo(str, t[0], t[1], t[2]);
                 str.append(" left");
             }
             appendStatsTo(str);
@@ -131,39 +133,10 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         } else if (Main.timesChosen) { // Show "Time till clock in" =======
             str.append("Time until clocked in:\n");
-            int[] t = shrinkTime(secondsTillClockIn);
-            appendReadableTimeTo(str, t[0], t[1], t[2]);
+            int[] t = Time.shrinkTime(secondsTillClockIn);
+            Time.appendReadableTimeTo(str, t[0], t[1], t[2]);
             stats.setText(str.append("\n").toString());
         }
-
-    }
-
-    private static int[] shrinkTime(long seconds) { // Convert seconds into time
-
-        int hours = 0;
-        int minutes = 0;
-
-        while (seconds > 59) {
-            minutes++;
-            seconds -= 60;
-        }
-        while (minutes > 59) {
-            hours++;
-            minutes -= 60;
-        }
-        // A list of integers, each index represents hours, minutes, and seconds respectively:
-        return new int[]{hours, minutes, (int) seconds};
-
-    }
-
-    private static void appendReadableTimeTo(StringBuilder sb, int h, int m, int s) { // Set time to "00:00:00" format
-
-        if (h < 10) sb.append("0");
-        sb.append(h).append(":");
-        if (m < 10) sb.append("0");
-        sb.append(m).append(":");
-        if (s < 10) sb.append("0");
-        sb.append(s);
 
     }
 
@@ -282,6 +255,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private static void setTooltips() {
 
+        // Add Order's tool tips
         double neededForTarget = (double) totalSecClockedIn/3600 * target;
         if (neededForTarget > orders) { // Tell us how many orders we need to reach our target
 
@@ -290,53 +264,25 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             addOrder.setToolTipText(str.append("<html><b>You are ")
                     .append(amountMissing)
                     .append(" order")
-                    .append(isPlural(amountMissing))
+                    .append(Ops.isPlural(amountMissing))
                     .append(" behind your hourly target</b></html>").toString());
 
         } else addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
 
+        // Set Break's tool tips
         if (breakTimesChosen) { // If we have chosen break times, change the tooltip to them.
 
             str = new StringBuilder();
             str.append("<html><b>Current: ");
-            appendTime12HrTo(str, breakInTime);
+            Time.append12HrTimeTo(str, breakInTime);
             str.append("-");
-            appendTime12HrTo(str, breakOutTime);
+            Time.append12HrTimeTo(str, breakOutTime);
             str.append("</b></html>");
 
             breakButton.setToolTipText(str.toString());
 
         }
 
-    }
-
-    private static void appendTime12HrTo(StringBuilder sb, LocalTime time) { // Append time in 12hr (ex: 16:00 -> 4:00pm)
-
-        int hour = time.getHour();
-        int minute = time.getMinute();
-        String amPM;
-
-        if (hour >= 12) { // Set correct hour and am/pm value
-            amPM = "PM";
-            if (hour != 12) {       // Set hour to 1-11pm
-                sb.append(hour-12);
-            } else sb.append(12);   // Set to 12pm
-        } else {
-            amPM = "AM";
-            if (hour != 0) {        // Set hour to 1-11am
-                sb.append(hour);
-            } else sb.append(12);   // Set to 12am
-        }
-
-        sb.append(":");
-        if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
-        sb.append(minute).append(amPM);
-
-    }
-
-    private static String isPlural(int number) { // Return "s" if there is more than 1 of number
-        if (number > 1) return "s";
-        return "";
     }
 
     private static Color loadColorOf(String component, int def) {

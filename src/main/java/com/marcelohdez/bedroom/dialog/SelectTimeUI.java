@@ -2,12 +2,13 @@ package com.marcelohdez.bedroom.dialog;
 
 import com.marcelohdez.bedroom.main.*;
 import com.marcelohdez.bedroom.enums.*;
+import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalTime;
-import java.util.*;
 
 public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
 
@@ -15,10 +16,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
-    private final JComboBox<String> hrBox = new JComboBox<>(createNumberList(1, 12, ":"));
+    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(1, 12, ":"));
     // Create minutes (0-59) and hourly targets (1-24)
-    private final JComboBox<String> minBox = new JComboBox<>(createNumberList(0, 59, null));
-    private final JComboBox<String> setTarget = new JComboBox<>(createNumberList(1, 24, null));
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(0, 59, null));
+    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(1, 24, null));
 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button
@@ -113,10 +114,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void selectTime() {
 
-        LocalTime newTime = LocalTime.parse(makeTime24Hour(
+        LocalTime newTime = LocalTime.parse(Time.makeTime24Hour(
                 this.hrBox.getSelectedIndex() + 1,
                 this.minBox.getSelectedIndex(),
-                Objects.requireNonNull(this.amPMBox.getSelectedItem()).toString()));
+                (this.amPMBox.getSelectedIndex() == 1)));
 
         if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
             UI.clockInTime = newTime; // Set clock in time
@@ -146,7 +147,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setBreakStartTime(LocalTime time) {
+    private static void setBreakStartTime(LocalTime time) {
 
         if ((time.isAfter(UI.clockInTime)) && time.isBefore(UI.clockOutTime) ||
                 time.equals(UI.clockInTime)) {
@@ -159,7 +160,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setBreakEndTime(LocalTime time) {
+    private static void setBreakEndTime(LocalTime time) {
 
         if (time.isAfter(UI.breakInTime) && time.isBefore(UI.clockOutTime) ||
                 time.equals(UI.clockOutTime)) {
@@ -172,33 +173,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private String makeTime24Hour(int oldHr, int min, String amPM) {
-
-        StringBuilder sb = new StringBuilder();
-        int newHr = 0;
-
-        // Convert hour to 24-hours from 12
-        switch (amPM) {
-            case "AM" -> {
-                if (oldHr != 12) newHr = oldHr;
-            }
-            case "PM" -> {
-                newHr = oldHr + 12;
-                if (oldHr == 12) newHr = oldHr;
-            }
-        }
-
-        // Make sure time is in format "00:00" so single digits get a 0 added
-        if (newHr < 10) sb.append("0");
-        sb.append(newHr).append(":");
-        if (min < 10) sb.append("0");
-        sb.append(min);
-
-        return sb.toString();
-
-    }
-
-    private void setTimeAndProceed(SelectTimeWindow oldWindow, SelectTimeWindow newWindow,
+    private static void setTimeAndProceed(SelectTimeWindow oldWindow, SelectTimeWindow newWindow,
                                    SetTime newWindowType) {
 
         oldWindow.dispose();
@@ -243,24 +218,6 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         setTargetRow.add(setTarget);
 
         return setTargetRow; // Return the new panel
-
-    }
-
-    private String[] createNumberList(int start, int end, String extraText) {
-
-        ArrayList<String> list = new ArrayList<>();
-        StringBuilder sb;
-        for (int i = start; i <= end; i++) {
-            sb = new StringBuilder();
-            if (i < 10) sb.append(0);
-            sb.append(i);
-            if (extraText != null) sb.append(extraText);
-            list.add(sb.toString());
-        }
-
-        // This line was gotten from Floern and Bozho's response on StackOverflow:
-        // https://stackoverflow.com/questions/4042434/converting-arrayliststring-to-string-in-java
-        return list.toArray(new String[0]);
 
     }
 
