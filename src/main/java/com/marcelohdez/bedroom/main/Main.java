@@ -33,16 +33,7 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
 
-        // Create main window
-        ui = new UI();
-        wnd = new Window(ui);
-        // Create clock in/out windows
-        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
-        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
-        // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
-        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK);
-
+        initWindows();
         openWorkApps();
 
         // Create a timer to run every second
@@ -70,13 +61,17 @@ public class Main {
 
     }
 
-    public static void updateColors() {
+    private static void initWindows() {
 
-        ui.reloadColors();
-        clockInWnd.reloadColors();
-        clockOutWnd.reloadColors();
-        enterBreakWnd.reloadColors();
-        leaveBreakWnd.reloadColors();
+        // Create main window and its UI
+        ui = new UI();
+        wnd = new Window(ui);
+        // Create clock in/out windows
+        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
+        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
+        // Create enter/leave break windows
+        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
+        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK);
 
     }
 
@@ -100,6 +95,16 @@ public class Main {
             }
 
         }
+
+    }
+
+    public static void updateColors() {
+
+        ui.reloadColors();
+        clockInWnd.reloadColors();
+        clockOutWnd.reloadColors();
+        enterBreakWnd.reloadColors();
+        leaveBreakWnd.reloadColors();
 
     }
 
