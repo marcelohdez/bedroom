@@ -29,7 +29,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
         message.setEditable(false);
         ok.addActionListener(this);
         ok.setBackground(UI.buttonColor);
-        ok.setForeground(UI.textColor);
+        ok.setForeground(UI.buttonTextColor);
 
         // Add components
         topUI.add(message);
