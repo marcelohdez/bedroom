@@ -1,7 +1,9 @@
-package com.marcelohdez.bedroom.settings;
+package com.marcelohdez.bedroom.dialog;
 
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
+import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,6 +31,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                     "Light", "Pink+White", "Sky Blue"});
 
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
+    private final JCheckBox doGC = new JCheckBox("Garbage Collect");
 
     public SettingsUI() { // Settings UI constructor
 
@@ -253,13 +256,22 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private JPanel createFirstMiscRow() {
 
+        // Create panel
         JPanel row = new JPanel();
 
+        // Customize stuffs
         row.setBackground(UI.bg);
-        row.add(alwaysOnTop);
-        alwaysOnTop.setForeground(UI.textColor);
-        alwaysOnTop.setBackground(UI.bg);
+        Ops.colorThis(alwaysOnTop, false);
+        alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
+        Ops.colorThis(doGC, false);
+        doGC.setToolTipText("<html><b>Forcefully remove excess memory every 60 seconds:</b><br>" +
+                                    "May reduce the memory footprint of Bedroom but will<br>" +
+                                    "cause more CPU overhead.</html>");
         alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
+
+        // Add to panel
+        row.add(alwaysOnTop);
+        row.add(doGC);
 
         return  row;
 
@@ -267,29 +279,24 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private void setButtonTextAndText(int value) {
 
+        setButtonTextAll(value);
+        setTextColorAll(value);
+
+    }
+
+    private void setTextColorAll(int value) {
+
         textRed.setValue(value);
         textGreen.setValue(value);
         textBlue.setValue(value);
 
+    }
+
+    private void setButtonTextAll(int value) {
+
         buttonTextRed.setValue(value);
         buttonTextGreen.setValue(value);
         buttonTextBlue.setValue(value);
-
-    }
-
-    private void setTextColorAll() {
-
-        textRed.setValue(0);
-        textGreen.setValue(0);
-        textBlue.setValue(0);
-
-    }
-
-    private void setButtonTextAll() {
-
-        buttonTextRed.setValue(240);
-        buttonTextGreen.setValue(240);
-        buttonTextBlue.setValue(240);
 
     }
 
@@ -329,8 +336,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         switch (theme) {
             case "Banana" -> {
-                setTextColorAll();
-                setButtonTextAll();
+                setTextColorAll(0);
+                setButtonTextAll(240);
                 setButtonRGB(54, 32, 0);
                 setBgRGB(240, 224, 53);
             }
@@ -360,7 +367,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 setBgRGB(220, 150, 200);
             }
             case "Sky Blue" -> {
-                setButtonTextAndText(0);
+                setButtonTextAndText(255);
                 setButtonRGB(100, 161, 240);
                 setBgRGB(150, 203, 255);
             }
@@ -373,6 +380,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void setDefaultMisc() {
 
         alwaysOnTop.setSelected(false);
+        doGC.setSelected(false);
 
     }
 
@@ -394,35 +402,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 (Integer) bgGreen.getValue(),
                 (Integer) bgBlue.getValue()};
 
-        saveSettings();
+        Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
+        Settings.saveMisc(alwaysOnTop.isSelected(), doGC.isSelected());
         Main.updateColors();
-
-    }
-
-    private void saveSettings() {
-
-        // Save text colors
-        Main.userPrefs.putInt("textRed", textRGB[0]);
-        Main.userPrefs.putInt("textGreen", textRGB[1]);
-        Main.userPrefs.putInt("textBlue", textRGB[2]);
-
-        // Save button text colors
-        Main.userPrefs.putInt("buttonTextRed", buttonTextRGB[0]);
-        Main.userPrefs.putInt("buttonTextGreen", buttonTextRGB[1]);
-        Main.userPrefs.putInt("buttonTextBlue", buttonTextRGB[2]);
-
-        // Save button colors
-        Main.userPrefs.putInt("buttonRed", buttonRGB[0]);
-        Main.userPrefs.putInt("buttonGreen", buttonRGB[1]);
-        Main.userPrefs.putInt("buttonBlue", buttonRGB[2]);
-
-        // Save background colors
-        Main.userPrefs.putInt("bgRed", bgRGB[0]);
-        Main.userPrefs.putInt("bgGreen", bgRGB[1]);
-        Main.userPrefs.putInt("bgBlue", bgRGB[2]);
-
-        // Misc options
-        Main.userPrefs.putBoolean("alwaysOnTop", alwaysOnTop.isSelected());
 
     }
 

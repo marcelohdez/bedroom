@@ -1,4 +1,4 @@
-package com.marcelohdez.bedroom.settings;
+package com.marcelohdez.bedroom.dialog;
 
 import com.marcelohdez.bedroom.main.*;
 import javax.swing.*;

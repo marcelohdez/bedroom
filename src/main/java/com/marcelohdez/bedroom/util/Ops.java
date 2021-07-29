@@ -1,11 +1,30 @@
 package com.marcelohdez.bedroom.util;
 
-import com.marcelohdez.bedroom.main.Main;
+import com.marcelohdez.bedroom.main.UI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Ops { // Operations
+
+    /**
+     * Colors a JComponent's background and foreground.
+     *
+     * @param c Component to color
+     * @param isButton Use button colors
+     */
+    public static void colorThis(JComponent c, boolean isButton) {
+
+        if (isButton) {
+            c.setBackground(UI.buttonColor);
+            c.setForeground(UI.buttonTextColor);
+        } else {
+            c.setBackground(UI.bg);
+            c.setForeground(UI.textColor);
+        }
+
+    }
 
     /**
      * Creates a String[] of numbers with optional added text to each.
