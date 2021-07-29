@@ -49,4 +49,15 @@ public class Settings {
 
     }
 
+    /**
+     * Saves a list of directories into Preferences
+     *
+     * @param apps The list of directories. In format: "[C:\User\Desktop\WorkApp1, C:\WorkApps\WorkApp2]"
+     */
+    public static void saveWorkApps(String apps) {
+
+        Main.userPrefs.put("workApps", apps);
+
+    }
+
 }

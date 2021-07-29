@@ -1,24 +1,31 @@
-package com.marcelohdez.bedroom.settings;
+package com.marcelohdez.bedroom.dialog;
 
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
-import com.marcelohdez.bedroom.dialog.ErrorWindow;
 import com.marcelohdez.bedroom.enums.ErrorType;
+import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
 
-public class WorkAppsWindow extends JDialog implements ActionListener {
+public class WorkAppsWindow extends JDialog implements ActionListener, WindowListener {
 
     private DefaultListModel<String> workApps;
     private JList<String> list;
+    private JFileChooser fc;
 
     public WorkAppsWindow() {
 
         setTitle("Work Apps");
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
         setResizable(false);
 
@@ -67,24 +74,27 @@ public class WorkAppsWindow extends JDialog implements ActionListener {
 
     private JPanel createList() {
 
-        // Create panel
+        // Create stuffs
         JPanel panel = new JPanel();
-        panel.setBackground(UI.buttonColor);
 
         // Add work apps
         workApps = new DefaultListModel<>();
-        workApps.addElement("Program 0");
+        for (String app : Main.loadedWorkApps)
+            if (!app.equals("")) workApps.addElement(app);
 
         // Create list
         list = new JList<>(workApps);
-        list.setPreferredSize(new Dimension(180, 140));
+        list.setVisibleRowCount(7);
 
         // Customize
-        list.setBackground(UI.buttonColor);
-        list.setForeground(UI.buttonTextColor);
+        Ops.colorThis(list, true);
+        panel.setBackground(UI.buttonColor);
+        JScrollPane sp = new JScrollPane(list);
+        sp.setPreferredSize(new Dimension(180, 140));
 
         // Add to panel
-        panel.add(list);
+        panel.add(sp);
+        pack();
 
         return panel;
 
@@ -92,13 +102,19 @@ public class WorkAppsWindow extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         switch (e.getActionCommand()) {
 
             case "Add" -> {
 
                 if (workApps.getSize() < 7) { // Add a work app if under limit
 
-                    workApps.addElement("Program " + workApps.getSize());
+                    fc = new JFileChooser();
+                    fc.setFileFilter(new FileNameExtensionFilter("Programs", "exe", "app", "lnk"));
+                    fc.setApproveButtonText("Add");
+                    int returnVal = fc.showOpenDialog(this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION)
+                        workApps.addElement(fc.getSelectedFile().toString());
 
                 } else new ErrorWindow(ErrorType.WORK_APPS_FULL); // Else error
 
@@ -120,5 +136,18 @@ public class WorkAppsWindow extends JDialog implements ActionListener {
             }
 
         }
+
     }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        Settings.saveWorkApps(workApps.toString());
+    }
+
+    public void windowOpened(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {}
+    public void windowActivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {}
 }

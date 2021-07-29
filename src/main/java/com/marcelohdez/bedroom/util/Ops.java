@@ -53,6 +53,38 @@ public class Ops { // Operations
     }
 
     /**
+     * Makes an ArrayList from a String that used to be an ArrayList (ex: "[cat, dog, wolf]").
+     * Used for a list that is saved in Preferences (since it is only allowed to save Strings)
+     * as ArrayList.toString(); and then getting the list back from Preferences.
+     *
+     * @param str String to detangle
+     * @return an ArrayList of the String's items
+     */
+    public static ArrayList<String> detangleString(String str) {
+
+        ArrayList<String> list = new ArrayList<>();
+
+        // Detangle string
+        int start = 1;
+        int end = start;
+        for (int i = 1; i < str.length() - 1; i++) { // -1 character from start and end to ignore []
+
+            if (str.charAt(i) != 44) { // If it is not the comma, extend end point
+                end++;
+            } else {
+                list.add(str.substring(start, end));
+                start = i+2;
+                end = i+1;
+            }
+
+        }
+        list.add(str.substring(start, end));
+
+        return list;
+
+    }
+
+    /**
      * Returns an "s" if number is greater than 1
      *
      * @param number Number to check

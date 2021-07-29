@@ -2,8 +2,13 @@ package com.marcelohdez.bedroom.main;
 
 import com.marcelohdez.bedroom.dialog.*;
 import com.marcelohdez.bedroom.enums.TimeWindowType;
+import com.marcelohdez.bedroom.util.Ops;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
 public class Main {
@@ -11,6 +16,8 @@ public class Main {
     public static String version = "3 (Beta 1)";
 
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
+    public static ArrayList<String> loadedWorkApps =
+            Ops.detangleString(Main.userPrefs.get("workApps", "[]"));
 
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
     private static final boolean gc = userPrefs.getBoolean("gc", false);
@@ -35,6 +42,8 @@ public class Main {
         // Create enter/leave break windows
         enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
         leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK);
+
+        openWorkApps();
 
         // Create a timer to run every second
         Timer t = new Timer(1000, e -> {
@@ -68,6 +77,29 @@ public class Main {
         clockOutWnd.reloadColors();
         enterBreakWnd.reloadColors();
         leaveBreakWnd.reloadColors();
+
+    }
+
+    private static void openWorkApps() {
+
+        for (String app : loadedWorkApps) {
+
+            if (!app.equals("")) {
+
+                File workApp = new File(app);
+                if (workApp.exists()) {
+
+                    try {
+                        Desktop.getDesktop().open(workApp);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }
 
     }
 
