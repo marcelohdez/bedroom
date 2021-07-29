@@ -5,11 +5,11 @@ import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SettingsWindow extends JDialog implements WindowListener {
+public class SettingsDialog extends JDialog implements WindowListener {
 
     private final SettingsUI sui;
 
-    public SettingsWindow() {
+    public SettingsDialog() {
 
         setModalityType(ModalityType.APPLICATION_MODAL);
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));

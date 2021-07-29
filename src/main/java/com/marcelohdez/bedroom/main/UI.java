@@ -1,7 +1,7 @@
 package com.marcelohdez.bedroom.main;
 
 import com.marcelohdez.bedroom.enums.SetTime;
-import com.marcelohdez.bedroom.dialog.SettingsWindow;
+import com.marcelohdez.bedroom.dialog.SettingsDialog;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Time;
 
@@ -172,7 +172,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> new SettingsWindow();  // Open settings with Del or Esc keys
+            case 27, 127 -> new SettingsDialog();  // Open settings with Del or Esc keys
         }
     }
 
