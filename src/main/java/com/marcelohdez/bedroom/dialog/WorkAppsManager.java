@@ -13,12 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.util.ArrayList;
 
 public class WorkAppsManager extends JDialog implements ActionListener, WindowListener {
 
-    private DefaultListModel<String> workApps;
-    private JList<String> list;
-    private JFileChooser fc;
+    private ArrayList<String> workAppDirs; // Keep track of work apps' directories
+    private DefaultListModel<String> workAppNames; // Work apps' names
+    private JList<String> list; // The JList to be displayed
 
     public WorkAppsManager() {
 
@@ -29,11 +31,11 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         setResizable(false);
 
         JPanel content = new JPanel(); // Content panel to set a background color
-        content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBackground(UI.bg);
 
-        content.add(createToolsPanel());
         content.add(createList());
+        content.add(createToolsPanel());
 
         add(content);
         pack();
@@ -54,7 +56,6 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JButton remove = new JButton("Remove");
 
         // Customize em
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(UI.bg);
         add.setBackground(UI.buttonColor);
         add.setForeground(UI.buttonTextColor);
@@ -77,12 +78,20 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JPanel panel = new JPanel();
 
         // Add work apps
-        workApps = new DefaultListModel<>();
-        for (String app : Main.loadedWorkApps)
-            if (!app.equals("")) workApps.addElement(app);
+        workAppDirs = new ArrayList<>();
+        workAppNames = new DefaultListModel<>();
+        for (String app : Main.loadedWorkApps) {
+
+            if (!app.equals("")) {
+                workAppDirs.add(app);
+                workAppNames.addElement(new File(app).getName());
+            }
+
+        }
+
 
         // Create list
-        list = new JList<>(workApps);
+        list = new JList<>(workAppNames);
         list.setVisibleRowCount(7);
 
         // Customize
@@ -104,43 +113,58 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         switch (e.getActionCommand()) {
 
-            case "Add" -> {
-
-                if (workApps.getSize() < 7) { // Add a work app if under limit
-
-                    fc = new JFileChooser();
-                    fc.setFileFilter(new FileNameExtensionFilter("Programs", "exe", "app", "lnk"));
-                    fc.setApproveButtonText("Add");
-                    int returnVal = fc.showOpenDialog(this);
-                    if (returnVal == JFileChooser.APPROVE_OPTION)
-                        workApps.addElement(fc.getSelectedFile().toString());
-
-                } else new ErrorDialog(ErrorType.WORK_APPS_FULL); // Else error
-
-            }
-            case "Remove" -> {
-
-                // Check if we have something selected
-                if (!list.isSelectionEmpty()) {
-
-                    int selected = list.getSelectedIndex(); // Get selected index
-                    workApps.remove(selected);          // Remove it
-                    list.setSelectedIndex(selected);    // Keep cursor on same position
-                    if (list.isSelectionEmpty())
-                        // If where we put the cursor is empty, move it up.
-                        list.setSelectedIndex(selected - 1);
-
-                }
-
-            }
+            case "Add" -> addAnApp();
+            case "Remove" -> removeAnApp();
 
         }
 
     }
 
+    private void addAnApp() {
+
+        if (workAppNames.getSize() < 7) { // Add a work app if under limit
+
+            JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(new FileNameExtensionFilter(
+                    // Set a filter of apps, text files (for scripts), and python scripts (for tech-y ppl)
+                    "Programs/Scripts", "exe", "app", "lnk", "txt", "odt", "rtf", "py"));
+            fc.setApproveButtonText("Add");
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                workAppNames.addElement(fc.getSelectedFile().getName()); // Add name of app
+                workAppDirs.add(fc.getSelectedFile().toString()); // Add its directory
+            }
+
+
+        } else new ErrorDialog(ErrorType.WORK_APPS_FULL); // Else error
+
+    }
+
+    private void removeAnApp() {
+
+        // Check if we have something selected
+        if (!list.isSelectionEmpty()) {
+
+            int selected = list.getSelectedIndex(); // Get selected index
+            removeAppFromBoth(selected);
+            list.setSelectedIndex(selected);    // Keep cursor on same position
+            if (list.isSelectionEmpty())
+                // If where we put the cursor is empty, move it up.
+                list.setSelectedIndex(selected - 1);
+
+        }
+
+    }
+
+    private void removeAppFromBoth(int app) {
+        workAppNames.remove(app);
+        workAppDirs.remove(app);
+    }
+
     @Override
     public void windowClosing(WindowEvent e) {
-        Settings.saveWorkApps(workApps.toString());
+        Settings.saveWorkApps(workAppDirs.toString());
     }
 
     public void windowOpened(WindowEvent e) {}
