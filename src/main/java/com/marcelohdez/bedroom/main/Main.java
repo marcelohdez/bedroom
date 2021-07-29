@@ -1,6 +1,7 @@
 package com.marcelohdez.bedroom.main;
 
 import com.marcelohdez.bedroom.dialog.*;
+import com.marcelohdez.bedroom.enums.ErrorType;
 import com.marcelohdez.bedroom.enums.TimeWindowType;
 import com.marcelohdez.bedroom.util.Ops;
 
@@ -90,7 +91,7 @@ public class Main {
                         e.printStackTrace();
                     }
 
-                }
+                } else new ErrorWindow(ErrorType.WORK_APP_DOES_NOT_EXIST);
 
             }
 

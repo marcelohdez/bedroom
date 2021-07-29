@@ -59,16 +59,38 @@ public class ErrorWindow extends JDialog implements ActionListener {
 
         switch(e) {
             case BREAK_OUT_OF_SHIFT -> {
-                return "Breaks can not start or end\noutside of shifts.";
+                return """
+                        Breaks can not start or end
+                        outside of shifts.""";
             }
             case NEGATIVE_BREAK_TIME -> {
-                return "A break's end time can not be\nbefore the break's start time.";
+                return """
+                        A break's end time can not be
+                        before the break's start time.""";
             }
             case NEGATIVE_SHIFT_TIME -> {
-                return "Clock out time has to be\nafter your clock in time.";
+                return """
+                        Clock out time has to be
+                        after your clock in time.""";
+            }
+            case NO_FILE_ASSOCIATION -> {
+                return """
+                        One of your work apps was not
+                        able to be started as it does
+                        not have a program associated
+                        with its file type""";
             }
             case WORK_APPS_FULL -> {
-                return "You can not add any more\nwork apps.";
+                return """
+                        You can not add any more
+                        work apps.""";
+            }
+            case WORK_APP_DOES_NOT_EXIST -> {
+                return """
+                        One of your work apps was not
+                        able to be started as it does
+                        not exist. Please go to
+                        Settings > Manage Work Apps.""";
             }
         }
 
