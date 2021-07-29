@@ -3,6 +3,7 @@ package com.marcelohdez.bedroom.dialog;
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
 import com.marcelohdez.bedroom.enums.ErrorType;
+import com.marcelohdez.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,17 +62,25 @@ public class ErrorDialog extends JDialog implements ActionListener {
             case BREAK_OUT_OF_SHIFT -> {
                 return """
                         Breaks can not start or end
-                        outside of shifts.""";
+                        outside of shifts. Current
+                        shift is:\040""" +
+                        Time.makeTime12Hour(UI.clockInTime) + "-" +
+                        Time.makeTime12Hour(UI.clockOutTime);
             }
             case NEGATIVE_BREAK_TIME -> {
                 return """
                         A break's end time can not be
-                        before the break's start time.""";
+                        before the break's start time.
+                        Current break start:\040""" +
+                        Time.makeTime12Hour(UI.breakInTime);
             }
             case NEGATIVE_SHIFT_TIME -> {
                 return """
                         Clock out time has to be
-                        after your clock in time.""";
+                        after your clock in time.
+                        Current clock in time:
+                        """ +
+                        Time.makeTime12Hour(UI.clockInTime);
             }
             case NO_FILE_ASSOCIATION -> {
                 return """

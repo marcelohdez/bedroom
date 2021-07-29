@@ -112,4 +112,40 @@ public class Time { // Time operations
 
     }
 
+    /**
+     * Converts 24-hour time (what LocalTime is saved in) into 12-hour time.
+     * It is then returned as a String.
+     *
+     * @param time The LocalTime to be converted
+     * @return A String of the converted time (ex: "4:00PM")
+     */
+    public static String makeTime12Hour(LocalTime time) {
+
+        StringBuilder sb = new StringBuilder();
+        int hour = time.getHour();
+        int minute = time.getMinute();
+        boolean isPM = true;
+
+        if (hour >= 12) { // Set correct hour and am/pm value
+            if (hour != 12) {       // Set hour to 1-11pm
+                sb.append(hour-12);
+            } else sb.append(12);   // Set to 12pm
+        } else {
+            isPM = false;           // Time is no longer PM.
+            if (hour != 0) {        // Set hour to 1-11am
+                sb.append(hour);
+            } else sb.append(12);   // Set to 12am
+        }
+
+        sb.append(":");
+        if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
+        sb.append(minute);
+        if (isPM) {
+            sb.append("PM");
+        } else sb.append("AM");
+
+        return sb.toString();
+
+    }
+
 }
