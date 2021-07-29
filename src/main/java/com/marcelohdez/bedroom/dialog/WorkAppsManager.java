@@ -25,7 +25,6 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
     public WorkAppsManager() {
 
         setTitle("Work Apps");
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
         setResizable(false);
@@ -80,13 +79,11 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         // Add work apps
         workAppDirs = new ArrayList<>();
         workAppNames = new DefaultListModel<>();
-        for (String app : Main.loadedWorkApps) {
-
+        for (String app : Ops.detangleString(Main.userPrefs.get("workApps", "[]"))) {
             if (!app.equals("")) {
                 workAppDirs.add(app);
                 workAppNames.addElement(new File(app).getName());
             }
-
         }
 
 

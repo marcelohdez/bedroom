@@ -17,8 +17,6 @@ public class Main {
     public static String version = "3 (Beta 1)";
 
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
-    public static ArrayList<String> loadedWorkApps =
-            Ops.detangleString(Main.userPrefs.get("workApps", "[]"));
 
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
     private static final boolean gc = userPrefs.getBoolean("gc", false);
@@ -78,7 +76,7 @@ public class Main {
 
     private static void openWorkApps() {
 
-        for (String app : loadedWorkApps) {
+        for (String app : Ops.detangleString(userPrefs.get("workApps", "[]"))) {
 
             if (!app.equals("")) {
 
