@@ -9,9 +9,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ErrorWindow extends JDialog implements ActionListener {
+public class ErrorDialog extends JDialog implements ActionListener {
 
-    public ErrorWindow(ErrorType e) {
+    public ErrorDialog(ErrorType e) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -88,8 +88,8 @@ public class ErrorWindow extends JDialog implements ActionListener {
             case WORK_APP_DOES_NOT_EXIST -> {
                 return """
                         One of your work apps was not
-                        able to be started as it does
-                        not exist. Please go to
+                        able to be started as it no
+                        longer exists. Please go to
                         Settings > Manage Work Apps.""";
             }
         }

@@ -143,7 +143,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             Main.timesChosen = true;                // Clock out time is now chosen
             Main.clockOutWnd.dispose();             // Close clock out time window
 
-        } else new ErrorWindow(ErrorType.NEGATIVE_SHIFT_TIME);
+        } else new ErrorDialog(ErrorType.NEGATIVE_SHIFT_TIME);
 
     }
 
@@ -156,7 +156,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
                     SetTime.BREAK_START_PLUS_30M);
 
-        } else new ErrorWindow(ErrorType.BREAK_OUT_OF_SHIFT);
+        } else new ErrorDialog(ErrorType.BREAK_OUT_OF_SHIFT);
 
     }
 
@@ -169,12 +169,12 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             UI.breakTimesChosen = true;
             Main.leaveBreakWnd.dispose();       // Close leave break window
 
-        } else new ErrorWindow(ErrorType.NEGATIVE_BREAK_TIME);
+        } else new ErrorDialog(ErrorType.NEGATIVE_BREAK_TIME);
 
     }
 
     private static void setTimeAndProceed(SelectTimeWindow oldWindow, SelectTimeWindow newWindow,
-                                   SetTime newWindowType) {
+                                          SetTime newWindowType) {
 
         oldWindow.dispose();
         newWindow.centerOnMainWindow();

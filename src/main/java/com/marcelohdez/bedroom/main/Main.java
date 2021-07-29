@@ -91,7 +91,7 @@ public class Main {
                         e.printStackTrace();
                     }
 
-                } else new ErrorWindow(ErrorType.WORK_APP_DOES_NOT_EXIST);
+                } else new ErrorDialog(ErrorType.WORK_APP_DOES_NOT_EXIST);
 
             }
 

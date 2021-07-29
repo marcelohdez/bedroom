@@ -13,15 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 
-public class WorkAppsWindow extends JDialog implements ActionListener, WindowListener {
+public class WorkAppsManager extends JDialog implements ActionListener, WindowListener {
 
     private DefaultListModel<String> workApps;
     private JList<String> list;
     private JFileChooser fc;
 
-    public WorkAppsWindow() {
+    public WorkAppsManager() {
 
         setTitle("Work Apps");
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
@@ -116,7 +115,7 @@ public class WorkAppsWindow extends JDialog implements ActionListener, WindowLis
                     if (returnVal == JFileChooser.APPROVE_OPTION)
                         workApps.addElement(fc.getSelectedFile().toString());
 
-                } else new ErrorWindow(ErrorType.WORK_APPS_FULL); // Else error
+                } else new ErrorDialog(ErrorType.WORK_APPS_FULL); // Else error
 
             }
             case "Remove" -> {
