@@ -51,8 +51,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         add(createBgSettings());
         add(createLabelRow("Misc. (Changes need restart)"));
         add(createFirstMiscRow());
-        add(createButtonRow("Manage Work Apps"));
-        add(createButtonRow("Set Defaults"));
+        add(createButtonRow("Manage Work Apps",
+                "Work apps will automatically open along with Bedroom."));
+        add(createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps."));
 
     }
 
@@ -214,7 +215,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private JPanel createButtonRow(String buttonText) {
+    private JPanel createButtonRow(String buttonText, String toolTip) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -225,6 +226,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         button.setForeground(UI.buttonTextColor);
         button.setBackground(UI.buttonColor);
         button.addActionListener(this);
+        button.setToolTipText("<html><b>" + toolTip + "</b></html>");
 
         // Add to row
         row.add(button);
