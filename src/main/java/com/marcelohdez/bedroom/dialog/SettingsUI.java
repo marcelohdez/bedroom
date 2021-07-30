@@ -261,8 +261,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize stuffs
         row.setBackground(UI.bg);
-        Ops.colorThis(alwaysOnTop, false);
-        Ops.colorThis(doGC, false);
+        Ops.colorThis(alwaysOnTop);
+        Ops.colorThis(doGC);
 
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         doGC.setToolTipText("<html><b>Forcefully remove excess memory every 60 seconds:</b><br>" +

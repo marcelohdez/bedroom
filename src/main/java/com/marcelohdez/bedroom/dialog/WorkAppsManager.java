@@ -92,7 +92,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         list.setVisibleRowCount(7);
 
         // Customize
-        Ops.colorThis(list, true);
+        Ops.colorThis(list);
         panel.setBackground(UI.buttonColor);
         JScrollPane sp = new JScrollPane(list);
         sp.setPreferredSize(new Dimension(180, 140));

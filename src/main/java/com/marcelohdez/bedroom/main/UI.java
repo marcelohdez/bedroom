@@ -306,12 +306,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void colorComponents() {
 
-        breakButton.setBackground(buttonColor);
-        breakButton.setForeground(buttonTextColor);
-        addOrder.setBackground(buttonColor);
-        addOrder.setForeground(buttonTextColor);
-        stats.setBackground(bg);
-        stats.setForeground(textColor);
+        Ops.colorThis(breakButton);
+        Ops.colorThis(addOrder);
+        Ops.colorThis(stats);
         setBackground(bg);
 
     }

@@ -12,11 +12,10 @@ public class Ops { // Operations
      * Colors a JComponent's background and foreground.
      *
      * @param c Component to color
-     * @param isButton Use button colors
      */
-    public static void colorThis(JComponent c, boolean isButton) {
+    public static void colorThis(JComponent c) {
 
-        if (isButton) {
+        if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
             c.setBackground(UI.buttonColor);
             c.setForeground(UI.buttonTextColor);
         } else {
