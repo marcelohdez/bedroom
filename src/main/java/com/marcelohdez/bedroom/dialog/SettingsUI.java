@@ -28,7 +28,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private final JComboBox<String> themeListBox =
             new JComboBox<>(new String[]{"Banana", "Dark", "Demonic Red", "Contrast",
-                    "Light", "Pink+White", "Sky Blue"});
+                    "Light", "Pink+White", "Pastel Blue"});
 
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
     private final JCheckBox doGC = new JCheckBox("Garbage Collect");
@@ -369,10 +369,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 setButtonColorAll(240);
                 setBgRGB(220, 150, 200);
             }
-            case "Sky Blue" -> {
+            case "Pastel Blue" -> {
                 setButtonTextAndText(255);
-                setButtonRGB(100, 161, 240);
-                setBgRGB(150, 203, 255);
+                setButtonRGB(100, 160, 240);
+                setBgRGB(140, 190, 255);
             }
         }
 
