@@ -154,9 +154,9 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
     }
 
-    private void removeAppFromBoth(int app) {
-        workAppNames.remove(app);
-        workAppDirs.remove(app);
+    private void removeAppFromBoth(int index) {
+        workAppNames.remove(index);
+        workAppDirs.remove(index);
     }
 
     @Override
