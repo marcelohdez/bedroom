@@ -16,6 +16,7 @@ import java.util.Objects;
 public class SettingsUI extends JPanel implements ActionListener, ChangeListener {
 
     private static final Dimension colorLabelsSize = new Dimension(100, 20);
+    private final SettingsDialog parent;
 
     // RGB values already set
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB;
@@ -33,7 +34,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
     private final JCheckBox doGC = new JCheckBox("Garbage Collect");
 
-    public SettingsUI() { // Settings UI constructor
+    public SettingsUI(SettingsDialog parent) { // Settings UI constructor
+        this.parent = parent;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -418,7 +420,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             case "comboBoxChanged" ->
                     setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
                             themeListBox.getSelectedIndex());
-            case "Manage Work Apps" -> new WorkAppsManager();
+            case "Manage Work Apps" -> new WorkAppsManager(parent);
             case "Set Defaults" -> setDefaultMisc();
         }
 

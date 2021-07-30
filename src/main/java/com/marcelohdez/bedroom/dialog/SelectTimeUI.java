@@ -13,6 +13,7 @@ import java.time.LocalTime;
 public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
 
     private final TimeWindowType type;
+    private final SelectTimeWindow parent;
 
     // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
@@ -32,9 +33,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private JPanel setTargetRow = createTargetRow();
     private final JPanel selectRow = new JPanel();
 
-    public SelectTimeUI(TimeWindowType type) {
-
+    public SelectTimeUI(SelectTimeWindow parent, TimeWindowType type) {
         this.type = type;
+        this.parent = parent;
+
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
@@ -143,11 +145,14 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             Main.timesChosen = true;                // Clock out time is now chosen
             Main.clockOutWnd.dispose();             // Close clock out time window
 
-        } else new ErrorDialog(ErrorType.NEGATIVE_SHIFT_TIME);
+        } else {
+            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
+                    ErrorType.NEGATIVE_SHIFT_TIME);
+        }
 
     }
 
-    private static void setBreakStartTime(LocalTime time) {
+    private void setBreakStartTime(LocalTime time) {
 
         if ((time.isAfter(UI.clockInTime)) && time.isBefore(UI.clockOutTime) ||
                 time.equals(UI.clockInTime)) {
@@ -156,11 +161,14 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
                     SetTime.BREAK_START_PLUS_30M);
 
-        } else new ErrorDialog(ErrorType.BREAK_OUT_OF_SHIFT);
+        } else {
+            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
+                    ErrorType.BREAK_OUT_OF_SHIFT);
+        }
 
     }
 
-    private static void setBreakEndTime(LocalTime time) {
+    private void setBreakEndTime(LocalTime time) {
 
         if (time.isAfter(UI.breakInTime) && time.isBefore(UI.clockOutTime) ||
                 time.equals(UI.clockOutTime)) {
@@ -169,7 +177,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             UI.breakTimesChosen = true;
             Main.leaveBreakWnd.dispose();       // Close leave break window
 
-        } else new ErrorDialog(ErrorType.NEGATIVE_BREAK_TIME);
+        } else {
+            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
+                    ErrorType.NEGATIVE_BREAK_TIME);
+        }
 
     }
 
@@ -253,7 +264,9 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case 10, 13 -> selectTime(); // Enter selects time (return on MacOS)
-            case 27, 127 -> new SettingsDialog();  // Open settings with Del or Esc keys
+            case 27, 127 -> new SettingsDialog(
+                    new int[]{parent.getX(), parent.getY(),
+                            parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
         }
     }
 

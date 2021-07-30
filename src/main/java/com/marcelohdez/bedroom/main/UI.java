@@ -14,6 +14,7 @@ import javax.swing.*;
 
 public class UI extends JPanel implements ActionListener, KeyListener {
 
+    private final Window parent;
     private static final DecimalFormat firstTwoDecs = new DecimalFormat("#.00");
     private static StringBuilder str;
 
@@ -53,8 +54,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Get color of background
     public static Color bg = loadColorOf("bg", 64);
 
-    public UI() { // Set UI's properties
+    public UI(Window parent) { // Set UI's properties
 
+        this.parent = parent;
         Dimension buttonSize = new Dimension(110, 55);
 
         setFocusable(true);
@@ -172,7 +174,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> new SettingsDialog();  // Open settings with Del or Esc keys
+            case 27, 127 -> new SettingsDialog(
+                    new int[]{parent.getX(), parent.getY(),
+                            parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
         }
     }
 

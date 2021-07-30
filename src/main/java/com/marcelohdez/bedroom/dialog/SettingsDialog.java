@@ -9,7 +9,7 @@ public class SettingsDialog extends JDialog implements WindowListener {
 
     private final SettingsUI sui;
 
-    public SettingsDialog() {
+    public SettingsDialog(int[] xyWidthHeight) {
 
         setModalityType(ModalityType.APPLICATION_MODAL);
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
@@ -17,14 +17,14 @@ public class SettingsDialog extends JDialog implements WindowListener {
         setTitle("Settings");
         setResizable(false);
 
-        sui = new SettingsUI();
+        sui = new SettingsUI(this);
         add(sui);
 
         pack();
 
-        // Center on main window
-        setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
-                Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
+        // Center on parent window
+        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2]/2) - (this.getWidth()/2)),
+                xyWidthHeight[1] + ((xyWidthHeight[3]/2) - (this.getHeight()/2)));
 
         setVisible(true);
 
@@ -34,7 +34,6 @@ public class SettingsDialog extends JDialog implements WindowListener {
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
         this.sui.updateValues();
-        Main.ui.requestFocus();
 
     }
 

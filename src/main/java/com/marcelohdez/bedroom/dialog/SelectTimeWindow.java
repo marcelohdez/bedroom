@@ -22,7 +22,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         addWindowListener(this);
 
 
-        ui = new SelectTimeUI(type);            // Create ui based on window type
+        ui = new SelectTimeUI(this, type); // Create ui based on window type
         ui.addKeyListener(ui);                  // Add key listener (itself) to ui
         add(ui);                                // Add the UI
 
@@ -46,18 +46,18 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
                 Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
-        this.ui.requestFocus();
+        ui.requestFocus();
 
     }
 
     public void setUITime(SetTime type) {
         // Set ui's list boxes to a time
-        this.ui.setListBoxIndexes(type);
+        ui.setListBoxIndexes(type);
     }
 
     public void reloadColors() {
 
-        this.ui.colorSelf();
+        ui.colorSelf();
 
     }
 

@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class ErrorDialog extends JDialog implements ActionListener {
 
-    public ErrorDialog(ErrorType e) {
+    public ErrorDialog(int[] xyWidthHeight, ErrorType e) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -47,9 +47,9 @@ public class ErrorDialog extends JDialog implements ActionListener {
         ok.setPreferredSize(new Dimension(this.getWidth() - 5, 40));
         pack();
 
-        // Center on main window
-        setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
-                Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
+        // Center on summoner
+        setLocation(xyWidthHeight[0] + (xyWidthHeight[2]/2 - (this.getWidth()/2)),
+                xyWidthHeight[1] + (xyWidthHeight[3]/2 - (this.getHeight()/2)));
 
         setVisible(true);
 

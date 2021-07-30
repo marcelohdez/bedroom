@@ -22,7 +22,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
     private DefaultListModel<String> workAppNames; // Work apps' names
     private JList<String> list; // The JList to be displayed
 
-    public WorkAppsManager() {
+    public WorkAppsManager(SettingsDialog parent) {
 
         setTitle("Work Apps");
         addWindowListener(this);
@@ -39,9 +39,9 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         add(content);
         pack();
 
-        // Center on main window
-        setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
-                Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
+        // Center on parent window
+        setLocation(parent.getX() + ((parent.getWidth()/2) - (this.getWidth()/2)),
+                parent.getY() + ((parent.getHeight()/2) - (this.getHeight()/2)));
 
         setVisible(true);
 
@@ -134,7 +134,10 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
             }
 
 
-        } else new ErrorDialog(ErrorType.WORK_APPS_FULL); // Else error
+        } else {
+            new ErrorDialog(new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()},
+                    ErrorType.WORK_APPS_FULL);
+        }
 
     }
 

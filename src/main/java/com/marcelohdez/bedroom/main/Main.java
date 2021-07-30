@@ -22,7 +22,6 @@ public class Main {
     private static final boolean gc = userPrefs.getBoolean("gc", false);
 
     public static Window wnd; // This window
-    public static UI ui; // UI of main window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
@@ -62,9 +61,8 @@ public class Main {
 
     private static void initWindows() {
 
-        // Create main window and its UI
-        ui = new UI();
-        wnd = new Window(ui);
+        // Create main window
+        wnd = new Window();
         // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
         clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
@@ -89,7 +87,10 @@ public class Main {
                         e.printStackTrace();
                     }
 
-                } else new ErrorDialog(ErrorType.WORK_APP_DOES_NOT_EXIST);
+                } else {
+                    new ErrorDialog(new int[]{wnd.getX(), wnd.getY(), wnd.getWidth(), wnd.getHeight()},
+                            ErrorType.WORK_APP_DOES_NOT_EXIST);
+                }
 
             }
 
@@ -99,7 +100,7 @@ public class Main {
 
     public static void updateColors() {
 
-        ui.reloadColors();
+        wnd.reloadColors();
         clockInWnd.reloadColors();
         clockOutWnd.reloadColors();
         enterBreakWnd.reloadColors();
