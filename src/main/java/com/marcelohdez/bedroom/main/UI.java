@@ -65,8 +65,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         // Set components' properties
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
+        stats.addKeyListener(this);
+        addOrder.addKeyListener(this);
         addOrder.addActionListener(this);
         addOrder.setPreferredSize(buttonSize);
+        breakButton.addKeyListener(this);
         breakButton.addActionListener(this);
         breakButton.setPreferredSize(buttonSize);
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
@@ -89,8 +92,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case "Add Order" -> changeOrders(1);
             case "Set Break" -> enterBreak();
         }
-
-        this.requestFocus(); // Get focus back from buttons when clicked (for shortcuts to work)
 
     }
 

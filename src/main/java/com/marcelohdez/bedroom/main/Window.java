@@ -13,9 +13,10 @@ public class Window extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
 
+
         ui = new UI(this);
-        ui.requestFocus();
         add(ui);
+        addKeyListener(ui);
         pack();
         setLocationRelativeTo(null);
 
