@@ -70,10 +70,14 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
 
         switch (this.type) {
             case CLOCK_OUT -> { // Go back to clock in time window
-                Main.clockOutWnd.dispose();
                 Main.clockInWnd.setVisible(true);
+                this.dispose();
             }
-            case END_BREAK, START_BREAK -> this.dispose();   // Close window
+            case START_BREAK -> this.dispose();   // Close window
+            case END_BREAK -> {
+                Main.enterBreakWnd.setVisible(true);
+                this.dispose();
+            }
         }
 
     }
