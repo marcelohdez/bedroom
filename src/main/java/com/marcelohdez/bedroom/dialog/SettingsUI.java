@@ -11,23 +11,27 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener, ChangeListener {
+public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener {
 
-    private static final Dimension colorLabelsSize = new Dimension(100, 20);
+    private static final Dimension colorLabelsSize = new Dimension(50, 20);
     private final SettingsDialog parent;
 
     // RGB values already set
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB;
+    // Keep track of currently coloring red green and blue slider values:
+    // 0 = text, 1 = buttonText, 2 = buttons, 3 = background
+    private int currentlyColoring = Main.userPrefs.getInt("lastColoring", 0);
 
-    // Spinners:
-    private JSpinner textRed, textGreen, textBlue;          // Text color spinners
-    private JSpinner buttonTextRed, buttonTextGreen, buttonTextBlue; // Button text color spinners
-    private JSpinner buttonRed, buttonGreen, buttonBlue;    // Button color spinners
-    private JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
+    private JSlider redSlider, greenSlider, blueSlider; // Color sliders
 
-    private final JComboBox<String> themeListBox =
+    private final JComboBox<String> coloringListBox = // Components we can color
+            new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
+
+    private final JComboBox<String> themeListBox = // Themes
             new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
                     "Light", "Pink+White", "Pastel Blue"});
 
@@ -40,15 +44,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         loadRGBValues();
-        setColorSpinners();
+        //setColorSpinners();
+        createColorSliders();
+        updateColorSliders();
 
         // Add rows
         add(createLabelRow("Colors (Red, Green, Blue)"));
-        add(createThemeRow());
-        add(createTextSettings());
-        add(createButtonTextSettings());
-        add(createButtonSettings());
-        add(createBgSettings());
+        add(createListBoxRow("Theme:", themeListBox, "lastTheme"));
+        add(createColoringPanel());
+        add(createListBoxRow("Currently coloring:", coloringListBox, "lastColoring"));
         add(createLabelRow("Misc."));
         add(createFirstMiscRow());
         add(createButtonRow("Manage Work Apps",
@@ -82,122 +86,117 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void setColorSpinners() {
+    private void createColorSliders() {
+        // Create color sliders with values based on currently coloring selection
+        switch (currentlyColoring) {
+            case 0 -> {         // Text
+                redSlider = new JSlider(0, 255, textRGB[0]);
+                greenSlider = new JSlider(0, 255, textRGB[1]);
+                blueSlider = new JSlider(0, 255, textRGB[2]);
+            }
+            case 1 -> {         // Button Text
+                redSlider = new JSlider(0, 255, buttonTextRGB[0]);
+                greenSlider = new JSlider(0, 255, buttonTextRGB[1]);
+                blueSlider = new JSlider(0, 255, buttonTextRGB[2]);
+            }
+            case 2 -> {         // Buttons
+                redSlider = new JSlider(0, 255, buttonRGB[0]);
+                greenSlider = new JSlider(0, 255, buttonRGB[1]);
+                blueSlider = new JSlider(0, 255, buttonRGB[2]);
+            }
+            case 3 -> {         // Background
+                redSlider = new JSlider(0, 255, bgRGB[0]);
+                greenSlider = new JSlider(0, 255, bgRGB[1]);
+                blueSlider = new JSlider(0, 255, bgRGB[2]);
+            }
+        }
 
-        // Text spinners
-        textRed = new JSpinner(new SpinnerNumberModel(textRGB[0], 0, 255, 1));
-        textGreen = new JSpinner(new SpinnerNumberModel(textRGB[1], 0, 255, 1));
-        textBlue = new JSpinner(new SpinnerNumberModel(textRGB[2], 0, 255, 1));
-
-        // Button text spinners
-        buttonTextRed = new JSpinner(new SpinnerNumberModel(buttonTextRGB[0], 0, 255, 1));
-        buttonTextGreen = new JSpinner(new SpinnerNumberModel(buttonTextRGB[1], 0, 255, 1));
-        buttonTextBlue = new JSpinner(new SpinnerNumberModel(buttonTextRGB[2], 0, 255, 1));
-
-        // Button spinners
-        buttonRed = new JSpinner(new SpinnerNumberModel(buttonRGB[0], 0, 255, 1));
-        buttonGreen = new JSpinner(new SpinnerNumberModel(buttonRGB[1], 0, 255, 1));
-        buttonBlue = new JSpinner(new SpinnerNumberModel(buttonRGB[2], 0, 255, 1));
-
-        // Background spinners
-        bgRed = new JSpinner(new SpinnerNumberModel(bgRGB[0], 0, 255, 1));
-        bgGreen = new JSpinner(new SpinnerNumberModel(bgRGB[1], 0, 255, 1));
-        bgBlue = new JSpinner(new SpinnerNumberModel(bgRGB[2], 0, 255, 1));
-
-    }
-
-    private JPanel createTextSettings() {
-
-        // Create thingies
-        JPanel row = new JPanel(); // Create panel to hold row of settings
-        JLabel label = new JLabel("Text:");
-        label.setPreferredSize(colorLabelsSize);
-
-        // Customize thingies
-        row.setBackground(UI.bg);
-        label.setForeground(UI.textColor);
-        textRed.addChangeListener(this);
-        textGreen.addChangeListener(this);
-        textBlue.addChangeListener(this);
-
-        // Add thingies to row
-        row.add(label);
-        row.add(textRed);
-        row.add(textGreen);
-        row.add(textBlue);
-
-        return row;
+        addSlidersChangeListener();
 
     }
 
-    private JPanel createButtonTextSettings() {
+    private void updateColorSliders() {
 
-        // Create thingies
-        JPanel row = new JPanel(); // Create panel to hold row of settings
-        JLabel label = new JLabel("Button Text:");
-        label.setPreferredSize(colorLabelsSize);
+        // Remove change listener to not update unwanted colors, as each slider triggers a change event
+        // making the colors get messed up quickly when changing themes or the currently coloring component.
+        removeSlidersChangeListener();
 
-        // Customize thingies
-        row.setBackground(UI.bg);
-        label.setForeground(UI.textColor);
-        buttonTextRed.addChangeListener(this);
-        buttonTextGreen.addChangeListener(this);
-        buttonTextBlue.addChangeListener(this);
+        switch (currentlyColoring) {
+            case 0 -> {         // Text
+                redSlider.setValue(textRGB[0]);
+                greenSlider.setValue(textRGB[1]);
+                blueSlider.setValue(textRGB[2]);
+            }
+            case 1 -> {         // Button Text
+                redSlider.setValue(buttonTextRGB[0]);
+                greenSlider.setValue(buttonTextRGB[1]);
+                blueSlider.setValue(buttonTextRGB[2]);
+            }
+            case 2 -> {         // Buttons
+                redSlider.setValue(buttonRGB[0]);
+                greenSlider.setValue(buttonRGB[1]);
+                blueSlider.setValue(buttonRGB[2]);
+            }
+            case 3 -> {         // Background
+                redSlider.setValue(bgRGB[0]);
+                greenSlider.setValue(bgRGB[1]);
+                blueSlider.setValue(bgRGB[2]);
+            }
+        }
 
-        // Add thingies to row
-        row.add(label);
-        row.add(buttonTextRed);
-        row.add(buttonTextGreen);
-        row.add(buttonTextBlue);
-
-        return row;
-
-    }
-
-    private JPanel createButtonSettings() {
-
-        // Create thingies
-        JPanel row = new JPanel(); // Create panel to hold row of settings
-        JLabel label = new JLabel("Buttons:");
-        label.setPreferredSize(colorLabelsSize);
-
-        // Customize thingies
-        row.setBackground(UI.bg);
-        label.setForeground(UI.textColor);
-        buttonRed.addChangeListener(this);
-        buttonGreen.addChangeListener(this);
-        buttonBlue.addChangeListener(this);
-
-        // Add thingies to row
-        row.add(label);
-        row.add(buttonRed);
-        row.add(buttonGreen);
-        row.add(buttonBlue);
-
-        return row;
+        addSlidersChangeListener();                     // Add change listener for user to change color
+        redSlider.setValue(redSlider.getValue() + 1);   // Since JSliders only sent a change event when their
+        redSlider.setValue(redSlider.getValue() - 1);   // value is changed here we make sure to do so.
 
     }
 
-    private JPanel createBgSettings() {
+    private void addSlidersChangeListener() {
 
-        // Create thingies
-        JPanel row = new JPanel(); // Create panel to hold row of settings
-        JLabel label = new JLabel("Background:");
-        label.setPreferredSize(colorLabelsSize);
+        redSlider.addChangeListener(this);
+        greenSlider.addChangeListener(this);
+        blueSlider.addChangeListener(this);
 
-        // Customize thingies
-        row.setBackground(UI.bg);
-        label.setForeground(UI.textColor);
-        bgRed.addChangeListener(this);
-        bgGreen.addChangeListener(this);
-        bgBlue.addChangeListener(this);
+    }
 
-        row.add(label);
-        row.add(bgRed);
-        row.add(bgGreen);
-        row.add(bgBlue);
+    private void removeSlidersChangeListener() {
 
-        return row;
+        redSlider.removeChangeListener(this);
+        greenSlider.removeChangeListener(this);
+        blueSlider.removeChangeListener(this);
+
+    }
+
+    private JPanel createColoringPanel() {
+
+        JPanel root = new JPanel();
+        JPanel redRow = new JPanel();
+        JPanel greenRow = new JPanel();
+        JPanel blueRow = new JPanel();
+        JLabel redLabel = new JLabel("Red:");
+        JLabel greenLabel = new JLabel("Green:");
+        JLabel blueLabel = new JLabel("Blue:");
+
+        Ops.colorThese(new JComponent[]{redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
+                blueRow, blueLabel, blueSlider});
+
+        // Add labels and sliders to their respective rows
+        redRow.add(redLabel);
+        redRow.add(redSlider);
+        redLabel.setPreferredSize(colorLabelsSize);
+        greenRow.add(greenLabel);
+        greenRow.add(greenSlider);
+        greenLabel.setPreferredSize(colorLabelsSize);
+        blueRow.add(blueLabel);
+        blueRow.add(blueSlider);
+        blueLabel.setPreferredSize(colorLabelsSize);
+
+        // Add them to root panel
+        root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
+        root.add(redRow);
+        root.add(greenRow);
+        root.add(blueRow);
+
+        return root;
 
     }
 
@@ -235,24 +234,24 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private JPanel createThemeRow() {
+    private JPanel createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey) {
 
         // Create the components
         JPanel row = new JPanel();
-        JLabel label = new JLabel("Theme:");
+        JLabel label = new JLabel(labelText);
 
         // Customize them
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
-        Ops.colorThis(themeListBox);
-        themeListBox.setSelectedIndex(0);
-        themeListBox.addActionListener(this);
-        themeListBox.setSelectedIndex(Math.min(Main.userPrefs.getInt("lastTheme", 0),
-                themeListBox.getItemCount() - 1));
+        Ops.colorThis(listBox);
+        listBox.setSelectedIndex(0);
+        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, 0),
+                listBox.getItemCount() - 1));
+        listBox.addItemListener(this);
 
         // Add to row
         row.add(label);
-        row.add(themeListBox);
+        row.add(listBox);
 
         return row;
 
@@ -284,101 +283,65 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void setButtonTextAndText(int value) {
+    private void setColoringTo(int index) {
 
-        setButtonTextAll(value);
-        setTextColorAll(value);
-
-    }
-
-    private void setTextColorAll(int value) {
-
-        textRed.setValue(value);
-        textGreen.setValue(value);
-        textBlue.setValue(value);
-
-    }
-
-    private void setButtonTextAll(int value) {
-
-        buttonTextRed.setValue(value);
-        buttonTextGreen.setValue(value);
-        buttonTextBlue.setValue(value);
-
-    }
-
-    private void setButtonColorAll(int value) {
-
-        buttonRed.setValue(value);
-        buttonGreen.setValue(value);
-        buttonBlue.setValue(value);
-
-    }
-
-    private void setButtonRGB(int r, int g, int b) {
-
-        buttonRed.setValue(r);
-        buttonGreen.setValue(g);
-        buttonBlue.setValue(b);
-
-    }
-
-    private void setBgColorAll(int value) {
-
-        bgRed.setValue(value);
-        bgGreen.setValue(value);
-        bgBlue.setValue(value);
-
-    }
-
-    private void setBgRGB(int r, int g, int b) {
-
-        bgRed.setValue(r);
-        bgGreen.setValue(g);
-        bgBlue.setValue(b);
+        currentlyColoring = index;
+        updateColorSliders();
+        Main.userPrefs.putInt("lastColoring", index);
 
     }
 
     private void setTheme(String theme, int index) {
 
+        int[] newTextRGB = new int[3];
+        int[] newButtonTextRGB = new int[3];
+        int[] newButtonRGB = new int[3];
+        int[] newBgRGB = new int[3];
+
         switch (theme) {
-            case "Banana" -> {
-                setTextColorAll(0);
-                setButtonTextAll(240);
-                setButtonRGB(54, 32, 0);
-                setBgRGB(240, 224, 53);
-            }
             case "Dark" -> {
-                setButtonTextAndText(240);
-                setButtonColorAll(80);
-                setBgColorAll(64);
+                newTextRGB = new int[]{240, 240, 240};
+                newButtonTextRGB = new int[]{240, 240, 240};
+                newButtonRGB = new int[]{80, 80, 80};
+                newBgRGB = new int[]{64, 64, 64};
             }
             case "Demonic Red" -> {
-                setButtonTextAndText(240);
-                setButtonColorAll(0);
-                setBgRGB(72, 0, 0);
+                newTextRGB = new int[]{240, 240, 240};
+                newButtonTextRGB = new int[]{240, 240, 240};
+                newButtonRGB = new int[]{0, 0, 0};
+                newBgRGB = new int[]{72, 0, 0};
             }
             case "Contrast" -> {
-                setButtonTextAndText(255);
-                setButtonColorAll(0);
-                setBgColorAll(0);
+                newTextRGB = new int[]{255, 255, 255};
+                newButtonTextRGB = new int[]{255, 255, 255};
+                newButtonRGB = new int[]{0, 0, 0};
+                newBgRGB = new int[]{0, 0, 0};
             }
             case "Light" -> {
-                setButtonTextAndText(0);
-                setButtonColorAll(220);
-                setBgColorAll(240);
+                newTextRGB = new int[]{0, 0, 0};
+                newButtonTextRGB = new int[]{0, 0, 0};
+                newButtonRGB = new int[]{220, 220, 220};
+                newBgRGB = new int[]{240, 240, 240};
             }
             case "Pink+White" -> {
-                setButtonTextAndText(0);
-                setButtonColorAll(240);
-                setBgRGB(220, 150, 200);
+                newTextRGB = new int[]{0, 0, 0};
+                newButtonTextRGB = new int[]{0, 0, 0};
+                newButtonRGB = new int[]{240, 240, 240};
+                newBgRGB = new int[]{220, 150, 200};
             }
             case "Pastel Blue" -> {
-                setButtonTextAndText(255);
-                setButtonRGB(100, 160, 240);
-                setBgRGB(140, 190, 255);
+                newTextRGB = new int[]{255, 255, 255};
+                newButtonTextRGB = new int[]{255, 255, 255};
+                newButtonRGB = new int[]{100, 160, 240};
+                newBgRGB = new int[]{140, 190, 255};
             }
         }
+
+        textRGB = newTextRGB;
+        buttonTextRGB = newButtonTextRGB;
+        buttonRGB = newButtonRGB;
+        bgRGB = newBgRGB;
+        updateColorSliders();
 
         Main.userPrefs.putInt("lastTheme", index);
 
@@ -393,21 +356,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     public void updateValues() {
 
-        textRGB = new int[] {(Integer) textRed.getValue(),
-                (Integer) textGreen.getValue(),
-                (Integer) textBlue.getValue()};
+        int[] newRGB = new int[] {redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()};
 
-        buttonTextRGB = new int[] {(Integer) buttonTextRed.getValue(),
-                (Integer) buttonTextGreen.getValue(),
-                (Integer) buttonTextBlue.getValue()};
-
-        buttonRGB = new int[] {(Integer) buttonRed.getValue(),
-                (Integer) buttonGreen.getValue(),
-                (Integer) buttonBlue.getValue()};
-
-        bgRGB = new int[] {(Integer) bgRed.getValue(),
-                (Integer) bgGreen.getValue(),
-                (Integer) bgBlue.getValue()};
+        switch (currentlyColoring) {
+            case 0 -> textRGB = newRGB;
+            case 1 -> buttonTextRGB = newRGB;
+            case 2 -> buttonRGB = newRGB;
+            case 3 -> bgRGB = newRGB;
+        }
 
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         Settings.saveMisc(alwaysOnTop.isSelected(), doGC.isSelected());
@@ -419,9 +375,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     public void actionPerformed(ActionEvent e) {
 
         switch (e.getActionCommand()) {
-            case "comboBoxChanged" ->
-                    setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
-                            themeListBox.getSelectedIndex());
             case "Manage Work Apps" -> new WorkAppsManager(parent);
             case "Set Defaults" -> setDefaultMisc();
         }
@@ -433,4 +386,12 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         updateValues();
     }
 
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getSource() == themeListBox) // If theme list box changed, update theme
+            setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
+                    themeListBox.getSelectedIndex());
+        if (e.getSource() == coloringListBox) // If coloring list box changed, update sliders for current component
+            setColoringTo(coloringListBox.getSelectedIndex());
+    }
 }
