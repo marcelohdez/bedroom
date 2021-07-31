@@ -26,6 +26,20 @@ public class Ops { // Operations
     }
 
     /**
+     * Returns white or black depending on how bright the color given is, in order to create contrast.
+     *
+     * @param c Color to calculate off of
+     * @return White or black
+     */
+    public static Color contrastTo(Color c) {
+
+        if (c.getRed() + c.getGreen() + c.getBlue() > 525) return Color.BLACK;
+
+        return Color.WHITE;
+
+    }
+
+    /**
      * Creates a String[] of numbers with optional added text to each.
      *
      * @param start Starting number
@@ -48,6 +62,26 @@ public class Ops { // Operations
         // This line was gotten from Floern and Bozho's response on StackOverflow:
         // https://stackoverflow.com/questions/4042434/converting-arrayliststring-to-string-in-java
         return list.toArray(new String[0]);
+
+    }
+
+    /**
+     * Darkens the given color by the given amount
+     *
+     * @param c Color to darken
+     * @param amount Amount to darken by
+     * @return Darkened color
+     */
+    public static Color darken(Color c, int amount) {
+
+        int r = c.getRed() - amount;
+        int g = c.getGreen() - amount;
+        int b = c.getBlue() - amount;
+        if (r < 0) r = 0;
+        if (g < 0) g = 0;
+        if (b < 0) b = 0;
+
+        return new Color(r, g, b);
 
     }
 
