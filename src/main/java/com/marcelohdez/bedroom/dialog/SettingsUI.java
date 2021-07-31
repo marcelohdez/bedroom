@@ -87,31 +87,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     private void createColorSliders() {
-        // Create color sliders with values based on currently coloring selection
-        switch (currentlyColoring) {
-            case 0 -> {         // Text
-                redSlider = new JSlider(0, 255, textRGB[0]);
-                greenSlider = new JSlider(0, 255, textRGB[1]);
-                blueSlider = new JSlider(0, 255, textRGB[2]);
-            }
-            case 1 -> {         // Button Text
-                redSlider = new JSlider(0, 255, buttonTextRGB[0]);
-                greenSlider = new JSlider(0, 255, buttonTextRGB[1]);
-                blueSlider = new JSlider(0, 255, buttonTextRGB[2]);
-            }
-            case 2 -> {         // Buttons
-                redSlider = new JSlider(0, 255, buttonRGB[0]);
-                greenSlider = new JSlider(0, 255, buttonRGB[1]);
-                blueSlider = new JSlider(0, 255, buttonRGB[2]);
-            }
-            case 3 -> {         // Background
-                redSlider = new JSlider(0, 255, bgRGB[0]);
-                greenSlider = new JSlider(0, 255, bgRGB[1]);
-                blueSlider = new JSlider(0, 255, bgRGB[2]);
-            }
-        }
+        // Create color sliders
+        redSlider = new JSlider(0, 255, 0);
+        greenSlider = new JSlider(0, 255, 0);
+        blueSlider = new JSlider(0, 255, 0);
 
-        addSlidersChangeListener();
+        addSlidersChangeListener(); // Add change listener
+        updateColorSliders(); // Set their values
 
     }
 
