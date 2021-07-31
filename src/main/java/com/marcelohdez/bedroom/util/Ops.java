@@ -26,6 +26,25 @@ public class Ops { // Operations
     }
 
     /**
+     * Colors a list of components' background and foreground.
+     *
+     * @param c Components to color
+     */
+    public static void colorThese(JComponent[] c) {
+
+        for (JComponent comp : c) {
+            if (comp instanceof JButton || comp instanceof JList || comp instanceof JComboBox) {
+                comp.setBackground(UI.buttonColor);
+                comp.setForeground(UI.buttonTextColor);
+            } else {
+                comp.setBackground(UI.bg);
+                comp.setForeground(UI.textColor);
+            }
+        }
+
+    }
+
+    /**
      * Returns white or black depending on how bright the color given is, in order to create contrast.
      *
      * @param c Color to calculate off of
