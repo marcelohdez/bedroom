@@ -28,7 +28,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private JSpinner bgRed, bgGreen, bgBlue;                // Background color spinners
 
     private final JComboBox<String> themeListBox =
-            new JComboBox<>(new String[]{"Banana", "Dark", "Demonic Red", "Contrast",
+            new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
                     "Light", "Pink+White", "Pastel Blue"});
 
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
@@ -244,11 +244,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Customize them
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
-        themeListBox.setBackground(UI.buttonColor);
-        themeListBox.setForeground(UI.buttonTextColor);
+        Ops.colorThis(themeListBox);
         themeListBox.setSelectedIndex(0);
         themeListBox.addActionListener(this);
-        themeListBox.setSelectedIndex(Main.userPrefs.getInt("lastTheme", 0));
+        themeListBox.setSelectedIndex(Math.min(Main.userPrefs.getInt("lastTheme", 0),
+                themeListBox.getItemCount() - 1));
 
         // Add to row
         row.add(label);
