@@ -52,7 +52,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         add(createLabelRow("Colors (Red, Green, Blue)"));
         add(createListBoxRow("Theme:", themeListBox, "lastTheme"));
         add(createColoringPanel());
-        add(createListBoxRow("Currently coloring:", coloringListBox, "lastColoring"));
+        add(createListBoxRow("Currently editing:", coloringListBox, "lastColoring"));
         add(createLabelRow("Misc."));
         add(createFirstMiscRow());
         add(createButtonRow("Manage Work Apps",
