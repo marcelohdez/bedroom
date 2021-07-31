@@ -49,7 +49,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         add(createButtonTextSettings());
         add(createButtonSettings());
         add(createBgSettings());
-        add(createLabelRow("Misc. (Changes need restart)"));
+        add(createLabelRow("Misc."));
         add(createFirstMiscRow());
         add(createButtonRow("Manage Work Apps",
                 "Work apps will automatically open along with Bedroom."));
@@ -411,7 +411,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         Settings.saveMisc(alwaysOnTop.isSelected(), doGC.isSelected());
-        Main.updateColors();
+        Main.updateSettings();
 
     }
 

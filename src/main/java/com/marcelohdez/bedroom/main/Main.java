@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
 public class Main {
@@ -98,13 +97,13 @@ public class Main {
 
     }
 
-    public static void updateColors() {
+    public static void updateSettings() {
 
-        wnd.reloadColors();
-        clockInWnd.reloadColors();
-        clockOutWnd.reloadColors();
-        enterBreakWnd.reloadColors();
-        leaveBreakWnd.reloadColors();
+        wnd.reloadSettings();
+        clockInWnd.reloadSettings();
+        clockOutWnd.reloadSettings();
+        enterBreakWnd.reloadSettings();
+        leaveBreakWnd.reloadSettings();
 
     }
 

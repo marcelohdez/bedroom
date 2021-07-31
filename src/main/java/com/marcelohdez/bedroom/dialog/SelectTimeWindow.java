@@ -16,7 +16,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         this.type = type;
 
         // Initial properties
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        reloadAlwaysOnTop();
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -55,9 +55,14 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         ui.setListBoxIndexes(type);
     }
 
-    public void reloadColors() {
+    public void reloadAlwaysOnTop() {
+        this.setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+    }
+
+    public void reloadSettings() {
 
         ui.colorSelf();
+        reloadAlwaysOnTop();
 
     }
 

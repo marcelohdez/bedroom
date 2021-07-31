@@ -11,7 +11,7 @@ public class Window extends JFrame {
         setTitle("Bedroom " + Main.version);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        reloadAlwaysOnTop();
 
 
         ui = new UI(this);
@@ -24,9 +24,14 @@ public class Window extends JFrame {
 
     }
 
-    public void reloadColors() { // Pass through to UI
+    public void reloadAlwaysOnTop() {
+        this.setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+    }
+
+    public void reloadSettings() { // Pass through to UI
 
         ui.reloadColors();
+        reloadAlwaysOnTop();
 
     }
 
