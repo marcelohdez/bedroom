@@ -40,6 +40,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         setBackground(UI.bg); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
+        addKeyListener(this);
 
         Dimension listBoxSize = new Dimension(80, 30);
         Dimension smallListBoxSize = new Dimension(65, 30);
@@ -56,14 +57,14 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         select.addActionListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         hrBox.setPreferredSize(listBoxSize);
-        hrBox.addActionListener(this);
+        hrBox.addKeyListener(this);
         minBox.setPreferredSize(listBoxSize);
-        minBox.addActionListener(this);
+        minBox.addKeyListener(this);
         amPMBox.setPreferredSize(smallListBoxSize);
-        amPMBox.addActionListener(this);
+        amPMBox.addKeyListener(this);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
-        setTarget.addActionListener(this);
+        setTarget.addKeyListener(this);
 
         // ======= Set colors =======
         colorSelf();
@@ -254,7 +255,6 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Select")) selectTime();
-        this.requestFocus(); // Get focus back from component clicked (for shortcuts)
     }
 
     @Override

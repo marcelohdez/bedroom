@@ -21,9 +21,8 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
 
-
         ui = new SelectTimeUI(this, type); // Create ui based on window type
-        ui.addKeyListener(ui);                  // Add key listener (itself) to ui
+        addKeyListener(ui);                     // Add key listener for shortcuts
         add(ui);                                // Add the UI
 
         pack();
