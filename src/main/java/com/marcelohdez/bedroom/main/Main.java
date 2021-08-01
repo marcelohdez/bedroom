@@ -54,8 +54,6 @@ public class Main {
         t.setRepeats(true);
         t.start(); // Start timer
 
-        System.out.println(UIManager.getLookAndFeel());
-
     }
 
     private static void initWindows() {

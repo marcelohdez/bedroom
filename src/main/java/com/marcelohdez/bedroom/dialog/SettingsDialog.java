@@ -33,7 +33,7 @@ public class SettingsDialog extends JDialog implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
-        this.sui.updateValues();
+        sui.updateValues();
 
     }
 

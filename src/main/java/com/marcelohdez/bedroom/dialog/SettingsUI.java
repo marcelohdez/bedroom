@@ -35,8 +35,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
                     "Light", "Pink+White", "Pastel Blue"});
 
-    private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
-    private final JCheckBox doGC = new JCheckBox("Garbage Collect");
+    // Misc. settings checkboxes
+    private JCheckBox alwaysOnTop;
+    private JCheckBox doGC;
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
         this.parent = parent;
@@ -44,9 +45,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         loadRGBValues();
-        //setColorSpinners();
+        // Creates misc. checkboxes and sets their default values. must be done before createColorSliders as
+        // that checks if these checkboxes are selected by calling updateValues.
+        createMiscOptions();
         createColorSliders();
-        updateColorSliders();
 
         // Add rows
         add(createLabelRow("Colors (Red, Green, Blue)"));
@@ -87,12 +89,12 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     private void createColorSliders() {
+
         // Create color sliders
         redSlider = new JSlider(0, 255, 0);
         greenSlider = new JSlider(0, 255, 0);
         blueSlider = new JSlider(0, 255, 0);
 
-        addSlidersChangeListener(); // Add change listener
         updateColorSliders(); // Set their values
 
     }
@@ -145,6 +147,21 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         redSlider.removeChangeListener(this);
         greenSlider.removeChangeListener(this);
         blueSlider.removeChangeListener(this);
+
+    }
+
+    private void createMiscOptions() {
+
+        alwaysOnTop = new JCheckBox("Stay on top");
+        doGC = new JCheckBox("Garbage Collect");
+
+        alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
+        doGC.setToolTipText("<html><b>Forcefully remove excess memory every 60 seconds:</b><br>" +
+                "May reduce the memory footprint of Bedroom but will<br>" +
+                "cause more CPU overhead.</html>");
+
+        alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        doGC.setSelected(Main.userPrefs.getBoolean("gc", false));
 
     }
 
@@ -248,14 +265,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         row.setBackground(UI.bg);
         Ops.colorThis(alwaysOnTop);
         Ops.colorThis(doGC);
-
-        alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
-        doGC.setToolTipText("<html><b>Forcefully remove excess memory every 60 seconds:</b><br>" +
-                                    "May reduce the memory footprint of Bedroom but will<br>" +
-                                    "cause more CPU overhead.</html>");
-
-        alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
-        doGC.setSelected(Main.userPrefs.getBoolean("gc", false));
 
         // Add to panel
         row.add(alwaysOnTop);
@@ -376,4 +385,5 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         if (e.getSource() == coloringListBox) // If coloring list box changed, update sliders for current component
             setColoringTo(coloringListBox.getSelectedIndex());
     }
+
 }
