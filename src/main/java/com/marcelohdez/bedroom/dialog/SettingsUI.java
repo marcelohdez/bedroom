@@ -281,6 +281,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
+    private void setColorSliderToolTips() {
+
+        redSlider.setToolTipText("<html><b>" + redSlider.getValue() + "</b></html>");
+        greenSlider.setToolTipText("<html><b>" + greenSlider.getValue() + "</b></html>");
+        blueSlider.setToolTipText("<html><b>" + blueSlider.getValue() + "</b></html>");
+
+    }
+
     private void setColorLabelsToValues() {
 
         if (showColorValues) {
@@ -376,8 +384,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     public void updateValues() {
 
+        setColorSliderToolTips();
         int[] newRGB = new int[] {redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()};
-
         switch (currentlyColoring) {
             case 0 -> textRGB = newRGB;
             case 1 -> buttonTextRGB = newRGB;
