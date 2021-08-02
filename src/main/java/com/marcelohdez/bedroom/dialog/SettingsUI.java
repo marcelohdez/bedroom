@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener {
 
-    private static final Dimension colorLabelsSize = new Dimension(50, 20);
+    private static final Dimension colorLabelsSize = new Dimension(40, 20);
     private final SettingsDialog parent;
 
     // RGB values already set
