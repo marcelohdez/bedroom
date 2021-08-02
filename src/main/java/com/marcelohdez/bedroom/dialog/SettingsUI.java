@@ -24,8 +24,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private int currentlyColoring = Main.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
-    // Color labels, they are a JComponent to switch between JLabel and JSpinner to allow precise editing.
-    private JComponent redLabel, greenLabel, blueLabel;
+    private JLabel redLabel, greenLabel, blueLabel; // Color labels
     // This used to ignore showing the color values when changing themes/component being edited:
     private boolean showColorValues = true;
 
@@ -286,12 +285,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         if (showColorValues) {
 
-            if (redLabel instanceof JLabel)
-                ((JLabel) redLabel).setText(Integer.toString(redSlider.getValue()));
-            if (greenLabel instanceof JLabel)
-                ((JLabel) greenLabel).setText(Integer.toString(greenSlider.getValue()));
-            if (blueLabel instanceof JLabel)
-                ((JLabel) blueLabel).setText(Integer.toString(blueSlider.getValue()));
+            if (redLabel != null) redLabel.setText(Integer.toString(redSlider.getValue()));
+            if (greenLabel != null) greenLabel.setText(Integer.toString(greenSlider.getValue()));
+            if (blueLabel != null) blueLabel.setText(Integer.toString(blueSlider.getValue()));
 
         }
 
@@ -299,12 +295,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private void resetColorLabels() {
 
-        if (redLabel instanceof JLabel)
-            ((JLabel) redLabel).setText("Red:");
-        if (greenLabel instanceof JLabel)
-            ((JLabel) greenLabel).setText("Green:");
-        if (blueLabel instanceof JLabel)
-            ((JLabel) blueLabel).setText("Blue:");
+        if (redLabel != null) redLabel.setText("Red:");
+        if (greenLabel != null) greenLabel.setText("Green:");
+        if (blueLabel != null) blueLabel.setText("Blue:");
 
     }
 
