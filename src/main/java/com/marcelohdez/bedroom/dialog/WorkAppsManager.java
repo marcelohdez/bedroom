@@ -27,6 +27,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         setTitle("Work Apps");
         addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         setResizable(false);
 
         JPanel content = new JPanel(); // Content panel to set a background color
