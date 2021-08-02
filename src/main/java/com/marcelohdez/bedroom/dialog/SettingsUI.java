@@ -9,13 +9,10 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener {
+public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener, MouseListener {
 
     private static final Dimension colorLabelsSize = new Dimension(40, 20);
     private final SettingsDialog parent;
@@ -27,6 +24,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private int currentlyColoring = Main.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
+    // Color labels, they are a JComponent to switch between JLabel and JSpinner to allow precise editing.
+    private JComponent redLabel, greenLabel, blueLabel;
+    // This used to ignore showing the color values when changing themes/component being edited:
+    private boolean showColorValues = true;
 
     private final JComboBox<String> coloringListBox = // Components we can color
             new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
@@ -91,9 +92,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void createColorSliders() {
 
         // Create color sliders
-        redSlider = new JSlider(0, 255, 0);
-        greenSlider = new JSlider(0, 255, 0);
-        blueSlider = new JSlider(0, 255, 0);
+        redSlider = new JSlider(0, 255);
+        greenSlider = new JSlider(0, 255);
+        blueSlider = new JSlider(0, 255);
+
+        redSlider.addMouseListener(this);
+        greenSlider.addMouseListener(this);
+        blueSlider.addMouseListener(this);
 
         updateColorSliders(); // Set their values
 
@@ -129,8 +134,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         }
 
         addSlidersChangeListener();                     // Add change listener for user to change color
-        redSlider.setValue(redSlider.getValue() + 1);   // Since JSliders only sent a change event when their
-        redSlider.setValue(redSlider.getValue() - 1);   // value is changed here we make sure to do so.
+
+        redSlider.setValue(redSlider.getValue() + 1);   // Since JSliders only send a change event when their
+        redSlider.setValue(redSlider.getValue() - 1);   // value is changed, here we make sure to do so.
+
+        if (!showColorValues) showColorValues = true;   // Allow color values to be seen if they weren't
 
     }
 
@@ -171,9 +179,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel redRow = new JPanel();
         JPanel greenRow = new JPanel();
         JPanel blueRow = new JPanel();
-        JLabel redLabel = new JLabel("Red:");
-        JLabel greenLabel = new JLabel("Green:");
-        JLabel blueLabel = new JLabel("Blue:");
+        redLabel = new JLabel("Red:");
+        greenLabel = new JLabel("Green:");
+        blueLabel = new JLabel("Blue:");
 
         Ops.colorThese(new JComponent[]{redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
                 blueRow, blueLabel, blueSlider});
@@ -274,9 +282,36 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
+    private void setColorLabelsToValues() {
+
+        if (showColorValues) {
+
+            if (redLabel instanceof JLabel)
+                ((JLabel) redLabel).setText(Integer.toString(redSlider.getValue()));
+            if (greenLabel instanceof JLabel)
+                ((JLabel) greenLabel).setText(Integer.toString(greenSlider.getValue()));
+            if (blueLabel instanceof JLabel)
+                ((JLabel) blueLabel).setText(Integer.toString(blueSlider.getValue()));
+
+        }
+
+    }
+
+    private void resetColorLabels() {
+
+        if (redLabel instanceof JLabel)
+            ((JLabel) redLabel).setText("Red:");
+        if (greenLabel instanceof JLabel)
+            ((JLabel) greenLabel).setText("Green:");
+        if (blueLabel instanceof JLabel)
+            ((JLabel) blueLabel).setText("Blue:");
+
+    }
+
     private void setColoringTo(int index) {
 
         currentlyColoring = index;
+        showColorValues = false;
         updateColorSliders();
         Main.userPrefs.putInt("lastColoring", index);
 
@@ -284,6 +319,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private void setTheme(String theme, int index) {
 
+        showColorValues = false;
         int[] newTextRGB = new int[3];
         int[] newButtonTextRGB = new int[3];
         int[] newButtonRGB = new int[3];
@@ -375,6 +411,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     @Override
     public void stateChanged(ChangeEvent e) {
         updateValues();
+        if (e.getSource() instanceof JSlider) setColorLabelsToValues();
     }
 
     @Override
@@ -386,4 +423,28 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             setColoringTo(coloringListBox.getSelectedIndex());
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        setColorLabelsToValues();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        resetColorLabels();
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
