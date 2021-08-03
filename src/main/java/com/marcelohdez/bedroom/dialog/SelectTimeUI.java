@@ -2,6 +2,7 @@ package com.marcelohdez.bedroom.dialog;
 
 import com.marcelohdez.bedroom.main.*;
 import com.marcelohdez.bedroom.enums.*;
+import com.marcelohdez.bedroom.settings.SettingsDialog;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Time;
 

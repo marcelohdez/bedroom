@@ -1,4 +1,4 @@
-package com.marcelohdez.bedroom.dialog;
+package com.marcelohdez.bedroom.settings;
 
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;

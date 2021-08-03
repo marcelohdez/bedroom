@@ -1,5 +1,6 @@
-package com.marcelohdez.bedroom.dialog;
+package com.marcelohdez.bedroom.settings;
 
+import com.marcelohdez.bedroom.dialog.ErrorDialog;
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
 import com.marcelohdez.bedroom.enums.ErrorType;

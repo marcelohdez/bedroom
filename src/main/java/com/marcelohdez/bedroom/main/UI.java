@@ -1,7 +1,7 @@
 package com.marcelohdez.bedroom.main;
 
 import com.marcelohdez.bedroom.enums.SetTime;
-import com.marcelohdez.bedroom.dialog.SettingsDialog;
+import com.marcelohdez.bedroom.settings.SettingsDialog;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Time;
 
