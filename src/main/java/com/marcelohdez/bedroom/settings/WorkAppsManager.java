@@ -82,7 +82,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         // Add work apps
         workAppDirs = new ArrayList<>();
         workAppNames = new DefaultListModel<>();
-        for (String app : Ops.detangleString(Main.userPrefs.get("workApps", "[]"))) {
+        for (String app : Ops.untangleString(Main.userPrefs.get("workApps", "[]"))) {
             if (!app.equals("")) {
                 workAppDirs.add(app);
                 workAppNames.addElement(new File(app).getName());

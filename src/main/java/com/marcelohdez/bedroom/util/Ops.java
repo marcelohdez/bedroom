@@ -35,14 +35,14 @@ public class Ops { // Operations
      * Used for a list that is saved in Preferences (since it is only allowed to save Strings)
      * as ArrayList.toString(); and then getting the list back from Preferences.
      *
-     * @param str String to detangle
+     * @param str String to untangle
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> detangleString(String str) {
+    public static ArrayList<String> untangleString(String str) {
 
         ArrayList<String> list = new ArrayList<>();
 
-        // Detangle string
+        // Untangle string
         int start = 1;
         int end = start;
         for (int i = 1; i < str.length() - 1; i++) { // -1 character from start and end to ignore []

@@ -71,7 +71,7 @@ public class Main {
 
     private static void openWorkApps() {
 
-        for (String app : Ops.detangleString(userPrefs.get("workApps", "[]"))) {
+        for (String app : Ops.untangleString(userPrefs.get("workApps", "[]"))) {
 
             if (!app.equals("")) {
 
