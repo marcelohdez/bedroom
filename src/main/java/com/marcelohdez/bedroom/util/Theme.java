@@ -64,7 +64,7 @@ public class Theme {
      * @param amount Amount to darken by
      * @return Darkened color
      */
-    public static Color darken(Color c, int amount) {
+    public static Color darkenThis(Color c, int amount) {
 
         int r = c.getRed() - amount;
         int g = c.getGreen() - amount;

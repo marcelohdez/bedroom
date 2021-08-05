@@ -3,7 +3,6 @@ package com.marcelohdez.bedroom.settings;
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
 import com.marcelohdez.bedroom.util.FloatingSpinner;
-import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Settings;
 import com.marcelohdez.bedroom.util.Theme;
 
@@ -213,10 +212,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(label);
 
-        row.setBackground(Theme.darken(UI.bg, 20));
+        row.setBackground(Theme.darkenThis(UI.bg, 20));
         row.add(colorLabel);
         colorLabel.setFont(UI.boldText);
-        colorLabel.setForeground(Theme.contrastTo(Theme.darken(UI.bg, 20)));
+        colorLabel.setForeground(Theme.contrastTo(Theme.darkenThis(UI.bg, 20)));
 
         return row;
 
