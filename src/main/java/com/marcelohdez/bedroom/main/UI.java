@@ -3,6 +3,7 @@ package com.marcelohdez.bedroom.main;
 import com.marcelohdez.bedroom.enums.SetTime;
 import com.marcelohdez.bedroom.settings.SettingsDialog;
 import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Theme;
 import com.marcelohdez.bedroom.util.Time;
 
 import java.awt.*;
@@ -311,9 +312,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void colorComponents() {
 
-        Ops.colorThis(breakButton);
-        Ops.colorThis(addOrder);
-        Ops.colorThis(stats);
+        Theme.colorThis(breakButton);
+        Theme.colorThis(addOrder);
+        Theme.colorThis(stats);
         setBackground(bg);
 
     }

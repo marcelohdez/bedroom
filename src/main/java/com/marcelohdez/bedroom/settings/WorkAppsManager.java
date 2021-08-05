@@ -6,6 +6,7 @@ import com.marcelohdez.bedroom.main.UI;
 import com.marcelohdez.bedroom.enums.ErrorType;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Settings;
+import com.marcelohdez.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -94,7 +95,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         list.setVisibleRowCount(7);
 
         // Customize
-        Ops.colorThis(list);
+        Theme.colorThis(list);
         panel.setBackground(UI.buttonColor);
         JScrollPane sp = new JScrollPane(list);
         sp.setPreferredSize(new Dimension(180, 140));

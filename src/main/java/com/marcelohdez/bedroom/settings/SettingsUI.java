@@ -5,6 +5,7 @@ import com.marcelohdez.bedroom.main.UI;
 import com.marcelohdez.bedroom.util.FloatingSpinner;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Settings;
+import com.marcelohdez.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -183,7 +184,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         greenLabel = new JLabel("Green:");
         blueLabel = new JLabel("Blue:");
 
-        Ops.colorThese(new JComponent[]{redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
+        Theme.colorThese(new JComponent[]{redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
                 blueRow, blueLabel, blueSlider});
 
         // Add labels and sliders to their respective rows
@@ -212,10 +213,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(label);
 
-        row.setBackground(Ops.darken(UI.bg, 20));
+        row.setBackground(Theme.darken(UI.bg, 20));
         row.add(colorLabel);
         colorLabel.setFont(UI.boldText);
-        colorLabel.setForeground(Ops.contrastTo(Ops.darken(UI.bg, 20)));
+        colorLabel.setForeground(Theme.contrastTo(Theme.darken(UI.bg, 20)));
 
         return row;
 
@@ -250,7 +251,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Customize them
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
-        Ops.colorThis(listBox);
+        Theme.colorThis(listBox);
         listBox.setSelectedIndex(0);
         listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, 0),
                 listBox.getItemCount() - 1));
@@ -271,8 +272,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize stuffs
         row.setBackground(UI.bg);
-        Ops.colorThis(alwaysOnTop);
-        Ops.colorThis(doGC);
+        Theme.colorThis(alwaysOnTop);
+        Theme.colorThis(doGC);
 
         // Add to panel
         row.add(alwaysOnTop);

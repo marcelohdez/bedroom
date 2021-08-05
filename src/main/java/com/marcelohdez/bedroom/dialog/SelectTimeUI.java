@@ -4,6 +4,7 @@ import com.marcelohdez.bedroom.main.*;
 import com.marcelohdez.bedroom.enums.*;
 import com.marcelohdez.bedroom.settings.SettingsDialog;
 import com.marcelohdez.bedroom.util.Ops;
+import com.marcelohdez.bedroom.util.Theme;
 import com.marcelohdez.bedroom.util.Time;
 
 import javax.swing.*;
@@ -236,15 +237,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     public void colorSelf() {
 
-        Ops.colorThis(this.labelRow);
-        Ops.colorThis(this.topText);
-        Ops.colorThis(this.select);
-        Ops.colorThis(this.hrBox);
-        Ops.colorThis(this.minBox);
-        Ops.colorThis(this.amPMBox);
-        Ops.colorThis(this.setTarget);
-        Ops.colorThis(this.selectRow);
-        Ops.colorThis(this.timeBoxesRow);
+        Theme.colorThese(new JComponent[]{labelRow, topText, select, hrBox,
+                minBox, amPMBox, setTarget, selectRow, timeBoxesRow});
 
         if (this.type.equals(TimeWindowType.CLOCK_OUT)) {
             this.setTargetRow.setBackground(UI.bg);
