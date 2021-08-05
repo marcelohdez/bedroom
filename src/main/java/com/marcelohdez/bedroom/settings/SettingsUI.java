@@ -2,6 +2,7 @@ package com.marcelohdez.bedroom.settings;
 
 import com.marcelohdez.bedroom.main.Main;
 import com.marcelohdez.bedroom.main.UI;
+import com.marcelohdez.bedroom.util.FloatingSpinner;
 import com.marcelohdez.bedroom.util.Ops;
 import com.marcelohdez.bedroom.util.Settings;
 
@@ -318,6 +319,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
+    private void setCustomSliderValue(MouseEvent e) {
+
+        JSlider source = (JSlider) e.getSource();
+        source.setValue(new FloatingSpinner(source.getValue(),
+                source.getMinimum(), source.getMaximum())
+                .showSelf(MouseInfo.getPointerInfo().getLocation()));
+
+    }
+
     private void setTheme(String theme, int index) {
 
         showColorValues = false;
@@ -425,17 +435,17 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.isPopupTrigger()) setCustomSliderValue(e);
         setColorLabelsToValues();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) setCustomSliderValue(e);
         resetColorLabels();
     }
 
