@@ -7,7 +7,7 @@ from the bedroom couldn't get any easier! Or... maybe it just did.
 To use or compile the program, install the newest JDK version, the minimum version required is stated on the description 
 of the Bedroom release you are trying to run. After doing so, double-click the jar file of Bedroom and begin.
 
-To compile the program from source, to get the newest changes committed, read Compile From Source below.
+To compile the program from source, to get the newest changes committed, read ```Compiling from source``` below.
 
 ## How to use
 Upon start up, you will be asked for your clock in and clock out time. On the clock out window there is an extra section 
@@ -26,6 +26,10 @@ Finally, the third row will show how many orders are needed for the day, and how
 information. The tool tip for the "Set Break" button will show you the times selected for the currently set break, while 
 the tooltip for the "Add Order" button will show how many orders are needed to stay on track with your hourly target.
 
+**Settings** can be opened with its shortcut(s) below. Settings can be used to edit the program's color scheme,
+set to a predefined theme, and other miscellanous options. The color sliders can be set to a specific value by right
+clicking them, hovering over them shows their current value.
+
 ### _Shortcuts:_
 * _Backspace & Down Arrow_ decrease orders by 1.
 * _Up Arrow_ increase orders by 1.
@@ -36,7 +40,7 @@ the tooltip for the "Add Order" button will show how many orders are needed to s
 _These shortcuts are meant to be unintrusive to work applications,
 hence their seemingly random keyboard placements._
 
-## Compiling From Source
+## Compiling from source
 _This is not supported; there could be loss of data or other bugs with things currently being experimented on._
 
 Download the source code by clicking the green code button on the top of the page and selecting Download ZIP. Open 
