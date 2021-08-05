@@ -13,7 +13,7 @@ import java.util.prefs.Preferences;
 
 public class Main {
 
-    public static String version = "3 (Beta 1)";
+    public static String version = "3 (Beta 2)";
 
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
