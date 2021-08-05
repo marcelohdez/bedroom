@@ -13,10 +13,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener, MouseListener {
+public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener,
+        MouseListener, KeyListener {
 
     private static final Dimension colorLabelsSize = new Dimension(40, 20);
     private final SettingsDialog parent;
+    private boolean shifting = false; // Keeps track if user is shifting
 
     // RGB values already set
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB;
@@ -97,8 +99,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         blueSlider = new JSlider(0, 255);
 
         redSlider.addMouseListener(this);
+        redSlider.addKeyListener(this);
         greenSlider.addMouseListener(this);
+        greenSlider.addKeyListener(this);
         blueSlider.addMouseListener(this);
+        blueSlider.addKeyListener(this);
 
         updateColorSliders(); // Set their values
 
@@ -328,6 +333,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
+    private void equalizeSliders(ChangeEvent e) { // Make sliders same value as e
+
+        JSlider source = (JSlider) e.getSource();
+        redSlider.setValue(source.getValue());
+        greenSlider.setValue(source.getValue());
+        blueSlider.setValue(source.getValue());
+
+    }
+
     private void setTheme(String theme, int index) {
 
         showColorValues = false;
@@ -427,8 +441,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     @Override
     public void stateChanged(ChangeEvent e) {
+
         updateValues();
-        if (e.getSource() instanceof JSlider) setColorLabelsToValues();
+
+        if (e.getSource() instanceof JSlider) {
+            setColorLabelsToValues();
+            if (shifting) equalizeSliders(e); // Make all sliders same value if shifting
+        }
+
     }
 
     @Override
@@ -463,5 +483,20 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        shifting = e.getKeyCode() == KeyEvent.VK_SHIFT; // If shift is pressed, we are shifting
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        shifting = false;
     }
 }
