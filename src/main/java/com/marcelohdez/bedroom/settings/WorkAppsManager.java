@@ -127,7 +127,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter(
                     // Set a filter of apps, text files (for scripts), and python scripts (for tech-y ppl)
-                    "Programs/Scripts", "exe", "app", "lnk", "txt", "odt", "rtf", "py"));
+                    "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf", "py"));
             fc.setApproveButtonText("Add");
             int returnVal = fc.showOpenDialog(this);
 
