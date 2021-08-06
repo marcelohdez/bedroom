@@ -326,11 +326,4 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    void printSizes() {
-
-        System.out.println(addOrder.getSize());
-        System.out.println(breakButton.getSize());
-
-    }
-
 }

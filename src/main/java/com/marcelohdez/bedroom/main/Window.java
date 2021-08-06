@@ -21,7 +21,6 @@ public class Window extends JFrame {
         pack();
         ui.sizeButtons();
         pack();
-        ui.printSizes();
 
         setLocationRelativeTo(null);
 
