@@ -58,7 +58,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public UI(Window parent) { // Set UI's properties
 
         this.parent = parent;
-        Dimension buttonSize = new Dimension(110, 55);
 
         setFocusable(true);
         addKeyListener(this);
@@ -69,10 +68,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         stats.addKeyListener(this);
         addOrder.addKeyListener(this);
         addOrder.addActionListener(this);
-        addOrder.setPreferredSize(buttonSize);
         breakButton.addKeyListener(this);
         breakButton.addActionListener(this);
-        breakButton.setPreferredSize(buttonSize);
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
 
         // Set colors
@@ -316,6 +313,23 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         Theme.colorThis(addOrder);
         Theme.colorThis(stats);
         setBackground(bg);
+
+    }
+
+    void sizeButtons() {
+
+        // Get the largest width * 1.2 for some buffer
+        int length = (int) ((Math.max(addOrder.getWidth(), breakButton.getWidth())) * 1.2);
+        // Set the buttons to that width, and half that for height to make identical rectangles
+        addOrder.setPreferredSize(new Dimension(length, length/2));
+        breakButton.setPreferredSize(new Dimension(length, length/2));
+
+    }
+
+    void printSizes() {
+
+        System.out.println(addOrder.getSize());
+        System.out.println(breakButton.getSize());
 
     }
 

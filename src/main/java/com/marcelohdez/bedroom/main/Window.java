@@ -17,7 +17,12 @@ public class Window extends JFrame {
         ui = new UI(this);
         add(ui);
         addKeyListener(ui);
+
         pack();
+        ui.sizeButtons();
+        pack();
+        ui.printSizes();
+
         setLocationRelativeTo(null);
 
         setVisible(true);
