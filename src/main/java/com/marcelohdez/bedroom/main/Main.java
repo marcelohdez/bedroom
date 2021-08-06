@@ -18,7 +18,7 @@ public class Main {
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
-    private static final boolean gc = userPrefs.getBoolean("gc", false);
+    private static boolean gc = userPrefs.getBoolean("gc", false);
 
     public static Window wnd; // This window
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd; // Select time windows
@@ -96,6 +96,8 @@ public class Main {
     }
 
     public static void updateSettings() {
+
+        gc = userPrefs.getBoolean("gc", false);
 
         wnd.reloadSettings();
         clockInWnd.reloadSettings();
