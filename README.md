@@ -22,9 +22,9 @@ On the right of the window you will see text with information about your current
 contain a time, while the second row will show your current orders with the current orders per hour in parentheses. 
 Finally, the third row will show how many orders are needed for the day, and how many are left. 
 
-**Tool Tips** are shown when you hover your mouse over the "Set Break" or "Add Order" buttons, and they display extra 
-information. The tool tip for the "Set Break" button will show you the times selected for the currently set break, while 
-the tooltip for the "Add Order" button will show how many orders are needed to stay on track with your hourly target.
+**Tool Tips** are shown when you hover your mouse over certain buttons, and display extra information. 
+The tool tip for the "Set Break" button will show you the times selected for the currently set break, and the tooltip 
+for the "Add Order" button will show how many orders are needed to stay on track with your hourly target.
 
 **Settings** can be opened with its shortcut(s) below. Settings can be used to edit the program's color scheme,
 set to a predefined theme, and other miscellanous options. The color sliders can be set to a specific value by right
