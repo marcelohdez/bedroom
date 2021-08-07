@@ -51,9 +51,8 @@ public class Theme {
      */
     public static Color contrastTo(Color c) {
 
-        if (c.getRed() + c.getGreen() + c.getBlue() > 525) return Color.BLACK;
-
-        return Color.WHITE;
+        // If colors add up to 525+ return black, else return white
+        return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? Color.BLACK : Color.WHITE;
 
     }
 

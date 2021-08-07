@@ -36,7 +36,7 @@ public class Main {
         // Create a timer to run every second
         Timer t = new Timer(1000, e -> {
 
-            if (UI.clockInTimePassed && !UI.inBreak) { UI.tick();
+            if (UI.clockInTimePassed && !UI.inBreak) { UI.tick(); // Add a second to clocked in time
             } else UI.getTime(); // To get time until clock in
 
             secCount++;

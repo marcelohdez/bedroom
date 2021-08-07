@@ -42,16 +42,16 @@ public class Ops { // Operations
 
         ArrayList<String> list = new ArrayList<>();
 
-        // Untangle string
-        int start = 1;
+        // Get a string[] from a string ex: "[monkey, car, shoe]" -> new String[]{"monkey", "car", "shoe"};
+        int start = 1; // Start 1 character ahead to avoid the beginning bracket
         int end = start;
-        for (int i = 1; i < str.length() - 1; i++) { // -1 character from start and end to ignore []
+        for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
 
             if (str.charAt(i) != 44) { // If it is not the comma, extend end point
                 end++;
-            } else {
+            } else { // Else return the string we have
                 list.add(str.substring(start, end));
-                start = i+2;
+                start = i+2; // Go 2 characters ahead to avoid the space in between items.
                 end = i+1;
             }
 

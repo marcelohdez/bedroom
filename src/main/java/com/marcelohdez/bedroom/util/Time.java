@@ -38,39 +38,32 @@ public class Time { // Time operations
 
         int hour = time.getHour();
         int minute = time.getMinute();
-        boolean isPM = true;
+        boolean isPM = (hour >= 12);
 
-        if (hour >= 12) { // Set correct hour and am/pm value
-            if (hour != 12) {       // Set hour to 1-11pm
-                sb.append(hour-12);
-            } else sb.append(12);   // Set to 12pm
-        } else {
-            isPM = false;           // Time is no longer PM.
-            if (hour != 0) {        // Set hour to 1-11am
-                sb.append(hour);
-            } else sb.append(12);   // Set to 12am
+        if (isPM) { // PM
+            sb.append(hour == 12 ? hour : hour - 12); // If hour is 12, it's 12pm, else remove 12 ex: 16:00 -> 4:00PM
+        } else { // AM
+            sb.append(hour != 0 ? hour : 12); // If hour = 0 then it's 12AM, else it is (hour) AM
         }
 
         sb.append(":");
         if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
-        sb.append(minute);
-        if (isPM) {
-            sb.append("PM");
-        } else sb.append("AM");
+        sb.append(minute)
+                .append(isPM ? "PM" : "AM"); // Append PM or AM at the end depending on isPM value
 
     }
 
     /**
      * Appends human-readable time from separate hour, minute, and second values to a StringBuilder.
      * Zeros are also added when the minutes or second values are below 10.
-     * ex: hour = 2, minute = 4, second = 6; we get "2:04:06".
+     * ex: hour = 2, minute = 4, second = 6; we get "2:04:06" instead of "2:4:6".
      *
      * @param sb The StringBuilder to append to
      * @param h Hours value
      * @param m Minutes value
      * @param s Seconds value
      */
-    public static void appendReadableTimeTo(StringBuilder sb, int h, int m, int s) { // Set time to "00:00:00" format
+    public static void appendReadableTimeTo(StringBuilder sb, int h, int m, int s) {
 
         if (h < 10) sb.append("0");
         sb.append(h).append(":");
@@ -122,27 +115,7 @@ public class Time { // Time operations
     public static String makeTime12Hour(LocalTime time) {
 
         StringBuilder sb = new StringBuilder();
-        int hour = time.getHour();
-        int minute = time.getMinute();
-        boolean isPM = true;
-
-        if (hour >= 12) { // Set correct hour and am/pm value
-            if (hour != 12) {       // Set hour to 1-11pm
-                sb.append(hour-12);
-            } else sb.append(12);   // Set to 12pm
-        } else {
-            isPM = false;           // Time is no longer PM.
-            if (hour != 0) {        // Set hour to 1-11am
-                sb.append(hour);
-            } else sb.append(12);   // Set to 12am
-        }
-
-        sb.append(":");
-        if (minute < 10) sb.append("0"); // Add 0 first if minute is less than 10 (ex: 4:1pm -> 4:01pm)
-        sb.append(minute);
-        if (isPM) {
-            sb.append("PM");
-        } else sb.append("AM");
+        append12HrTimeTo(sb, time);
 
         return sb.toString();
 

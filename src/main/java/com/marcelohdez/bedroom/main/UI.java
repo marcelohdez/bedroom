@@ -16,12 +16,14 @@ import javax.swing.*;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     private final Window parent;
-    private static final DecimalFormat firstTwoDecs = new DecimalFormat("#.00");
+    private static final DecimalFormat twoDecs = new DecimalFormat("#.00");
     private static StringBuilder str;
 
     // Time Variables
-    private static int hr = 0, min = 0;
-    private static long totalSecClockedIn = 0, sec = 0;
+    private static int hr = 0;
+    private static int min = 0;
+    private static int sec = 0;
+    private static long totalSecClockedIn = 0;
     private static long secondsTillClockIn = -1;
     private static long secondsTillLeaveBreak = -1;
 
@@ -39,8 +41,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     private static long ordersNeeded = 0;
 
     // Time values
-    public static LocalTime clockInTime, clockOutTime,
-            breakInTime, breakOutTime;
+    public static LocalTime clockInTime, clockOutTime, breakInTime, breakOutTime;
     public static boolean breakTimesChosen = false;
 
     // ======= Public reusable colors & fonts =======
@@ -95,18 +96,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     public static void tick() { // Change time values
 
+        while (sec > 59) {
+            sec -= 60;
+            min++;
+            if (min > 59) {
+                min -= 60;
+                hr++;
+            }
+        }
         totalSecClockedIn++;
         sec++;
-
-        while (sec > 59) {
-            min++;
-            sec -= 60;
-        }
-
-        while (min > 59) {
-            hr++;
-            min -= 60;
-        }
 
         getStats();
 
@@ -120,14 +119,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             if (!inBreak) { // Show time clocked in
                 str.append("Time: ");
-                Time.appendReadableTimeTo(str, hr, min, (int) sec);
+                Time.appendReadableTimeTo(str, hr, min, sec);
+                str.append("\n") // Line break
+                        .append(returnStats());
             } else { // Show time left until our break ends =======
                 str.append("On break, ");
                 int[] t = Time.shrinkTime(secondsTillLeaveBreak);
                 Time.appendReadableTimeTo(str, t[0], t[1], t[2]);
-                str.append(" left");
+                str.append(" left\n");
             }
-            appendStatsTo(str);
 
             stats.setText(str.toString());
             setTooltips();
@@ -141,18 +141,17 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    private static void appendStatsTo(StringBuilder sb) {
+    private static String returnStats() {
 
-        sb.append("\nOrders: ").append((int)orders).append(" (")
-                .append(firstTwoDecs.format((double) (orders*3600)/ totalSecClockedIn))
-                .append("/hr)\nNeeded: ");
-        if (ordersNeeded > 0) {
-            sb.append(ordersNeeded);
-        } else sb.append("0");
-        sb.append(", ");
-        if (orders < ordersNeeded) { sb.append((int) (ordersNeeded - orders));
-        } else sb.append("0");
-        sb.append(" left");
+        return """
+                Orders: $orders ($perHr/hr)
+                Needed: $needed, $left left"""
+                .replace("$orders", String.valueOf(orders))
+                .replace("$perHr",
+                        String.valueOf(twoDecs.format((double) (orders*3600)/ totalSecClockedIn)))
+                .replace("$needed", String.valueOf(ordersNeeded))
+                .replace("$left", (orders < ordersNeeded) ?
+                        String.valueOf(ordersNeeded - orders) : "0");
 
     }
 
@@ -173,9 +172,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
             case 48 -> enterBreak();                // Set break times with 0
             case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> new SettingsDialog(
-                    new int[]{parent.getX(), parent.getY(),
-                            parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
+            case 27, 127 -> new SettingsDialog(new int[]{parent.getX(), parent.getY(),
+                    parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
         }
     }
 
@@ -203,13 +201,13 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 if (breakTimesChosen) { // Have we chosen break times?
                     getBreakTime();
                 } else { // If not, set totalSecClocked to time from clock in to now
-                    totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1;
+                    totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
                 }
 
                 getOrdersNeeded();
-                sec = totalSecClockedIn;
-                min = 0;
-                hr = 0;
+                sec = (int) (totalSecClockedIn % 60);
+                min = (int) (totalSecClockedIn / 60) % 60;
+                hr = (int) Math.floor(totalSecClockedIn/60F/60F);
                 tick(); // Update time and show on screen
 
             } else {
