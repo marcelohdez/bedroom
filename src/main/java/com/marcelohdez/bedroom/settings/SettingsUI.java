@@ -327,9 +327,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void setCustomSliderValue(MouseEvent e) {
 
         JSlider source = (JSlider) e.getSource();
-        source.setValue(new FloatingSpinner(source.getValue(),
-                source.getMinimum(), source.getMaximum())
-                .showSelf(MouseInfo.getPointerInfo().getLocation()));
+        source.setValue(
+                new FloatingSpinner(source.getValue(), source.getMinimum(),
+                        source.getMaximum()).showSelf());
 
     }
 

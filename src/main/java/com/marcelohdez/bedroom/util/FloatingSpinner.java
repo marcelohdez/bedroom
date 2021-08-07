@@ -28,9 +28,15 @@ public class FloatingSpinner extends JDialog implements ChangeListener {
 
     }
 
-    public int showSelf(Point location) {
+    /**
+     * Shows self at mouse pointer's position. This freezes the application until
+     * a new value is entered and returned once setVisible(false) is called.
+     *
+     * @return The newly entered value.
+     */
+    public int showSelf() {
 
-        setLocation(location);
+        setLocation(MouseInfo.getPointerInfo().getLocation());
         requestFocus();
         setVisible(true);
 
