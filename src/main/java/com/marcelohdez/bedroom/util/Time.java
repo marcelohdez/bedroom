@@ -12,19 +12,10 @@ public class Time { // Time operations
      */
     public static int[] shrinkTime(long seconds) {
 
-        int hours = 0;
-        int minutes = 0;
-
-        while (seconds > 59) {
-            minutes++;
-            seconds -= 60;
-        }
-        while (minutes > 59) {
-            hours++;
-            minutes -= 60;
-        }
-        // A list of integers, each index represents hours, minutes, and seconds respectively:
-        return new int[]{hours, minutes, (int) seconds};
+        // The list of time values
+        return new int[]{(int) Math.floor(seconds/60F/60F), // Hours
+            (int) (seconds/60) % 60, // Minutes
+            (int) (seconds % 60)}; // Seconds
 
     }
 
