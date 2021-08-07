@@ -126,7 +126,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
             UI.clockInTime = newTime; // Set clock in time
-            setTimeAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
+            hideAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
         } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
             setClockOutTime(newTime);
         } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
@@ -161,8 +161,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 time.equals(UI.clockInTime)) {
 
             UI.breakInTime = time; // Set enter break time
-            setTimeAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd,
-                    SetTime.BREAK_START_PLUS_30M);
+            hideAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd, SetTime.BREAK_START_PLUS_30M);
 
         } else {
             new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
@@ -187,13 +186,13 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private static void setTimeAndProceed(SelectTimeWindow oldWindow, SelectTimeWindow newWindow,
-                                          SetTime newWindowType) {
+    private static void hideAndProceed(SelectTimeWindow hideThis, SelectTimeWindow openThis,
+                                       SetTime newWindowType) {
 
-        oldWindow.dispose();
-        newWindow.centerOnMainWindow();
-        newWindow.setUITime(newWindowType);
-        newWindow.setVisible(true);
+        hideThis.setVisible(false);
+        openThis.centerOnMainWindow();
+        openThis.setUITime(newWindowType);
+        openThis.setVisible(true);
 
     }
 
