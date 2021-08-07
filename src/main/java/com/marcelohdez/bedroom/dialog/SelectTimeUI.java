@@ -257,9 +257,9 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case 10, 13 -> selectTime(); // Enter selects time (return on MacOS)
-            case 27, 127 -> new SettingsDialog(
-                    new int[]{parent.getX(), parent.getY(),
+            case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time (return on MacOS which is 13)
+            case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ESCAPE, KeyEvent.VK_DELETE ->
+                    new SettingsDialog(new int[]{parent.getX(), parent.getY(),
                             parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
         }
     }

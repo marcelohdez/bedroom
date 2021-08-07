@@ -167,13 +167,16 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {}
 
     public void keyPressed(KeyEvent e) {
+        System.out.println(e.getKeyCode());
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
-            case 8, 40 -> changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-            case 48 -> enterBreak();                // Set break times with 0
-            case 38 -> changeOrders(1);     // Add orders with up arrow
-            case 27, 127 -> new SettingsDialog(new int[]{parent.getX(), parent.getY(),
-                    parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
+            case KeyEvent.VK_DOWN ->
+                    changeOrders(-1); // Remove orders with BckSpc & Down Arrow
+            case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
+            case KeyEvent.VK_UP -> changeOrders(1); // Add orders with up arrow
+            case KeyEvent.VK_DELETE, KeyEvent.VK_ESCAPE, KeyEvent.VK_BACK_SPACE ->
+                    new SettingsDialog(new int[]{parent.getX(), parent.getY(),
+                            parent.getWidth(), parent.getHeight()}); // Open settings with Del or Esc keys
         }
     }
 
