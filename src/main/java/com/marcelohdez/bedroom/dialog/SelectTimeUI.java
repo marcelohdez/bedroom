@@ -98,16 +98,16 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             case CURRENT -> // Set minBox to current minute
                     this.minBox.setSelectedIndex(LocalTime.now().getMinute());
             case CLOCK_IN_PLUS_DEFAULT -> { // Get 4hrs after clock in time, for clock out window
-                hour = UI.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
+                hour = Main.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
-                this.minBox.setSelectedIndex(UI.clockInTime.getMinute()); // Set minBox to clock in time's minute
+                this.minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
             case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
-                minute = UI.breakInTime.getMinute() + 30; // +30 minutes after break start
-                hour = UI.breakInTime.getHour();        // Get break start time's hour
+                minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
+                hour = Main.breakInTime.getHour();        // Get break start time's hour
                 if (minute > 59) {                      // If it is over 59, loop it
                     minute -= 60;
-                    hour = UI.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
+                    hour = Main.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
                 }
                 this.minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
             }
@@ -125,7 +125,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 (this.amPMBox.getSelectedIndex() == 1)));
 
         if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
-            UI.clockInTime = newTime; // Set clock in time
+            Main.clockInTime = newTime; // Set clock in time
             hideAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
         } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
             setClockOutTime(newTime);
@@ -135,16 +135,16 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             setBreakEndTime(newTime);
         }
 
-        if (Main.timesChosen) UI.getTime();
+        if (Main.timesChosen) Main.updateTime();
 
     }
 
     private void setClockOutTime(LocalTime time) {
 
-        if (time.isAfter(UI.clockInTime)) {
+        if (time.isAfter(Main.clockInTime)) {
 
-            UI.clockOutTime = time;                 // Set clock out time
-            UI.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+            Main.clockOutTime = time;                 // Set clock out time
+            Main.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
             Main.timesChosen = true;                // Clock out time is now chosen
             Main.clockOutWnd.dispose();             // Close clock out time window
 
@@ -157,10 +157,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void setBreakStartTime(LocalTime time) {
 
-        if ((time.isAfter(UI.clockInTime)) && time.isBefore(UI.clockOutTime) ||
-                time.equals(UI.clockInTime)) {
+        if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime) ||
+                time.equals(Main.clockInTime)) {
 
-            UI.breakInTime = time; // Set enter break time
+            Main.breakInTime = time; // Set enter break time
             hideAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd, SetTime.BREAK_START_PLUS_30M);
 
         } else {
@@ -172,11 +172,11 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void setBreakEndTime(LocalTime time) {
 
-        if (time.isAfter(UI.breakInTime) && time.isBefore(UI.clockOutTime) ||
-                time.equals(UI.clockOutTime)) {
+        if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime) ||
+                time.equals(Main.clockOutTime)) {
 
-            UI.breakOutTime = time; // Set leave break time
-            UI.breakTimesChosen = true;
+            Main.breakOutTime = time; // Set leave break time
+            Main.breakTimesChosen = true;
             Main.leaveBreakWnd.dispose();       // Close leave break window
 
         } else {
