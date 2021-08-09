@@ -1,6 +1,6 @@
-package com.marcelohdez.bedroom.util;
+package com.swiftsatchel.bedroom.util;
 
-import com.marcelohdez.bedroom.main.UI;
+import com.swiftsatchel.bedroom.main.UI;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.marcelohdez.bedroom.enums;
+package com.swiftsatchel.bedroom.enums;
 
 public enum ErrorType { // Types of user errors we can catch
 

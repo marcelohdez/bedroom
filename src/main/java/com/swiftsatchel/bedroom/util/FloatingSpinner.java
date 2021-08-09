@@ -1,6 +1,6 @@
-package com.marcelohdez.bedroom.util;
+package com.swiftsatchel.bedroom.util;
 
-import com.marcelohdez.bedroom.main.Main;
+import com.swiftsatchel.bedroom.main.Main;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

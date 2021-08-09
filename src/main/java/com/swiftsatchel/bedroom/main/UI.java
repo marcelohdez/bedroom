@@ -1,10 +1,10 @@
-package com.marcelohdez.bedroom.main;
+package com.swiftsatchel.bedroom.main;
 
-import com.marcelohdez.bedroom.enums.SetTime;
-import com.marcelohdez.bedroom.settings.SettingsDialog;
-import com.marcelohdez.bedroom.util.Ops;
-import com.marcelohdez.bedroom.util.Theme;
-import com.marcelohdez.bedroom.util.Time;
+import com.swiftsatchel.bedroom.enums.SetTime;
+import com.swiftsatchel.bedroom.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.Time;
 
 import java.awt.*;
 import java.awt.event.*;

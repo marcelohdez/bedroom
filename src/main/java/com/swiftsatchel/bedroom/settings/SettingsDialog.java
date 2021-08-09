@@ -1,6 +1,7 @@
-package com.marcelohdez.bedroom.settings;
+package com.swiftsatchel.bedroom.settings;
 
-import com.marcelohdez.bedroom.main.*;
+import com.swiftsatchel.bedroom.main.Main;
+
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;

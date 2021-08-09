@@ -1,11 +1,14 @@
-package com.marcelohdez.bedroom.dialog;
+package com.swiftsatchel.bedroom.dialog;
 
-import com.marcelohdez.bedroom.main.*;
-import com.marcelohdez.bedroom.enums.*;
-import com.marcelohdez.bedroom.settings.SettingsDialog;
-import com.marcelohdez.bedroom.util.Ops;
-import com.marcelohdez.bedroom.util.Theme;
-import com.marcelohdez.bedroom.util.Time;
+import com.swiftsatchel.bedroom.enums.ErrorType;
+import com.swiftsatchel.bedroom.enums.SetTime;
+import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.Time;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.main.Main;
 
 import javax.swing.*;
 import java.awt.*;

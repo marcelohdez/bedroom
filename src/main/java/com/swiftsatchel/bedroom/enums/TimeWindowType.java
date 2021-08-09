@@ -1,4 +1,4 @@
-package com.marcelohdez.bedroom.enums;
+package com.swiftsatchel.bedroom.enums;
 
 public enum TimeWindowType { // Types of select time windows
 

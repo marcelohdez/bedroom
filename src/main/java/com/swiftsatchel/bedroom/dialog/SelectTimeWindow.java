@@ -1,7 +1,8 @@
-package com.marcelohdez.bedroom.dialog;
+package com.swiftsatchel.bedroom.dialog;
 
-import com.marcelohdez.bedroom.main.*;
-import com.marcelohdez.bedroom.enums.*;
+import com.swiftsatchel.bedroom.enums.SetTime;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.main.Main;
 
 import java.awt.event.*;
 import javax.swing.*;

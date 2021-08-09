@@ -1,12 +1,12 @@
-package com.marcelohdez.bedroom.settings;
+package com.swiftsatchel.bedroom.settings;
 
-import com.marcelohdez.bedroom.dialog.ErrorDialog;
-import com.marcelohdez.bedroom.main.Main;
-import com.marcelohdez.bedroom.main.UI;
-import com.marcelohdez.bedroom.enums.ErrorType;
-import com.marcelohdez.bedroom.util.Ops;
-import com.marcelohdez.bedroom.util.Settings;
-import com.marcelohdez.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.dialog.ErrorDialog;
+import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.enums.ErrorType;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
+import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

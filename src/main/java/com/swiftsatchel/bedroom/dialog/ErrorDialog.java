@@ -1,9 +1,9 @@
-package com.marcelohdez.bedroom.dialog;
+package com.swiftsatchel.bedroom.dialog;
 
-import com.marcelohdez.bedroom.main.Main;
-import com.marcelohdez.bedroom.main.UI;
-import com.marcelohdez.bedroom.enums.ErrorType;
-import com.marcelohdez.bedroom.util.Time;
+import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.enums.ErrorType;
+import com.swiftsatchel.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;
