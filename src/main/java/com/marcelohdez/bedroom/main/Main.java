@@ -55,30 +55,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try { // Set cross-platform look and feel, fixes macOS buttons.
+        try { // Set cross-platform look and feel, fixes macOS buttons having a white background
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
 
         initWindows();
         openWorkApps();
 
-        // Create a timer to run every second
-        Timer t = new Timer(1000, e -> {
-
-            if (clockInTimePassed && !inBreak) { tick(); // Add a second to clocked in time
-            } else updateTime(); // To get time until clock in
-
-            secCount++;
-
-            if (secCount > 59) { // Run every minute
-                if (gc) System.gc();
-                updateTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
-                secCount = 0;
-            }
-
-            wnd.pack();
-
-        });
+        // Create a timer to run every second, updating the time
+        Timer t = new Timer(1000, e -> update());
 
         t.setRepeats(true);
         t.start(); // Start timer
@@ -121,6 +106,23 @@ public class Main {
             }
 
         }
+
+    }
+
+    private static void update() {
+
+        if (clockInTimePassed && !inBreak) { tick(); // Add a second to clocked in time
+        } else updateTime(); // To get time until clock in
+
+        secCount++;
+
+        if (secCount > 59) { // Run every minute
+            if (gc) System.gc();
+            updateTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
+            secCount = 0;
+        }
+
+        wnd.pack();
 
     }
 
