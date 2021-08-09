@@ -81,7 +81,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         add(addOrder);
         add(stats);
 
-        getStats();
+        showStats();
 
     }
 
@@ -107,11 +107,11 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         totalSecClockedIn++;
         sec++;
 
-        getStats();
+        showStats();
 
     }
 
-    private static void getStats() {
+    private static void showStats() {
 
         str = new StringBuilder();
 
@@ -121,7 +121,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                 str.append("Time: ");
                 Time.appendReadableTimeTo(str, hr, min, sec);
                 str.append("\n") // Line break
-                        .append(returnStats());
+                        .append(getStats());
             } else { // Show time left until our break ends =======
                 str.append("On break, ");
                 int[] t = Time.shrinkTime(secondsTillLeaveBreak);
@@ -141,7 +141,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    private static String returnStats() {
+    private static String getStats() {
 
         return """
                 Orders: $orders ($perHr/hr)
@@ -185,7 +185,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         if (!freeze && !inBreak) {
             orders += amount;
             if (orders < 0) orders = 0;
-            getStats();
+            showStats();
         }
 
         Main.wnd.pack(); // Call the Window to pack itself
@@ -216,7 +216,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             } else {
                 // Get seconds left until we have to clock in
                 secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
-                getStats(); // Display it on screen
+                showStats(); // Display it on screen
             }
 
         Main.wnd.pack();
