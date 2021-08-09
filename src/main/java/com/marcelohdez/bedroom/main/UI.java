@@ -124,8 +124,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
                         .append(getStats());
             } else { // Show time left until our break ends =======
                 str.append("On break, ");
-                int[] t = Time.shrinkTime(secondsTillLeaveBreak);
-                Time.appendReadableTimeTo(str, t[0], t[1], t[2]);
+                Time.appendReadableTimeTo(str, Time.shrinkTime(secondsTillLeaveBreak));
                 str.append(" left\n");
             }
 
@@ -134,8 +133,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         } else if (Main.timesChosen) { // Show "Time till clock in" =======
             str.append("Time until clocked in:\n");
-            int[] t = Time.shrinkTime(secondsTillClockIn);
-            Time.appendReadableTimeTo(str, t[0], t[1], t[2]);
+            Time.appendReadableTimeTo(str, Time.shrinkTime(secondsTillClockIn));
             stats.setText(str.append("\n").toString());
         }
 

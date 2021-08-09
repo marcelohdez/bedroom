@@ -46,8 +46,7 @@ public class Time { // Time operations
 
     /**
      * Appends human-readable time from separate hour, minute, and second values to a StringBuilder.
-     * Zeros are also added when the minutes or second values are below 10.
-     * ex: hour = 2, minute = 4, second = 6; we get "2:04:06" instead of "2:4:6".
+     * Human-readable time is in 00:00:00 format, with zeros before second digits if under 10.
      *
      * @param sb The StringBuilder to append to
      * @param h Hours value
@@ -62,6 +61,24 @@ public class Time { // Time operations
         sb.append(m).append(":");
         if (s < 10) sb.append("0");
         sb.append(s);
+
+    }
+
+    /**
+     * Appends human-readable time from the 3 values to a StringBuilder.
+     * Human-readable time is in 00:00:00 format, with zeros before second digits if under 10.
+     *
+     * @param sb The StringBuilder to append to
+     * @param values Hour, minute, and second values respectively
+     */
+    public static void appendReadableTimeTo(StringBuilder sb, int[] values) {
+
+        if (values[0] < 10) sb.append("0");
+        sb.append(values[0]).append(":");
+        if (values[1] < 10) sb.append("0");
+        sb.append(values[1]).append(":");
+        if (values[2] < 10) sb.append("0");
+        sb.append(values[2]);
 
     }
 
