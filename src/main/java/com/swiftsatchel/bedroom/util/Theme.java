@@ -5,7 +5,7 @@ import com.swiftsatchel.bedroom.main.UI;
 import javax.swing.*;
 import java.awt.*;
 
-public class Theme {
+public final class Theme {
 
     /**
      * Colors a JComponent's background and foreground.
