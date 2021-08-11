@@ -57,17 +57,20 @@ public class Theme {
     }
 
     /**
-     * Darkens the given color by the given amount
+     * Darkens the given color by the given amount, or lightens if amount is negative
      *
      * @param c Color to darken
      * @param amount Amount to darken by
      * @return Darkened color
      */
-    public static Color darkenThis(Color c, int amount) {
+    public static Color darkenBy(Color c, int amount) {
 
         int r = c.getRed() - amount;
         int g = c.getGreen() - amount;
         int b = c.getBlue() - amount;
+        if (r > 255) r = 255;
+        if (g > 255) g = 255;
+        if (b > 255) b = 255;
         if (r < 0) r = 0;
         if (g < 0) g = 0;
         if (b < 0) b = 0;
