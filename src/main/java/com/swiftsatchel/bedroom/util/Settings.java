@@ -2,7 +2,7 @@ package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.main.Main;
 
-public class Settings {
+public final class Settings {
 
     /**
      * Saves color values

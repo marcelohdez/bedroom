@@ -2,7 +2,7 @@ package com.swiftsatchel.bedroom.util;
 
 import java.time.LocalTime;
 
-public class Time { // Time operations
+public final class Time { // Time operations
 
     /**
      * Returns an int[] of the hours, minutes, and seconds respectively of the seconds value.

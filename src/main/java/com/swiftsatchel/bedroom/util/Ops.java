@@ -2,7 +2,7 @@ package com.swiftsatchel.bedroom.util;
 
 import java.util.ArrayList;
 
-public class Ops { // Operations
+public final class Ops { // Operations
 
     /**
      * Creates a String[] of numbers with optional added text to each.
