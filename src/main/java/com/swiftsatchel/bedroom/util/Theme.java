@@ -94,6 +94,10 @@ public final class Theme {
 
     }
 
+    /**
+     * Sets color accents not accessible through setForeground or setBackground.
+     * Hence, this only works before creating the components.
+     */
     public static void setAccents() {
 
         Color c = contrastWithColor(UI.buttonColor, 20);
