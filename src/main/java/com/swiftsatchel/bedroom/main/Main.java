@@ -5,6 +5,7 @@ import com.swiftsatchel.bedroom.dialog.SelectTimeWindow;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 
 import javax.swing.*;
@@ -60,6 +61,7 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
 
+        Theme.setAccents();
         initWindows();
         openWorkApps();
 
@@ -131,6 +133,7 @@ public class Main {
 
         gc = userPrefs.getBoolean("gc", false);
 
+        Theme.setAccents();
         wnd.reloadSettings();
         clockInWnd.reloadSettings();
         clockOutWnd.reloadSettings();

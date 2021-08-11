@@ -46,13 +46,28 @@ public final class Theme {
     /**
      * Returns white or black depending on how bright the color given is, in order to create contrast.
      *
-     * @param c Color to calculate off of
+     * @param c Color to contrast with
      * @return White or black
      */
     public static Color contrastWithBnW(Color c) {
 
         // If colors add up to 525+ return black, else return white
         return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? Color.BLACK : Color.WHITE;
+
+    }
+
+    /**
+     * Returns a darkened or lightened version of given color depending on brightness.
+     *
+     * @param c Color to contrast with
+     * @param amount Amount to lighten/darken by
+     * @return New color
+     */
+    public static Color contrastWithColor(Color c, int amount) {
+
+        // If colors add up to 525+ return black, else return white
+        return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? darkenBy(c, amount) :
+                darkenBy(c, -amount);
 
     }
 
@@ -76,6 +91,17 @@ public final class Theme {
         if (b < 0) b = 0;
 
         return new Color(r, g, b);
+
+    }
+
+    public static void setAccents() {
+
+        Color c = contrastWithColor(UI.buttonColor, 20);
+        UIManager.put("Button.select", c);
+        UIManager.put("Button.focus", c);
+        UIManager.put("ComboBox.selectionBackground", c);
+        UIManager.put("ComboBox.selectionForeground", UI.textColor);
+        UIManager.put("ScrollBar.background", UI.bg);
 
     }
 
