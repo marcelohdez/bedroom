@@ -49,7 +49,7 @@ public class Theme {
      * @param c Color to calculate off of
      * @return White or black
      */
-    public static Color contrastTo(Color c) {
+    public static Color contrastWithBnW(Color c) {
 
         // If colors add up to 525+ return black, else return white
         return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? Color.BLACK : Color.WHITE;

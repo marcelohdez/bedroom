@@ -220,7 +220,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         row.setBackground(Theme.darkenBy(UI.bg, 20));
         row.add(colorLabel);
         colorLabel.setFont(UI.boldText);
-        colorLabel.setForeground(Theme.contrastTo(Theme.darkenThis(UI.bg, 20)));
+        colorLabel.setForeground(Theme.contrastWithBnW(Theme.darkenBy(UI.bg, 20)));
 
         return row;
 
