@@ -259,8 +259,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time (return on macOS which is 13)
-            case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ESCAPE, KeyEvent.VK_DELETE ->
-                    new SettingsDialog(parent);  // Open settings with Delete, Backspace, or Escape keys
+            case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_DELETE ->
+                    new SettingsDialog(parent);  // Open settings with Delete or Backspace keys
         }
     }
 
