@@ -164,9 +164,10 @@ public class Main {
             } else { // Show time left until our break ends =======
                 sb.append("On break, ");
                 Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillLeaveBreak));
-                sb.append(" left\n");
+                sb.append(" left\n")
+                        .append(getStats());
             }
-            UI.display(sb.toString()); // Show on-screen
+            UI.display(sb.toString()); // Show on UI
 
         } else if (Main.timesChosen) { // Show "Time till clock in" =======
 
