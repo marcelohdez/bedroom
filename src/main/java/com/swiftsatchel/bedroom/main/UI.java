@@ -1,6 +1,7 @@
 package com.swiftsatchel.bedroom.main;
 
-import com.swiftsatchel.bedroom.enums.SetTime;
+import com.swiftsatchel.bedroom.dialog.SelectTimeWindow;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
@@ -71,11 +72,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     }
 
     private void enterBreak() {
-        if (!freeze) {
-            Main.enterBreakWnd.centerOnMainWindow(); // Set to current center of main window
-            Main.enterBreakWnd.setUITime(SetTime.CURRENT);
-            Main.enterBreakWnd.setVisible(true);
-        }
+        if (!freeze)
+            new SelectTimeWindow(parent, TimeWindowType.START_BREAK);
     }
 
     public void keyTyped(KeyEvent e) {}

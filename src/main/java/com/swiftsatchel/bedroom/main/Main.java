@@ -23,9 +23,8 @@ public class Main {
     public static String version = "3 (Beta 2)";
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
-    // Windows
+    // Window
     public static BedroomWindow wnd;
-    public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd;
 
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
@@ -61,28 +60,15 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch(Exception e) { e.printStackTrace(); }
 
-        Theme.setAccents();
-        initWindows();
-        openWorkApps();
+        Theme.setAccents(); // Set extra color accents through UIManager
+        openWorkApps(); // Open any work apps
 
         // Create a timer to run every second, updating the time
         Timer t = new Timer(1000, e -> update());
-
         t.setRepeats(true);
         t.start(); // Start timer
 
-    }
-
-    private static void initWindows() {
-
-        // Create main window
-        wnd = new BedroomWindow();
-        // Create clock in/out windows
-        clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
-        clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);
-        // Create enter/leave break windows
-        enterBreakWnd = new SelectTimeWindow(TimeWindowType.START_BREAK);
-        leaveBreakWnd = new SelectTimeWindow(TimeWindowType.END_BREAK);
+        wnd = new BedroomWindow(); // Create main window
 
     }
 
@@ -125,7 +111,7 @@ public class Main {
             secCount = 0;
         }
 
-        wnd.pack();
+        if (wnd != null) wnd.pack();
 
     }
 
@@ -135,10 +121,6 @@ public class Main {
 
         Theme.setAccents();
         wnd.reloadSettings();
-        clockInWnd.reloadSettings();
-        clockOutWnd.reloadSettings();
-        enterBreakWnd.reloadSettings();
-        leaveBreakWnd.reloadSettings();
 
     }
 

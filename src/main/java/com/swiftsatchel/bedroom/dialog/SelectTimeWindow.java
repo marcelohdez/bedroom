@@ -3,18 +3,21 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import java.awt.event.*;
 import javax.swing.*;
 
-public class SelectTimeWindow extends JFrame implements WindowListener {
+public class SelectTimeWindow extends JFrame implements WindowListener, WindowParent {
 
     private final SelectTimeUI ui;
     private final TimeWindowType type;
+    public final WindowParent parent;
 
-    public SelectTimeWindow(TimeWindowType type) {
+    public SelectTimeWindow(WindowParent parent, TimeWindowType type) {
 
         this.type = type;
+        this.parent = parent;
 
         // Initial properties
         reloadAlwaysOnTop();
@@ -33,25 +36,24 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
             case CLOCK_OUT -> setTitle("Clocking out:");
             case START_BREAK -> setTitle("Enter break:");
             case END_BREAK -> setTitle("Leave break:");
-            case CLOCK_IN -> {
-                setTitle("Clocking in:");
-                setVisible(true); // Automatically show clock in window
-                centerOnMainWindow();
-            }
+            case CLOCK_IN -> setTitle("Clocking in:");
         }
+
+        centerOnParent();
+        setVisible(true); // Show self
 
     }
 
-    public void centerOnMainWindow() {
+    public void centerOnParent() {
 
-        setLocation(Main.wnd.getX() + ((Main.wnd.getWidth()/2) - (this.getWidth()/2)),
-                Main.wnd.getY() + ((Main.wnd.getHeight()/2) - (this.getHeight()/2)));
-        ui.requestFocus();
+        int[] xyWidthHeight = parent.getXYWidthHeight();
+        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2] /2) - (this.getWidth()/2)),
+                xyWidthHeight[1]  + ((xyWidthHeight[3] /2) - (this.getHeight()/2)));
 
     }
 
     public void setUITime(SetTime type) {
-        // Set ui's list boxes to a time
+        // Set UI's list boxes to a time
         ui.setListBoxIndexes(type);
     }
 
@@ -59,35 +61,40 @@ public class SelectTimeWindow extends JFrame implements WindowListener {
         this.setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
     }
 
-    public void reloadSettings() {
-
-        ui.colorSelf();
-        reloadAlwaysOnTop();
-
-    }
-
     @Override
     public void windowClosing(WindowEvent e) {
 
         switch (this.type) {
-            case CLOCK_OUT -> { // Go back to clock in time window
-                Main.clockInWnd.setVisible(true);
+            case CLOCK_OUT, END_BREAK -> { // Go back to clock in time window
+                parent.makeVisible(true);
                 this.dispose();
             }
             case START_BREAK -> this.dispose();   // Close window
-            case END_BREAK -> {
-                Main.enterBreakWnd.setVisible(true);
-                this.dispose();
-            }
         }
 
     }
 
+    @Override
+    public int[] getXYWidthHeight() {
+        return new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()};
+    }
+
+    @Override
+    public void makeVisible(boolean b) {
+        setVisible(b);
+    }
+
+    @Override
     public void windowOpened(WindowEvent e) {}
+    @Override
     public void windowClosed(WindowEvent e) {}
+    @Override
     public void windowIconified(WindowEvent e) {}
+    @Override
     public void windowDeiconified(WindowEvent e) {}
+    @Override
     public void windowActivated(WindowEvent e) {}
+    @Override
     public void windowDeactivated(WindowEvent e) {}
 
 }

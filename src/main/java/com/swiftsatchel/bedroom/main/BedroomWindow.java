@@ -1,8 +1,12 @@
 package com.swiftsatchel.bedroom.main;
 
+import com.swiftsatchel.bedroom.dialog.SelectTimeWindow;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.util.WindowParent;
+
 import javax.swing.*;
 
-public class BedroomWindow extends JFrame {
+public class BedroomWindow extends JFrame implements WindowParent {
 
     private final UI ui;
 
@@ -25,6 +29,7 @@ public class BedroomWindow extends JFrame {
         setLocationRelativeTo(null);
 
         setVisible(true);
+        new SelectTimeWindow(this, TimeWindowType.CLOCK_IN); // Create clock in window
 
     }
 
@@ -39,4 +44,13 @@ public class BedroomWindow extends JFrame {
 
     }
 
+    @Override
+    public int[] getXYWidthHeight() {
+        return new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()};
+    }
+
+    @Override
+    public void makeVisible(boolean b) {
+        setVisible(b);
+    }
 }

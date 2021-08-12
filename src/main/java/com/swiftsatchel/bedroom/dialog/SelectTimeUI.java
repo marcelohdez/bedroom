@@ -129,7 +129,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
             Main.clockInTime = newTime; // Set clock in time
-            hideAndProceed(Main.clockInWnd, Main.clockOutWnd, SetTime.CLOCK_IN_PLUS_DEFAULT);
+            proceedWith(TimeWindowType.CLOCK_OUT, SetTime.CLOCK_IN_PLUS_DEFAULT);
         } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
             setClockOutTime(newTime);
         } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
@@ -146,10 +146,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         if (time.isAfter(Main.clockInTime)) {
 
-            Main.clockOutTime = time;                 // Set clock out time
+            Main.clockOutTime = time;               // Set clock out time
             Main.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
             Main.timesChosen = true;                // Clock out time is now chosen
-            Main.clockOutWnd.dispose();             // Close clock out time window
+            parent.dispose();                       // Close clock out time window
 
         } else {
             new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
@@ -164,7 +164,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 time.equals(Main.clockInTime)) {
 
             Main.breakInTime = time; // Set enter break time
-            hideAndProceed(Main.enterBreakWnd, Main.leaveBreakWnd, SetTime.BREAK_START_PLUS_30M);
+            proceedWith(TimeWindowType.END_BREAK, SetTime.BREAK_START_PLUS_30M); // Open end break window
 
         } else {
             new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
@@ -180,7 +180,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
             Main.breakOutTime = time; // Set leave break time
             Main.breakTimesChosen = true;
-            Main.leaveBreakWnd.dispose();       // Close leave break window
+            parent.dispose();       // Close leave break window
 
         } else {
             new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
@@ -189,13 +189,13 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private static void hideAndProceed(SelectTimeWindow hideThis, SelectTimeWindow openThis,
-                                       SetTime newWindowType) {
+    private void proceedWith(TimeWindowType newType, SetTime newWindowType) {
 
-        hideThis.setVisible(false);
-        openThis.centerOnMainWindow();
-        openThis.setUITime(newWindowType);
-        openThis.setVisible(true);
+        SelectTimeWindow newWindow = new SelectTimeWindow(parent, newType);
+        parent.setVisible(false);
+        newWindow.centerOnParent();
+        newWindow.setUITime(newWindowType);
+        newWindow.setVisible(true);
 
     }
 
