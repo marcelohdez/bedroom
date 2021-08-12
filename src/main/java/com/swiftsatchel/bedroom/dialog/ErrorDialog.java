@@ -4,6 +4,7 @@ import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.Time;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.awt.event.ActionListener;
 
 public class ErrorDialog extends JDialog implements ActionListener {
 
-    public ErrorDialog(int[] xyWidthHeight, ErrorType e) {
+    public ErrorDialog(WindowParent parent, ErrorType e) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -48,6 +49,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
         pack();
 
         // Center on summoner
+        int[] xyWidthHeight = parent.getXYWidthHeight();
         setLocation(xyWidthHeight[0] + (xyWidthHeight[2]/2 - (this.getWidth()/2)),
                 xyWidthHeight[1] + (xyWidthHeight[3]/2 - (this.getHeight()/2)));
 

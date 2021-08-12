@@ -88,8 +88,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
             case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
             case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
             case KeyEvent.VK_DELETE, KeyEvent.VK_ESCAPE, KeyEvent.VK_BACK_SPACE ->
-                    new SettingsDialog(new int[]{parent.getX(), parent.getY(),
-                            parent.getWidth(), parent.getHeight()}); // Open settings with Del or Esc keys
+                    new SettingsDialog(parent);  // Open settings with Delete, Backspace, or Escape keys
         }
     }
 

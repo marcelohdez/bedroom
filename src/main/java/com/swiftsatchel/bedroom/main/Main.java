@@ -61,14 +61,13 @@ public class Main {
         } catch(Exception e) { e.printStackTrace(); }
 
         Theme.setAccents(); // Set extra color accents through UIManager
+        wnd = new BedroomWindow(); // Create main window
         openWorkApps(); // Open any work apps
 
         // Create a timer to run every second, updating the time
         Timer t = new Timer(1000, e -> update());
         t.setRepeats(true);
         t.start(); // Start timer
-
-        wnd = new BedroomWindow(); // Create main window
 
     }
 
@@ -88,8 +87,7 @@ public class Main {
                     }
 
                 } else {
-                    new ErrorDialog(new int[]{wnd.getX(), wnd.getY(), wnd.getWidth(), wnd.getHeight()},
-                            ErrorType.WORK_APP_DOES_NOT_EXIST);
+                    new ErrorDialog(wnd, ErrorType.WORK_APP_DOES_NOT_EXIST);
                 }
 
             }
@@ -111,7 +109,7 @@ public class Main {
             secCount = 0;
         }
 
-        if (wnd != null) wnd.pack();
+        wnd.pack();
 
     }
 

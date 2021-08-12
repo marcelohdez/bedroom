@@ -152,8 +152,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             parent.dispose();                       // Close clock out time window
 
         } else {
-            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
-                    ErrorType.NEGATIVE_SHIFT_TIME);
+            new ErrorDialog(parent, ErrorType.NEGATIVE_SHIFT_TIME);
         }
 
     }
@@ -167,8 +166,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             proceedWith(TimeWindowType.END_BREAK, SetTime.BREAK_START_PLUS_30M); // Open end break window
 
         } else {
-            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
-                    ErrorType.BREAK_OUT_OF_SHIFT);
+            new ErrorDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
         }
 
     }
@@ -183,8 +181,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             parent.dispose();       // Close leave break window
 
         } else {
-            new ErrorDialog(new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()},
-                    ErrorType.NEGATIVE_BREAK_TIME);
+            new ErrorDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
         }
 
     }
@@ -262,8 +259,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time (return on MacOS which is 13)
             case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ESCAPE, KeyEvent.VK_DELETE ->
-                    new SettingsDialog(new int[]{parent.getX(), parent.getY(),
-                            parent.getWidth(), parent.getHeight()});  // Open settings with Del or Esc keys
+                    new SettingsDialog(parent);  // Open settings with Delete, Backspace, or Escape keys
         }
     }
 

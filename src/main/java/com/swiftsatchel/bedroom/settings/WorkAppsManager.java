@@ -7,6 +7,7 @@ import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -20,11 +21,15 @@ import java.util.ArrayList;
 
 public class WorkAppsManager extends JDialog implements ActionListener, WindowListener {
 
+    private final WindowParent parent;
+
     private ArrayList<String> workAppDirs; // Keep track of work apps' directories
     private DefaultListModel<String> workAppNames; // Work apps' names
     private JList<String> list; // The JList to be displayed
 
     public WorkAppsManager(SettingsDialog parent) {
+
+        this.parent = parent;
 
         setTitle("Work Apps");
         addWindowListener(this);
@@ -138,8 +143,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
 
         } else {
-            new ErrorDialog(new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()},
-                    ErrorType.WORK_APPS_FULL);
+            new ErrorDialog(parent, ErrorType.WORK_APPS_FULL);
         }
 
     }
