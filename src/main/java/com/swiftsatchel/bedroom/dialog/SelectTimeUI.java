@@ -40,7 +40,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     public SelectTimeUI(SelectTimeWindow parent) {
 
-        this.type = parent.type;
+        type = parent.type;
         this.parent = parent;
 
         setBackground(UI.bg); // Set background color
@@ -100,11 +100,11 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         switch (type) { // Set minBox depending on type and get wanted hour int
             // Case 0 is to get current time, for hour it is already stored above
             case CURRENT -> // Set minBox to current minute
-                    this.minBox.setSelectedIndex(LocalTime.now().getMinute());
+                    minBox.setSelectedIndex(LocalTime.now().getMinute());
             case CLOCK_IN_PLUS_DEFAULT -> { // Get 4hrs after clock in time, for clock out window
                 hour = Main.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
-                this.minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
+                minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
             case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
                 minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
@@ -113,7 +113,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                     minute -= 60;
                     hour = Main.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
                 }
-                this.minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
+                minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
             }
         }
 
@@ -124,18 +124,18 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private void selectTime() {
 
         LocalTime newTime = LocalTime.parse(Time.makeTime24Hour(
-                this.hrBox.getSelectedIndex() + 1,
-                this.minBox.getSelectedIndex(),
-                (this.amPMBox.getSelectedIndex() == 1)));
+                hrBox.getSelectedIndex() + 1,
+                minBox.getSelectedIndex(),
+                (amPMBox.getSelectedIndex() == 1)));
 
-        if (this.type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
+        if (type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
             Main.clockInTime = newTime; // Set clock in time
             proceedWith(TimeWindowType.CLOCK_OUT, SetTime.CLOCK_IN_PLUS_DEFAULT);
-        } else if (this.type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
+        } else if (type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
             setClockOutTime(newTime);
-        } else if (this.type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
+        } else if (type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
             setBreakStartTime(newTime);
-        } else if (this.type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
+        } else if (type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
             setBreakEndTime(newTime);
         }
 
@@ -200,18 +200,18 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private void setListBoxesByHour(int hour) { // Convert time to 12-hour format for list boxes
 
         if (hour >= 12) {
-            this.amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
+            amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
             // This if statement sets the list box index to current hour,
             // since LocalTime is in 24hr format, we have to do some maths
             // to get it to 12hr am/pm.
             if (hour != 12) {                       // Set hour to 1-11pm
-                this.hrBox.setSelectedIndex(hour - 13);
-            } else this.hrBox.setSelectedIndex(11); // Set hour to 12pm
+                hrBox.setSelectedIndex(hour - 13);
+            } else hrBox.setSelectedIndex(11); // Set hour to 12pm
         } else {
-            this.amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
+            amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
             if (hour != 0) {                        // Set hour to 1-11am
-                this.hrBox.setSelectedIndex(hour - 1);
-            } else this.hrBox.setSelectedIndex(11); // Set hour to 12am (or 0 in 24hr)
+                hrBox.setSelectedIndex(hour - 1);
+            } else hrBox.setSelectedIndex(11); // Set hour to 12am (or 0 in 24hr)
         }
 
     }
@@ -240,9 +240,9 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         Theme.colorThese(new JComponent[]{labelRow, topText, select, hrBox,
                 minBox, amPMBox, setTarget, selectRow, timeBoxesRow});
 
-        if (this.type.equals(TimeWindowType.CLOCK_OUT)) {
-            this.setTargetRow.setBackground(UI.bg);
-            this.targetText.setForeground(UI.textColor);
+        if (type.equals(TimeWindowType.CLOCK_OUT)) {
+            setTargetRow.setBackground(UI.bg);
+            targetText.setForeground(UI.textColor);
         }
 
     }

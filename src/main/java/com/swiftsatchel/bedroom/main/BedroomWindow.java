@@ -34,7 +34,7 @@ public class BedroomWindow extends JFrame implements WindowParent {
     }
 
     public void reloadAlwaysOnTop() {
-        this.setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
     }
 
     public void reloadSettings() { // Pass through to UI
@@ -46,7 +46,7 @@ public class BedroomWindow extends JFrame implements WindowParent {
 
     @Override
     public int[] getXYWidthHeight() {
-        return new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()};
+        return new int[]{getX(), getY(), getWidth(), getHeight()};
     }
 
     @Override

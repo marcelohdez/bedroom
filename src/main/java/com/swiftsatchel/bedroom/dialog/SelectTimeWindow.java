@@ -47,8 +47,8 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
     public void centerOnParent() {
 
         int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2] /2) - (this.getWidth()/2)),
-                xyWidthHeight[1]  + ((xyWidthHeight[3] /2) - (this.getHeight()/2)));
+        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2] /2) - (getWidth()/2)),
+                xyWidthHeight[1]  + ((xyWidthHeight[3] /2) - (getHeight()/2)));
 
     }
 
@@ -58,25 +58,25 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
     }
 
     public void reloadAlwaysOnTop() {
-        this.setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
 
         switch (this.type) {
-            case CLOCK_OUT, END_BREAK -> { // Go back to clock in time window
+            case CLOCK_OUT, END_BREAK -> {  // Go back to clock in time window
                 parent.makeVisible(true);
-                this.dispose();
+                dispose();
             }
-            case START_BREAK -> this.dispose();   // Close window
+            case START_BREAK -> dispose();  // Close window
         }
 
     }
 
     @Override
     public int[] getXYWidthHeight() {
-        return new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()};
+        return new int[]{getX(), getY(), getWidth(), getHeight()};
     }
 
     @Override

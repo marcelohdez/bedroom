@@ -45,13 +45,13 @@ public class ErrorDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle("Error");
         pack();
-        ok.setPreferredSize(new Dimension(this.getWidth() - 5, 40));
+        ok.setPreferredSize(new Dimension(getWidth() - 5, 40));
         pack();
 
         // Center on summoner
         int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + (xyWidthHeight[2]/2 - (this.getWidth()/2)),
-                xyWidthHeight[1] + (xyWidthHeight[3]/2 - (this.getHeight()/2)));
+        setLocation(xyWidthHeight[0] + (xyWidthHeight[2]/2 - (getWidth()/2)),
+                xyWidthHeight[1] + (xyWidthHeight[3]/2 - (getHeight()/2)));
 
         setVisible(true);
 
@@ -112,8 +112,6 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) { // Do sum when OK is pressed
-        if (e.getActionCommand().equals("OK")) {
-            this.dispose();
-        }
+        dispose();
     }
 }

@@ -147,7 +147,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         buttonColor = loadColorOf("button", 80);
         bg = loadColorOf("bg", 64);
 
-        this.colorComponents();
+        colorComponents();
 
     }
 

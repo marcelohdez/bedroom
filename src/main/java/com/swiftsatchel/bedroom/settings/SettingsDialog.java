@@ -26,8 +26,8 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
 
         // Center on parent window
         int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2]/2) - (this.getWidth()/2)),
-                xyWidthHeight[1] + ((xyWidthHeight[3]/2) - (this.getHeight()/2)));
+        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2]/2) - (getWidth()/2)),
+                xyWidthHeight[1] + ((xyWidthHeight[3]/2) - (getHeight()/2)));
 
         setVisible(true);
 
@@ -42,7 +42,7 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
 
     @Override
     public int[] getXYWidthHeight() {
-        return new int[]{this.getX(), this.getY(), this.getWidth(), this.getHeight()};
+        return new int[]{getX(), getY(), getWidth(), getHeight()};
     }
 
     @Override
