@@ -38,8 +38,9 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private JPanel setTargetRow = createTargetRow();
     private final JPanel selectRow = new JPanel();
 
-    public SelectTimeUI(SelectTimeWindow parent, TimeWindowType type) {
-        this.type = type;
+    public SelectTimeUI(SelectTimeWindow parent) {
+
+        this.type = parent.type;
         this.parent = parent;
 
         setBackground(UI.bg); // Set background color
@@ -68,7 +69,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         amPMBox.setPreferredSize(smallListBoxSize);
         amPMBox.addKeyListener(this);
         setTarget.setPreferredSize(smallListBoxSize);
-        setTarget.setSelectedIndex(8); // Set default to 9 (what i need @ my job, so a lil easter egg)
+        setTarget.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
         setTarget.addKeyListener(this);
 
         // ======= Set colors =======
@@ -196,7 +197,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setListBoxesByHour(int hour) { // Convert time to 12 hour format for list boxes
+    private void setListBoxesByHour(int hour) { // Convert time to 12-hour format for list boxes
 
         if (hour >= 12) {
             this.amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
@@ -257,7 +258,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time (return on MacOS which is 13)
+            case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time (return on macOS which is 13)
             case KeyEvent.VK_BACK_SPACE, KeyEvent.VK_ESCAPE, KeyEvent.VK_DELETE ->
                     new SettingsDialog(parent);  // Open settings with Delete, Backspace, or Escape keys
         }

@@ -11,8 +11,8 @@ import javax.swing.*;
 public class SelectTimeWindow extends JFrame implements WindowListener, WindowParent {
 
     private final SelectTimeUI ui;
-    private final TimeWindowType type;
-    public final WindowParent parent;
+    public final TimeWindowType type;
+    private final WindowParent parent;
 
     public SelectTimeWindow(WindowParent parent, TimeWindowType type) {
 
@@ -25,7 +25,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
 
-        ui = new SelectTimeUI(this, type); // Create ui based on window type
+        ui = new SelectTimeUI(this); // Create ui based on window type
         addKeyListener(ui);                     // Add key listener for shortcuts
         add(ui);                                // Add the UI
 
