@@ -2,11 +2,11 @@ package com.swiftsatchel.bedroom.main;
 
 import javax.swing.*;
 
-public class Window extends JFrame {
+public class BedroomWindow extends JFrame {
 
     private final UI ui;
 
-    public Window() {
+    public BedroomWindow() {
 
         setTitle("Bedroom " + Main.version);
         setResizable(false);

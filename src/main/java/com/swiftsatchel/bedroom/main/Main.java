@@ -24,7 +24,7 @@ public class Main {
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     // Windows
-    public static Window wnd;
+    public static BedroomWindow wnd;
     public static SelectTimeWindow clockInWnd, clockOutWnd, enterBreakWnd, leaveBreakWnd;
 
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
@@ -76,7 +76,7 @@ public class Main {
     private static void initWindows() {
 
         // Create main window
-        wnd = new Window();
+        wnd = new BedroomWindow();
         // Create clock in/out windows
         clockInWnd = new SelectTimeWindow(TimeWindowType.CLOCK_IN);
         clockOutWnd = new SelectTimeWindow(TimeWindowType.CLOCK_OUT);

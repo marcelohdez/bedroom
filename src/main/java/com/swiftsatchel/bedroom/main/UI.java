@@ -12,7 +12,7 @@ import javax.swing.*;
 
 public class UI extends JPanel implements ActionListener, KeyListener {
 
-    private final Window parent;
+    private final BedroomWindow parent;
     public static boolean freeze = true; // Ignore input of change order and set break actions
 
     // Components used outside of constructor
@@ -32,7 +32,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     // Get color of background
     public static Color bg = loadColorOf("bg", 64);
 
-    public UI(Window parent) { // Set UI's properties
+    public UI(BedroomWindow parent) { // Set UI's properties
 
         this.parent = parent;
 
