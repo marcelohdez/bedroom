@@ -187,13 +187,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void proceedWith(TimeWindowType newType, SetTime newWindowType) {
+    private void proceedWith(TimeWindowType newType, SetTime setTimeTo) {
 
-        SelectTimeWindow newWindow = new SelectTimeWindow(parent, newType);
         parent.setVisible(false);
-        newWindow.centerOnParent();
-        newWindow.setUITime(newWindowType);
-        newWindow.setVisible(true);
+        new SelectTimeWindow(parent, newType);
 
     }
 

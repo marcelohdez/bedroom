@@ -8,7 +8,7 @@ import com.swiftsatchel.bedroom.util.WindowParent;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class SelectTimeWindow extends JFrame implements WindowListener, WindowParent {
+public class SelectTimeWindow extends JDialog implements WindowListener, WindowParent {
 
     private final SelectTimeUI ui;
     public final TimeWindowType type;
@@ -21,6 +21,7 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
 
         // Initial properties
         reloadAlwaysOnTop();
+        setModalityType(ModalityType.APPLICATION_MODAL);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -31,12 +32,19 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
 
         pack();
 
-        // Set window title per window type
+        // Set window title and time per type
         switch (type) {
-            case CLOCK_OUT -> setTitle("Clocking out:");
-            case START_BREAK -> setTitle("Enter break:");
-            case END_BREAK -> setTitle("Leave break:");
             case CLOCK_IN -> setTitle("Clocking in:");
+            case CLOCK_OUT -> {
+                setTitle("Clocking out:");
+                setUITime(SetTime.CLOCK_IN_PLUS_DEFAULT);
+            }
+            case START_BREAK -> setTitle("Enter break:");
+            case END_BREAK -> {
+                setTitle("Leave break:");
+                setUITime(SetTime.BREAK_START_PLUS_30M);
+            }
+
         }
 
         centerOnParent();
@@ -62,19 +70,6 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
     }
 
     @Override
-    public void windowClosing(WindowEvent e) {
-
-        switch (this.type) {
-            case CLOCK_OUT, END_BREAK -> {  // Go back to clock in time window
-                parent.makeVisible(true);
-                dispose();
-            }
-            case START_BREAK -> dispose();  // Close window
-        }
-
-    }
-
-    @Override
     public int[] getXYWidthHeight() {
         return new int[]{getX(), getY(), getWidth(), getHeight()};
     }
@@ -82,6 +77,19 @@ public class SelectTimeWindow extends JFrame implements WindowListener, WindowPa
     @Override
     public void makeVisible(boolean b) {
         setVisible(b);
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+        switch (this.type) {
+            case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
+                dispose();
+                parent.makeVisible(true);
+            }
+            case START_BREAK -> dispose();  // Close window
+        }
+
     }
 
     @Override
