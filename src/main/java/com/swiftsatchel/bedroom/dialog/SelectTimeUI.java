@@ -129,7 +129,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         if (type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
             Main.clockInTime = newTime; // Set clock in time
-            proceedWith(TimeWindowType.CLOCK_OUT, SetTime.CLOCK_IN_PLUS_DEFAULT);
+            proceedWith(TimeWindowType.CLOCK_OUT);
         } else if (type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
             setClockOutTime(newTime);
         } else if (type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
@@ -163,7 +163,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 time.equals(Main.clockInTime)) {
 
             Main.breakInTime = time; // Set enter break time
-            proceedWith(TimeWindowType.END_BREAK, SetTime.BREAK_START_PLUS_30M); // Open end break window
+            proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
             new ErrorDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
@@ -186,7 +186,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void proceedWith(TimeWindowType newType, SetTime setTimeTo) {
+    private void proceedWith(TimeWindowType newType) {
 
         parent.setVisible(false);
         new SelectTimeDialog(parent, newType);
