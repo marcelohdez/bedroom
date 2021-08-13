@@ -8,13 +8,13 @@ import com.swiftsatchel.bedroom.util.WindowParent;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class SelectTimeWindow extends JDialog implements WindowListener, WindowParent {
+public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent {
 
     private final SelectTimeUI ui;
     public final TimeWindowType type;
     private final WindowParent parent;
 
-    public SelectTimeWindow(WindowParent parent, TimeWindowType type) {
+    public SelectTimeDialog(WindowParent parent, TimeWindowType type) {
 
         this.type = type;
         this.parent = parent;

@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.main;
 
-import com.swiftsatchel.bedroom.dialog.SelectTimeWindow;
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
@@ -29,7 +29,7 @@ public class BedroomWindow extends JFrame implements WindowParent {
         setLocationRelativeTo(null);
 
         setVisible(true);
-        new SelectTimeWindow(this, TimeWindowType.CLOCK_IN); // Create clock in window
+        new SelectTimeDialog(this, TimeWindowType.CLOCK_IN); // Create clock in window
 
     }
 

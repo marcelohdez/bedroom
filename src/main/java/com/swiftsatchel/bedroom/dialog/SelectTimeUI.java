@@ -3,7 +3,6 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -18,7 +17,7 @@ import java.time.LocalTime;
 public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
 
     private final TimeWindowType type;
-    private final SelectTimeWindow parent;
+    private final SelectTimeDialog parent;
 
     // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
@@ -38,7 +37,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private JPanel setTargetRow = createTargetRow();
     private final JPanel selectRow = new JPanel();
 
-    public SelectTimeUI(SelectTimeWindow parent) {
+    public SelectTimeUI(SelectTimeDialog parent) {
 
         type = parent.type;
         this.parent = parent;
@@ -190,7 +189,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private void proceedWith(TimeWindowType newType, SetTime setTimeTo) {
 
         parent.setVisible(false);
-        new SelectTimeWindow(parent, newType);
+        new SelectTimeDialog(parent, newType);
 
     }
 

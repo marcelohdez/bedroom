@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.main;
 
-import com.swiftsatchel.bedroom.dialog.SelectTimeWindow;
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
@@ -73,7 +73,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     private void enterBreak() {
         if (!freeze)
-            new SelectTimeWindow(parent, TimeWindowType.START_BREAK);
+            new SelectTimeDialog(parent, TimeWindowType.START_BREAK);
     }
 
     public void keyTyped(KeyEvent e) {}
