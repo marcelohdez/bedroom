@@ -100,12 +100,13 @@ public final class Theme {
      */
     public static void setAccents() {
 
-        Color c = contrastWithColor(UI.buttonColor, 20);
+        Color c = contrastWithColor(UI.buttonColor, 30);
         UIManager.put("Button.select", c);
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
-        UIManager.put("ComboBox.selectionForeground", UI.textColor);
+        UIManager.put("ComboBox.selectionForeground", UI.buttonTextColor);
         UIManager.put("ScrollBar.background", UI.bg);
+        UIManager.put("ToolTip.background", Color.WHITE);
 
     }
 
