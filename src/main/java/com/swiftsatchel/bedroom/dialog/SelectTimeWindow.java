@@ -69,6 +69,16 @@ public class SelectTimeWindow extends JDialog implements WindowListener, WindowP
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
     }
 
+    public void close() {
+        switch (type) {
+            case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
+                dispose();
+                parent.makeVisible(true);
+            }
+            case START_BREAK -> dispose();  // Close window
+        }
+    }
+
     @Override
     public int[] getXYWidthHeight() {
         return new int[]{getX(), getY(), getWidth(), getHeight()};
@@ -81,15 +91,7 @@ public class SelectTimeWindow extends JDialog implements WindowListener, WindowP
 
     @Override
     public void windowClosing(WindowEvent e) {
-
-        switch (this.type) {
-            case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
-                dispose();
-                parent.makeVisible(true);
-            }
-            case START_BREAK -> dispose();  // Close window
-        }
-
+        close();
     }
 
     @Override

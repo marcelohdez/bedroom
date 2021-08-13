@@ -256,6 +256,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time with Enter (return on macOS, which is 13)
+            case KeyEvent.VK_ESCAPE -> parent.close();
         }
     }
 
