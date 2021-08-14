@@ -1,13 +1,12 @@
 package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.main.Main;
-import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.Time;
+import com.swiftsatchel.bedroom.util.UIBuilder;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,44 +14,14 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
     public ErrorDialog(WindowParent parent, ErrorType e) {
 
-        // Create components
-        JPanel topUI = new JPanel();
-        JPanel botUI = new JPanel();
-        JTextArea message = new JTextArea(getErrorMessage(e));
-        JButton ok = new JButton("OK");
-
-        // Customize components
-        topUI.setBackground(UI.bg);
-        botUI.setBackground(UI.bg);
-        message.setBackground(UI.bg);
-        message.setForeground(UI.textColor);
-        message.setFont(UI.boldText);
-        message.setEditable(false);
-        ok.addActionListener(this);
-        ok.setBackground(UI.buttonColor);
-        ok.setForeground(UI.buttonTextColor);
-
-        // Add components
-        topUI.add(message);
-        botUI.add(ok);
-        add(topUI, BorderLayout.PAGE_START);
-        add(botUI, BorderLayout.PAGE_END);
-
-        // Set window properties
-        setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from all other windows
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
-        setResizable(false);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setTitle("Error");
-        pack();
-        ok.setPreferredSize(new Dimension(getWidth() - 5, 40));
-        pack();
+        UIBuilder.createDialog(this, this, "Error", getErrorMessage(e));
 
         // Center on summoner
         int[] xyWidthHeight = parent.getXYWidthHeight();
         setLocation(xyWidthHeight[0] + (xyWidthHeight[2]/2 - (getWidth()/2)),
                 xyWidthHeight[1] + (xyWidthHeight[3]/2 - (getHeight()/2)));
 
+        // Show
         setVisible(true);
 
     }

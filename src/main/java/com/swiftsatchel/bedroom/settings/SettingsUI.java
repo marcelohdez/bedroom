@@ -28,6 +28,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private int currentlyColoring = Main.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
+    public int changeCount = 0; // Amount of color changes, (2 are done on startup, so 3 means colors have changed)
     private JLabel redLabel, greenLabel, blueLabel; // Color labels
     // This used to ignore showing the color values when changing themes/component being edited:
     private boolean showColorValues = true;
@@ -438,6 +439,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     @Override
     public void stateChanged(ChangeEvent e) {
 
+        changeCount++;
         updateValues();
 
         if (e.getSource() instanceof JSlider) {

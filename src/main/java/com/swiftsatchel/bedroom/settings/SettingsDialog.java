@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom.settings;
 
+import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
@@ -44,6 +45,10 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
         sui.updateValues();
+        if (sui.changeCount > 2) new AlertDialog(this, // If colors were changed, create an alert
+                """
+                Some colors may not change
+                until Bedroom is reopened.""");
 
     }
 
