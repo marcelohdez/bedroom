@@ -80,7 +80,6 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {}
 
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyCode());
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DOWN ->
