@@ -71,6 +71,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
     public void close() {
         switch (type) {
+            case CLOCK_IN -> System.exit(0);
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
                 parent.makeVisible(true);
