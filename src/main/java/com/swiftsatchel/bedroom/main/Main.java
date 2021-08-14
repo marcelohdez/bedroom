@@ -30,7 +30,6 @@ public class Main {
 
     // ======= Debugging =======
     private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
-    private static boolean gc = userPrefs.getBoolean("gc", false);
 
     // ======= Variables =======
     // Time variables
@@ -111,7 +110,6 @@ public class Main {
         secCount++;
 
         if (secCount > 59) { // Run every minute
-            if (gc) System.gc();
             updateTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
             secCount = 0;
         }
@@ -121,8 +119,6 @@ public class Main {
     }
 
     public static void updateSettings() {
-
-        gc = userPrefs.getBoolean("gc", false);
 
         Theme.setAccents();
         wnd.reloadSettings();

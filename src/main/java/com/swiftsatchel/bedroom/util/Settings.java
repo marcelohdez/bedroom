@@ -40,12 +40,10 @@ public final class Settings {
      * Saves Misc. settings
      *
      * @param stayOnTop Make window always stay on top
-     * @param gc Enable garbage collection
      */
-    public static void saveMisc(boolean stayOnTop, boolean gc) {
+    public static void saveMisc(boolean stayOnTop) {
 
         Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
-        Main.userPrefs.putBoolean("gc", gc);
 
     }
 

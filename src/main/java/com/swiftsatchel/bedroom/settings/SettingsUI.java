@@ -41,7 +41,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     // Misc. settings checkboxes
     private JCheckBox alwaysOnTop;
-    private JCheckBox doGC;
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
         this.parent = parent;
@@ -167,15 +166,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void createMiscOptions() {
 
         alwaysOnTop = new JCheckBox("Stay on top");
-        doGC = new JCheckBox("Garbage Collect");
-
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
-        doGC.setToolTipText("<html><b>Forcefully remove excess memory every 60 seconds:</b><br>" +
-                "May reduce the memory footprint of Bedroom but will<br>" +
-                "cause more CPU overhead.</html>");
-
         alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
-        doGC.setSelected(Main.userPrefs.getBoolean("gc", false));
 
     }
 
@@ -278,11 +270,9 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Customize stuffs
         row.setBackground(UI.bg);
         Theme.colorThis(alwaysOnTop);
-        Theme.colorThis(doGC);
 
         // Add to panel
         row.add(alwaysOnTop);
-        row.add(doGC);
 
         return  row;
 
@@ -409,7 +399,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void setDefaultMisc() {
 
         alwaysOnTop.setSelected(false);
-        doGC.setSelected(false);
 
     }
 
@@ -426,7 +415,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Save settings
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
-        Settings.saveMisc(alwaysOnTop.isSelected(), doGC.isSelected());
+        Settings.saveMisc(alwaysOnTop.isSelected());
 
         if (parent.getWindowParent() instanceof SelectTimeDialog)
             parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
