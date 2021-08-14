@@ -20,4 +20,9 @@ public interface WindowParent {
      */
     void makeVisible(boolean b);
 
+    /**
+     * Used to reload settings of this window by the child.
+     */
+    void reloadSettings();
+
 }

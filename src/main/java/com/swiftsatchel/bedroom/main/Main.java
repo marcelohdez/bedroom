@@ -1,7 +1,9 @@
 package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.dialog.ErrorDialog;
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -59,13 +61,20 @@ public class Main {
         } catch(Exception e) { e.printStackTrace(); }
 
         Theme.setAccents(); // Set extra color accents through UIManager
-        wnd = new BedroomWindow(); // Create main window
+        init();
         openWorkApps(); // Open any work apps
 
         // Create a timer to run every second, updating the time
         Timer t = new Timer(1000, e -> update());
         t.setRepeats(true);
         t.start(); // Start timer
+
+    }
+
+    private static void init() {
+
+        wnd = new BedroomWindow(); // Set main window
+        new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
 
     }
 

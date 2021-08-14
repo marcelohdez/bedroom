@@ -1,7 +1,5 @@
 package com.swiftsatchel.bedroom.main;
 
-import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
@@ -29,7 +27,6 @@ public class BedroomWindow extends JFrame implements WindowParent {
         setLocationRelativeTo(null);
 
         setVisible(true);
-        new SelectTimeDialog(this, TimeWindowType.CLOCK_IN); // Create clock in window
 
     }
 
@@ -37,7 +34,8 @@ public class BedroomWindow extends JFrame implements WindowParent {
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
     }
 
-    public void reloadSettings() { // Pass through to UI
+    @Override
+    public void reloadSettings() {
 
         ui.reloadColors();
         reloadAlwaysOnTop();

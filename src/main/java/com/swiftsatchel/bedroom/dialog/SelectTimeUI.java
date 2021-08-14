@@ -3,6 +3,7 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -256,6 +257,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time with Enter (return on macOS, which is 13)
             case KeyEvent.VK_ESCAPE -> parent.close();
+            case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
+                    new SettingsDialog(parent);  // Open settings with Delete or Backspace keys
         }
     }
 

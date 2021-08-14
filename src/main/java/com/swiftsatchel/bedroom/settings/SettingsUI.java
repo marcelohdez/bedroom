@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom.settings;
 
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.FloatingSpinner;
@@ -423,8 +424,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             case 3 -> bgRGB = newRGB;
         }
 
+        // Save settings
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         Settings.saveMisc(alwaysOnTop.isSelected(), doGC.isSelected());
+
+        if (parent.getWindowParent() instanceof SelectTimeDialog)
+            parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
+                                                        // its settings too
+
         Main.updateSettings();
 
     }

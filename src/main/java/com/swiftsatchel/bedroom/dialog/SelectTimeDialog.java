@@ -90,6 +90,14 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     }
 
     @Override
+    public void reloadSettings() {
+
+        ui.colorSelf();
+        reloadAlwaysOnTop();
+
+    }
+
+    @Override
     public void windowClosing(WindowEvent e) {
         close();
     }

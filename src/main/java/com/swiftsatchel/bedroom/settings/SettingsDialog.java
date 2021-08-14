@@ -10,8 +10,11 @@ import java.awt.event.WindowListener;
 public class SettingsDialog extends JDialog implements WindowListener, WindowParent {
 
     private final SettingsUI sui;
+    private final WindowParent parent;
 
     public SettingsDialog(WindowParent parent) {
+
+        this.parent = parent;
 
         setModalityType(ModalityType.APPLICATION_MODAL);
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
@@ -33,6 +36,10 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
 
     }
 
+    WindowParent getWindowParent() {
+        return parent;
+    }
+
     @Override
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
@@ -50,11 +57,21 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         setVisible(b);
     }
 
-    public void windowOpened(WindowEvent e) {}
+    // ======= Currently unused interface methods =======
+    @Override
+    public void reloadSettings() {} // WindowParent
+
+    @Override
+    public void windowOpened(WindowEvent e) {} // WindowListener
+    @Override
     public void windowClosed(WindowEvent e) {}
+    @Override
     public void windowIconified(WindowEvent e) {}
+    @Override
     public void windowDeiconified(WindowEvent e) {}
-    public void windowActivated(WindowEvent e) { }
+    @Override
+    public void windowActivated(WindowEvent e) {}
+    @Override
     public void windowDeactivated(WindowEvent e) {}
 
 }
