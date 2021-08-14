@@ -14,7 +14,6 @@ import javax.swing.*;
 public class UI extends JPanel implements ActionListener, KeyListener {
 
     private final BedroomWindow parent;
-    public static boolean freeze = true; // Ignore input of change order and set break actions
 
     // Components used outside of constructor
     private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
@@ -72,8 +71,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
     }
 
     private void enterBreak() {
-        if (!freeze)
-            new SelectTimeDialog(parent, TimeWindowType.START_BREAK);
+        new SelectTimeDialog(parent, TimeWindowType.START_BREAK);
     }
 
     public void keyTyped(KeyEvent e) {}

@@ -127,7 +127,7 @@ public class Main {
 
     static void changeOrders(int amount) { // Change orders
 
-        if (!UI.freeze && !inBreak) {
+        if (!inBreak) {
             orders += amount;
             if (orders < 0) orders = 0;
             updateStats();
@@ -202,7 +202,6 @@ public class Main {
             // Has our clock in time passed?
             if (clockInTime.compareTo(LocalTime.now()) <= 0) {
 
-                UI.freeze = false;
                 clockInTimePassed = true;
 
                 if (breakTimesChosen) { // Have we chosen break times?
