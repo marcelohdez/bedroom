@@ -2,11 +2,13 @@ package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.enums.ErrorType;
+import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
-import com.swiftsatchel.bedroom.util.UIBuilder;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,7 +16,33 @@ public class ErrorDialog extends JDialog implements ActionListener {
 
     public ErrorDialog(WindowParent parent, ErrorType e) {
 
-        UIBuilder.createDialog(this, this, "Error", getErrorMessage(e));
+        // Create components
+        JPanel topUI = new JPanel();
+        JPanel botUI = new JPanel();
+        JTextArea message = new JTextArea(getErrorMessage(e));
+        JButton ok = new JButton("OK");
+
+        // Customize components
+        Theme.colorThese(new JComponent[]{topUI, botUI, message, ok});
+        message.setFont(UI.boldText);
+        message.setEditable(false);
+        ok.addActionListener(this);
+
+        // Add components
+        topUI.add(message);
+        botUI.add(ok);
+        add(topUI, BorderLayout.PAGE_START);
+        add(botUI, BorderLayout.PAGE_END);
+
+        // Set window properties
+        setModalityType(Dialog.ModalityType.APPLICATION_MODAL); // Retain input from other windows
+        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setResizable(false);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setTitle("Error");
+        pack();
+        ok.setPreferredSize(new Dimension(getWidth() - 5, 40));
+        pack();
 
         // Center on summoner
         int[] xyWidthHeight = parent.getXYWidthHeight();
