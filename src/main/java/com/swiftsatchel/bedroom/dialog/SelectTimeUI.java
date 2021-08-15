@@ -153,7 +153,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             parent.dispose();                       // Close clock out time window
 
         } else {
-            new ErrorDialog(parent, ErrorType.NEGATIVE_SHIFT_TIME);
+            new AlertDialog(parent, ErrorType.NEGATIVE_SHIFT_TIME);
         }
 
     }
@@ -167,7 +167,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
-            new ErrorDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
+            new AlertDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
         }
 
     }
@@ -182,7 +182,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             parent.dispose();       // Close leave break window
 
         } else {
-            new ErrorDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
+            new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
         }
 
     }

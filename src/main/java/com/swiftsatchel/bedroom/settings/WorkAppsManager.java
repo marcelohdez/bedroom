@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.settings;
 
-import com.swiftsatchel.bedroom.dialog.ErrorDialog;
+import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.enums.ErrorType;
@@ -143,7 +143,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
 
         } else {
-            new ErrorDialog(parent, ErrorType.WORK_APPS_FULL);
+            new AlertDialog(parent, ErrorType.WORK_APPS_FULL);
         }
 
     }
