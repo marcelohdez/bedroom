@@ -38,7 +38,7 @@ public final class Ops { // Operations
      * @param str String to untangle
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> untangleString(String str) {
+    public static ArrayList<String> stringToList(String str) {
 
         ArrayList<String> list = new ArrayList<>();
 
