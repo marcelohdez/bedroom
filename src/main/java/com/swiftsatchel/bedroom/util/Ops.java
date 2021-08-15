@@ -31,9 +31,7 @@ public final class Ops { // Operations
     }
 
     /**
-     * Makes an ArrayList from a String that used to be an ArrayList (ex: "[cat, dog, wolf]").
-     * Used for a list that is saved in Preferences (since it is only allowed to save Strings)
-     * as ArrayList.toString(); and then getting the list back from Preferences.
+     * Makes an ArrayList from a String containing text separated by commas (ex: "[cat, dog, wolf]").
      *
      * @param str String to untangle
      * @return an ArrayList of the String's items
@@ -42,12 +40,11 @@ public final class Ops { // Operations
 
         ArrayList<String> list = new ArrayList<>();
 
-        // Get a string[] from a string ex: "[monkey, car, shoe]" -> new String[]{"monkey", "car", "shoe"};
         int start = 1; // Start 1 character ahead to avoid the beginning bracket
         int end = start;
         for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
 
-            if (str.charAt(i) != 44) { // If it is not the comma, extend end point
+            if (str.charAt(i) != 44) { // If it is not a comma, extend end point
                 end++;
             } else { // Else return the string we have
                 list.add(str.substring(start, end));
