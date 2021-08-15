@@ -55,15 +55,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createColorSliders();
 
         // Add rows
-        add(createLabelRow("Colors (Red, Green, Blue)"));
-        add(createListBoxRow("Theme:", themeListBox, "lastTheme"));
-        add(createColoringPanel());
-        add(createListBoxRow("Currently editing:", coloringListBox, "lastColoring"));
-        add(createLabelRow("Misc."));
-        add(createFirstMiscRow());
-        add(createButtonRow("Manage Work Apps",
-                "Work apps will automatically open along with Bedroom."));
-        add(createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps."));
+        createLabelRow("Colors");
+        createListBoxRow("Theme:", themeListBox, "lastTheme");
+        createColoringPanel();
+        createListBoxRow("Currently editing:", coloringListBox, "lastColoring");
+        createLabelRow("Misc.");
+        createCheckBoxRow(new JCheckBox[]{alwaysOnTop});
+        createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
+        createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
     }
 
@@ -172,7 +171,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private JPanel createColoringPanel() {
+    private void createColoringPanel() {
 
         JPanel root = new JPanel();
         JPanel redRow = new JPanel();
@@ -202,11 +201,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         root.add(greenRow);
         root.add(blueRow);
 
-        return root;
+        add(root);
 
     }
 
-    private JPanel createLabelRow(String label) {
+    private void createLabelRow(String label) {
 
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(label);
@@ -216,11 +215,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         colorLabel.setFont(UI.boldText);
         colorLabel.setForeground(Theme.contrastWithBnW(Theme.darkenBy(UI.bg, 20)));
 
-        return row;
+        add(row);
 
     }
 
-    private JPanel createButtonRow(String buttonText, String toolTip) {
+    private void createButtonRow(String buttonText, String toolTip) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -236,11 +235,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Add to row
         row.add(button);
 
-        return  row;
+        add(row);
 
     }
 
-    private JPanel createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey) {
+    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -259,23 +258,26 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         row.add(label);
         row.add(listBox);
 
-        return row;
+        add(row);
 
     }
 
-    private JPanel createFirstMiscRow() {
+    private void createCheckBoxRow(JCheckBox[] c) {
 
         // Create panel
         JPanel row = new JPanel();
 
         // Customize stuffs
         row.setBackground(UI.bg);
-        Theme.colorThis(alwaysOnTop);
+        for (JCheckBox cb : c) {
 
-        // Add to panel
-        row.add(alwaysOnTop);
+            Theme.colorThis(cb);
+            // Add to panel
+            row.add(cb);
 
-        return  row;
+        }
+
+        add(row);
 
     }
 
