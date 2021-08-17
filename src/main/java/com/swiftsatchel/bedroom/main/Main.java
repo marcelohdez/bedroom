@@ -104,11 +104,9 @@ public class Main {
 
     private static void update() {
 
-        if (clockInTimePassed && !inBreak) { tick(); // Add a second to clocked in time
-        } else updateTime(); // To get time until clock in
+        updateTime(); // To get time until clock in
 
         secCount++;
-
         if (secCount > 59) { // Run every minute
             updateTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
             secCount = 0;
@@ -134,24 +132,6 @@ public class Main {
         }
 
         wnd.pack(); // Pack the window in case of text changes.
-
-    }
-
-    private static void tick() { // Change time values
-
-        sec++;
-        while (sec > 59) {
-            sec -= 60;
-            min++;
-            if (min > 59) {
-                min -= 60;
-                hr++;
-            }
-        }
-        totalSecClockedIn++;
-        sec++;
-
-        updateStats();
 
     }
 
@@ -215,7 +195,7 @@ public class Main {
                 sec = (int) (totalSecClockedIn % 60);
                 min = (int) (totalSecClockedIn / 60) % 60;
                 hr = (int) Math.floor(totalSecClockedIn/60F/60F);
-                tick(); // Update time and show on screen
+                updateStats(); // Update stats and show on screen
 
             } else {
                 // Get seconds left until we have to clock in
@@ -235,11 +215,11 @@ public class Main {
                 // Set totalSecClocked to the seconds from clocking in to the break's start,
                 // then from break end to the current time.
                 totalSecClockedIn = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
-                        breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS) - 1);
+                        breakOutTime.until(LocalTime.now(), ChronoUnit.SECONDS));
             } else { // If our break has not ended:
                 inBreak = true; // We are still in break
                 // Set totalSecClocked to the seconds from clocking in to the break's start
-                totalSecClockedIn = clockInTime.until(breakInTime, ChronoUnit.SECONDS) - 1;
+                totalSecClockedIn = clockInTime.until(breakInTime, ChronoUnit.SECONDS);
                 secondsTillLeaveBreak = // Seconds until our break ends
                         LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
             }
