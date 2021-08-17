@@ -139,6 +139,7 @@ public class Main {
 
     private static void tick() { // Change time values
 
+        sec++;
         while (sec > 59) {
             sec -= 60;
             min++;
