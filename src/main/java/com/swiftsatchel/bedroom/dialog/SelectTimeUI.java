@@ -153,7 +153,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             parent.dispose();                       // Close clock out time window
 
         } else {
-            new AlertDialog(parent, ErrorType.NEGATIVE_SHIFT_TIME);
+            new AlertDialog(parent, ErrorType.NON_POSITIVE_SHIFT_TIME);
         }
 
     }
