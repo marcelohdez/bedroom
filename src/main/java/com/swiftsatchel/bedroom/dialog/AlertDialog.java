@@ -18,19 +18,23 @@ import java.awt.event.ActionListener;
  */
 public class AlertDialog extends JDialog implements ActionListener {
 
+    private final WindowParent parent;
+
     public AlertDialog(WindowParent parent, String message) {
 
-        init(parent, "Alert", message);
+        this.parent = parent;
+        init("Alert", message);
 
     }
 
     public AlertDialog(WindowParent parent, ErrorType e) {
 
-        init(parent, "Error", getErrorMessage(e));
+        this.parent = parent;
+        init("Error", getErrorMessage(e));
 
     }
 
-    private void init(WindowParent parent, String title, String message) {
+    private void init(String title, String message) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -51,10 +55,10 @@ public class AlertDialog extends JDialog implements ActionListener {
         add(botUI, BorderLayout.PAGE_END);
 
         // Set window properties
-        setModalityType(Dialog.ModalityType.APPLICATION_MODAL); // Retain input from other windows
+        setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from other windows
         setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
         setResizable(false);
-        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle(title);
         pack();
         ok.setPreferredSize(new Dimension(getWidth() - 5, 40));
