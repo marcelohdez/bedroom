@@ -65,6 +65,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         // Customize components
         topText.setFont(UI.boldText);
         select.addActionListener(this);
+        select.addKeyListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         hrBox.setPreferredSize(listBoxSize);
         hrBox.addKeyListener(this);
