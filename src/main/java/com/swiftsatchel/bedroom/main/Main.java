@@ -263,7 +263,7 @@ public class Main {
 
         // Store the current shift end date and the orders per hour within the chosen time.
         shiftHistory.put(LocalDate.now(), Float.valueOf(twoDecs.format((float) (orders*3600)/
-                clockInTime.until(time, ChronoUnit.SECONDS))));
+                time.until(time, ChronoUnit.SECONDS))));
 
         userPrefs.put("shiftHistory", shiftHistory.toString());
 
