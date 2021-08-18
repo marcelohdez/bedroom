@@ -7,7 +7,7 @@ import com.swiftsatchel.bedroom.util.WindowParent;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class BedroomWindow extends JFrame implements WindowParent, WindowListener {
 
@@ -60,7 +60,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if (LocalTime.now().isBefore(Main.clockOutTime)) {
+        if (LocalDateTime.now().isBefore(Main.clockOutTime)) {
 
             new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
 

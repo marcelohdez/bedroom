@@ -83,15 +83,15 @@ public class AlertDialog extends JDialog implements ActionListener {
                         Breaks can not start or end
                         outside of shifts. Current
                         shift is:\040""" +
-                        Time.makeTime12Hour(Main.clockInTime) + "-" +
-                        Time.makeTime12Hour(Main.clockOutTime);
+                        Time.makeTime12Hour(Main.clockInTime.toLocalTime()) + "-" +
+                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
             }
             case NEGATIVE_BREAK_TIME -> {
                 return """
                         A break's end time can not be
                         before the break's start time.
                         Current break start:\040""" +
-                        Time.makeTime12Hour(Main.breakInTime);
+                        Time.makeTime12Hour(Main.breakInTime.toLocalTime());
             }
             case NON_POSITIVE_SHIFT_TIME -> {
                 return """
@@ -99,7 +99,7 @@ public class AlertDialog extends JDialog implements ActionListener {
                         after your clock in time.
                         Current clock in time:
                         """ +
-                        Time.makeTime12Hour(Main.clockInTime);
+                        Time.makeTime12Hour(Main.clockInTime.toLocalTime());
             }
             case NO_FILE_ASSOCIATION -> {
                 return """
@@ -126,7 +126,7 @@ public class AlertDialog extends JDialog implements ActionListener {
                         before original clock out
                         time. Your current clock
                         out time:\040""" +
-                        Time.makeTime12Hour(Main.clockOutTime);
+                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
             }
         }
 

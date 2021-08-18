@@ -118,9 +118,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");
-            Time.append12HrTimeTo(sb, Main.breakInTime);
+            Time.append12HrTimeTo(sb, Main.breakInTime.toLocalTime());
             sb.append("-");
-            Time.append12HrTimeTo(sb, Main.breakOutTime);
+            Time.append12HrTimeTo(sb, Main.breakOutTime.toLocalTime());
             sb.append("</b></html>");
 
             breakButton.setToolTipText(sb.toString());

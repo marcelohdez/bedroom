@@ -13,6 +13,8 @@ import com.swiftsatchel.bedroom.main.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
@@ -129,10 +131,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void selectTime() {
 
-        LocalTime newTime = LocalTime.parse(Time.makeTime24Hour(
-                hrBox.getSelectedIndex() + 1,
-                minBox.getSelectedIndex(),
-                (amPMBox.getSelectedIndex() == 1)));
+        // Parse the current date and time in format: "2021-8-16T17:20" for 5:20PM on Aug 18, 2021
+        LocalDateTime newTime = LocalDateTime.parse(LocalDate.now() + "T" +
+                Time.makeTime24Hour(hrBox.getSelectedIndex() + 1,
+                minBox.getSelectedIndex(), (amPMBox.getSelectedIndex() == 1)));
 
         switch (type) {
             case CLOCK_IN -> {
@@ -149,22 +151,20 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setClockOutTime(LocalTime time) {
+    private void setClockOutTime(LocalDateTime time) {
 
-        if (time.isAfter(Main.clockInTime)) {
+        // Since the default date is the user's current date, if the clock out time is before
+        // the clock in time, assume it is an overnight shift and set the clock out time's date
+        // to the current date + 1 day.
+        Main.clockOutTime = time.isAfter(Main.clockInTime) ? time : time.plusDays(1);
 
-            Main.clockOutTime = time;               // Set clock out time
-            Main.target = setTarget.getSelectedIndex() + 1; // Set target
-            Main.timesChosen = true;                // Clock out time is now chosen
-            parent.dispose();                       // Close clock out time window
-
-        } else {
-            new AlertDialog(parent, ErrorType.NON_POSITIVE_SHIFT_TIME);
-        }
+        Main.target = setTarget.getSelectedIndex() + 1; // Set target
+        Main.timesChosen = true;                // Clock out time is now chosen
+        parent.dispose();                       // Close clock out time window
 
     }
 
-    private void setBreakStartTime(LocalTime time) {
+    private void setBreakStartTime(LocalDateTime time) {
 
         if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime) ||
                 time.equals(Main.clockInTime)) {
@@ -178,7 +178,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void setBreakEndTime(LocalTime time) {
+    private void setBreakEndTime(LocalDateTime time) {
 
         if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime) ||
                 time.equals(Main.clockOutTime)) {
@@ -193,7 +193,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void clockOutEarly(LocalTime time) {
+    private void clockOutEarly(LocalDateTime time) {
 
         if (time.isAfter(Main.clockInTime)) {
 
