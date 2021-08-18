@@ -61,12 +61,12 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Add rows
         createLabelRow("Colors");
-        createListBoxRow("Theme:", themeListBox, "lastTheme", 0);
+        createListBoxRow("Theme:", themeListBox, "lastTheme", 0, 0);
         createColoringPanel();
-        createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0);
+        createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0, 0);
         createLabelRow("Misc.");
         createCheckBoxRow(new JCheckBox[]{alwaysOnTop});
-        createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4);
+        createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4, -1);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
@@ -176,6 +176,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
         // Default shift length
+        shiftLengthListBox.setSelectedIndex(Main.userPrefs.getInt("defaultShiftLength", 4) - 1);
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
                 "clock out time.<br></b></html>");
 
@@ -249,7 +250,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey, int def) {
+    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey, int def, int offset) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -259,8 +260,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         row.setBackground(UI.bg);
         label.setForeground(UI.textColor);
         Theme.colorThis(listBox);
-        listBox.setSelectedIndex(0);
-        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def),
+        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def) + offset,
                 listBox.getItemCount() - 1));
         listBox.addItemListener(this);
 
@@ -412,6 +412,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void setDefaultMisc() {
 
         alwaysOnTop.setSelected(false);
+        shiftLengthListBox.setSelectedIndex(3);
 
     }
 
