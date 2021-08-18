@@ -41,9 +41,10 @@ public final class Settings {
      *
      * @param stayOnTop Make window always stay on top
      */
-    public static void saveMisc(boolean stayOnTop, int defShiftLength) {
+    public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength) {
 
         Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
+        Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
         Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
 
     }

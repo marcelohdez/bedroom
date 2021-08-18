@@ -2,12 +2,15 @@ package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.util.Time;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class BedroomWindow extends JFrame implements WindowParent, WindowListener {
 
@@ -63,8 +66,16 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         // If we are currently in our shift:
         if (LocalDateTime.now().isAfter(Main.clockInTime) &&
                 LocalDateTime.now().isBefore(Main.clockOutTime)) {
+
             // Clock out early
-            new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
+            if (Main.userPrefs.getBoolean("askBeforeEarlyClose", true)) {
+                // If we have the option selected, show a dialog for confirmation
+                new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
+
+                // If we do not have the option selected, just clock out early at
+                // the current time down to the minute
+            } else Main.clockOut(LocalDateTime.parse((LocalDate.now() + "T" +
+                    LocalTime.now().getHour() + ":" + LocalTime.now().getMinute())));
 
         } else if (LocalDateTime.now().isBefore(Main.clockInTime)) { // If we have not clocked in:
 

@@ -22,11 +22,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final SettingsDialog parent;
     private boolean shifting = false; // Keeps track if user is shifting
 
-    // RGB values already set
-    public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB;
-    // Keep track of currently coloring red green and blue slider values:
-    // 0 = text, 1 = buttonText, 2 = buttons, 3 = background
-    private int currentlyColoring = Main.userPrefs.getInt("lastColoring", 0);
+    public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB; // Component color values
+    private int currentlyColoring = // Component(s) currently being colored,
+            // 0 = text, 1 = buttonText, 2 = buttons, 3 = background
+            Main.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
     public int changeCount = 0; // Amount of color changes, (2 are done on startup, so 3 means colors have changed)
@@ -45,8 +44,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final JComboBox<String> shiftLengthListBox = // Default shift length in hours.
             new JComboBox<>(Ops.createNumberList(false, 1, 12, "h"));
 
-    // Misc. settings checkboxes
-    private JCheckBox alwaysOnTop;
+    // Checkboxes
+    private final JCheckBox alwaysOnTop = // Stay on top option
+            new JCheckBox("Stay on top");
+    private final JCheckBox askBeforeEarlyClose = // Ask before clocking out early
+            new JCheckBox("Ask before clocking out early");
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
         this.parent = parent;
@@ -66,6 +68,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0, 0);
         createLabelRow("Misc.");
         createCheckBoxRow(new JCheckBox[]{alwaysOnTop});
+        createCheckBoxRow(new JCheckBox[]{askBeforeEarlyClose});
         createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4, -1);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
@@ -172,13 +175,16 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void createMiscOptions() {
 
         // Stay on top checkbox
-        alwaysOnTop = new JCheckBox("Stay on top");
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
         // Default shift length
         shiftLengthListBox.setSelectedIndex(Main.userPrefs.getInt("defaultShiftLength", 4) - 1);
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
                 "clock out time.<br></b></html>");
+        // Ask before clocking out early
+        askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
+                "a dialog asks to input new clock out time</b></html>");
+        askBeforeEarlyClose.setSelected(Main.userPrefs.getBoolean("askBeforeEarlyClose", true));
 
     }
 
@@ -272,7 +278,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createCheckBoxRow(JCheckBox[] c) {
+    private void createCheckBoxRow(JCheckBox[] c) { // This takes an array in case of multiple checkboxes in a row.
 
         // Create panel
         JPanel row = new JPanel();
@@ -429,7 +435,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Save settings
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
-        Settings.saveMisc(alwaysOnTop.isSelected(), shiftLengthListBox.getSelectedIndex() + 1);
+        Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
+                shiftLengthListBox.getSelectedIndex() + 1);
 
         if (parent.getWindowParent() instanceof SelectTimeDialog)
             parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
