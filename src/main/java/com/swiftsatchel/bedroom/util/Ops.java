@@ -16,14 +16,13 @@ public final class Ops { // Operations
      * @param extraText Optional added text, can be null
      * @return A String[] of numbers with optional added text to each.
      */
-    public static String[] createNumberList(int start, int end, String extraText) {
+    public static String[] createNumberList(boolean addZeroUnder10, int start, int end, String extraText) {
 
         ArrayList<String> list = new ArrayList<>();
         StringBuilder sb;
         for (int i = start; i <= end; i++) {
             sb = new StringBuilder();
-            if (i < 10) sb.append(0);
-            sb.append(i);
+            sb.append(i < 10 && addZeroUnder10 ? "0" + i : i);
             if (extraText != null) sb.append(extraText);
             list.add(sb.toString());
         }
@@ -66,7 +65,7 @@ public final class Ops { // Operations
     /**
      * Returns a TreeMap<LocalDate, Float> of past shifts.
      *
-     * @return A TreeMap<String, Float> from the string's values
+     * @return A TreeMap<LocalDate, Float> from the string's values
      */
     public static TreeMap<LocalDate, Float> loadShiftHistory() {
 

@@ -22,10 +22,10 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
-    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(1, 12, ":"));
+    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
     // Create minutes (0-59) and hourly targets (1-24)
-    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(0, 59, null));
-    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(1, 24, null));
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59, null));
+    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(false, 1, 24, null));
 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button

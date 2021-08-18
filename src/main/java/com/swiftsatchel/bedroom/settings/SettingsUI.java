@@ -43,7 +43,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                     "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
 
     private final JComboBox<String> shiftLengthListBox = // Default shift length in hours.
-            new JComboBox<>(Ops.createNumberList(1, 12, "h"));
+            new JComboBox<>(Ops.createNumberList(false, 1, 12, "h"));
 
     // Misc. settings checkboxes
     private JCheckBox alwaysOnTop;
