@@ -60,7 +60,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     @Override
     public void windowClosing(WindowEvent e) {
 
-        if (Main.clockOutTime.isAfter(LocalTime.now())) {
+        if (LocalTime.now().isBefore(Main.clockOutTime)) {
 
             new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
 

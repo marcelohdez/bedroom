@@ -4,6 +4,7 @@ import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.FloatingSpinner;
+import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
 
@@ -33,12 +34,16 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     // This used to ignore showing the color values when changing themes/component being edited:
     private boolean showColorValues = true;
 
+    // ======= Combo Boxes: =======
     private final JComboBox<String> coloringListBox = // Components we can color
             new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
 
     private final JComboBox<String> themeListBox = // Themes
             new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
                     "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
+
+    private final JComboBox<String> shiftLengthListBox = // Default shift length in hours.
+            new JComboBox<>(Ops.createNumberList(1, 12, "h"));
 
     // Misc. settings checkboxes
     private JCheckBox alwaysOnTop;
@@ -56,11 +61,12 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Add rows
         createLabelRow("Colors");
-        createListBoxRow("Theme:", themeListBox, "lastTheme");
+        createListBoxRow("Theme:", themeListBox, "lastTheme", 0);
         createColoringPanel();
-        createListBoxRow("Currently editing:", coloringListBox, "lastColoring");
+        createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0);
         createLabelRow("Misc.");
         createCheckBoxRow(new JCheckBox[]{alwaysOnTop});
+        createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
@@ -165,9 +171,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private void createMiscOptions() {
 
+        // Stay on top checkbox
         alwaysOnTop = new JCheckBox("Stay on top");
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        // Default shift length
+        shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
+                "clock out time.<br></b></html>");
 
     }
 
@@ -239,7 +249,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey) {
+    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey, int def) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -250,7 +260,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         label.setForeground(UI.textColor);
         Theme.colorThis(listBox);
         listBox.setSelectedIndex(0);
-        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, 0),
+        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def),
                 listBox.getItemCount() - 1));
         listBox.addItemListener(this);
 
@@ -418,7 +428,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Save settings
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
-        Settings.saveMisc(alwaysOnTop.isSelected());
+        Settings.saveMisc(alwaysOnTop.isSelected(), shiftLengthListBox.getSelectedIndex() + 1);
 
         if (parent.getWindowParent() instanceof SelectTimeDialog)
             parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
@@ -461,9 +471,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
     public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger()) setCustomSliderValue(e);
         setColorLabelsToValues();
@@ -476,21 +483,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
     public void keyPressed(KeyEvent e) {
         shifting = e.getKeyCode() == KeyEvent.VK_SHIFT; // If shift is pressed, we are shifting
     }
@@ -499,4 +491,14 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     public void keyReleased(KeyEvent e) {
         shifting = false;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
 }

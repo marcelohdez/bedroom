@@ -106,13 +106,14 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             case CURRENT -> // Set minBox to current minute
                     minBox.setSelectedIndex(LocalTime.now().getMinute());
             case CLOCK_IN_PLUS_DEFAULT -> { // Get 4hrs after clock in time, for clock out window
-                hour = Main.clockInTime.getHour() + 4;    // Add 4 to clock in time's hours
+                hour = Main.clockInTime.getHour() +     // Add default shift length's hours
+                        Main.userPrefs.getInt("defaultShiftLength", 4);
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
                 minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
             case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
                 minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
-                hour = Main.breakInTime.getHour();        // Get break start time's hour
+                hour = Main.breakInTime.getHour();      // Get break start time's hour
                 if (minute > 59) {                      // If it is over 59, loop it
                     minute -= 60;
                     hour = Main.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
