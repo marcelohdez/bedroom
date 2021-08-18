@@ -89,7 +89,7 @@ public class AlertDialog extends JDialog implements ActionListener {
                         Current break start:\040""" +
                         Time.makeTime12Hour(Main.breakInTime);
             }
-            case NEGATIVE_SHIFT_TIME -> {
+            case NON_POSITIVE_SHIFT_TIME -> {
                 return """
                         Clock out time has to be
                         after your clock in time.
@@ -115,6 +115,14 @@ public class AlertDialog extends JDialog implements ActionListener {
                         able to be started as it no
                         longer exists. Please go to
                         Settings > Manage Work Apps.""";
+            }
+            case EARLY_CLOCK_OUT_NOT_EARLY -> {
+                return """
+                        Early clock outs must be
+                        before original clock out
+                        time. Your current clock
+                        out time:\040""" +
+                        Time.makeTime12Hour(Main.clockOutTime);
             }
         }
 

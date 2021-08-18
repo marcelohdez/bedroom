@@ -55,7 +55,11 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             case CLOCK_OUT -> topText.setText("Select CLOCK OUT time:");
             case START_BREAK -> topText.setText("Select BREAK START time:");
             case END_BREAK -> topText.setText("Select BREAK END time:");
-            case CLOCK_IN -> topText.setText("  Select CLOCK IN time:  ");
+            case CLOCK_IN -> topText.setText("Select CLOCK IN time:");
+            case EARLY_CLOCK_OUT -> {
+                topText.setText("Clocking out early?");
+                select.setText("Clock Out");
+            }
         }
 
         // Customize components
@@ -128,15 +132,15 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 minBox.getSelectedIndex(),
                 (amPMBox.getSelectedIndex() == 1)));
 
-        if (type.equals(TimeWindowType.CLOCK_IN)) { // ======= For clock in time=======
-            Main.clockInTime = newTime; // Set clock in time
-            proceedWith(TimeWindowType.CLOCK_OUT);
-        } else if (type.equals(TimeWindowType.CLOCK_OUT)) { // ======= For clock out time =======
-            setClockOutTime(newTime);
-        } else if (type.equals(TimeWindowType.START_BREAK)) { // ======= For entering break =======
-            setBreakStartTime(newTime);
-        } else if (type.equals(TimeWindowType.END_BREAK)) { // ======= For leaving break =======
-            setBreakEndTime(newTime);
+        switch (type) {
+            case CLOCK_IN -> {
+                Main.clockInTime = newTime; // Set clock in time
+                proceedWith(TimeWindowType.CLOCK_OUT);
+            }
+            case CLOCK_OUT -> setClockOutTime(newTime);
+            case START_BREAK -> setBreakStartTime(newTime);
+            case END_BREAK -> setBreakEndTime(newTime);
+            case EARLY_CLOCK_OUT -> clockOutEarly(newTime);
         }
 
         if (Main.timesChosen) Main.updateTime();
@@ -148,7 +152,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         if (time.isAfter(Main.clockInTime)) {
 
             Main.clockOutTime = time;               // Set clock out time
-            Main.target = setTarget.getSelectedIndex() + 1; // Set to the list box selection
+            Main.target = setTarget.getSelectedIndex() + 1; // Set target
             Main.timesChosen = true;                // Clock out time is now chosen
             parent.dispose();                       // Close clock out time window
 
@@ -184,6 +188,20 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         } else {
             new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
         }
+
+    }
+
+    private void clockOutEarly(LocalTime time) {
+
+        if (time.isAfter(Main.clockInTime)) {
+
+            if (time.isBefore(Main.clockOutTime)) {
+
+                Main.clockOut(time); // Save this shift's performance and close application
+
+            } else new AlertDialog(parent, ErrorType.EARLY_CLOCK_OUT_NOT_EARLY);
+
+        } else new AlertDialog(parent, ErrorType.NON_POSITIVE_SHIFT_TIME);
 
     }
 
@@ -246,7 +264,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Select")) selectTime();
+        selectTime();
     }
 
     @Override

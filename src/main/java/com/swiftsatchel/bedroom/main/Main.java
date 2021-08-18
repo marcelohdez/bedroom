@@ -13,8 +13,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
 public class Main {
@@ -23,9 +25,7 @@ public class Main {
     public static String version = "3 (Beta 2)";
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
-    // Window
-    public static BedroomWindow wnd;
-
+    public static BedroomWindow wnd; // Main window
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
     // ======= Debugging =======
@@ -49,7 +49,10 @@ public class Main {
     public static boolean inBreak = false;
     public static boolean clockInTimePassed = false;
     public static int target = 0; // Target orders/hr
-    private static long ordersNeeded = 0;
+    private static int ordersNeeded = 0;
+
+    // Shift performance history (key: shift end date, value: float of orders per hour)
+    public static TreeMap<LocalDate, Float> shiftHistory = Ops.loadShiftHistory();
 
     private static final DecimalFormat twoDecs = new DecimalFormat("#.00");
 
@@ -143,6 +146,7 @@ public class Main {
             if (!inBreak) { // Show time clocked in
                 sb.append("Time: ");
                 Time.appendReadableTimeTo(sb, hr, min, sec);
+                if (LocalTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
                 sb.append("\n") // Line break
                         .append(getStats());
             } else { // Show time left until our break ends =======
@@ -170,7 +174,7 @@ public class Main {
                 Needed: $needed, $left left"""
                 .replace("$orders", String.valueOf(orders))
                 .replace("$perHr",
-                        String.valueOf(twoDecs.format((double) (orders*3600)/ totalSecClockedIn)))
+                        twoDecs.format((float) (orders*3600)/totalSecClockedIn))
                 .replace("$needed", String.valueOf(ordersNeeded))
                 .replace("$left", (orders < ordersNeeded) ?
                         String.valueOf(ordersNeeded - orders) : "0");
@@ -181,23 +185,26 @@ public class Main {
 
         if (Main.timesChosen) // Have we chosen clock in and out times?
             // Has our clock in time passed?
-            if (clockInTime.compareTo(LocalTime.now()) <= 0) {
-
+            if (LocalTime.now().isAfter(clockInTime)) {
                 clockInTimePassed = true;
 
-                if (breakTimesChosen) { // Have we chosen break times?
-                    getBreakTime();
-                } else { // If not, set totalSecClocked to time from clock in to now
-                    totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
-                }
+                if (LocalTime.now().isBefore(clockOutTime)) { // If we have not finished our shift:
+
+                    if (breakTimesChosen) { // Have we chosen break times?
+                        getBreakTime();
+                    } else { // If not, set totalSecClocked to time from clock in to now
+                        totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
+                    }
+
+                } else getTotalShiftTime();
 
                 getOrdersNeeded();
                 sec = (int) (totalSecClockedIn % 60);
                 min = (int) (totalSecClockedIn / 60) % 60;
-                hr = (int) Math.floor(totalSecClockedIn/60F/60F);
+                hr = (int) Math.floor(totalSecClockedIn / 60F / 60F);
                 updateStats(); // Update stats and show on screen
 
-            } else {
+            } else if (LocalTime.now().isBefore(clockInTime)) { // Else if it is before our shift starts:
                 // Get seconds left until we have to clock in
                 secondsTillClockIn = LocalTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
                 updateStats(); // Display it on screen
@@ -209,8 +216,8 @@ public class Main {
 
     private static void getBreakTime() {
 
-        if (breakInTime.compareTo(LocalTime.now()) <= 0) { // Has our break started?
-            if (breakOutTime.compareTo(LocalTime.now()) <= 0) { // Has our break ended?
+        if (LocalTime.now().isAfter(breakInTime)) { // Has our break started?
+            if (LocalTime.now().isAfter(breakOutTime)) { // Has our break ended?
                 inBreak = false; // If so, we are not in break.
                 // Set totalSecClocked to the seconds from clocking in to the break's start,
                 // then from break end to the current time.
@@ -223,7 +230,8 @@ public class Main {
                 secondsTillLeaveBreak = // Seconds until our break ends
                         LocalTime.now().until(breakOutTime, ChronoUnit.SECONDS);
             }
-        }
+            // If break has not started, set time clocked in from start to now.
+        } else totalSecClockedIn = clockInTime.until(LocalTime.now(), ChronoUnit.SECONDS);
 
     }
 
@@ -232,12 +240,34 @@ public class Main {
         if (!breakTimesChosen) { // Check if we have not chosen break times
             ordersNeeded = Math.round(target *
                     // If so, get ordersNeeded with clock in and out times
-                    ((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60));
+                    (clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60F));
         } else ordersNeeded = Math.round(target *
-                // If we did choose break times, then get ordersNeeded from clock in
-                // and clock out times minus the difference of our break's start and end times
-                (((double) clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
-                        (double) breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60));
+                // If we did choose break times, then get ordersNeeded from minutes we work
+                // minus the break length.
+                ((clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
+                        breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60F));
+
+    }
+
+    private static void getTotalShiftTime() {
+        // Get shift length, used once our shift has ended as to not keep updating time,
+        // If we have chosen breaks, get shift length minus break length, for worked time.
+        if (breakTimesChosen) {
+            totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS) -
+                    breakInTime.until(breakOutTime, ChronoUnit.SECONDS);
+        } else totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS);
+
+    }
+
+    public static void clockOut(LocalTime time) {
+
+        // Store the current shift end date and the orders per hour within the chosen time.
+        shiftHistory.put(LocalDate.now(), Float.valueOf(twoDecs.format((float) (orders*3600)/
+                clockInTime.until(time, ChronoUnit.SECONDS))));
+
+        userPrefs.put("shiftHistory", shiftHistory.toString());
+
+        System.exit(0);
 
     }
 

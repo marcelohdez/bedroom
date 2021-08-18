@@ -7,6 +7,7 @@ public enum ErrorType { // Types of user errors we can catch
     NON_POSITIVE_SHIFT_TIME,
     NO_FILE_ASSOCIATION,
     WORK_APPS_FULL,
-    WORK_APP_DOES_NOT_EXIST
+    WORK_APP_DOES_NOT_EXIST,
+    EARLY_CLOCK_OUT_NOT_EARLY,
 
 }

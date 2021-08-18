@@ -1,10 +1,15 @@
 package com.swiftsatchel.bedroom.main;
 
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.time.LocalTime;
 
-public class BedroomWindow extends JFrame implements WindowParent {
+public class BedroomWindow extends JFrame implements WindowParent, WindowListener {
 
     private final UI ui;
 
@@ -12,9 +17,9 @@ public class BedroomWindow extends JFrame implements WindowParent {
 
         setTitle("Bedroom " + Main.version);
         setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         reloadAlwaysOnTop();
-
+        addWindowListener(this);
 
         ui = new UI(this);
         add(ui);
@@ -51,4 +56,29 @@ public class BedroomWindow extends JFrame implements WindowParent {
     public void makeVisible(boolean b) {
         setVisible(b);
     }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+        if (Main.clockOutTime.isAfter(LocalTime.now())) {
+
+            new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
+
+        } else Main.clockOut(Main.clockOutTime);
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {}
+    @Override
+    public void windowClosed(WindowEvent e) {}
+    @Override
+    public void windowIconified(WindowEvent e) {}
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+    @Override
+    public void windowActivated(WindowEvent e) {}
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
+
 }

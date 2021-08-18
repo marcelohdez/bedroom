@@ -44,7 +44,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
                 setTitle("Leave break:");
                 setUITime(SetTime.BREAK_START_PLUS_30M);
             }
-
+            case EARLY_CLOCK_OUT -> setTitle("Early clock out:");
         }
 
         centerOnParent();
@@ -76,7 +76,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
                 dispose();
                 parent.makeVisible(true);
             }
-            case START_BREAK -> dispose();  // Close window
+            case START_BREAK, EARLY_CLOCK_OUT -> dispose();  // Close window
         }
     }
 
