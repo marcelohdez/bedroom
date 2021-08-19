@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.swiftsatchel'
-version '3b2'
+version '3b3'
 
 sourceCompatibility = "16"
 targetCompatibility = "16"
