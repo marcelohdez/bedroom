@@ -46,7 +46,7 @@ public final class Time { // Time operations
 
     /**
      * Appends human-readable time from separate hour, minute, and second values to a StringBuilder.
-     * Human-readable time is in 00:00:00 format, with zeros before second digits if under 10.
+     * Human-readable time is in 00:00:00 format, with the : being added when needed
      *
      * @param sb The StringBuilder to append to
      * @param h Hours value
@@ -55,31 +55,28 @@ public final class Time { // Time operations
      */
     public static void appendReadableTimeTo(StringBuilder sb, int h, int m, int s) {
 
-        if (h < 10) sb.append("0");
-        sb.append(h).append(":");
-        if (m < 10) sb.append("0");
-        sb.append(m).append(":");
-        if (s < 10) sb.append("0");
-        sb.append(s);
+        if (h > 0) { // If we have hours to show, show hours, and put a zero behind minutes under 10
+            sb.append(h).append(":")
+                    .append(Ops.addZeroUnder10(m))
+                    .append(":");
+            if (s < 10) sb.append("0");
+        } else if (m > 0) { // If we have minutes to show, show minutes, and put a zero behind seconds under 10.
+            sb.append(m).append(":");
+            if (s < 10) sb.append("0");
+        }
+        sb.append(s); // Always show seconds
 
     }
 
     /**
-     * Appends human-readable time from the 3 values to a StringBuilder.
-     * Human-readable time is in 00:00:00 format, with zeros before second digits if under 10.
+     * Appends human-readable time from the 3 values in an int[] to a StringBuilder.
+     * Human-readable time is in 00:00:00 format, with the : being added when needed.
      *
      * @param sb The StringBuilder to append to
      * @param values Hour, minute, and second values respectively
      */
     public static void appendReadableTimeTo(StringBuilder sb, int[] values) {
-
-        if (values[0] < 10) sb.append("0");
-        sb.append(values[0]).append(":");
-        if (values[1] < 10) sb.append("0");
-        sb.append(values[1]).append(":");
-        if (values[2] < 10) sb.append("0");
-        sb.append(values[2]);
-
+        appendReadableTimeTo(sb, values[0], values[1], values[2]);
     }
 
     /**
