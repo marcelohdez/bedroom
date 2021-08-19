@@ -114,4 +114,14 @@ public final class Ops { // Operations
         return "";
     }
 
+    /**
+     * Returns a 0 + the number if the number is under 10
+     *
+     * @param number The number to check
+     * @return A String containing a 0 and the number ex: "04"
+     */
+    public static String addZeroUnder10(int number) {
+        return (number < 10) ? "0" + number : String.valueOf(number);
+    }
+
 }

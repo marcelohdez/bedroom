@@ -2,6 +2,7 @@ package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Time;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
@@ -75,7 +76,8 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
                 // If we do not have the option selected, just clock out early at
                 // the current time down to the minute
             } else Main.clockOut(LocalDateTime.parse((LocalDate.now() + "T" +
-                    LocalTime.now().getHour() + ":" + LocalTime.now().getMinute())));
+                    Ops.addZeroUnder10(LocalTime.now().getHour()) + ":" +
+                    Ops.addZeroUnder10(LocalTime.now().getMinute()))));
 
         } else if (LocalDateTime.now().isBefore(Main.clockInTime)) { // If we have not clocked in:
 
