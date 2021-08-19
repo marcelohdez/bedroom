@@ -27,7 +27,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
     // Create minutes (0-59) and hourly targets (1-24)
     private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59, null));
-    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(false, 1, 24, null));
+    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(true, 1, 24, null));
 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button
@@ -166,8 +166,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void setBreakStartTime(LocalDateTime time) {
 
-        if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime) ||
-                time.equals(Main.clockInTime)) {
+        if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime)) {
 
             Main.breakInTime = time; // Set enter break time
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
@@ -180,8 +179,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     private void setBreakEndTime(LocalDateTime time) {
 
-        if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime) ||
-                time.equals(Main.clockOutTime)) {
+        if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime)) {
 
             Main.breakOutTime = time; // Set leave break time
             Main.breakTimesChosen = true;
