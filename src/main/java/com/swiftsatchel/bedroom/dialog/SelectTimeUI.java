@@ -101,31 +101,31 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     public void setListBoxIndexes(SetTime type) { // Set list boxes to a time:
 
-        int hour = LocalTime.now().getHour(); // Store hour to not be rechecked
-        int minute; // Store minute
+        int hour = LocalTime.now().getHour();
 
         switch (type) { // Set minBox depending on type and get wanted hour int
-            // Case 0 is to get current time, for hour it is already stored above
-            case CURRENT -> // Set minBox to current minute
-                    minBox.setSelectedIndex(LocalTime.now().getMinute());
-            case CLOCK_IN_PLUS_DEFAULT -> { // Get 4hrs after clock in time, for clock out window
-                hour = Main.clockInTime.getHour() +     // Add default shift length's hours
-                        Main.userPrefs.getInt("defaultShiftLength", 4);
+
+            case CURRENT -> minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set to current time
+
+            case CLOCK_IN_PLUS_DEFAULT -> { // Set to chosen default hour value after clock in time
+                hour = Main.clockInTime.getHour() + Main.userPrefs.getInt("defaultShiftLength", 4);
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
                 minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
+
             case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
-                minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
+                int minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
                 hour = Main.breakInTime.getHour();      // Get break start time's hour
-                if (minute > 59) {                      // If it is over 59, loop it
+                if (minute > 59) {                      // If it is over 59, loop it and add an hour
                     minute -= 60;
-                    hour = Main.breakInTime.getHour() + 1; // Add an hour since it went over 59 minutes
+                    hour = Main.breakInTime.getHour() + 1;
                 }
                 minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
             }
+
         }
 
-        setListBoxesByHour(hour);
+        setListBoxesByHour(hour); // Do maths for when hour value is over 12, ex 16:00 -> 4PM
 
     }
 
