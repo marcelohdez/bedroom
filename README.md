@@ -8,8 +8,9 @@ from the bedroom couldn't get any easier! Or... maybe it just did.
 version is stated under the release you are trying to run. Ex: For Bedroom 3 Java 16+ is required.
 
 ### _How to set up_
-After downloading the .jar file from the releases section, you can simply double click to open like other applications. 
-It is recommended to make a start script for Bedroom to reduce its memory usage if you are into that stuff. For Windows, 
+Download the .jar file from the Releases section, and double click it like any other application.
+
+**A start script** could be used to reduce Bedroom's memory usage if you are into that stuff. For Windows, 
 a .bat file can be made in Bedroom's location with the text ```start javaw -jar -Xmx32M filename.jar``` (replacing 
 _filename_ with the name of the jar you are trying to run) and then making a shortcut to it wherever you like. If you 
 want to keep the command prompt opened for errors, etc. change javaw to java. "-Xmx32M" is the maximum amount of memory 
@@ -26,7 +27,8 @@ your theme and other things to make your experience better, this can be opened t
 
 ### _Shortcuts:_
 * **Adding/removing orders:** _Up Arrow_ & _Down Arrow_ respectively.
-* **Settings:** _Backspace_ or _Delete_
+* **Open Settings:** _Backspace_ or _Delete_
+   * Holding _Shift_ while dragging the color sliders will make them all the same value.
 * **Opening Set Break dialog:** _Number 0_
 * **Exiting select time dialogs:** _Escape_
 * **Selecting time in select time dialogs, without pressing Select button:** _Enter_
@@ -40,7 +42,7 @@ _This is not supported; there could be loss of data or other bugs with things cu
 
 After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
 extracted folder with your Terminal/Command Prompt (on Windows this can simply be done by selecting the address bar on 
-top, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS, you may need to run ```chmod +x gradlew``` 
-before this works, open the Terminal in the location of the extracted folder and run ```./gradlew build```. Once 
-finished, the resulting files will be in the ```build``` folder. The .jar will be in ```build > libs``` and gradle's
-default build scripts will be in ```build > bin```.
+top of File Explorer, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS, you may need to 
+run ```chmod +x gradlew``` before this works, open the Terminal in the location of the extracted folder and run 
+```./gradlew build```. Once finished, the resulting files will be in the ```build``` folder. The .jar will be in 
+```build > libs``` and gradle's default build scripts will be in ```build > bin```.
