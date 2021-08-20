@@ -418,6 +418,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private void setDefaultMisc() {
 
         alwaysOnTop.setSelected(false);
+        askBeforeEarlyClose.setSelected(true);
         shiftLengthListBox.setSelectedIndex(3);
 
     }
