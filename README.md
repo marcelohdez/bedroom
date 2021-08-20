@@ -4,38 +4,32 @@ and orders per hour to meet their quotas effectively. Due to the pandemic people
 from the bedroom couldn't get any easier! Or... maybe it just did.
 
 ## Prerequisites
-To use or compile the program, install the newest JDK version, the minimum version required is stated on the description 
-of the Bedroom release you are trying to run. After doing so, double-click the jar file of Bedroom and begin.
+**For running and/or compiling the program** the newest version of Java is recommended, while the minimum required
+version is stated under the release you are trying to run. Ex: For Bedroom 3 Java 16+ is required.
 
-To compile the program from source, to get the newest changes committed, read ```Compiling from source``` below.
+### _How to set up_
+After downloading the .jar file from the releases section, you can simply double click to open like other applications. It 
+is recommended to make a start script for Bedroom to reduce its memory usage if you are into that stuff. For Windows, a
+.bat file can be made in Bedroom's location with the text ```start javaw -jar -Xmx32M filename.jar``` and then 
+making a shortcut to it wherever you like. If you want to keep the command prompt opened for errors, etc. change javaw 
+to java. "-Xmx32M" is the maximum amount of memory Bedroom is allowed to allocate to itself (In this case it is 
+32MB, actual memory usage may be more due to the JVM, more information can be found [here](https://plumbr.io/blog/memory-leaks/why-does-my-java-process-consume-more-memory-than-xmx).)
 
 ## How to use
-Upon start up, you will be asked for your clock in and clock out time. On the clock out window there is an extra section 
-to choose your "hourly target", which is the amount of orders per hour you are aiming for. Once selected, the program 
-will start counting the time left until clocking in, or the time you have been clocked in for if your clock in time has 
-already passed. Your break and orders can be changed through the shortcuts below or by clicking the "Set Break" and 
-"Add Order" buttons. Removing orders can only be done through shortcuts. Orders can only be modified while outside of 
-break and being clocked in, so shortcuts for them will only work while so. _You can only go on break once currently, 
-setting new break times will override the current ones._
-
-On the right of the window you will see text with information about your current situation. The first row will always 
-contain a time, while the second row will show your current orders with the current orders per hour in parentheses. 
-Finally, the third row will show how many orders are needed for the day, and how many are left. 
-
-**Tool Tips** are shown when you hover your mouse over certain buttons, and display extra information. 
-The tool tip for the "Set Break" button will show you the times selected for the currently set break, and the tooltip 
-for the "Add Order" button will show how many orders are needed to stay on track with your hourly target.
-
-**Settings** can be opened with its shortcut(s) below. Settings can be used to edit the program's color scheme,
-set to a predefined theme, and other miscellanous options. The color sliders can be set to a specific value by right
-clicking them, hovering over them shows their current value.
+After opening Bedroom you can input your clock in and out times, if you every mess up on these select time dialogs you
+may close them to go to the previous one (although closing the clock in time dialog will close Bedroom.) On the right will
+be information about your current shift, on the center will be your Add Order button, and on the left will be the Set
+Break button. These buttons can be substituted by shortcuts, which you can see below. To remove orders you have to use
+a shortcut, which is currently the down arrow on your keyboard. Bedroom also contains a Settings dialog for customizing
+your theme and other things to make your experience better, this can be opened through either Backspace or Delete.
 
 ### _Shortcuts:_
-* _Down Arrow_ decreases orders by 1.
-* _Up Arrow_ increases orders by 1.
-* _0_ Opens window to set break times.
-* _Escape, Delete, and Backspace_ keys open settings.
-* _Enter (Return on macOS)_ can be used as the "select" button in select time windows.
+* **Adding/removing orders:** _Up Arrow_ & _Down Arrow_ respectively.
+* **Settings:** _Backspace_ or _Delete_
+* **Opening Set Break dialog:** _Number 0_
+* **Exiting select time dialogs:** _Escape_
+* **Selecting time in select time dialogs, without pressing Select button:** _Enter_
+* Any default Swing shortcuts.
 
 _These shortcuts are meant to be unobtrusive to work applications,
 hence their seemingly random keyboard placements._
@@ -43,9 +37,9 @@ hence their seemingly random keyboard placements._
 ## Compiling from source
 _This is not supported; there could be loss of data or other bugs with things currently being experimented on._
 
-Download the source code by clicking the green code button on the top of the page and selecting Download ZIP. Open 
-the downloaded file and copy the folder inside to anywhere else (like your desktop) and delete the original zipped file. 
-Finally, open the folder you copied into a new location with Terminal/Command Prompt (on Windows this can simply be done 
-by selecting the address bar on top, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS, you
-may need to run ```chmod +x gradlew``` before this works, open the Terminal in the location of the extracted folder and 
-run ```./gradlew build```. Once finished, the resulting files will be in ```build > libs```. 
+After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
+extracted folder with your Terminal/Command Prompt (on Windows this can simply be done by selecting the address bar on 
+top, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS, you may need to run ```chmod +x gradlew``` 
+before this works, open the Terminal in the location of the extracted folder and run ```./gradlew build```. Once 
+finished, the resulting files will be in the ```build``` folder. The .jar will be in ```build > libs``` and gradle's
+default build scripts will be in ```build > bin```.
