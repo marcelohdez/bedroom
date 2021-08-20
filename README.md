@@ -8,12 +8,13 @@ from the bedroom couldn't get any easier! Or... maybe it just did.
 version is stated under the release you are trying to run. Ex: For Bedroom 3 Java 16+ is required.
 
 ### _How to set up_
-After downloading the .jar file from the releases section, you can simply double click to open like other applications. It 
-is recommended to make a start script for Bedroom to reduce its memory usage if you are into that stuff. For Windows, a
-.bat file can be made in Bedroom's location with the text ```start javaw -jar -Xmx32M filename.jar``` and then 
-making a shortcut to it wherever you like. If you want to keep the command prompt opened for errors, etc. change javaw 
-to java. "-Xmx32M" is the maximum amount of memory Bedroom is allowed to allocate to itself (In this case it is 
-32MB, actual memory usage may be more due to the JVM, more information can be found [here](https://plumbr.io/blog/memory-leaks/why-does-my-java-process-consume-more-memory-than-xmx).)
+After downloading the .jar file from the releases section, you can simply double click to open like other applications. 
+It is recommended to make a start script for Bedroom to reduce its memory usage if you are into that stuff. For Windows, 
+a .bat file can be made in Bedroom's location with the text ```start javaw -jar -Xmx32M filename.jar``` (replacing 
+_filename_ with the name of the jar you are trying to run) and then making a shortcut to it wherever you like. If you 
+want to keep the command prompt opened for errors, etc. change javaw to java. "-Xmx32M" is the maximum amount of memory 
+Bedroom is allowed to allocate to itself (In this case it is 32MB, actual memory usage may be more due to the JVM, more 
+information can be found [here](https://plumbr.io/blog/memory-leaks/why-does-my-java-process-consume-more-memory-than-xmx).)
 
 ## How to use
 After opening Bedroom you can input your clock in and out times, if you every mess up on these select time dialogs you
