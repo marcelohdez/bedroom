@@ -5,8 +5,9 @@ import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.main.Main;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent {
 

@@ -80,8 +80,8 @@ public class AlertDialog extends JDialog implements ActionListener {
         switch(e) {
             case BREAK_OUT_OF_SHIFT -> {
                 return """
-                        Breaks can not start or end
-                        outside of shifts. Current
+                        Breaks may only start or end
+                        inside of shifts. Current
                         shift is:\040""" +
                         Time.makeTime12Hour(Main.clockInTime.toLocalTime()) + "-" +
                         Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
