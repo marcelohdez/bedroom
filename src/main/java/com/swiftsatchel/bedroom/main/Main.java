@@ -29,9 +29,6 @@ public class Main {
     public static BedroomWindow wnd; // Main window
     public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
-    // ======= Debugging =======
-    private static int secCount = 0; // Keep count of seconds to do certain tasks every 60 seconds
-
     // ======= Variables =======
     // Time variables
     private static int hr = 0;
@@ -106,20 +103,6 @@ public class Main {
 
     }
 
-    private static void update() {
-
-        updateTime(); // To get time until clock in
-
-        secCount++;
-        if (secCount > 59) { // Run every minute
-            updateTime(); // Recheck time clocked in, in case of computer sleep and for accuracy
-            secCount = 0;
-        }
-
-        wnd.pack();
-
-    }
-
     public static void updateSettings() {
 
         Theme.setAccents();
@@ -182,7 +165,7 @@ public class Main {
 
     }
 
-    public static void updateTime() {
+    public static void update() {
 
         if (Main.timesChosen) // Have we chosen clock in and out times?
             // Has our clock in time passed?

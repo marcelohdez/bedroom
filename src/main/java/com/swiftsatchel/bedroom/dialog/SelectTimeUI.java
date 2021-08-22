@@ -147,7 +147,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
             case EARLY_CLOCK_OUT -> clockOutEarly(newTime);
         }
 
-        if (Main.timesChosen) Main.updateTime();
+        if (Main.timesChosen) Main.update();
 
     }
 
