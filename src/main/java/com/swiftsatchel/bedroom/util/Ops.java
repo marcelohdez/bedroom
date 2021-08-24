@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.util;
 
-import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.Main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

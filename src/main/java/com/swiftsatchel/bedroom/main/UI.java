@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom.main;
 
+import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
@@ -92,7 +93,7 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    static void display(String message) {
+    public static void display(String message) {
 
         stats.setText(message);
         setTooltips();

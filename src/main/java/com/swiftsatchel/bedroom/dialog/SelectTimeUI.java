@@ -3,7 +3,7 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;

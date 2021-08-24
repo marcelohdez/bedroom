@@ -1,9 +1,11 @@
-package com.swiftsatchel.bedroom.main;
+package com.swiftsatchel.bedroom;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.main.BedroomWindow;
+import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -142,7 +144,7 @@ public class Main {
 
     }
 
-    static void changeOrders(int amount) { // Change orders
+    public static void changeOrders(int amount) { // Change orders
 
         if (!inBreak) {
             orders += amount;
@@ -154,7 +156,7 @@ public class Main {
 
     }
 
-    static void updateStats() {
+    public static void updateStats() {
 
         StringBuilder sb = new StringBuilder();
         if (clockInTimePassed) { // Get stats =======

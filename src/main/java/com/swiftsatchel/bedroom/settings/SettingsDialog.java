@@ -1,7 +1,7 @@
 package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
-import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;

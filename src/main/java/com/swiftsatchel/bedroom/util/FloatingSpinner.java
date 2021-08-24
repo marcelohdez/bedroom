@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.util;
 
-import com.swiftsatchel.bedroom.main.Main;
+import com.swiftsatchel.bedroom.Main;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
