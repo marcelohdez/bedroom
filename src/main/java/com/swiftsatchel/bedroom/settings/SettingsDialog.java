@@ -2,6 +2,7 @@ package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
@@ -45,10 +46,12 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
 
         sui.updateValues();
-        if (sui.changeCount > 2) new AlertDialog(this, // If colors were changed, create an alert
+        if (sui.changeCount > 2 && parent instanceof SelectTimeDialog)
+            new AlertDialog(this, // If colors were changed, create an alert
                 """
                 Some colors may not change
-                until Bedroom is reopened.""");
+                until the select time
+                dialog is reopened.""");
 
     }
 
