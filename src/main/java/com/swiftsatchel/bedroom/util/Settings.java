@@ -73,7 +73,7 @@ public final class Settings {
      * @return The value of always on top's user preference key
      */
     public static boolean getAlwaysOnTop() {
-        return Main.userPrefs.getBoolean("alwaysOnTop", false);
+        return Main.userPrefs.getBoolean("alwaysOnTop", true);
     }
 
     /**
