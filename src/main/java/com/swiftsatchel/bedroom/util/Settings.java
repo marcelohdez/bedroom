@@ -2,6 +2,10 @@ package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.Main;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.TreeMap;
+
 public final class Settings {
 
     /**
@@ -57,6 +61,88 @@ public final class Settings {
     public static void saveWorkApps(String apps) {
 
         Main.userPrefs.put("workApps", apps);
+
+    }
+
+    /**
+     * Get always on top value from user preferences.
+     * This is preferred over writing the line over so that when changing the default value
+     * we only have to change this method instead of digging through Bedroom to change all
+     * occurrences.
+     *
+     * @return The value of always on top's user preference key
+     */
+    public static boolean getAlwaysOnTop() {
+        return Main.userPrefs.getBoolean("alwaysOnTop", false);
+    }
+
+    /**
+     * Returns an ArrayList<String> from the String of work apps saved in preferences.
+     *
+     * @return an ArrayList of the String's items
+     */
+    public static ArrayList<String> getWorkAppsList() {
+
+        ArrayList<String> list = new ArrayList<>();
+        String str = Main.userPrefs.get("workApps", "[]");
+
+        int start = 1; // Start 1 character ahead to avoid the beginning bracket
+        int end = start;
+        for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
+
+            if (str.charAt(i) != 44) { // If it is not a comma, extend end point
+                end++;
+            } else { // Else return the string we have
+                list.add(str.substring(start, end));
+                start = i+2; // Go 2 characters ahead to avoid the space in between items.
+                end = i+1;
+            }
+
+        }
+        list.add(str.substring(start, end));
+
+        return list;
+
+    }
+
+    /**
+     * Returns a TreeMap<LocalDate, Float> of past shifts.
+     *
+     * @return A TreeMap<LocalDate, Float> from the string's values
+     */
+    public static TreeMap<LocalDate, Float> loadShiftHistory() {
+
+        TreeMap<LocalDate, Float> tm = new TreeMap<>();
+        String str = Main.userPrefs.get("shiftHistory", "{}");
+
+        if (!str.equals("{}")) { // If the string is not an empty TreeMap: (to avoid null exceptions)
+
+            int start = 1; // Start 1 character ahead to avoid the beginning bracket
+            int end = start;
+            String currentKey = "";
+            for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
+
+                if (str.charAt(i) != 44) { // If it is not a comma then check:
+                    if (str.charAt(i) != 61) { // If it is not a = then extend endpoint
+                        end++;
+                    } else { // If it is a =,
+                        currentKey = str.substring(start, end); // Save this substring as the key
+                        start = i + 1; // Go a characters ahead to start on float value.
+                        end = i + 1;
+                    }
+                } else { // Else if it is a comma, set the key we got before the = to the value after the =.
+                    tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+                    start = i + 2; // Go 2 characters ahead to avoid the space in between items.
+                    end = i + 1;
+                }
+
+            }
+            // Once loop is finished add last bit
+            tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+
+        }
+
+        return tm;
 
     }
 

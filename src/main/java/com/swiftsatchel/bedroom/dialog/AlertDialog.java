@@ -3,6 +3,7 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 import com.swiftsatchel.bedroom.util.WindowParent;
@@ -56,7 +57,7 @@ public class AlertDialog extends JDialog implements ActionListener {
 
         // Set window properties
         setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from other windows
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle(title);

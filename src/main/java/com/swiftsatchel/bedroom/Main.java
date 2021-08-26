@@ -7,6 +7,7 @@ import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.main.BedroomWindow;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 
@@ -51,7 +52,7 @@ public class Main {
     private static int ordersNeeded = 0;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
-    public static TreeMap<LocalDate, Float> shiftHistory = Ops.loadShiftHistory();
+    public static TreeMap<LocalDate, Float> shiftHistory = Settings.loadShiftHistory();
 
     private static final DecimalFormat twoDecs = new DecimalFormat("#.00");
 
@@ -81,7 +82,7 @@ public class Main {
 
     private static void openWorkApps() {
 
-        for (String app : Ops.stringToList(userPrefs.get("workApps", "[]"))) {
+        for (String app : Settings.getWorkAppsList()) {
 
             if (!app.equals("")) {
 

@@ -3,6 +3,7 @@ package com.swiftsatchel.bedroom.settings;
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         this.parent = parent;
 
         setModalityType(ModalityType.APPLICATION_MODAL);
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
         addWindowListener(this);
         setTitle("Settings");
         setResizable(false);

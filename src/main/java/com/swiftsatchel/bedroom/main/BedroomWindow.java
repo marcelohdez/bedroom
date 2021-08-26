@@ -4,6 +4,7 @@ import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     }
 
     public void reloadAlwaysOnTop() {
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
     }
 
     @Override

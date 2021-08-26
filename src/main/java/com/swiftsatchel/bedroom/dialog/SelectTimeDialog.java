@@ -3,6 +3,7 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
@@ -67,7 +68,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     }
 
     public void reloadAlwaysOnTop() {
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
     }
 
     public void close() {
