@@ -3,10 +3,7 @@ package com.swiftsatchel.bedroom.settings;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.util.FloatingSpinner;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -240,13 +237,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Create the components
         JPanel row = new JPanel();
-        JButton button = new JButton(buttonText);
+        BedroomButton button = new BedroomButton(buttonText, this, null);
 
         // Customize them
         row.setBackground(UI.bg);
-        button.setForeground(UI.buttonTextColor);
-        button.setBackground(UI.buttonColor);
-        button.addActionListener(this);
+        Theme.colorThis(button);
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
 
         // Add to row

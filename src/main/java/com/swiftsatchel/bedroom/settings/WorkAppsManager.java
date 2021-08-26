@@ -4,10 +4,7 @@ import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -59,8 +56,8 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         // Create components
         JPanel panel = new JPanel();
-        JButton add = new JButton("Add");
-        JButton remove = new JButton("Remove");
+        BedroomButton add = new BedroomButton("Add", this);
+        BedroomButton remove = new BedroomButton("Remove", this);
 
         // Customize em
         panel.setBackground(UI.bg);

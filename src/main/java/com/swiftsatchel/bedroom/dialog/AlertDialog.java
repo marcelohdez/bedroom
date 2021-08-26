@@ -3,10 +3,7 @@ package com.swiftsatchel.bedroom.dialog;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.Time;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,13 +38,12 @@ public class AlertDialog extends JDialog implements ActionListener {
         JPanel topUI = new JPanel();
         JPanel botUI = new JPanel();
         JTextArea messageBox = new JTextArea(message);
-        JButton ok = new JButton("OK");
+        BedroomButton ok = new BedroomButton("OK", this, null);
 
         // Customize components
         Theme.colorThese(new JComponent[]{topUI, botUI, messageBox, ok});
         messageBox.setFont(UI.boldText);
         messageBox.setEditable(false);
-        ok.addActionListener(this);
 
         // Add components
         topUI.add(messageBox);

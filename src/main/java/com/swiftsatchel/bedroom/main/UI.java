@@ -4,6 +4,7 @@ import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.util.BedroomButton;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -21,8 +22,8 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
     // Components used outside of constructor
     private static final JTextArea stats = new JTextArea("Please clock in.\n\n");
-    private static final JButton breakButton = new JButton("Set Break");
-    private static final JButton addOrder = new JButton("Add Order");
+    private static final BedroomButton breakButton = new BedroomButton("Set Break");
+    private static final BedroomButton addOrder = new BedroomButton("Add Order");
 
     // ======= Public reusable colors & fonts =======
     public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
