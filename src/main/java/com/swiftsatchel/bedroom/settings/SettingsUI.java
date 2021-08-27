@@ -70,6 +70,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
+        Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
+
     }
 
     private void loadRGBValues() {
@@ -237,12 +239,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Create the components
         JPanel row = new JPanel();
-        BedroomButton button = new BedroomButton(buttonText, this, null);
+        JButton button = new JButton(buttonText);
 
         // Customize them
         row.setBackground(UI.bg);
         Theme.colorThis(button);
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
+        button.addActionListener(this);
 
         // Add to row
         row.add(button);

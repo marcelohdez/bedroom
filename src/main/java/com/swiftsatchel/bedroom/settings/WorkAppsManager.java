@@ -2,7 +2,6 @@ package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.*;
 
@@ -31,7 +30,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         setTitle("Work Apps");
         addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
         setResizable(false);
 
         JPanel content = new JPanel(); // Content panel to set a background color
@@ -40,6 +39,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         content.add(createList());
         content.add(createToolsPanel());
+        Ops.setHandCursorOnCompsFrom(content); // Set hand cursor on needed components
 
         add(content);
         pack();
@@ -56,8 +56,8 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         // Create components
         JPanel panel = new JPanel();
-        BedroomButton add = new BedroomButton("Add", this);
-        BedroomButton remove = new BedroomButton("Remove", this);
+        JButton add = new JButton("Add");
+        JButton remove = new JButton("Remove");
 
         // Customize em
         panel.setBackground(UI.bg);

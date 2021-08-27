@@ -38,12 +38,14 @@ public class AlertDialog extends JDialog implements ActionListener {
         JPanel topUI = new JPanel();
         JPanel botUI = new JPanel();
         JTextArea messageBox = new JTextArea(message);
-        BedroomButton ok = new BedroomButton("OK", this, null);
+        JButton ok = new JButton("OK");
 
         // Customize components
         Theme.colorThese(new JComponent[]{topUI, botUI, messageBox, ok});
         messageBox.setFont(UI.boldText);
         messageBox.setEditable(false);
+        ok.addActionListener(this);
+        ok.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
 
         // Add components
         topUI.add(messageBox);

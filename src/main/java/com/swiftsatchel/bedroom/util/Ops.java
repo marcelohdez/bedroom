@@ -1,10 +1,8 @@
 package com.swiftsatchel.bedroom.util;
 
-import com.swiftsatchel.bedroom.Main;
-
-import java.time.LocalDate;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 public final class Ops { // Operations
 
@@ -52,6 +50,28 @@ public final class Ops { // Operations
      */
     public static String addZeroUnder10(int number) {
         return (number < 10) ? "0" + number : String.valueOf(number);
+    }
+
+    /**
+     * Sets hand cursor on the needed components in the given JPanel
+     */
+    public static void setHandCursorOnCompsFrom(JPanel pnl) {
+
+        for (Component c : pnl.getComponents()) { // Go through the component list in this JPanel
+
+            // If it is of a desired class, set the cursor
+            if (c instanceof JButton || c instanceof JComboBox || c instanceof JSlider || c instanceof JCheckBox) {
+
+                c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            } else if (c instanceof JPanel) { // If it is another JPanel, use recursion to get those components as well.
+
+                setHandCursorOnCompsFrom((JPanel) c);
+
+            }
+
+        }
+
     }
 
 }

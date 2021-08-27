@@ -6,7 +6,6 @@ import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
-import com.swiftsatchel.bedroom.util.BedroomButton;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -34,7 +33,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(true, 1, 24, null));
 
     // Other components:
-    private final BedroomButton select = new BedroomButton("Select", this, this);   // Select button
+    private final JButton select = new JButton("Select");   // Select button
     private final JLabel topText = new JLabel();                 // Top text
     private JLabel targetText;                                  // Select target text
 
@@ -70,6 +69,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
         // Customize components
         topText.setFont(UI.boldText);
+        select.addActionListener(this);
+        select.addKeyListener(this);
         select.setPreferredSize(new Dimension(235, 40));
         hrBox.setPreferredSize(listBoxSize);
         hrBox.addKeyListener(this);
@@ -96,6 +97,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         add(timeBoxesRow);
         if (type.equals(TimeWindowType.CLOCK_OUT)) add(setTargetRow);
         add(selectRow);
+
+        Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
         requestFocus();
 
