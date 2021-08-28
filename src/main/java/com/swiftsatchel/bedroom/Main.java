@@ -6,7 +6,6 @@ import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.main.BedroomWindow;
 import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -82,11 +81,11 @@ public class Main {
 
     private static void openWorkApps() {
 
-        for (String app : Settings.getWorkAppsList()) {
+        for (String location : Settings.getWorkAppsList()) {
 
-            if (!app.equals("")) {
+            if (!location.equals("")) {
 
-                File workApp = new File(app);
+                File workApp = new File(location);
                 if (workApp.exists()) {
 
                     try {

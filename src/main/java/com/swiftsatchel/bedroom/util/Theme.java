@@ -105,6 +105,8 @@ public final class Theme {
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
         UIManager.put("ComboBox.selectionForeground", UI.buttonTextColor);
+        UIManager.put("List.selectionBackground", c);
+        UIManager.put("List.selectionForeground", UI.buttonTextColor);
         UIManager.put("ScrollBar.background", UI.bg);
         UIManager.put("ToolTip.background", Color.WHITE);
 
