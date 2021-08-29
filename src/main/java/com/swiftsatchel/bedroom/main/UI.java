@@ -20,16 +20,14 @@ public class UI extends JPanel implements ActionListener {
     private static final JButton addOrder = new JButton("Add Order");
 
     // ======= Public reusable colors & fonts =======
-    public static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    // Fonts:
+    private static Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
 
-    // Get colors for UI from user's preferences
-    public static Color textColor = loadColorOf("text", 240);
-    // Get color of button text
-    public static Color buttonTextColor = loadColorOf("buttonText", 240);
-    // Get color of buttons
-    public static Color buttonColor = loadColorOf("button", 80);
-    // Get color of background
-    public static Color bg = loadColorOf("bg", 64);
+    // UI colors:
+    private static Color textColor = loadColorOf("text", 240);
+    private static Color buttonTextColor = loadColorOf("buttonText", 240);
+    private static Color buttonColor = loadColorOf("button", 80);
+    private static Color bg = loadColorOf("bg", 64);
 
     public UI(BedroomWindow parent) { // Set UI's properties
 
@@ -117,6 +115,26 @@ public class UI extends JPanel implements ActionListener {
                 Main.userPrefs.getInt(component + "Green", def),
                 Main.userPrefs.getInt(component + "Blue", def));
 
+    }
+
+    public static Font getBoldText() {
+        return boldText;
+    }
+
+    public static Color getTextColor() {
+        return textColor;
+    }
+
+    public static Color getButtonTextColor() {
+        return buttonTextColor;
+    }
+
+    public static Color getButtonColor() {
+        return buttonColor;
+    }
+
+    public static Color getBgColor() {
+        return bg;
     }
 
     public void reloadColors() {

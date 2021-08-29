@@ -15,11 +15,11 @@ public final class Theme {
     public static void colorThis(JComponent c) {
 
         if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
-            c.setBackground(UI.buttonColor);
-            c.setForeground(UI.buttonTextColor);
+            c.setBackground(UI.getButtonColor());
+            c.setForeground(UI.getButtonTextColor());
         } else {
-            c.setBackground(UI.bg);
-            c.setForeground(UI.textColor);
+            c.setBackground(UI.getBgColor());
+            c.setForeground(UI.getTextColor());
         }
 
     }
@@ -27,18 +27,12 @@ public final class Theme {
     /**
      * Colors a list of components' background and foreground.
      *
-     * @param c Components to color
+     * @param comps Components to color
      */
-    public static void colorThese(JComponent[] c) {
+    public static void colorThese(JComponent[] comps) {
 
-        for (JComponent comp : c) {
-            if (comp instanceof JButton || comp instanceof JList || comp instanceof JComboBox) {
-                comp.setBackground(UI.buttonColor);
-                comp.setForeground(UI.buttonTextColor);
-            } else {
-                comp.setBackground(UI.bg);
-                comp.setForeground(UI.textColor);
-            }
+        for (JComponent c : comps) {
+            colorThis(c);
         }
 
     }
@@ -100,14 +94,14 @@ public final class Theme {
      */
     public static void setAccents() {
 
-        Color c = contrastWithColor(UI.buttonColor, 30);
+        Color c = contrastWithColor(UI.getButtonColor(), 30);
         UIManager.put("Button.select", c);
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
-        UIManager.put("ComboBox.selectionForeground", UI.buttonTextColor);
+        UIManager.put("ComboBox.selectionForeground", UI.getButtonTextColor());
         UIManager.put("List.selectionBackground", c);
-        UIManager.put("List.selectionForeground", UI.buttonTextColor);
-        UIManager.put("ScrollBar.background", UI.bg);
+        UIManager.put("List.selectionForeground", UI.getButtonTextColor());
+        UIManager.put("ScrollBar.background", UI.getBgColor());
         UIManager.put("ToolTip.background", Color.WHITE);
 
     }

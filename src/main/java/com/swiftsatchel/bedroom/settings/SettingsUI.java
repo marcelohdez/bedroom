@@ -226,10 +226,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(label);
 
-        row.setBackground(Theme.darkenBy(UI.bg, 20));
+        row.setBackground(Theme.darkenBy(UI.getBgColor(), 20));
         row.add(colorLabel);
-        colorLabel.setFont(UI.boldText);
-        colorLabel.setForeground(Theme.contrastWithBnW(Theme.darkenBy(UI.bg, 20)));
+        colorLabel.setFont(UI.getBoldText());
+        colorLabel.setForeground(Theme.contrastWithBnW(Theme.darkenBy(UI.getBgColor(), 20)));
 
         add(row);
 
@@ -242,7 +242,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JButton button = new JButton(buttonText);
 
         // Customize them
-        row.setBackground(UI.bg);
+        row.setBackground(UI.getBgColor());
         Theme.colorThis(button);
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(this);
@@ -261,8 +261,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JLabel label = new JLabel(labelText);
 
         // Customize them
-        row.setBackground(UI.bg);
-        label.setForeground(UI.textColor);
+        row.setBackground(UI.getBgColor());
+        label.setForeground(UI.getTextColor());
         Theme.colorThis(listBox);
         listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def) + offset,
                 listBox.getItemCount() - 1));
@@ -282,7 +282,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
 
         // Customize stuffs
-        row.setBackground(UI.bg);
+        row.setBackground(UI.getBgColor());
         for (JCheckBox cb : c) {
 
             Theme.colorThis(cb);

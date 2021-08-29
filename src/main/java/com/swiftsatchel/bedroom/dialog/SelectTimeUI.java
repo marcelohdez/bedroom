@@ -48,7 +48,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         type = parent.type;
         this.parent = parent;
 
-        setBackground(UI.bg); // Set background color
+        setBackground(UI.getBgColor()); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
         addKeyListener(this);
@@ -68,7 +68,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         }
 
         // Customize components
-        topText.setFont(UI.boldText);
+        topText.setFont(UI.getBoldText());
         select.addActionListener(this);
         select.addKeyListener(this);
         select.setPreferredSize(new Dimension(235, 40));
@@ -244,8 +244,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         if (System.getProperty("os.name").equals("Mac OS X"))
             targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
         targetText.setPreferredSize(new Dimension(165, 25));
-        targetText.setForeground(UI.textColor);
-        setTargetRow.setBackground(UI.bg);
+        targetText.setForeground(UI.getTextColor());
+        setTargetRow.setBackground(UI.getBgColor());
 
         // Add the specific stuffs
         setTargetRow.add(targetText);
@@ -261,8 +261,8 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 minBox, amPMBox, setTarget, selectRow, timeBoxesRow});
 
         if (type.equals(TimeWindowType.CLOCK_OUT)) {
-            setTargetRow.setBackground(UI.bg);
-            targetText.setForeground(UI.textColor);
+            setTargetRow.setBackground(UI.getBgColor());
+            targetText.setForeground(UI.getTextColor());
         }
 
     }

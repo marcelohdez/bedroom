@@ -35,7 +35,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         JPanel content = new JPanel(); // Content panel to set a background color
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setBackground(UI.bg);
+        content.setBackground(UI.getBgColor());
 
         content.add(createList());
         content.add(createToolsPanel());
@@ -60,12 +60,8 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JButton remove = new JButton("Remove");
 
         // Customize em
-        panel.setBackground(UI.bg);
-        add.setBackground(UI.buttonColor);
-        add.setForeground(UI.buttonTextColor);
+        Theme.colorThese(new JComponent[]{panel, add, remove});
         add.addActionListener(this);
-        remove.setBackground(UI.buttonColor);
-        remove.setForeground(UI.buttonTextColor);
         remove.addActionListener(this);
 
         // Add tools to panel
@@ -98,7 +94,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         // Customize
         Theme.colorThis(list);
-        panel.setBackground(UI.buttonColor);
+        panel.setBackground(UI.getButtonColor());
         JScrollPane sp = new JScrollPane(list);
         sp.setPreferredSize(new Dimension(180, 140));
 

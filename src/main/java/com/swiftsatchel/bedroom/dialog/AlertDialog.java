@@ -42,7 +42,7 @@ public class AlertDialog extends JDialog implements ActionListener {
 
         // Customize components
         Theme.colorThese(new JComponent[]{topUI, botUI, messageBox, ok});
-        messageBox.setFont(UI.boldText);
+        messageBox.setFont(UI.getBoldText());
         messageBox.setEditable(false);
         ok.addActionListener(this);
         ok.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
