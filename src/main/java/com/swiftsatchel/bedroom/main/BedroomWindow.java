@@ -3,18 +3,21 @@ package com.swiftsatchel.bedroom.main;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class BedroomWindow extends JFrame implements WindowParent, WindowListener {
+public class BedroomWindow extends JFrame implements WindowParent, WindowListener, KeyListener {
 
     private final UI ui;
 
@@ -25,10 +28,10 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         reloadAlwaysOnTop();
         addWindowListener(this);
+        addKeyListener(this);
 
         ui = new UI(this);
         add(ui);
-        addKeyListener(ui);
 
         pack();
         ui.sizeButtons();
@@ -60,6 +63,23 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     @Override
     public void makeVisible(boolean b) {
         setVisible(b);
+    }
+
+    public void enterBreak() {
+        new SelectTimeDialog(this, TimeWindowType.START_BREAK);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // ======= Shortcuts =======
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_DOWN ->
+                    Main.changeOrders(-1); // Remove orders with BckSpc & Down Arrow
+            case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
+            case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
+            case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
+                    new SettingsDialog(this);  // Open settings with Delete or Backspace keys
+        }
     }
 
     @Override
@@ -100,5 +120,9 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyReleased(KeyEvent e) {}
 
 }

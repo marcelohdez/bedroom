@@ -1,9 +1,6 @@
 package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -12,10 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class UI extends JPanel implements ActionListener, KeyListener {
+public class UI extends JPanel implements ActionListener {
 
     private final BedroomWindow parent;
 
@@ -41,15 +36,15 @@ public class UI extends JPanel implements ActionListener, KeyListener {
         this.parent = parent;
 
         setFocusable(true);
-        addKeyListener(this);
+        addKeyListener(parent);
 
         // Set components' properties
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
-        stats.addKeyListener(this);
-        addOrder.addKeyListener(this);
+        stats.addKeyListener(parent);
+        addOrder.addKeyListener(parent);
         addOrder.addActionListener(this);
-        breakButton.addKeyListener(this);
+        breakButton.addKeyListener(parent);
         breakButton.addActionListener(this);
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
 
@@ -71,28 +66,9 @@ public class UI extends JPanel implements ActionListener, KeyListener {
 
         switch (e.getActionCommand()) {
             case "Add Order" -> Main.changeOrders(1);
-            case "Set Break" -> enterBreak();
+            case "Set Break" -> parent.enterBreak();
         }
 
-    }
-
-    private void enterBreak() {
-        new SelectTimeDialog(parent, TimeWindowType.START_BREAK);
-    }
-
-    public void keyTyped(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
-
-    public void keyPressed(KeyEvent e) {
-        // ======= Shortcuts =======
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_DOWN ->
-                    Main.changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-            case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
-            case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
-            case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
-                    new SettingsDialog(parent);  // Open settings with Delete or Backspace keys
-        }
     }
 
     public static void display(String message) {

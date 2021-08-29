@@ -2,7 +2,6 @@ package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
