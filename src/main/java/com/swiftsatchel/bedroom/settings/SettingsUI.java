@@ -225,7 +225,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(labelText);
 
-        row.setBackground(Theme.contrastWithColor(Theme.getBgColor(), 20));
+        row.setBackground(Theme.contrastWithShade(Theme.getBgColor(), 20));
         row.add(colorLabel);
         colorLabel.setFont(Theme.getBoldText());
         colorLabel.setForeground(Theme.contrastWithBnW(row.getBackground()));

@@ -64,13 +64,13 @@ public final class Theme {
     }
 
     /**
-     * Returns a darkened or lightened version of given color depending on brightness.
+     * Returns a darkened or lightened shade of the given color depending on brightness.
      *
      * @param c Color to contrast with
      * @param amount Amount to lighten/darken by
      * @return New color
      */
-    public static Color contrastWithColor(Color c, int amount) {
+    public static Color contrastWithShade(Color c, int amount) {
 
         // If colors add up to 525+ return black, else return white
         return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? darkenBy(c, amount) :
@@ -107,7 +107,7 @@ public final class Theme {
      */
     public static void setAccents() {
 
-        Color c = contrastWithColor(buttonColor, 30);
+        Color c = contrastWithShade(buttonColor, 30);
         UIManager.put("Button.select", c);
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
