@@ -140,6 +140,7 @@ public class Main {
     public static void updateSettings() {
 
         Theme.setAccents();
+        Theme.reloadColors();
         wnd.reloadSettings();
 
     }

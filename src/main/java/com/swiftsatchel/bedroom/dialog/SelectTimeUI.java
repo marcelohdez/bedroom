@@ -4,7 +4,6 @@ import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
@@ -48,7 +47,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         type = parent.type;
         this.parent = parent;
 
-        setBackground(UI.getBgColor()); // Set background color
+        setBackground(Theme.getBgColor()); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
         addKeyListener(this);
@@ -68,7 +67,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         }
 
         // Customize components
-        topText.setFont(UI.getBoldText());
+        topText.setFont(Theme.getBoldText());
         select.addActionListener(this);
         select.addKeyListener(this);
         select.setPreferredSize(new Dimension(235, 40));
@@ -244,8 +243,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         if (System.getProperty("os.name").equals("Mac OS X"))
             targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
         targetText.setPreferredSize(new Dimension(165, 25));
-        targetText.setForeground(UI.getTextColor());
-        setTargetRow.setBackground(UI.getBgColor());
+        Theme.colorThese(new JComponent[]{targetText, setTargetRow});
 
         // Add the specific stuffs
         setTargetRow.add(targetText);
@@ -261,8 +259,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
                 minBox, amPMBox, setTarget, selectRow, timeBoxesRow});
 
         if (type.equals(TimeWindowType.CLOCK_OUT)) {
-            setTargetRow.setBackground(UI.getBgColor());
-            targetText.setForeground(UI.getTextColor());
+            Theme.colorThese(new JComponent[]{setTargetRow, targetText});
         }
 
     }

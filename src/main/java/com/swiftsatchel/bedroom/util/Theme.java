@@ -1,11 +1,24 @@
 package com.swiftsatchel.bedroom.util;
 
-import com.swiftsatchel.bedroom.main.UI;
+import com.swiftsatchel.bedroom.Main;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A class for some coloring/theming methods as well as holding the current theme's color values
+ */
 public final class Theme {
+
+    // ======= Public reusable colors & fonts =======
+    // Fonts:
+    private static final Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+
+    // UI colors:
+    private static Color textColor = loadColorOf("text", 240);
+    private static Color buttonTextColor = loadColorOf("buttonText", 240);
+    private static Color buttonColor = loadColorOf("button", 80);
+    private static Color bg = loadColorOf("bg", 64);
 
     /**
      * Colors a JComponent's background and foreground.
@@ -15,11 +28,11 @@ public final class Theme {
     public static void colorThis(JComponent c) {
 
         if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
-            c.setBackground(UI.getButtonColor());
-            c.setForeground(UI.getButtonTextColor());
+            c.setBackground(getButtonColor());
+            c.setForeground(getButtonTextColor());
         } else {
-            c.setBackground(UI.getBgColor());
-            c.setForeground(UI.getTextColor());
+            c.setBackground(getBgColor());
+            c.setForeground(getTextColor());
         }
 
     }
@@ -94,15 +107,90 @@ public final class Theme {
      */
     public static void setAccents() {
 
-        Color c = contrastWithColor(UI.getButtonColor(), 30);
+        Color c = contrastWithColor(buttonColor, 30);
         UIManager.put("Button.select", c);
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
-        UIManager.put("ComboBox.selectionForeground", UI.getButtonTextColor());
+        UIManager.put("ComboBox.selectionForeground", buttonTextColor);
         UIManager.put("List.selectionBackground", c);
-        UIManager.put("List.selectionForeground", UI.getButtonTextColor());
-        UIManager.put("ScrollBar.background", UI.getBgColor());
+        UIManager.put("List.selectionForeground", buttonTextColor);
+        UIManager.put("ScrollBar.background", bg);
         UIManager.put("ToolTip.background", Color.WHITE);
+
+    }
+
+    /**
+     * Loads the RGB values of the specified color's key from preferences.
+     * ex: for buttonTextColor the red value is stored in buttonTextRed,
+     * so this method iterates through the given "buttonText" key and adds
+     * "Red" "Green" and "Blue" at the end as need.
+     *
+     * @param colorKey String of component ex: "button"
+     * @param def Default value
+     * @return The color value of that key from preferences.
+     */
+    private static Color loadColorOf(String colorKey, int def) {
+
+        return new Color(Main.userPrefs.getInt(colorKey + "Red", def),
+                Main.userPrefs.getInt(colorKey + "Green", def),
+                Main.userPrefs.getInt(colorKey + "Blue", def));
+
+    }
+
+    /**
+     * Gets the default bold font from theme.
+     *
+     * @return The bold font.
+     */
+    public static Font getBoldText() {
+        return boldText;
+    }
+
+    /**
+     * Gets the text color of current theme
+     *
+     * @return The text color
+     */
+    public static Color getTextColor() {
+        return textColor;
+    }
+
+    /**
+     * Gets the button text color of current theme
+     *
+     * @return The button text color
+     */
+    public static Color getButtonTextColor() {
+        return buttonTextColor;
+    }
+
+    /**
+     * Gets the button color of current theme
+     *
+     * @return The button color
+     */
+    public static Color getButtonColor() {
+        return buttonColor;
+    }
+
+    /**
+     * Gets the background color of current theme
+     *
+     * @return The bg color
+     */
+    public static Color getBgColor() {
+        return bg;
+    }
+
+    /**
+     * Reloads the colors from preferences.
+     */
+    public static void reloadColors() {
+
+        textColor = loadColorOf("text", 240);
+        buttonTextColor = loadColorOf("buttonText", 240);
+        buttonColor = loadColorOf("button", 80);
+        bg = loadColorOf("bg", 64);
 
     }
 

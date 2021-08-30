@@ -2,7 +2,6 @@ package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
@@ -221,15 +220,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createLabelRow(String label) {
+    private void createLabelRow(String labelText) {
 
         JPanel row = new JPanel();
-        JLabel colorLabel = new JLabel(label);
+        JLabel colorLabel = new JLabel(labelText);
 
-        row.setBackground(Theme.darkenBy(UI.getBgColor(), 20));
+        row.setBackground(Theme.contrastWithColor(Theme.getBgColor(), 20));
         row.add(colorLabel);
-        colorLabel.setFont(UI.getBoldText());
-        colorLabel.setForeground(Theme.contrastWithBnW(Theme.darkenBy(UI.getBgColor(), 20)));
+        colorLabel.setFont(Theme.getBoldText());
+        colorLabel.setForeground(Theme.contrastWithBnW(row.getBackground()));
 
         add(row);
 
@@ -242,7 +241,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JButton button = new JButton(buttonText);
 
         // Customize them
-        row.setBackground(UI.getBgColor());
+        row.setBackground(Theme.getBgColor());
         Theme.colorThis(button);
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(this);
@@ -261,9 +260,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JLabel label = new JLabel(labelText);
 
         // Customize them
-        row.setBackground(UI.getBgColor());
-        label.setForeground(UI.getTextColor());
-        Theme.colorThis(listBox);
+        Theme.colorThese(new JComponent[]{label, listBox, row});
         listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def) + offset,
                 listBox.getItemCount() - 1));
         listBox.addItemListener(this);
@@ -282,7 +279,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
 
         // Customize stuffs
-        row.setBackground(UI.getBgColor());
+        row.setBackground(Theme.getBgColor());
         for (JCheckBox cb : c) {
 
             Theme.colorThis(cb);

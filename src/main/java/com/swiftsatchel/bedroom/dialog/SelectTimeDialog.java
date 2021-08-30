@@ -53,7 +53,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
     }
 
-    public void centerOnParent() {
+    private void centerOnParent() {
 
         int[] xyWidthHeight = parent.getXYWidthHeight();
         setLocation(xyWidthHeight[0] + ((xyWidthHeight[2] /2) - (getWidth()/2)),

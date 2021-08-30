@@ -50,7 +50,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     @Override
     public void reloadSettings() {
 
-        ui.reloadColors();
+        ui.colorComponents();
         reloadAlwaysOnTop();
 
     }

@@ -2,7 +2,6 @@ package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
@@ -35,7 +34,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         JPanel content = new JPanel(); // Content panel to set a background color
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setBackground(UI.getBgColor());
+        content.setBackground(Theme.getBgColor());
 
         content.add(createList());
         content.add(createToolsPanel());
@@ -93,8 +92,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         list.setVisibleRowCount(7);
 
         // Customize
-        Theme.colorThis(list);
-        panel.setBackground(UI.getButtonColor());
+        Theme.colorThese(new JComponent[]{list, panel});
         JScrollPane sp = new JScrollPane(list);
         sp.setPreferredSize(new Dimension(180, 140));
 

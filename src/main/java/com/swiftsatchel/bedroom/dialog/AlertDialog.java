@@ -2,7 +2,6 @@ package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.main.UI;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
@@ -42,7 +41,7 @@ public class AlertDialog extends JDialog implements ActionListener {
 
         // Customize components
         Theme.colorThese(new JComponent[]{topUI, botUI, messageBox, ok});
-        messageBox.setFont(UI.getBoldText());
+        messageBox.setFont(Theme.getBoldText());
         messageBox.setEditable(false);
         ok.addActionListener(this);
         ok.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
