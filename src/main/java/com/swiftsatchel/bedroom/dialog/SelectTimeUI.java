@@ -4,7 +4,6 @@ import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
@@ -13,13 +12,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class SelectTimeUI extends JPanel implements ActionListener, KeyListener {
+public class SelectTimeUI extends JPanel implements ActionListener {
 
     private final TimeWindowType type;
     private final SelectTimeDialog parent;
@@ -50,7 +47,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         setBackground(Theme.getBgColor()); // Set background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
-        addKeyListener(this);
+        addKeyListener(parent);
 
         Dimension listBoxSize = new Dimension(80, 30);
         Dimension smallListBoxSize = new Dimension(65, 30);
@@ -69,17 +66,17 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
         // Customize components
         topText.setFont(Theme.getBoldText());
         select.addActionListener(this);
-        select.addKeyListener(this);
+        select.addKeyListener(parent);
         select.setPreferredSize(new Dimension(235, 40));
         hrBox.setPreferredSize(listBoxSize);
-        hrBox.addKeyListener(this);
+        hrBox.addKeyListener(parent);
         minBox.setPreferredSize(listBoxSize);
-        minBox.addKeyListener(this);
+        minBox.addKeyListener(parent);
         amPMBox.setPreferredSize(smallListBoxSize);
-        amPMBox.addKeyListener(this);
+        amPMBox.addKeyListener(parent);
         setTarget.setPreferredSize(smallListBoxSize);
         setTarget.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
-        setTarget.addKeyListener(this);
+        setTarget.addKeyListener(parent);
 
         // ======= Set colors =======
         colorSelf();
@@ -133,7 +130,7 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
 
     }
 
-    private void selectTime() {
+    void selectTime() {
 
         // Parse the current date and time in format: "2021-8-16T17:20" for 5:20PM on Aug 18, 2021
         LocalDateTime newTime = LocalDateTime.parse(LocalDate.now() + "T" +
@@ -268,21 +265,5 @@ public class SelectTimeUI extends JPanel implements ActionListener, KeyListener 
     public void actionPerformed(ActionEvent e) {
         selectTime();
     }
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER, 13 -> selectTime(); // Select time with Enter (return on macOS, which is 13)
-            case KeyEvent.VK_ESCAPE -> parent.close();
-            case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
-                    new SettingsDialog(parent);  // Open settings with Delete or Backspace keys
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {}
 
 }

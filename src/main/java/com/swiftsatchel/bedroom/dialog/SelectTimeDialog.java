@@ -2,14 +2,17 @@ package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent {
+public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent, KeyListener {
 
     private final SelectTimeUI ui;
     public final TimeWindowType type;
@@ -28,7 +31,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         addWindowListener(this);
 
         ui = new SelectTimeUI(this); // Create ui based on window type
-        addKeyListener(ui);                     // Add key listener for shortcuts
+        addKeyListener(this);                   // Add key listener for shortcuts
         add(ui);                                // Add the UI
 
         pack();
@@ -100,6 +103,16 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     }
 
     @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ENTER, 13 -> ui.selectTime(); // Select time with Enter (return on macOS, which is 13)
+            case KeyEvent.VK_ESCAPE -> close();
+            case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
+                    new SettingsDialog(this);  // Open settings with Delete or Backspace keys
+        }
+    }
+
+    @Override
     public void windowClosing(WindowEvent e) {
         close();
     }
@@ -116,5 +129,9 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyReleased(KeyEvent e) {}
 
 }
