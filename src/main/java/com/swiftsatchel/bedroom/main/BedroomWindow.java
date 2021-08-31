@@ -2,6 +2,7 @@ package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
+import com.swiftsatchel.bedroom.dialog.ShiftHistoryDialog;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Ops;
@@ -79,6 +80,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
             case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
+            case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryDialog(this);
         }
     }
 
