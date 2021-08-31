@@ -54,8 +54,6 @@ public class ShiftHistoryChart extends JPanel {
                         barHeight, thickness, getHeight() - barHeight);
             } else emptySpaces++;
 
-            System.out.println(value);
-
         }
 
     }
