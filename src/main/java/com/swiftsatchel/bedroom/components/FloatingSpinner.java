@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.util;
+package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
 

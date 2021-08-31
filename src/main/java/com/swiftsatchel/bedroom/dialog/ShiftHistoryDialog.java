@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom.dialog;
 
+import com.swiftsatchel.bedroom.components.ShiftHistoryChart;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;

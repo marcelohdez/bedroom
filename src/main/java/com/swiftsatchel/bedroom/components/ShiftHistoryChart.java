@@ -1,6 +1,7 @@
-package com.swiftsatchel.bedroom.util;
+package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
