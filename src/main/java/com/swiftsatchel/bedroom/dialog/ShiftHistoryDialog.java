@@ -76,10 +76,15 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
 
     }
 
+    private void updatePageAmount() {
+        pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(leftButton)) chart.prevPage();
         if (e.getSource().equals(rightButton)) chart.nextPage();
+        updatePageAmount();
     }
 
     @Override
@@ -89,10 +94,11 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if (e.getSource().equals(ptsAmount)) {
+        if (e.getSource().equals(ptsAmount))
             chart.setPointsAmount((int) Objects.requireNonNull(ptsAmount.getSelectedItem()));
-            repaint();
-        }
+
+        repaint();
+        pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
     }
 
     @Override
