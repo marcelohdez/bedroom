@@ -102,7 +102,7 @@ public class ShiftHistoryChart extends JPanel {
     public void nextPage() {
 
         if (currentPage < totalPages) { // If we are not at last page, add 1.
-            totalPages++;
+            currentPage++;
             range = getPageRange();
             repaint();
         }
