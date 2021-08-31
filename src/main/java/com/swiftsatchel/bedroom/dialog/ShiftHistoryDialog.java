@@ -20,13 +20,14 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 15, 25});
     private final JLabel shiftsLabel = new JLabel(" shifts");
     private final JButton leftButton = new JButton("<");
-    private final JLabel pagesLabel = new JLabel("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
+    private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
 
     public ShiftHistoryDialog(WindowParent parent) {
         this.parent = parent;
 
         init(); // Initialize everything
+        updatePageAmount(); // Get correct page numbers and disable left/right buttons as needed
         pack(); // Let swing size window appropriately with the components added
         setMinimumSize(new Dimension(getWidth(), getWidth())); // Set that width to the minimum size
 
@@ -77,7 +78,12 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     }
 
     private void updatePageAmount() {
+
         pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
+
+        leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
+        rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
+
     }
 
     @Override
@@ -98,7 +104,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
             chart.setPointsAmount((int) Objects.requireNonNull(ptsAmount.getSelectedItem()));
 
         repaint();
-        pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
+        updatePageAmount();
     }
 
     @Override
