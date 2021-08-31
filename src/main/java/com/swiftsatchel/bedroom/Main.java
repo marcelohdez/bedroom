@@ -51,7 +51,7 @@ public class Main {
     private static int ordersNeeded = 0;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
-    public static TreeMap<LocalDate, Float> shiftHistory = Settings.loadShiftHistory();
+    private static final TreeMap<LocalDate, Float> shiftHistory = Settings.loadShiftHistory();
 
     private static final DecimalFormat twoDecs = new DecimalFormat("#.00");
 
@@ -243,6 +243,10 @@ public class Main {
                     breakInTime.until(breakOutTime, ChronoUnit.SECONDS);
         } else totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS);
 
+    }
+
+    public static TreeMap<LocalDate, Float> getShiftHistory() {
+        return shiftHistory;
     }
 
     public static void clockOut(LocalDateTime time) {
