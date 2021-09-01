@@ -63,6 +63,34 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     /**
+     * Get current amount of data points being shown on page.
+     *
+     * @return Amount of data points on-screen
+     */
+    private int getPointsBeingShown() {
+
+        int p = 0; // Amount of points currently being shown
+        for (int i = 0; i < pointsAmount; i++) {
+            int offset = pointsAmount * (currentPage - 1);
+            if (offset + i < keys.length)
+                if (!Float.isNaN(shiftHistoryData.get(keys[offset + i])))
+                    p++;
+        }
+        return p;
+
+    }
+
+    /**
+     * Get the range of dates on current page, ex: "8/12/2020-8/25/2020"
+     *
+     * @return The range of dates currently being shown
+     */
+    public String getShownDates() {
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
+                + "-" + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[getPointsBeingShown()]);
+    }
+
+    /**
      * Get range (max number that the values reach) of current page
      *
      * @return Max number that values on current page reach

@@ -22,12 +22,13 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
+    private final JLabel datesShown = new JLabel("1/1/2020-1/1/2021");
 
     public ShiftHistoryDialog(WindowParent parent) {
         this.parent = parent;
 
         init(); // Initialize everything
-        updatePageAmount(); // Get correct page numbers and disable left/right buttons as needed
+        updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack(); // Let swing size window appropriately with the components added
         setMinimumSize(new Dimension(getWidth(), getWidth())); // Set that width to the minimum size
 
@@ -60,12 +61,13 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
         topRow.add(leftButton);
         topRow.add(pagesLabel);
         topRow.add(rightButton);
+        topRow.add(datesShown);
         add(topRow, BorderLayout.NORTH);
         add(chart, BorderLayout.CENTER);
 
         // Color components
         Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount, shiftsLabel,
-                pagesLabel, leftButton, rightButton, chart});
+                pagesLabel, leftButton, rightButton, datesShown, chart});
 
     }
 
@@ -77,12 +79,12 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
 
     }
 
-    private void updatePageAmount() {
+    private void updatePageInfo() {
 
         pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
-
         leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
         rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
+        datesShown.setText(chart.getShownDates());
 
     }
 
@@ -90,7 +92,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(leftButton)) chart.prevPage();
         if (e.getSource().equals(rightButton)) chart.nextPage();
-        updatePageAmount();
+        updatePageInfo();
     }
 
     @Override
@@ -103,8 +105,8 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
         if (e.getSource().equals(ptsAmount))
             chart.setPointsAmount((int) Objects.requireNonNull(ptsAmount.getSelectedItem()));
 
+        updatePageInfo();
         repaint();
-        updatePageAmount();
     }
 
     @Override
