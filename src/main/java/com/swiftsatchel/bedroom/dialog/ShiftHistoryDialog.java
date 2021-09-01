@@ -86,6 +86,9 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
         rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
         datesShown.setText(chart.getShownDates());
 
+        pack(); // Let swing resize according to label changes
+        setMinimumSize(new Dimension(getWidth(), getWidth())); // Update minimum size
+
     }
 
     @Override
