@@ -28,8 +28,8 @@ public class ShiftHistoryChart extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object into Graphics2d
 
-        int barSeparation = getWidth() / pointsAmount;
-        int thickness = barSeparation - getWidth()/40;
+        int barXDiff = getWidth() / pointsAmount;   // Difference in X coordinates between bars
+        int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.contrastWithBnW(getBackground()); // Set bars to contrasting color
 
         // Draw lines behind chart for each whole number in range
@@ -50,7 +50,7 @@ public class ShiftHistoryChart extends JPanel {
 
             // draw the bar (a rectangle)
             if (!Float.isNaN(value)) {
-                g.fillRect((barSeparation / 2) + (barSeparation * (point - emptySpaces) - (thickness/2)),
+                g.fillRect((barXDiff / 2) + (barXDiff * (point - emptySpaces) - (thickness/2)),
                         barHeight, thickness, getHeight() - barHeight);
             } else emptySpaces++;
 

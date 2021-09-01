@@ -45,7 +45,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
         setAlwaysOnTop(Settings.getAlwaysOnTop());
         ///setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle("Shift Performance");
+        setTitle("Shift Performance History");
 
         // Apply listeners to needed components
         addKeyListener(this); // Add key listener to self
