@@ -6,6 +6,8 @@ import com.swiftsatchel.bedroom.util.Theme;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.TreeMap;
 
 /**
@@ -17,7 +19,7 @@ public class ShiftHistoryChart extends JPanel {
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
     private final LocalDate[] keys = shiftHistoryData.keySet().toArray(new LocalDate[0]);
-    private int totalPages = (int) Math.ceil((double) keys.length/ (double)pointsAmount);
+    private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
     private int currentPage = totalPages; // Default to last page, being the newest shifts
 
     private int range = getPageRange();
@@ -43,16 +45,18 @@ public class ShiftHistoryChart extends JPanel {
         int emptySpaces = 0; // Amount of NaN values, to be able to ignore their spacing.
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
-            int index = point * currentPage; // Get index
-            float value = // If index exists get its value, else default to zero.
-                    (index < keys.length) ? shiftHistoryData.get(keys[index]) : 0;
+            int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
+            float value = // If index exists get its value, else default to negative one.
+                    (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1;
             int barHeight = (int) (getHeight() - ((getHeight()/ range) * value)); // Calculate height of bar
 
-            // draw the bar (a rectangle)
-            if (!Float.isNaN(value)) {
+            // draw the bar (a rectangle) if value is a number and not -1 (to filter out nonexistent values)
+            if (!Float.isNaN(value) && value >= 0 ) {
+
                 g.fillRect((barXDiff / 2) + (barXDiff * (point - emptySpaces) - (thickness/2)),
                         barHeight, thickness, getHeight() - barHeight);
-            } else emptySpaces++;
+
+            } else emptySpaces++; // Else add as a spot to ignore on next data point
 
         }
 
@@ -66,7 +70,6 @@ public class ShiftHistoryChart extends JPanel {
     public int getPageRange() {
 
         int r = 0;
-
         for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
 
             int index = p * currentPage;    // Get its position in the array
@@ -76,7 +79,6 @@ public class ShiftHistoryChart extends JPanel {
             }
 
         }
-
         return r; // Return range
 
     }
