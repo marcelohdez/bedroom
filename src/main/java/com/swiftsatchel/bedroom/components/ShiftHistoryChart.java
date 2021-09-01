@@ -22,7 +22,7 @@ public class ShiftHistoryChart extends JPanel {
     private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
     private int currentPage = totalPages; // Default to last page, being the newest shifts
 
-    private int range = getPageRange();
+    private int range = getCurrentRange();
 
     @Override
     public void paintComponent(Graphics graphics) { // Drawing the graph
@@ -95,7 +95,7 @@ public class ShiftHistoryChart extends JPanel {
      *
      * @return Max number that values on current page reach
      */
-    public int getPageRange() {
+    public int getCurrentRange() {
 
         int r = 0;
         for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
@@ -118,7 +118,7 @@ public class ShiftHistoryChart extends JPanel {
 
         if (currentPage > 1) { // If we are above page 1, subtract 1.
             currentPage--;
-            range = getPageRange();
+            range = getCurrentRange();
             repaint();
         }
 
@@ -131,7 +131,7 @@ public class ShiftHistoryChart extends JPanel {
 
         if (currentPage < totalPages) { // If we are not at last page, add 1.
             currentPage++;
-            range = getPageRange();
+            range = getCurrentRange();
             repaint();
         }
 
