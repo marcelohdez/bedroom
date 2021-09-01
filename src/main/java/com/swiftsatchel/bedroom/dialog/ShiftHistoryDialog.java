@@ -29,8 +29,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
 
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
-        pack(); // Let swing size window appropriately with the components added
-        setMinimumSize(new Dimension(getWidth(), getWidth())); // Set that width to the minimum size
+        packAndSize();
 
         centerOnParent();
 
@@ -71,6 +70,11 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
 
     }
 
+    private void packAndSize() {
+        pack(); // Let swing size window appropriately with updated components
+        setMinimumSize(new Dimension(getWidth(), (int) (getWidth() /1.5))); // Set new minimum size
+    }
+
     private void centerOnParent() {
 
         int[] xyWidthHeight = parent.getXYWidthHeight();
@@ -86,8 +90,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
         rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
         datesShown.setText(chart.getShownDates());
 
-        pack(); // Let swing resize according to label changes
-        setMinimumSize(new Dimension(getWidth(), getWidth())); // Update minimum size
+        packAndSize();
 
     }
 
