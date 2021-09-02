@@ -30,7 +30,7 @@ public class ShiftHistoryChart extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object into Graphics2d
 
-        int barXDiff = getWidth() / pointsAmount;   // Difference in X coordinates between bars
+        int barXDiff = getWidth() / (pointsAmount-1);   // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.contrastWithBnW(getBackground()); // Set bars to contrasting color
 
