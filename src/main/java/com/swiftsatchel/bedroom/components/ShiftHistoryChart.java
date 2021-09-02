@@ -58,21 +58,22 @@ public class ShiftHistoryChart extends JPanel {
             // also draw the date and month if needed at its bottom
             if (!Float.isNaN(value) && value != -1F) {
 
-                int barHeight = (int) (getHeight() - ((getHeight() / range) * value)); // Height of current bar
-                int x = initXOffset +// Get x of bar plus initial offset
-                        (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2));
+                int top = (int) (getHeight() - ((getHeight() / range) * value)); // Top of current bar
+                // Get x of bar plus initial offset
+                int x = initXOffset + (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2));
                 int fontSize = font.getSize();
 
                 // Draw bar
                 g.setColor(barColor);
-                g.fillRect(x, barHeight, thickness, getHeight() - barHeight);
+                g.fillRect(x, top, thickness, getHeight() - top);
+
+                // Draw bar value
+                Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
+                g.setColor(opposite);
+                g.drawString(String.valueOf(value), x + 2, top + fontSize);
 
                 // Draw date of shift at the bottom of the bar
-                Color background = Theme.contrastWithBnW(barColor); // Get a constant background color for text
-
-                g.setColor(background); // Set to background box color
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
-
                 if (keys[index].getMonthValue() != lastMonth) { // If the month has changed:
                     lastMonth = drawMonth(g, barColor, index, x); // Draw month and save new value
                 } else g.setColor(barColor); // Set color to write text on top of box
