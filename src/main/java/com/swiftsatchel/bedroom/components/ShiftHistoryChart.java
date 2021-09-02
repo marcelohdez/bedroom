@@ -41,9 +41,8 @@ public class ShiftHistoryChart extends JPanel {
         g.setColor(Theme.contrastWithShade(barColor, 120)); // Set color to grey-ish color
         for (int i = 0; i < range; i++) { // For each integer in range:
             // draw a line across the screen at its value height
-            int y = (getHeight() / range) * i; // Cache y to not divide same value multiple times
-            g.drawLine(0, y, getWidth(), y);
-            g.drawString(String.valueOf(range - i), 1, y + font.getSize());
+            g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
+            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + font.getSize());
         }
 
         // ======== Draw the chart ========
