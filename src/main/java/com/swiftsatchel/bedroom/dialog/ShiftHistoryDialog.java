@@ -71,8 +71,13 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     }
 
     private void packAndSize() {
+        Dimension last = getSize(); // Get size before packing
         pack(); // Let swing size window appropriately with updated components
-        setMinimumSize(new Dimension(getWidth(), (int) (getWidth() /1.5))); // Set new minimum size
+        Dimension minimum = new Dimension(getWidth(), (int) (getWidth() /1.5)); // Store new minimum
+        setMinimumSize(minimum); // Set new minimum size
+
+        if (last.getWidth() > minimum.getWidth() && last.getHeight() > minimum.getHeight())
+            setSize(last); // If it was greater than the new minimum, set size back to where it was.
     }
 
     private void centerOnParent() {
