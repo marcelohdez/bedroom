@@ -69,8 +69,13 @@ public class ShiftHistoryChart extends JPanel {
 
                 // Draw bar value
                 Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
-                g.setColor(opposite);
-                g.drawString(String.valueOf(value), x + 2, top + fontSize);
+                if (top < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
+                    g.setColor(opposite);
+                    g.drawString(String.valueOf(value), x + 2, top + fontSize);
+                } else { // Else show the text on top and change color accordingly:
+                    g.drawString(String.valueOf(value), x + 2, top - fontSize);
+                    g.setColor(opposite);
+                }
 
                 // Draw date of shift at the bottom of the bar
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
