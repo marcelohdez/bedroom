@@ -48,7 +48,7 @@ public class ShiftHistoryChart extends JPanel {
         // ======== Draw the chart ========
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
-        for (int point = 0; point < pointsAmount + 1; point++) { // For each point:
+        for (int point = 0; point <= pointsAmount; point++) { // For each point:
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
             // If index exists get its value, else default to negative one.
@@ -93,7 +93,7 @@ public class ShiftHistoryChart extends JPanel {
     private int getPointsBeingShown() {
 
         int p = 0; // Amount of points currently being shown
-        for (int i = 0; i < pointsAmount + 1; i++) {
+        for (int i = 0; i <= pointsAmount; i++) {
             int offset = pointsAmount * (currentPage - 1);
             if (offset + i < keys.length)
                 if (!Float.isNaN(shiftHistoryData.get(keys[offset + i])))
@@ -151,7 +151,7 @@ public class ShiftHistoryChart extends JPanel {
     public int getCurrentRange() {
 
         int r = 0;
-        for (int p = 0; p < pointsAmount+1; p++) { // For each point we can show:
+        for (int p = 0; p <= pointsAmount; p++) { // For each point we can show:
 
             int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
             if (index < keys.length) { // If index exists:
