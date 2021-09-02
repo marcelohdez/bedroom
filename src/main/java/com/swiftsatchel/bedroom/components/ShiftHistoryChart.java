@@ -69,7 +69,7 @@ public class ShiftHistoryChart extends JPanel {
 
                 // Draw bar value
                 Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
-                if (barXDiff > fontSize*2) {
+                if (barXDiff > fontSize*2) { // If bar is thick enough to fit the text:
                     if (top < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
                         g.setColor(opposite);
                         g.drawString(String.valueOf(value), x + 2, top + fontSize);
@@ -77,7 +77,19 @@ public class ShiftHistoryChart extends JPanel {
                         g.drawString(String.valueOf(value), x + 2, top - fontSize);
                         g.setColor(opposite);
                     }
-                } else g.setColor(opposite);
+                } else if (barXDiff > fontSize) { // Else if it is thick enough to fit the text horizontally:
+                    if (top < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
+                        g.rotate(-Math.PI/2);
+                        g.setColor(opposite);
+                        g.drawString(String.valueOf(value), -(top + fontSize*2), x + fontSize);
+                        g.rotate(Math.PI/2);
+                    } else { // Else show the text on top and change color accordingly:
+                        g.rotate(-Math.PI/2);
+                        g.drawString(String.valueOf(value), -(top - fontSize*2), x + fontSize);
+                        g.setColor(opposite);
+                        g.rotate(Math.PI/2);
+                    }
+                } else g.setColor(opposite); // If too skinny for both, just do not show text
 
                 // Draw date of shift at the bottom of the bar
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
