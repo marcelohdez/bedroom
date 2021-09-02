@@ -71,13 +71,8 @@ public class ShiftHistoryChart extends JPanel {
                 Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
                 drawBarValue(g, opposite, barXDiff, value, x, top);
 
-                // Draw date of shift at the bottom of the bar
-                g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
-                if (keys[index].getMonthValue() != lastMonth) { // If the month has changed:
-                    lastMonth = drawMonth(g, barColor, index, x); // Draw month and save new value
-                } else g.setColor(barColor); // Set color to write text on top of box
-
-                g.drawString(String.valueOf(keys[index].getDayOfMonth()), x, getHeight() - 1); // Draw date number
+                // Draw date of shift at the bottom of the bar if there is space
+                lastMonth = drawDate(g, barColor, index, x, lastMonth, barXDiff);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
 
@@ -100,6 +95,34 @@ public class ShiftHistoryChart extends JPanel {
                     p++;
         }
         return p;
+
+    }
+
+    /**
+     * Draw date of shift at the bottom of the bar if there is space
+     *
+     * @param g Graphics2D object to draw with
+     * @param textColor Text color
+     * @param dateIndex Index of date on keys array
+     * @param x X coordinate
+     * @param lastMonth Current last month value
+     * @param barWidth Width of current bar (difference of bars)
+     * @return New lastMonth value if changed
+     */
+    private int drawDate(Graphics2D g, Color textColor, int dateIndex, int x, int lastMonth, int barWidth) {
+
+        if (barWidth > g.getFont().getSize()*1.4) {
+
+            g.fillRect(x, getHeight() - g.getFont().getSize(), (int) (g.getFont().getSize() * 1.4),
+                    g.getFont().getSize()); // Draw box behind date
+
+            if (keys[dateIndex].getMonthValue() != lastMonth) { // If the month has changed:
+                lastMonth = drawMonth(g, textColor, dateIndex, x); // Draw month and save new value
+            } else g.setColor(textColor); // Set color to write text on top of box
+            g.drawString(String.valueOf(keys[dateIndex].getDayOfMonth()), x, getHeight() - 1); // Draw date number
+
+        }
+        return lastMonth;
 
     }
 
