@@ -69,27 +69,7 @@ public class ShiftHistoryChart extends JPanel {
 
                 // Draw bar value
                 Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
-                if (barXDiff > fontSize*2) { // If bar is thick enough to fit the text:
-                    if (top < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
-                        g.setColor(opposite);
-                        g.drawString(String.valueOf(value), x + 2, top + fontSize);
-                    } else { // Else show the text on top and change color accordingly:
-                        g.drawString(String.valueOf(value), x + 2, top - fontSize);
-                        g.setColor(opposite);
-                    }
-                } else if (barXDiff > fontSize) { // Else if it is thick enough to fit the text horizontally:
-                    if (top < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
-                        g.rotate(-Math.PI/2);
-                        g.setColor(opposite);
-                        g.drawString(String.valueOf(value), -(top + fontSize*2), x + fontSize);
-                        g.rotate(Math.PI/2);
-                    } else { // Else show the text on top and change color accordingly:
-                        g.rotate(-Math.PI/2);
-                        g.drawString(String.valueOf(value), -(top - fontSize*2), x + fontSize);
-                        g.setColor(opposite);
-                        g.rotate(Math.PI/2);
-                    }
-                } else g.setColor(opposite); // If too skinny for both, just do not show text
+                drawBarValue(g, opposite, barXDiff, value, x, top);
 
                 // Draw date of shift at the bottom of the bar
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
@@ -144,6 +124,44 @@ public class ShiftHistoryChart extends JPanel {
         g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
 
         return keys[dateIndex].getMonthValue(); // return new month value
+
+    }
+
+    /**
+     * Draws the represented value either inside or outside on the top of the bar
+     * depending on its height, and it could draw the value either horizontally,
+     * vertically or no way at all depending on the bar's width.
+     *
+     * @param g Graphics2D object to draw with
+     * @param textColor Text color
+     * @param barXDiff Current difference between bars (for width detection)
+     * @param value Value to draw
+     * @param x X coordinate
+     * @param barTop Top y value of bar
+     */
+    private void drawBarValue(Graphics2D g, Color textColor, int barXDiff, float value, int x, int barTop) {
+
+        if (barXDiff > g.getFont().getSize()*2) { // If bar is thick enough to fit the text:
+            if (barTop < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
+                g.setColor(textColor);
+                g.drawString(String.valueOf(value), x + 2, barTop + g.getFont().getSize());
+            } else { // Else show the text on top and change color accordingly:
+                g.drawString(String.valueOf(value), x + 2, barTop - g.getFont().getSize());
+                g.setColor(textColor);
+            }
+        } else if (barXDiff > g.getFont().getSize()) { // Else if it is thick enough to fit the text horizontally:
+            if (barTop < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
+                g.rotate(-Math.PI/2);
+                g.setColor(textColor);
+                g.drawString(String.valueOf(value), -(barTop + g.getFont().getSize()*2), x + g.getFont().getSize());
+                g.rotate(Math.PI/2);
+            } else { // Else show the text on top and change color accordingly:
+                g.rotate(-Math.PI/2);
+                g.drawString(String.valueOf(value), -(barTop - g.getFont().getSize()*2), x + g.getFont().getSize());
+                g.setColor(textColor);
+                g.rotate(Math.PI/2);
+            }
+        } else g.setColor(textColor); // If too skinny for both, just do not show text
 
     }
 
