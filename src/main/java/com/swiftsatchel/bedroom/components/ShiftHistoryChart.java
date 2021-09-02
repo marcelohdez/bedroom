@@ -86,8 +86,13 @@ public class ShiftHistoryChart extends JPanel {
      * @return The range of dates currently being shown
      */
     public String getShownDates() {
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
-                + "-" + DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[getPointsBeingShown()]);
+        int offset = pointsAmount * (currentPage - 1); // Initial offset
+        int endDateIndex = offset + getPointsBeingShown(); // Index of ending date
+        if (endDateIndex == keys.length) endDateIndex = offset + getPointsBeingShown() - 1;
+
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[offset])
+                + "-" +
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[endDateIndex]);
     }
 
     /**
