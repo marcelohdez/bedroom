@@ -17,7 +17,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     // ======= Top panel components =======
     private final JPanel topRow = new JPanel(); // The panel itself
     private final JLabel showingLabel = new JLabel("Showing ");
-    private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 15, 25});
+    private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 10, 15});
     private final JLabel shiftsLabel = new JLabel(" shifts");
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
