@@ -67,11 +67,9 @@ public class ShiftHistoryChart extends JPanel {
                 g.setColor(barColor);
                 g.fillRect(x, top, thickness, getHeight() - top);
 
-                // Draw bar value
+                // Draw bar value and date
                 Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
                 drawBarValue(g, opposite, barXDiff, value, x, top);
-
-                // Draw date of shift at the bottom of the bar if there is space
                 lastMonth = drawDate(g, barColor, index, x, lastMonth, barXDiff);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
