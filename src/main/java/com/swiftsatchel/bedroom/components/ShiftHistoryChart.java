@@ -32,7 +32,7 @@ public class ShiftHistoryChart extends JPanel {
 
         Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 16); // Save the font we'll use
         int initXOffset = (int)(font.getSize() * 1.5); // Space on left of chart for numbers
-        int barXDiff = ((getWidth() - initXOffset) / (pointsAmount-1)); // Difference in X coordinates between bars
+        int barXDiff = ((getWidth() - initXOffset) / pointsAmount); // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.getTextColor();      // Set a constant bar color
         g.setFont(font); // Set to font
@@ -48,11 +48,11 @@ public class ShiftHistoryChart extends JPanel {
         // ======== Draw the chart ========
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
-        for (int point = 0; point < pointsAmount; point++) { // For each point:
+        for (int point = 0; point < pointsAmount + 1; point++) { // For each point:
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
             // If index exists get its value, else default to negative one.
-            float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1;
+            float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
             // draw the bar (a rectangle) if value is a number and not -1 (to filter out nonexistent values)
             // also draw the date and month if needed at its bottom
@@ -93,7 +93,7 @@ public class ShiftHistoryChart extends JPanel {
     private int getPointsBeingShown() {
 
         int p = 0; // Amount of points currently being shown
-        for (int i = 0; i < pointsAmount; i++) {
+        for (int i = 0; i < pointsAmount + 1; i++) {
             int offset = pointsAmount * (currentPage - 1);
             if (offset + i < keys.length)
                 if (!Float.isNaN(shiftHistoryData.get(keys[offset + i])))
@@ -136,7 +136,7 @@ public class ShiftHistoryChart extends JPanel {
         int offset = pointsAmount * (currentPage - 1); // Initial offset
         int pointsShown = getPointsBeingShown(); // Store points being shown to not do for loop again
         int endDateIndex = offset + pointsShown; // Index of ending date
-        if (endDateIndex == keys.length) endDateIndex = offset + pointsShown - 1;
+        if (endDateIndex == keys.length) endDateIndex--;
 
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[offset])
                 + "-" +
@@ -151,7 +151,7 @@ public class ShiftHistoryChart extends JPanel {
     public int getCurrentRange() {
 
         int r = 0;
-        for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
+        for (int p = 0; p < pointsAmount+1; p++) { // For each point we can show:
 
             int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
             if (index < keys.length) { // If index exists:
