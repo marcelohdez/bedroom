@@ -105,8 +105,8 @@ public class ShiftHistoryChart extends JPanel {
         int r = 0;
         for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
 
-            int index = p * currentPage;    // Get its position in the array
-            if (index < keys.length) {      // If index exists:
+            int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
+            if (index < keys.length) { // If index exists:
                 if (shiftHistoryData.get(keys[index]) > r) // We check if it is greater than the last max
                     r = (int) Math.ceil(shiftHistoryData.get(keys[index])); // If it is, set to new max
             }
