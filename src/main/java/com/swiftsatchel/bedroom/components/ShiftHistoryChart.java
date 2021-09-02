@@ -5,6 +5,7 @@ import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -28,11 +29,11 @@ public class ShiftHistoryChart extends JPanel {
     public void paintComponent(Graphics graphics) { // Drawing the graph
         super.paintComponent(graphics);
 
-        Graphics2D g = (Graphics2D) graphics; // Cast Graphics object into Graphics2d
+        Graphics2D g = (Graphics2D) graphics; // Cast Graphics object to Graphics2D
 
         int barXDiff = getWidth() / (pointsAmount-1);   // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
-        Color barColor = Theme.contrastWithBnW(getBackground()); // Set bars to contrasting color
+        Color barColor = Theme.getTextColor();      // Set a constant bar color
 
         // Draw lines behind chart for each whole number in range
         g.setColor(Theme.contrastWithShade(barColor, 120)); // Set color to grey-ish color
@@ -40,21 +41,46 @@ public class ShiftHistoryChart extends JPanel {
             // draw a line across the screen at its value height
             g.drawLine(0, (getHeight()/range) * i, getWidth(), (getHeight()/ range) * i);
 
-        // Draw the chart
-        g.setColor(barColor);
-        int emptySpaces = 0; // Amount of NaN values, to be able to ignore their spacing.
+        // ======== Draw the chart ========
+        int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
+        int lastMonth = 0;      // Keep track of last month value to only put month name when changed
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
-            float value = // If index exists get its value, else default to negative one.
-                    (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1;
-            int barHeight = (int) (getHeight() - ((getHeight()/ range) * value)); // Calculate height of bar
+            // If index exists get its value, else default to negative one.
+            float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1;
 
             // draw the bar (a rectangle) if value is a number and not -1 (to filter out nonexistent values)
-            if (!Float.isNaN(value) && value >= 0 ) {
+            // also draw the date and month if needed at its bottom
+            if (!Float.isNaN(value) && value != -1F) {
 
-                g.fillRect((barXDiff / 2) + (barXDiff * (point - emptySpaces) - (thickness/2)),
-                        barHeight, thickness, getHeight() - barHeight);
+                int barHeight = (int) (getHeight() - ((getHeight() / range) * value)); // Height of current bar
+                Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 16); // Save the font we'll use
+                int x = (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2)); // Get x of bar
+
+                // Draw bar
+                g.setColor(barColor);
+                g.fillRect(x, barHeight, thickness, getHeight() - barHeight);
+
+                // Draw date of shift at the bottom of the bar
+                g.setFont(font); // Set to font
+                Color background = Theme.contrastWithBnW(barColor); // Get a constant background color for text
+                int fontSize = font.getSize();
+
+                g.setColor(background); // Set to background box color
+                g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
+                if (keys[index].getMonthValue() != lastMonth) { // If the month has changed:
+
+                    g.rotate(-Math.PI/2); // Rotate -90 degrees
+                    // Draw box behind month name
+                    g.fillRect(-(getHeight() - (int)(fontSize*1.1)), x, (int)(fontSize * 2.4), (int)(fontSize * 1.2));
+                    g.setColor(barColor); // Set back to text color
+                    g.drawString(keys[index].getMonth().name().substring(0, 3), -(getHeight() - (int)(fontSize*1.2)), x + fontSize);
+                    g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
+                    lastMonth = keys[index].getMonthValue(); // Save current month
+
+                } else g.setColor(barColor); // Set color to write text on top of box
+                g.drawString(String.valueOf(keys[index].getDayOfMonth()), x, getHeight() - 1); // Draw date number
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
 
@@ -87,8 +113,9 @@ public class ShiftHistoryChart extends JPanel {
      */
     public String getShownDates() {
         int offset = pointsAmount * (currentPage - 1); // Initial offset
-        int endDateIndex = offset + getPointsBeingShown(); // Index of ending date
-        if (endDateIndex == keys.length) endDateIndex = offset + getPointsBeingShown() - 1;
+        int pointsShown = getPointsBeingShown(); // Store points being shown to not do for loop again
+        int endDateIndex = offset + pointsShown; // Index of ending date
+        if (endDateIndex == keys.length) endDateIndex = offset + pointsShown - 1;
 
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[offset])
                 + "-" +
