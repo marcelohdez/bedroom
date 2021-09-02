@@ -5,7 +5,6 @@ import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -31,15 +30,21 @@ public class ShiftHistoryChart extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object to Graphics2D
 
-        int barXDiff = getWidth() / (pointsAmount-1);   // Difference in X coordinates between bars
+        Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 16); // Save the font we'll use
+        int initXOffset = (int)(font.getSize() * 1.5); // Space on left of chart for numbers
+        int barXDiff = ((getWidth() - initXOffset) / (pointsAmount-1)); // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.getTextColor();      // Set a constant bar color
+        g.setFont(font); // Set to font
 
-        // Draw lines behind chart for each whole number in range
+        // Draw lines and the value they represent behind chart for each whole number in range
         g.setColor(Theme.contrastWithShade(barColor, 120)); // Set color to grey-ish color
-        for (int i = 0; i < range; i++) // For each integer in range:
+        for (int i = 0; i < range; i++) { // For each integer in range:
             // draw a line across the screen at its value height
-            g.drawLine(0, (getHeight()/range) * i, getWidth(), (getHeight()/ range) * i);
+            int y = (getHeight() / range) * i; // Cache y to not divide same value multiple times
+            g.drawLine(0, y, getWidth(), y);
+            g.drawString(String.valueOf(range - i), 1, y + font.getSize());
+        }
 
         // ======== Draw the chart ========
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
@@ -55,17 +60,16 @@ public class ShiftHistoryChart extends JPanel {
             if (!Float.isNaN(value) && value != -1F) {
 
                 int barHeight = (int) (getHeight() - ((getHeight() / range) * value)); // Height of current bar
-                Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 16); // Save the font we'll use
-                int x = (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2)); // Get x of bar
+                int x = initXOffset +// Get x of bar plus initial offset
+                        (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2));
+                int fontSize = font.getSize();
 
                 // Draw bar
                 g.setColor(barColor);
                 g.fillRect(x, barHeight, thickness, getHeight() - barHeight);
 
                 // Draw date of shift at the bottom of the bar
-                g.setFont(font); // Set to font
                 Color background = Theme.contrastWithBnW(barColor); // Get a constant background color for text
-                int fontSize = font.getSize();
 
                 g.setColor(background); // Set to background box color
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
