@@ -69,17 +69,11 @@ public class ShiftHistoryChart extends JPanel {
 
                 g.setColor(background); // Set to background box color
                 g.fillRect(x, getHeight() - fontSize, (int)(fontSize * 1.4), fontSize); // Draw box behind date
+
                 if (keys[index].getMonthValue() != lastMonth) { // If the month has changed:
-
-                    g.rotate(-Math.PI/2); // Rotate -90 degrees
-                    // Draw box behind month name
-                    g.fillRect(-(getHeight() - (int)(fontSize*1.1)), x, (int)(fontSize * 2.4), (int)(fontSize * 1.2));
-                    g.setColor(barColor); // Set back to text color
-                    g.drawString(keys[index].getMonth().name().substring(0, 3), -(getHeight() - (int)(fontSize*1.2)), x + fontSize);
-                    g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
-                    lastMonth = keys[index].getMonthValue(); // Save current month
-
+                    lastMonth = drawMonth(g, barColor, index, x); // Draw month and save new value
                 } else g.setColor(barColor); // Set color to write text on top of box
+
                 g.drawString(String.valueOf(keys[index].getDayOfMonth()), x, getHeight() - 1); // Draw date number
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
@@ -103,6 +97,30 @@ public class ShiftHistoryChart extends JPanel {
                     p++;
         }
         return p;
+
+    }
+
+    /**
+     * Draws the first 3 letters of a month 90 degrees counter clock wise with a filled rectangle behind it
+     * then returns the new month value.
+     *
+     * @param g Graphics2D object to draw with
+     * @param textColor Text color
+     * @param dateIndex Index of date on keys array
+     * @param y Y coordinate of drawing (really x, because coordinate system is flipped -90 deg.)
+     * @return The new month value
+     */
+    private int drawMonth(Graphics2D g, Color textColor, int dateIndex, int y) {
+
+        int fontSize = g.getFont().getSize();
+        g.rotate(-Math.PI/2); // Rotate -90 degrees
+        // Draw box behind month name
+        g.fillRect(-(getHeight() - (int)(fontSize*1.1)), y, (int)(fontSize * 2.4), (int)(fontSize * 1.2));
+        g.setColor(textColor); // Set back to text color
+        g.drawString(keys[dateIndex].getMonth().name().substring(0, 3), -(getHeight() - (int)(fontSize*1.2)), y + fontSize);
+        g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
+
+        return keys[dateIndex].getMonthValue(); // return new month value
 
     }
 
