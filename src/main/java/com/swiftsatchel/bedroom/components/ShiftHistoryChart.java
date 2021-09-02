@@ -30,19 +30,18 @@ public class ShiftHistoryChart extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object to Graphics2D
 
-        Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 16); // Save the font we'll use
-        int initXOffset = (int)(font.getSize() * 1.5); // Space on left of chart for numbers
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16)); // Set to font we'll use
+        int initXOffset = (int)(g.getFont().getSize() * 1.5); // Space on left of chart for numbers
         int barXDiff = ((getWidth() - initXOffset) / pointsAmount); // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.getTextColor();      // Set a constant bar color
-        g.setFont(font); // Set to font
 
         // Draw lines and the value they represent behind chart for each whole number in range
         g.setColor(Theme.contrastWithShade(barColor, 120)); // Set color to grey-ish color
         for (int i = 0; i < range; i++) { // For each integer in range:
             // draw a line across the screen at its value height
             g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
-            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + font.getSize());
+            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + g.getFont().getSize());
         }
 
         // ======== Draw the chart ========
@@ -61,7 +60,6 @@ public class ShiftHistoryChart extends JPanel {
                 int top = (int) (getHeight() - ((getHeight() / range) * value)); // Top of current bar
                 // Get x of bar plus initial offset
                 int x = initXOffset + (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2));
-                int fontSize = font.getSize();
 
                 // Draw bar
                 g.setColor(barColor);
