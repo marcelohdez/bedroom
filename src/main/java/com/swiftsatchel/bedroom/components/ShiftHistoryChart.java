@@ -109,7 +109,7 @@ public class ShiftHistoryChart extends JPanel {
      */
     private int drawDate(Graphics2D g, Color textColor, int dateIndex, int x, int lastMonth, int barWidth) {
 
-        if (barWidth > g.getFont().getSize()*1.4) {
+        if (barWidth > g.getFont().getSize()*1.3) { // If there is space to do so:
 
             g.fillRect(x, getHeight() - g.getFont().getSize(), (int) (g.getFont().getSize() * 1.4),
                     g.getFont().getSize()); // Draw box behind date
