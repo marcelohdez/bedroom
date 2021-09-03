@@ -29,23 +29,23 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private JLabel redLabel, greenLabel, blueLabel; // Color labels
     // This used to ignore showing the color values when changing themes/component being edited:
     private boolean showColorValues = true;
+    private boolean highContrast = Settings.isContrastEnabled();
 
     // ======= Combo Boxes: =======
-    private final JComboBox<String> coloringListBox = // Components we can color
-            new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
+    // Components we can color
+    private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
+    // Themes
+    private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
+            "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
+    // Default shift length in hours.
+    private final JComboBox<String> shiftLengthListBox = new JComboBox<>(Ops.createNumberList(false,
+            1, 12, "h"));
 
-    private final JComboBox<String> themeListBox = // Themes
-            new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
-                    "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
-
-    private final JComboBox<String> shiftLengthListBox = // Default shift length in hours.
-            new JComboBox<>(Ops.createNumberList(false, 1, 12, "h"));
-
-    // Checkboxes
-    private final JCheckBox alwaysOnTop = // Stay on top option
-            new JCheckBox("Stay on top");
-    private final JCheckBox askBeforeEarlyClose = // Ask before clocking out early
-            new JCheckBox("Ask before clocking out early");
+    // ======= Checkboxes =======
+    // Stay on top option
+    private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
+    // Ask before clocking out early
+    private final JCheckBox askBeforeEarlyClose = new JCheckBox("Ask before clocking out early");
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
         this.parent = parent;
@@ -356,6 +356,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         int[] newButtonRGB = new int[3];
         int[] newBgRGB = new int[3];
 
+        highContrast = false; // Disable high contrast by default
         switch (theme) {
             case "Dark" -> {
                 newTextRGB = new int[]{240, 240, 240};
@@ -374,6 +375,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 newButtonTextRGB = new int[]{255, 255, 255};
                 newButtonRGB = new int[]{0, 0, 0};
                 newBgRGB = new int[]{0, 0, 0};
+                highContrast = true; // Enable high contrast
             }
             case "Khaki Green" -> {
                 newTextRGB = new int[]{240, 240, 240};
@@ -434,6 +436,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
                 shiftLengthListBox.getSelectedIndex() + 1);
+        Settings.saveHighContrast(highContrast);
 
         if (parent.getWindowParent() instanceof SelectTimeDialog)
             parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload

@@ -9,6 +9,15 @@ import java.util.TreeMap;
 public final class Settings {
 
     /**
+     * Check if highContrast is enabled in user preferences
+     *
+     * @return highContrast boolean value
+     */
+    public static boolean isContrastEnabled() {
+        return Main.userPrefs.getBoolean("highContrast", false);
+    }
+
+    /**
      * Saves color values
      *
      * @param textRGB int[] of the text colors
@@ -38,6 +47,15 @@ public final class Settings {
         Main.userPrefs.putInt("bgGreen", bgRGB[1]);
         Main.userPrefs.putInt("bgBlue", bgRGB[2]);
 
+    }
+
+    /**
+     * Save a boolean to highContrast key
+     *
+     * @param highContrast new highContrast value
+     */
+    public static void saveHighContrast(boolean highContrast) {
+        Main.userPrefs.putBoolean("highContrast", highContrast);
     }
 
     /**
