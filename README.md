@@ -3,6 +3,16 @@ Bedroom is an open source Java application developed in order to aid call center
 and orders per hour to meet their quotas effectively. Due to the pandemic people have started working remotely, working 
 from the bedroom couldn't get any easier! Or... maybe it just did.
 
+This is my first Java program as a self taught high school student, so it has grown and improved (and will continue to) 
+as i improve or learn more about the language.
+
+## Table of contents
+* [Prerequisites](https://github.com/swiftsatchel/bedroom#prerequisites)
+* [How to set up](https://github.com/swiftsatchel/bedroom#how-to-set-up)
+* [How to use](https://github.com/swiftsatchel/bedroom#how-to-use)
+* [Shortcuts](https://github.com/swiftsatchel/bedroom#shortcuts)
+* [Compiling from source](https://github.com/swiftsatchel/bedroom#compiling-from-source)
+
 ## Prerequisites
 **For running and/or compiling the program** the newest version of Java is recommended, while the minimum required
 version is stated under the release you are trying to run. Ex: For Bedroom 3 Java 16+ is required.
