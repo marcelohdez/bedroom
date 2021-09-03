@@ -1,6 +1,7 @@
 package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
@@ -94,7 +95,9 @@ public class ShiftHistoryChart extends JPanel {
      * @param g Graphics2D object to draw with
      */
     private void drawRangeLines(Graphics2D g) {
-        g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
+        if (!Settings.isContrastEnabled()) {
+            g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
+        } else g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 255));
         for (int i = 0; i < range; i++) { // For each integer in range:
             // draw a line across the screen at its value height
             g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
