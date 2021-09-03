@@ -3,8 +3,9 @@ Bedroom is an open source Java application developed in order to aid call center
 and orders per hour to meet their quotas effectively. Due to the pandemic people have started working remotely, working 
 from the bedroom couldn't get any easier! Or... maybe it just did.
 
-This is my first Java program as a self taught high school student, so it has grown and improved (and will continue to) 
-as i improve or learn more about the language.
+This is my first Java program as a self taught high school student, so it has grown and improved (and will hopefully 
+continue to) as i improve or learn more about the language. It was originally created for me and my friends working 
+at a call center to keep track of our orders/hr without doing the math ourselves, enabling us to share it quicker.
 
 ## Table of contents
 * [Prerequisites](https://github.com/swiftsatchel/bedroom#prerequisites)
