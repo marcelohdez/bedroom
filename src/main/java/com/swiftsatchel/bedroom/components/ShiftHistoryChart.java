@@ -37,7 +37,7 @@ public class ShiftHistoryChart extends JPanel {
         Color barColor = Theme.getTextColor();      // Set a constant bar color
 
         // Draw lines and the value they represent behind chart for each whole number in range
-        g.setColor(Theme.contrastWithShade(barColor, 120)); // Set color to grey-ish color
+        g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
         for (int i = 0; i < range; i++) { // For each integer in range:
             // draw a line across the screen at its value height
             g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
