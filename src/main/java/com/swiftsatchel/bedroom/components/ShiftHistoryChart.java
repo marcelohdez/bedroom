@@ -36,6 +36,7 @@ public class ShiftHistoryChart extends JPanel {
         int barXDiff = ((getWidth() - initXOffset) / pointsAmount); // Difference in X coordinates between bars
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.getTextColor();      // Set a constant bar color
+        range = getCurrentRange();
 
         drawRangeLines(g);
 
@@ -239,7 +240,6 @@ public class ShiftHistoryChart extends JPanel {
 
         if (currentPage > 1) { // If we are above page 1, subtract 1.
             currentPage--;
-            range = getCurrentRange();
             repaint();
         }
 
@@ -252,7 +252,6 @@ public class ShiftHistoryChart extends JPanel {
 
         if (currentPage < totalPages) { // If we are not at last page, add 1.
             currentPage++;
-            range = getCurrentRange();
             repaint();
         }
 
