@@ -36,13 +36,7 @@ public class ShiftHistoryChart extends JPanel {
         int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
         Color barColor = Theme.getTextColor();      // Set a constant bar color
 
-        // Draw lines and the value they represent behind chart for each whole number in range
-        g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
-        for (int i = 0; i < range; i++) { // For each integer in range:
-            // draw a line across the screen at its value height
-            g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
-            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + g.getFont().getSize());
-        }
+        drawRangeLines(g);
 
         // ======== Draw the chart ========
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
@@ -92,6 +86,20 @@ public class ShiftHistoryChart extends JPanel {
         }
         return p;
 
+    }
+
+    /**
+     * Draw lines and the value they represent behind chart for each whole number in range
+     *
+     * @param g Graphics2D object to draw with
+     */
+    private void drawRangeLines(Graphics2D g) {
+        g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
+        for (int i = 0; i < range; i++) { // For each integer in range:
+            // draw a line across the screen at its value height
+            g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
+            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + g.getFont().getSize());
+        }
     }
 
     /**
