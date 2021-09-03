@@ -96,13 +96,20 @@ public class ShiftHistoryChart extends JPanel {
      * @param g Graphics2D object to draw with
      */
     private void drawRangeLines(Graphics2D g) {
+
         if (!Settings.isContrastEnabled()) {
             g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
-        } else g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 255));
-        for (int i = 0; i < range; i++) { // For each integer in range:
+        } else g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 255)); // Higher contrast
+
+        int divisor; // Amount of units to divide by
+        if (getHeight() / range > g.getFont().getSize() * 1.2) { // If 1 by 1 fits (ex: 1, 2, 3, 4) set divisor to 1
+            divisor = 1;
+        } else divisor = 2; // Else set to to (ex: 2, 4, 6, 8)
+
+        for (int i = 0; i < (range/divisor); i++) { // For each integer in range:
             // draw a line across the screen at its value height
-            g.drawLine(0, (getHeight() / range) * i, getWidth(), (getHeight() / range) * i);
-            g.drawString(String.valueOf(range - i), 1, ((getHeight() / range) * i) + g.getFont().getSize());
+            g.drawLine(0, (getHeight() / range) * (i*divisor), getWidth(), (getHeight() / range) * (i*divisor));
+            g.drawString(String.valueOf(range - (i*divisor)), 1, ((getHeight() / range) * (i*divisor)) + g.getFont().getSize());
         }
     }
 
