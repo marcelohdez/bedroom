@@ -1,7 +1,7 @@
 # Bedroom
-Bedroom is an open source Java application developed in order to aid call center agents in keeping track of their orders 
-and orders per hour to meet their quotas effectively. Due to the pandemic people have started working remotely, working 
-from the bedroom couldn't get any easier! Or... maybe it just did.
+Due to the pandemic people have started working remotely, _working from the bedroom couldn't get any easier!_
+Or... maybe it just did. Bedroom is an open source Java application developed in order to aid call center 
+agents in keeping track of their orders and orders per hour to meet their quotas effectively.
 
 This is my first Java program as a self taught high school student, so it has grown and improved (and will hopefully 
 continue to) as i improve or learn more about the language. It was originally created for me and my friends working 
