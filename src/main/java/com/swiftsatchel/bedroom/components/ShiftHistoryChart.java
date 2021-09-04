@@ -108,8 +108,10 @@ public class ShiftHistoryChart extends JPanel {
 
         for (int i = 0; i < (range/divisor); i++) { // For each integer in range:
             // draw a line across the screen at its value height
-            g.drawLine(0, (int)(getHeight() / range) * (i*divisor), getWidth(), (int)(getHeight() / range) * (i*divisor));
-            g.drawString(String.valueOf(range - (i*divisor)), 1, (int)((getHeight() / range) * (i*divisor)) + g.getFont().getSize());
+            g.drawLine(0, (int)(getHeight() / range) * (i*divisor), getWidth(),
+                    (int)(getHeight() / range) * (i*divisor));
+            g.drawString(String.valueOf((int)(range - (i*divisor))), 1,
+                    (int)((getHeight() / range) * (i*divisor)) + g.getFont().getSize());
         }
     }
 
