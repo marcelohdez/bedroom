@@ -23,7 +23,7 @@ public class ShiftHistoryChart extends JPanel {
     private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
     private int currentPage = totalPages; // Default to last page, being the newest shifts
 
-    private int range = getCurrentRange();
+    private float range = getCurrentRange();
 
     @Override
     public void paintComponent(Graphics graphics) { // Drawing the graph
@@ -108,8 +108,8 @@ public class ShiftHistoryChart extends JPanel {
 
         for (int i = 0; i < (range/divisor); i++) { // For each integer in range:
             // draw a line across the screen at its value height
-            g.drawLine(0, (getHeight() / range) * (i*divisor), getWidth(), (getHeight() / range) * (i*divisor));
-            g.drawString(String.valueOf(range - (i*divisor)), 1, ((getHeight() / range) * (i*divisor)) + g.getFont().getSize());
+            g.drawLine(0, (int)(getHeight() / range) * (i*divisor), getWidth(), (int)(getHeight() / range) * (i*divisor));
+            g.drawString(String.valueOf(range - (i*divisor)), 1, (int)((getHeight() / range) * (i*divisor)) + g.getFont().getSize());
         }
     }
 
