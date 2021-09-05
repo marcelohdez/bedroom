@@ -22,6 +22,7 @@ public class ShiftHistoryChart extends JPanel {
     private final LocalDate[] keys = shiftHistoryData.keySet().toArray(new LocalDate[0]);
     private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
     private int currentPage = totalPages; // Default to last page, being the newest shifts
+    private final Color barColor = Theme.getTextColor(); // Constant bar color
 
     private float range = getCurrentRange();
 
@@ -32,15 +33,21 @@ public class ShiftHistoryChart extends JPanel {
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object to Graphics2D
 
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16)); // Set to font we'll use
-        int initXOffset = (int)(g.getFont().getSize() * 1.5); // Space on left of chart for numbers
-        int barXDiff = ((getWidth() - initXOffset) / pointsAmount); // Difference in X coordinates between bars
-        int thickness = barXDiff - 1;               // Have one pixel of separation, giving the look of a histogram
-        Color barColor = Theme.getTextColor();      // Set a constant bar color
         range = getCurrentRange();
 
         drawRangeLines(g);
+        drawBars(g);
 
-        // ======== Draw the chart ========
+    }
+
+    /**
+     * Draw performance history bars
+     *
+     * @param g Graphics2D object to draw with
+     */
+    private void drawBars(Graphics2D g) {
+        // Difference in X coordinates between bars
+        int barXDiff = (int) ((getWidth() - g.getFont().getSize()*1.5F) / pointsAmount);
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
         for (int point = 0; point <= pointsAmount; point++) { // For each point:
@@ -49,27 +56,25 @@ public class ShiftHistoryChart extends JPanel {
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
-            // draw the bar (a rectangle) if value is a number and not -1 (to filter out nonexistent values)
-            // also draw the date and month if needed at its bottom
+            // draw the bar (a rectangle) and its date at the bottom if value is a number and not -1
+            // (to filter out nonexistent values)
             if (!Float.isNaN(value) && value != -1F) {
 
                 int top = (int) (getHeight() - ((getHeight() / range) * value)); // Top of current bar
                 // Get x of bar plus initial offset
-                int x = initXOffset + (barXDiff/2) + (barXDiff * (point - emptySpaces) - (thickness / 2));
+                int x = (int) ((g.getFont().getSize() * 1.5) +
+                        (barXDiff / 2) + (barXDiff * (point - emptySpaces) - ((barXDiff - 1) / 2)));
 
                 // Draw bar
                 g.setColor(barColor);
-                g.fillRect(x, top, thickness, getHeight() - top);
+                g.fillRect(x, top, (barXDiff - 1), getHeight() - top);
 
                 // Draw bar value and date
-                Color opposite = Theme.contrastWithBnW(barColor); // Get a constant opposite color
-                drawBarValue(g, opposite, barXDiff, value, x, top);
-                lastMonth = drawDate(g, barColor, index, x, lastMonth, barXDiff);
+                drawBarValue(g, keys[index].getMonthValue() != lastMonth, barXDiff, value, x, top);
+                lastMonth = drawDate(g, index, x, lastMonth, barXDiff);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
-
         }
-
     }
 
     /**
@@ -121,23 +126,23 @@ public class ShiftHistoryChart extends JPanel {
      * Draw date of shift at the bottom of the bar if there is space
      *
      * @param g Graphics2D object to draw with
-     * @param textColor Text color
      * @param dateIndex Index of date on keys array
      * @param x X coordinate
      * @param lastMonth Current last month value
      * @param barWidth Width of current bar (difference of bars)
      * @return New lastMonth value if changed
      */
-    private int drawDate(Graphics2D g, Color textColor, int dateIndex, int x, int lastMonth, int barWidth) {
+    private int drawDate(Graphics2D g, int dateIndex, int x, int lastMonth, int barWidth) {
 
         if (barWidth > g.getFont().getSize()*1.3) { // If there is space to do so:
+            g.setColor(Theme.contrastWithBnW(barColor));
 
             g.fillRect(x, getHeight() - g.getFont().getSize(), (int) (g.getFont().getSize() * 1.4),
                     g.getFont().getSize()); // Draw box behind date
 
             if (keys[dateIndex].getMonthValue() != lastMonth) { // If the month has changed:
-                lastMonth = drawMonth(g, textColor, dateIndex, x); // Draw month and save new value
-            } else g.setColor(textColor); // Set color to write text on top of box
+                lastMonth = drawMonth(g, barColor, dateIndex, x); // Draw month and save new value
+            } else g.setColor(barColor); // Set color to write text on top of box
             g.drawString(String.valueOf(keys[dateIndex].getDayOfMonth()), x, getHeight() - 1); // Draw date number
 
         }
@@ -175,35 +180,45 @@ public class ShiftHistoryChart extends JPanel {
      * vertically or no way at all depending on the bar's width.
      *
      * @param g Graphics2D object to draw with
-     * @param textColor Text color
-     * @param barXDiff Current difference between bars (for width detection)
+     * @param isMonth Is the current bar starting on a new month
      * @param value Value to draw
      * @param x X coordinate
      * @param barTop Top y value of bar
      */
-    private void drawBarValue(Graphics2D g, Color textColor, int barXDiff, float value, int x, int barTop) {
+    private void drawBarValue(Graphics2D g, boolean isMonth, int barXDiff, float value, int x, int barTop) {
+        Color opposite = Theme.contrastWithBnW(barColor);
+        int textWidth = g.getFontMetrics().stringWidth(String.valueOf(value));
+        int dateMonthHeight = g.getFont().getSize()*2 + g.getFontMetrics().stringWidth("ABCD");
 
-        if (barXDiff > g.getFont().getSize()*2) { // If bar is thick enough to fit the text:
-            if (barTop < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
-                g.setColor(textColor);
+        if (barXDiff > textWidth + 4) { // If bar is thick enough to fit the text plus some legroom:
+            g.setColor(opposite); // Set to opposite of bar color
+            // If bar is taller than the date/month text, draw text inside
+            if (barTop < getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*2)) {
                 g.drawString(String.valueOf(value), x + 2, barTop + g.getFont().getSize());
-            } else { // Else show the text on top and change color accordingly:
-                g.drawString(String.valueOf(value), x + 2, barTop - g.getFont().getSize());
-                g.setColor(textColor);
+            } else { // Else show the text on top of date/month text with background and change color accordingly:
+                g.fillRect(x, (int)((getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*2.5F))),
+                        textWidth + 4, g.getFont().getSize() + 4);
+                g.setColor(barColor);
+                g.drawString(String.valueOf(value), x + 2, ((getHeight() - (isMonth ? dateMonthHeight :
+                        g.getFont().getSize()*2.5F)) + g.getFont().getSize()));
             }
         } else if (barXDiff > g.getFont().getSize()) { // Else if it is thick enough to fit the text horizontally:
-            if (barTop < getHeight() * 0.8) { // If bar is at least 20% the height of the screen show value in it:
+            g.setColor(opposite); // Set to opposite of bar color
+            if (barTop < getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*3)) {
+                // If bar is taller than the date/month text then draw value inside
                 g.rotate(-Math.PI/2);
-                g.setColor(textColor);
-                g.drawString(String.valueOf(value), -(barTop + g.getFont().getSize()*2), x + g.getFont().getSize());
+                g.drawString(String.valueOf(value), -(barTop + textWidth + 2), x + g.getFont().getSize());
                 g.rotate(Math.PI/2);
-            } else { // Else show the text on top and change color accordingly:
+            } else { // Else show the value on top of date/month text with a background and change color accordingly:
                 g.rotate(-Math.PI/2);
-                g.drawString(String.valueOf(value), -(barTop - g.getFont().getSize()*2), x + g.getFont().getSize());
-                g.setColor(textColor);
+                g.fillRect(-(getHeight() - (isMonth ? dateMonthHeight - g.getFont().getSize() - 4:
+                                g.getFont().getSize() + 1)), x, textWidth + 6, g.getFont().getSize() + 4);
+                g.setColor(barColor);
+                g.drawString(String.valueOf(value), -(getHeight() - (isMonth ? dateMonthHeight - g.getFont().getSize() :
+                        g.getFont().getSize()+4)), x + g.getFont().getSize());
                 g.rotate(Math.PI/2);
             }
-        } else g.setColor(textColor); // If too skinny for both, just do not show text
+        }
 
     }
 
@@ -213,12 +228,10 @@ public class ShiftHistoryChart extends JPanel {
      * @return The range of dates currently being shown
      */
     public String getShownDates() {
-        int offset = pointsAmount * (currentPage - 1); // Initial offset
-        int pointsShown = getPointsBeingShown(); // Store points being shown to not do for loop again
-        int endDateIndex = offset + pointsShown; // Index of ending date
+        int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown(); // Index of ending date
         if (endDateIndex == keys.length) endDateIndex--;
 
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[offset])
+        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
                 + "-" +
                 DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[endDateIndex]);
     }
