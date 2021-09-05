@@ -181,6 +181,7 @@ public class ShiftHistoryChart extends JPanel {
      *
      * @param g Graphics2D object to draw with
      * @param isMonth Is the current bar starting on a new month
+     * @param barXDiff Current difference between bars (for width detection)
      * @param value Value to draw
      * @param x X coordinate
      * @param barTop Top y value of bar
@@ -197,27 +198,25 @@ public class ShiftHistoryChart extends JPanel {
                 g.drawString(String.valueOf(value), x + 2, barTop + g.getFont().getSize());
             } else { // Else show the text on top of date/month text with background and change color accordingly:
                 g.fillRect(x, (int)((getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*2.5F))),
-                        textWidth + 4, g.getFont().getSize() + 4);
+                        textWidth + 4, g.getFont().getSize() + 4); // Draw background box
                 g.setColor(barColor);
                 g.drawString(String.valueOf(value), x + 2, ((getHeight() - (isMonth ? dateMonthHeight :
-                        g.getFont().getSize()*2.5F)) + g.getFont().getSize()));
+                        g.getFont().getSize()*2.5F)) + g.getFont().getSize())); // Draw text
             }
         } else if (barXDiff > g.getFont().getSize()) { // Else if it is thick enough to fit the text horizontally:
             g.setColor(opposite); // Set to opposite of bar color
+            g.rotate(-Math.PI/2); // Rotate canvas -90 degrees
             if (barTop < getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*3)) {
                 // If bar is taller than the date/month text then draw value inside
-                g.rotate(-Math.PI/2);
                 g.drawString(String.valueOf(value), -(barTop + textWidth + 2), x + g.getFont().getSize());
-                g.rotate(Math.PI/2);
             } else { // Else show the value on top of date/month text with a background and change color accordingly:
-                g.rotate(-Math.PI/2);
-                g.fillRect(-(getHeight() - (isMonth ? dateMonthHeight - g.getFont().getSize() - 4:
+                g.fillRect(-(getHeight() - (isMonth ? dateMonthHeight - g.getFont().getSize() - 4: // Background box
                                 g.getFont().getSize() + 1)), x, textWidth + 6, g.getFont().getSize() + 4);
                 g.setColor(barColor);
                 g.drawString(String.valueOf(value), -(getHeight() - (isMonth ? dateMonthHeight - g.getFont().getSize() :
-                        g.getFont().getSize()+4)), x + g.getFont().getSize());
-                g.rotate(Math.PI/2);
+                        g.getFont().getSize()+4)), x + g.getFont().getSize()); // Draw text
             }
+            g.rotate(Math.PI/2); // Rotate 90 degrees to get canvas back to normal
         }
 
     }
