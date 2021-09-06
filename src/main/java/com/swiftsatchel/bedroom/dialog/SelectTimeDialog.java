@@ -109,7 +109,6 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             case KeyEvent.VK_ESCAPE -> close();
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
-            case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryDialog(this);
         }
     }
 

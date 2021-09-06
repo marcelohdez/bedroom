@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyListener, ItemListener {
+public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener {
 
     private final WindowParent parent;
 
@@ -24,7 +24,7 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     private final JButton rightButton = new JButton(">");
     private final JLabel datesShown = new JLabel("1/1/2020-1/1/2021");
 
-    public ShiftHistoryDialog(WindowParent parent) {
+    public ShiftHistoryWindow(WindowParent parent) {
         this.parent = parent;
 
         init(); // Initialize everything
@@ -41,7 +41,6 @@ public class ShiftHistoryDialog extends JDialog implements ActionListener, KeyLi
     private void init() {
 
         // Set window properties
-        setModalityType(Dialog.ModalityType.APPLICATION_MODAL); // Retain input from other windows
         setAlwaysOnTop(Settings.getAlwaysOnTop());
         ///setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
