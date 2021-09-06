@@ -7,6 +7,7 @@ import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -35,7 +36,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         add(ui);                                // Add the UI
 
         pack();
-        setSize((int)(getWidth()*1.4), (int)(getHeight()*1.2));
+        setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
 
         // Set window title and time per type
         switch (type) {
