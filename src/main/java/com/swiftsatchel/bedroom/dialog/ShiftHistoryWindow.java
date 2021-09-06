@@ -1,6 +1,7 @@
 package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.components.ShiftHistoryChart;
+import com.swiftsatchel.bedroom.main.BedroomWindow;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
@@ -8,9 +9,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener {
+public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener {
 
-    private final WindowParent parent;
+    private final BedroomWindow parent;
 
     private final ShiftHistoryChart chart = new ShiftHistoryChart();
 
@@ -24,9 +25,11 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     private final JButton rightButton = new JButton(">");
     private final JLabel datesShown = new JLabel("1/1/2020-1/1/2021");
 
-    public ShiftHistoryWindow(WindowParent parent) {
+    public ShiftHistoryWindow(BedroomWindow parent) {
         this.parent = parent;
 
+        parent.setEnabled(false);
+        addWindowListener(this);
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         packAndSize();
@@ -126,8 +129,27 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     }
 
     @Override
+    public void windowClosed(WindowEvent e) {
+        parent.setEnabled(true);
+        parent.requestFocus();
+    }
+
+    @Override
     public void keyTyped(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void windowOpened(WindowEvent e) {}
+    @Override
+    public void windowClosing(WindowEvent e) {}
+    @Override
+    public void windowIconified(WindowEvent e) {}
+    @Override
+    public void windowDeiconified(WindowEvent e) {}
+    @Override
+    public void windowActivated(WindowEvent e) {}
+    @Override
+    public void windowDeactivated(WindowEvent e) {}
 
 }
