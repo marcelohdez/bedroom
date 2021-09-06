@@ -35,6 +35,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         add(ui);                                // Add the UI
 
         pack();
+        setSize((int)(getWidth()*1.4), (int)(getHeight()*1.2));
 
         // Set window title and time per type
         switch (type) {
@@ -58,9 +59,8 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
     private void centerOnParent() {
 
-        int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2] /2) - (getWidth()/2)),
-                xyWidthHeight[1]  + ((xyWidthHeight[3] /2) - (getHeight()/2)));
+        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
+                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
     }
 

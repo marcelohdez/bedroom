@@ -20,83 +20,83 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private final TimeWindowType type;
     private final SelectTimeDialog parent;
+    private final GridBagLayout layout;
+    private final GridBagConstraints gbc;
 
     // ======= List boxes: =======
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
     private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
     // Create minutes (0-59) and hourly targets (1-24)
-    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59, null));
-    private final JComboBox<String> setTarget = new JComboBox<>(Ops.createNumberList(true, 1, 24, null));
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
+    private final JComboBox<String> targetListBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
 
     // Other components:
     private final JButton select = new JButton("Select");   // Select button
-    private final JLabel topText = new JLabel();                 // Top text
-    private JLabel targetText;                                  // Select target text
-
-    // Component rows:
-    private final JPanel labelRow = new JPanel();
-    private final JPanel timeBoxesRow = new JPanel();
-    private JPanel setTargetRow = createTargetRow();
-    private final JPanel selectRow = new JPanel();
+    private final JLabel topText = new JLabel("CLOCK IN time:"); // Top text label
+    private final JLabel targetLabel = new JLabel("Your hourly target:"); // Select target text
 
     public SelectTimeUI(SelectTimeDialog parent) {
 
         type = parent.type;
         this.parent = parent;
+        layout = new GridBagLayout();
+        gbc = new GridBagConstraints();
 
         setBackground(Theme.getBgColor()); // Set background color
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(layout);
         setListBoxIndexes(SetTime.CURRENT); // Set to current time
         addKeyListener(parent);
 
-        Dimension listBoxSize = new Dimension(80, 30);
-        Dimension smallListBoxSize = new Dimension(65, 30);
-
-        switch (type) { // Change top text depending on window type
-            case CLOCK_OUT -> topText.setText("Select CLOCK OUT time:");
-            case START_BREAK -> topText.setText("Select BREAK START time:");
-            case END_BREAK -> topText.setText("Select BREAK END time:");
-            case CLOCK_IN -> topText.setText("Select CLOCK IN time:");
+        switch (type) { // Set window type-specific things
+            case CLOCK_OUT -> { // For clock out time window, add its specific components as well
+                topText.setText("CLOCK OUT time:");
+                addComponent(targetLabel, 0, 2, 2, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0));
+                addComponent(targetListBox, 2, 2, 1, GridBagConstraints.BOTH, new Insets(2, 2, 2, 4));
+            }
+            case START_BREAK -> topText.setText("Break start:");
+            case END_BREAK -> topText.setText("Break end:");
             case EARLY_CLOCK_OUT -> {
                 topText.setText("Clocking out early?");
                 select.setText("Clock Out");
             }
         }
 
+        // Add components
+        addComponent(topText, 0, 0, 3, GridBagConstraints.HORIZONTAL, new Insets(4, 4, 2, 4));
+        addComponent(hrBox, 0, 1, 1, GridBagConstraints.BOTH, new Insets(4, 4, 4, 2));
+        addComponent(minBox, 1, 1, 1, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
+        addComponent(amPMBox, 2, 1, 1, GridBagConstraints.BOTH, new Insets(4, 2, 4, 4));
+        addComponent(select, 0, 4, 3, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
+
         // Customize components
         topText.setFont(Theme.getBoldText());
+        topText.setHorizontalAlignment(JLabel.CENTER);
         select.addActionListener(this);
         select.addKeyListener(parent);
-        select.setPreferredSize(new Dimension(235, 40));
-        hrBox.setPreferredSize(listBoxSize);
         hrBox.addKeyListener(parent);
-        minBox.setPreferredSize(listBoxSize);
         minBox.addKeyListener(parent);
-        amPMBox.setPreferredSize(smallListBoxSize);
         amPMBox.addKeyListener(parent);
-        setTarget.setPreferredSize(smallListBoxSize);
-        setTarget.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
-        setTarget.addKeyListener(parent);
+        targetLabel.setHorizontalAlignment(JLabel.CENTER);
+        targetListBox.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
+        targetListBox.addKeyListener(parent);
 
-        // ======= Set colors =======
-        colorSelf();
-
-        // Add components to their rows
-        labelRow.add(topText);
-        timeBoxesRow.add(hrBox);
-        timeBoxesRow.add(minBox);
-        timeBoxesRow.add(amPMBox);
-        selectRow.add(select);
-
-        // Add rows to UI
-        add(labelRow);
-        add(timeBoxesRow);
-        if (type.equals(TimeWindowType.CLOCK_OUT)) add(setTargetRow);
-        add(selectRow);
-
+        colorSelf(); // Color components
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
-        requestFocus();
+    }
+
+    private void addComponent(JComponent comp, int x, int y, int width, int fill, Insets insets) {
+
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = insets;
+        gbc.fill = fill;
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.gridwidth = width;
+        gbc.gridheight = 1;
+        layout.setConstraints(comp, gbc);
+        add(comp, gbc);
 
     }
 
@@ -159,7 +159,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // to the current date + 1 day.
         Main.clockOutTime = time.isAfter(Main.clockInTime) ? time : time.plusDays(1);
 
-        Main.target = setTarget.getSelectedIndex() + 1; // Set target
+        Main.target = targetListBox.getSelectedIndex() + 1; // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
         parent.dispose();                       // Close clock out time window
 
@@ -232,31 +232,13 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    private JPanel createTargetRow() {
-
-        setTargetRow = new JPanel();
-        targetText = new JLabel("  Please set an hourly target:"); // Create target label
-
-        if (System.getProperty("os.name").equals("Mac OS X"))
-            targetText.setText(" Select your hourly target:");// Due to diff mac font, set diff text
-        targetText.setPreferredSize(new Dimension(165, 25));
-        Theme.colorThese(new JComponent[]{targetText, setTargetRow});
-
-        // Add the specific stuffs
-        setTargetRow.add(targetText);
-        setTargetRow.add(setTarget);
-
-        return setTargetRow; // Return the new panel
-
-    }
-
     public void colorSelf() {
 
-        Theme.colorThese(new JComponent[]{labelRow, topText, select, hrBox,
-                minBox, amPMBox, setTarget, selectRow, timeBoxesRow});
+        Theme.colorThese(new JComponent[]{this, topText, select, hrBox,
+                minBox, amPMBox});
 
         if (type.equals(TimeWindowType.CLOCK_OUT)) {
-            Theme.colorThese(new JComponent[]{setTargetRow, targetText});
+            Theme.colorThese(new JComponent[]{targetLabel, targetListBox});
         }
 
     }

@@ -90,9 +90,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     private void centerOnParent() {
 
-        int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2]/2) - (getWidth()/2)),
-                xyWidthHeight[1]  + ((xyWidthHeight[3]/2) - (getHeight()/2)));
+        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
+                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
     }
 

@@ -15,7 +15,6 @@ import java.util.Objects;
 public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener,
         MouseListener, KeyListener {
 
-    private static final Dimension colorLabelsSize = new Dimension(40, 20);
     private final SettingsDialog parent;
     private boolean shifting = false; // Keeps track if user is shifting
 
@@ -39,7 +38,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
     // Default shift length in hours.
     private final JComboBox<String> shiftLengthListBox = new JComboBox<>(Ops.createNumberList(false,
-            1, 12, "h"));
+            1, 12, "h "));
 
     // ======= Checkboxes =======
     // Stay on top option
@@ -201,15 +200,18 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 blueRow, blueLabel, blueSlider});
 
         // Add labels and sliders to their respective rows
+        FontMetrics fm = redLabel.getFontMetrics(redLabel.getFont());
+        Dimension labelSize = new Dimension(Math.max(fm.stringWidth(redLabel.getText()),
+                Math.max(fm.stringWidth(greenLabel.getText()), fm.stringWidth(blueLabel.getText()))), fm.getHeight());
         redRow.add(redLabel);
         redRow.add(redSlider);
-        redLabel.setPreferredSize(colorLabelsSize);
+        redLabel.setPreferredSize(labelSize);
         greenRow.add(greenLabel);
         greenRow.add(greenSlider);
-        greenLabel.setPreferredSize(colorLabelsSize);
+        greenLabel.setPreferredSize(labelSize);
         blueRow.add(blueLabel);
         blueRow.add(blueSlider);
-        blueLabel.setPreferredSize(colorLabelsSize);
+        blueLabel.setPreferredSize(labelSize);
 
         // Add them to root panel
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));

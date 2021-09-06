@@ -1,7 +1,6 @@
 package com.swiftsatchel.bedroom.settings;
 
 import com.swiftsatchel.bedroom.dialog.AlertDialog;
-import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
@@ -31,9 +30,8 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         pack();
 
         // Center on parent window
-        int[] xyWidthHeight = parent.getXYWidthHeight();
-        setLocation(xyWidthHeight[0] + ((xyWidthHeight[2]/2) - (getWidth()/2)),
-                xyWidthHeight[1] + ((xyWidthHeight[3]/2) - (getHeight()/2)));
+        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
+                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
         setVisible(true);
 
