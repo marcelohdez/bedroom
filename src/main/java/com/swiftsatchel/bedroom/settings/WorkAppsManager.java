@@ -94,10 +94,11 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         // Customize
         Theme.colorThese(new JComponent[]{list, panel});
         JScrollPane sp = new JScrollPane(list);
-        sp.setPreferredSize(new Dimension(180, 140));
 
         // Add to panel
         panel.add(sp);
+        pack();
+        sp.setPreferredSize(new Dimension((int)(getWidth()*1.5), getWidth()));
         pack();
 
         return panel;

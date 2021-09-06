@@ -59,7 +59,7 @@ public class AlertDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle(title);
         pack();
-        ok.setPreferredSize(new Dimension(getWidth() - 5, 40));
+        ok.setPreferredSize(new Dimension(messageBox.getWidth(), (int)(ok.getHeight()*1.5)));
         pack();
 
         // Center on summoner

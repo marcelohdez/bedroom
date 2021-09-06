@@ -200,26 +200,6 @@ public class Main {
 
     }
 
-    public static long getTotalSecClockedIn() {
-        return totalSecClockedIn;
-    }
-
-    public static boolean isBreakTimesChosen() {
-        return breakOutTime != null;
-    }
-
-    public static int getTarget() {
-        return target;
-    }
-
-    public static void setTarget(int newTarget) {
-        target = newTarget;
-    }
-
-    public static int getOrders() {
-        return orders;
-    }
-
     private static void getBreakTime() {
 
         if (LocalDateTime.now().isAfter(breakInTime)) { // Has our break started?
@@ -267,6 +247,26 @@ public class Main {
 
     public static TreeMap<LocalDate, Float> getShiftHistory() {
         return shiftHistory;
+    }
+
+    public static long getTotalSecClockedIn() {
+        return totalSecClockedIn;
+    }
+
+    public static boolean isBreakTimesChosen() {
+        return breakOutTime != null;
+    }
+
+    public static int getTarget() {
+        return target;
+    }
+
+    public static void setTarget(int newTarget) {
+        target = newTarget;
+    }
+
+    public static int getOrders() {
+        return orders;
     }
 
     public static void clockOut(LocalDateTime time) {
