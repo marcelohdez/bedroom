@@ -104,16 +104,18 @@ public final class Theme {
     /**
      * Sets color accents not accessible through setForeground or setBackground.
      * Hence, this only works before creating the components.
+     * Also takes into account high contrast, if it is enabled accents will be much
+     * more exaggerated, and certain colors will change.
      */
     public static void setAccents() {
 
-        Color c = contrastWithShade(buttonColor, 30);
+        Color c = contrastWithShade(buttonColor, Settings.isContrastEnabled() ? 240 : 30);
         UIManager.put("Button.select", c);
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
-        UIManager.put("ComboBox.selectionForeground", buttonTextColor);
+        UIManager.put("ComboBox.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
         UIManager.put("List.selectionBackground", c);
-        UIManager.put("List.selectionForeground", buttonTextColor);
+        UIManager.put("List.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
         UIManager.put("ScrollBar.background", bg);
         UIManager.put("ToolTip.background", Color.WHITE);
 
