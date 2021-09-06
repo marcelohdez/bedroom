@@ -54,8 +54,15 @@ public final class Settings {
      *
      * @param highContrast new highContrast value
      */
-    public static void saveHighContrast(boolean highContrast) {
-        Main.userPrefs.putBoolean("highContrast", highContrast);
+    public static void setHighContrastTo(boolean highContrast) {
+        Main.userPrefs.putBoolean("highContrast", highContrast); // Save new value
+        if (highContrast) { // If it is true, set to high contrast theme
+            int[] textRGB = new int[]{255, 255, 255};
+            int[] buttonTextRGB = new int[]{255, 255, 255};
+            int[] buttonRGB = new int[]{0, 0, 0};
+            int[] bgRGB = new int[]{0, 0, 0};
+            saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
+        }
     }
 
     /**

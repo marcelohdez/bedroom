@@ -58,6 +58,10 @@ public class Main {
 
         try { // Set cross-platform look and feel, fixes macOS buttons having a white background
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            // Also, if on Windows--IDK the property to any other OS--check for high contrast and enable if true
+            if (System.getProperty("os.name").contains("Windows"))
+                if (Toolkit.getDefaultToolkit().getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE))
+                    Settings.setHighContrastTo(true);
         } catch(Exception e) { e.printStackTrace(); }
 
         Theme.setAccents(); // Set extra color accents through UIManager

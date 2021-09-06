@@ -372,13 +372,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 newButtonRGB = new int[]{0, 0, 0};
                 newBgRGB = new int[]{72, 0, 0};
             }
-            case "Contrast" -> {
-                newTextRGB = new int[]{255, 255, 255};
-                newButtonTextRGB = new int[]{255, 255, 255};
-                newButtonRGB = new int[]{0, 0, 0};
-                newBgRGB = new int[]{0, 0, 0};
-                highContrast = true; // Enable high contrast
-            }
+            case "Contrast" -> highContrast = true; // Enable high contrast
             case "Khaki Green" -> {
                 newTextRGB = new int[]{240, 240, 240};
                 newButtonTextRGB = new int[]{240, 240, 240};
@@ -435,10 +429,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         }
 
         // Save settings
-        Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
                 shiftLengthListBox.getSelectedIndex() + 1);
-        Settings.saveHighContrast(highContrast);
+        Settings.setHighContrastTo(highContrast);
+        // Since high contrast overwrites colors anyways, only do this if it is false
+        if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
 
         if (parent.getWindowParent() instanceof SelectTimeDialog)
             parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
