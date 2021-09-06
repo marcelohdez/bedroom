@@ -16,11 +16,8 @@ public final class Ops { // Operations
     public static String[] createNumberList(boolean addZeroUnder10, int start, int end, String extraText) {
 
         String[] list = new String[(end+1)-start];
-        StringBuilder sb;
         for (int i = 0; i < list.length; i++) {
-            sb = new StringBuilder();
-            sb.append(addZeroUnder10 && i < 10 ? "0" + i : i).append(extraText);
-            list[i] = sb.toString();
+            list[i] = (addZeroUnder10 && i < 10 ? "0" + i : i) + extraText;
         }
 
         return list;
