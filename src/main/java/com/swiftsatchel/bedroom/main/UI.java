@@ -67,12 +67,12 @@ public class UI extends JPanel implements ActionListener {
     static void setTooltips() {
 
         // Add Order's tool tips
-        double neededForTarget = (double) Main.totalSecClockedIn/3600 * Main.target;
+        double neededForTarget = (double) Main.getTotalSecClockedIn()/3600 * Main.getTarget();
         StringBuilder sb;
-        if (neededForTarget > Main.orders) { // Tell us how many orders we need to reach our target
+        if (neededForTarget > Main.getOrders()) { // Tell us how many orders we need to reach our target
 
             sb = new StringBuilder();
-            int amountMissing = (int) Math.round(Math.ceil(neededForTarget - Main.orders));
+            int amountMissing = (int) Math.round(Math.ceil(neededForTarget - Main.getOrders()));
             addOrder.setToolTipText(sb.append("<html><b>You are ")
                     .append(amountMissing)
                     .append(" order")
@@ -82,7 +82,7 @@ public class UI extends JPanel implements ActionListener {
         } else addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
 
         // Set Break's tool tips
-        if (Main.breakTimesChosen) { // If we have chosen break times, change the tooltip to them.
+        if (Main.isBreakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");

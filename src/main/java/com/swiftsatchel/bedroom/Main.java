@@ -35,19 +35,18 @@ public class Main {
     private static int hr = 0;
     private static int min = 0;
     private static int sec = 0;
-    public static long totalSecClockedIn = 0;
-    public static long secondsTillClockIn = -1;
-    public static long secondsTillLeaveBreak = -1;
+    private static long totalSecClockedIn = 0;
+    private static long secondsTillClockIn = -1;
+    private static long secondsTillLeaveBreak = -1;
 
     // Time values
     public static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
-    public static boolean breakTimesChosen = false;
 
     // Shift stats
-    public static long orders = 0;
-    public static boolean inBreak = false;
-    public static boolean clockInTimePassed = false;
-    public static int target = 0; // Target orders/hr
+    private static int orders = 0;
+    private static boolean inBreak = false;
+    private static boolean clockInTimePassed = false;
+    private static int target; // Target orders/hr
     private static int ordersNeeded = 0;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
@@ -113,7 +112,7 @@ public class Main {
 
                 if (LocalDateTime.now().isBefore(clockOutTime)) { // If we have not finished our shift:
 
-                    if (breakTimesChosen) { // Have we chosen break times?
+                    if (breakOutTime != null) { // Have we chosen break times?
                         getBreakTime();
                     } else { // If not, set totalSecClocked to time from clock in to now
                         totalSecClockedIn = clockInTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
@@ -201,6 +200,26 @@ public class Main {
 
     }
 
+    public static long getTotalSecClockedIn() {
+        return totalSecClockedIn;
+    }
+
+    public static boolean isBreakTimesChosen() {
+        return breakOutTime != null;
+    }
+
+    public static int getTarget() {
+        return target;
+    }
+
+    public static void setTarget(int newTarget) {
+        target = newTarget;
+    }
+
+    public static int getOrders() {
+        return orders;
+    }
+
     private static void getBreakTime() {
 
         if (LocalDateTime.now().isAfter(breakInTime)) { // Has our break started?
@@ -224,7 +243,7 @@ public class Main {
 
     private static void getOrdersNeeded() {
 
-        if (!breakTimesChosen) { // Check if we have not chosen break times
+        if (breakOutTime == null) { // Check if we have not chosen break times
             ordersNeeded = Math.round(target *
                     // If so, get ordersNeeded with clock in and out times
                     (clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60F));
@@ -239,7 +258,7 @@ public class Main {
     private static void getTotalShiftTime() {
         // Get shift length, used once our shift has ended as to not keep updating time,
         // If we have chosen breaks, get shift length minus break length, for worked time.
-        if (breakTimesChosen) {
+        if (breakOutTime != null) {
             totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS) -
                     breakInTime.until(breakOutTime, ChronoUnit.SECONDS);
         } else totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS);

@@ -171,7 +171,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // to the current date + 1 day.
         Main.clockOutTime = time.isAfter(Main.clockInTime) ? time : time.plusDays(1);
 
-        Main.target = targetBox.getSelectedIndex() + 1; // Set target
+        Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
         parent.dispose();                       // Close clock out time window
 
@@ -195,7 +195,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime)) {
 
             Main.breakOutTime = time; // Set leave break time
-            Main.breakTimesChosen = true;
             parent.dispose();       // Close leave break window
 
         } else {
