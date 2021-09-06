@@ -9,6 +9,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -19,7 +20,7 @@ public class ShiftHistoryChart extends JPanel {
     private int pointsAmount = 7; // Amount of data points to show
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
-    private final LocalDate[] keys = shiftHistoryData.keySet().toArray(new LocalDate[0]);
+    private final LocalDate[] keys = cleanUpKeys(shiftHistoryData.keySet().toArray(new LocalDate[0]));
     private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
     private int currentPage = totalPages; // Default to last page, being the newest shifts
     private final Color barColor = Theme.getTextColor(); // Constant bar color
@@ -40,6 +41,17 @@ public class ShiftHistoryChart extends JPanel {
 
     }
 
+    private LocalDate[] cleanUpKeys(LocalDate[] keys) {
+
+        ArrayList<LocalDate> cleanedList = new ArrayList<>();
+        for (int i = 0; i < keys.length; i++) {
+            if (!shiftHistoryData.get(keys[i]).isNaN()) cleanedList.add(keys[i]);
+        }
+
+        return cleanedList.toArray(new LocalDate[0]);
+
+    }
+
     /**
      * Draw performance history bars
      *
@@ -50,15 +62,13 @@ public class ShiftHistoryChart extends JPanel {
         int barXDiff = (int) ((getWidth() - g.getFont().getSize()*1.5F) / pointsAmount);
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
-        for (int point = 0; point <= pointsAmount; point++) { // For each point:
+        for (int point = 0; point < pointsAmount; point++) { // For each point:
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
-            // draw the bar (a rectangle) and its date at the bottom if value is a number and not -1
-            // (to filter out nonexistent values)
-            if (!Float.isNaN(value) && value != -1F) {
+            if (value != -1F) { // draw the bar (a rectangle) if value is not -1 (to filter out nonexistent values)
 
                 int top = (int) (getHeight() - ((getHeight() / range) * value)); // Top of current bar
                 // Get x of bar plus initial offset
@@ -85,11 +95,9 @@ public class ShiftHistoryChart extends JPanel {
     private int getPointsBeingShown() {
 
         int p = 0; // Amount of points currently being shown
-        for (int i = 0; i <= pointsAmount; i++) {
+        for (int i = 0; i < pointsAmount; i++) {
             int offset = pointsAmount * (currentPage - 1);
-            if (offset + i < keys.length)
-                if (!Float.isNaN(shiftHistoryData.get(keys[offset + i])))
-                    p++;
+            if (offset + i < keys.length) p++;
         }
         return p;
 
@@ -227,8 +235,7 @@ public class ShiftHistoryChart extends JPanel {
      * @return The range of dates currently being shown
      */
     public String getShownDates() {
-        int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown(); // Index of ending date
-        if (endDateIndex == keys.length) endDateIndex--;
+        int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown() - 1; // Index of ending date
 
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
                 + "-" +
@@ -243,7 +250,7 @@ public class ShiftHistoryChart extends JPanel {
     public int getCurrentRange() {
 
         int r = 0;
-        for (int p = 0; p <= pointsAmount; p++) { // For each point we can show:
+        for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
 
             int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
             if (index < keys.length) { // If index exists:
