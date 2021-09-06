@@ -15,9 +15,9 @@ public final class Ops { // Operations
      */
     public static String[] createNumberList(boolean addZeroUnder10, int start, int end, String extraText) {
 
-        String[] list = new String[(end+1)-start];
+        String[] list = new String[end-start+1];
         for (int i = 0; i < list.length; i++) {
-            list[i] = (addZeroUnder10 && i < 10 ? "0" + i : i) + extraText;
+            list[i] = (addZeroUnder10 && (start+i) < 10 ? "0" + (start+i) : (start+i)) + extraText;
         }
 
         return list;
@@ -33,9 +33,9 @@ public final class Ops { // Operations
      */
     public static String[] createNumberList(boolean addZeroUnder10, int start, int end) {
 
-        String[] list = new String[(end+1)-start];
+        String[] list = new String[end-start+1];
         for (int i = 0; i < list.length; i++) {
-            list[i] = String.valueOf(addZeroUnder10 && i < 10 ? "0" + i : i);
+            list[i] = String.valueOf(addZeroUnder10 && (start+i) < 10 ? "0" + (start+i) : (start+i));
         }
 
         return list;
