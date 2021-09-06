@@ -23,65 +23,77 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private final GridBagLayout layout;
     private final GridBagConstraints gbc;
 
-    // ======= List boxes: =======
-    private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
-    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
-    // Create minutes (0-59) and hourly targets (1-24)
-    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
-    private final JComboBox<String> targetListBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
-
-    // Other components:
-    private final JButton select = new JButton("Select");   // Select button
-    private final JLabel topText = new JLabel("CLOCK IN time:"); // Top text label
-    private final JLabel targetLabel = new JLabel("Your hourly target:"); // Select target text
+    // ======= Components: =======
+    private final JLabel topText;               // Top text label
+    private final JComboBox<String> amPMBox;    // AM/PM list box
+    private final JComboBox<String> hrBox;      // Hours list box
+    private final JComboBox<String> minBox;     // Minutes list box
+    private final JComboBox<String> targetBox;  // Targets list box
+    private final JButton selectButton;               // Select button
+    private final JLabel targetLabel;           // Select target text
 
     public SelectTimeUI(SelectTimeDialog parent) {
 
+        // Initial properties
         type = parent.type;
         this.parent = parent;
         layout = new GridBagLayout();
         gbc = new GridBagConstraints();
 
-        setBackground(Theme.getBgColor()); // Set background color
-        setLayout(layout);
-        setListBoxIndexes(SetTime.CURRENT); // Set to current time
-        addKeyListener(parent);
+        // Initialize component variables
+        amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
+        hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
+        minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
+        targetBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
+        selectButton = new JButton("Select");
+        topText = new JLabel("CLOCK IN time:");
+        targetLabel = new JLabel("Your hourly target:");
+
+        setBackground(Theme.getBgColor());  // Set background color
+        setLayout(layout);                  // Set layout
+        setListBoxIndexes(SetTime.CURRENT); // Set to current time on default
+        addKeyListener(parent);             // Add key listener
 
         switch (type) { // Set window type-specific things
             case CLOCK_OUT -> { // For clock out time window, add its specific components as well
                 topText.setText("CLOCK OUT time:");
                 addComponent(targetLabel, 0, 2, 2, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0));
-                addComponent(targetListBox, 2, 2, 1, GridBagConstraints.BOTH, new Insets(2, 2, 2, 4));
+                addComponent(targetBox, 2, 2, 1, GridBagConstraints.BOTH, new Insets(2, 2, 2, 4));
             }
             case START_BREAK -> topText.setText("Break start:");
             case END_BREAK -> topText.setText("Break end:");
             case EARLY_CLOCK_OUT -> {
                 topText.setText("Clocking out early?");
-                select.setText("Clock Out");
+                selectButton.setText("Clock Out");
             }
         }
+
+        initComponents(); // Add and customize components
+        colorSelf(); // Color self
+        Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
+
+    }
+
+    private void initComponents() {
 
         // Add components
         addComponent(topText, 0, 0, 3, GridBagConstraints.HORIZONTAL, new Insets(4, 4, 2, 4));
         addComponent(hrBox, 0, 1, 1, GridBagConstraints.BOTH, new Insets(4, 4, 4, 2));
         addComponent(minBox, 1, 1, 1, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
         addComponent(amPMBox, 2, 1, 1, GridBagConstraints.BOTH, new Insets(4, 2, 4, 4));
-        addComponent(select, 0, 4, 3, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
+        addComponent(selectButton, 0, 4, 3, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
 
-        // Customize components
+        // Customize em
         topText.setFont(Theme.getBoldText());
         topText.setHorizontalAlignment(JLabel.CENTER);
-        select.addActionListener(this);
-        select.addKeyListener(parent);
+        selectButton.addActionListener(this);
+        selectButton.addKeyListener(parent);
         hrBox.addKeyListener(parent);
         minBox.addKeyListener(parent);
         amPMBox.addKeyListener(parent);
         targetLabel.setHorizontalAlignment(JLabel.CENTER);
-        targetListBox.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
-        targetListBox.addKeyListener(parent);
-
-        colorSelf(); // Color components
-        Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
+        targetBox.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
+        targetBox.addKeyListener(parent);
 
     }
 
@@ -159,7 +171,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // to the current date + 1 day.
         Main.clockOutTime = time.isAfter(Main.clockInTime) ? time : time.plusDays(1);
 
-        Main.target = targetListBox.getSelectedIndex() + 1; // Set target
+        Main.target = targetBox.getSelectedIndex() + 1; // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
         parent.dispose();                       // Close clock out time window
 
@@ -234,11 +246,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public void colorSelf() {
 
-        Theme.colorThese(new JComponent[]{this, topText, select, hrBox,
-                minBox, amPMBox});
+        Theme.colorThese(new JComponent[]{this, topText, selectButton, hrBox, minBox, amPMBox});
 
         if (type.equals(TimeWindowType.CLOCK_OUT)) {
-            Theme.colorThese(new JComponent[]{targetLabel, targetListBox});
+            Theme.colorThese(new JComponent[]{targetLabel, targetBox});
         }
 
     }

@@ -120,24 +120,6 @@ public final class Theme {
     }
 
     /**
-     * Loads the RGB values of the specified color's key from preferences.
-     * ex: for buttonTextColor the red value is stored in buttonTextRed,
-     * so this method iterates through the given "buttonText" key and adds
-     * "Red" "Green" and "Blue" at the end as need.
-     *
-     * @param colorKey String of component ex: "button"
-     * @param def Default value
-     * @return The color value of that key from preferences.
-     */
-    private static Color loadColorOf(String colorKey, int def) {
-
-        return new Color(Main.userPrefs.getInt(colorKey + "Red", def),
-                Main.userPrefs.getInt(colorKey + "Green", def),
-                Main.userPrefs.getInt(colorKey + "Blue", def));
-
-    }
-
-    /**
      * Gets the default bold font from theme.
      *
      * @return The bold font.
@@ -191,6 +173,25 @@ public final class Theme {
         buttonTextColor = loadColorOf("buttonText", 240);
         buttonColor = loadColorOf("button", 80);
         bg = loadColorOf("bg", 64);
+        setAccents();
+
+    }
+
+    /**
+     * Loads the RGB values of the specified color's key from preferences.
+     * ex: for buttonTextColor the red value is stored in buttonTextRed,
+     * so this method iterates through the given "buttonText" key and adds
+     * "Red" "Green" and "Blue" at the end as need.
+     *
+     * @param colorKey String of component ex: "button"
+     * @param def Default value
+     * @return The color value of that key from preferences.
+     */
+    private static Color loadColorOf(String colorKey, int def) {
+
+        return new Color(Main.userPrefs.getInt(colorKey + "Red", def),
+                Main.userPrefs.getInt(colorKey + "Green", def),
+                Main.userPrefs.getInt(colorKey + "Blue", def));
 
     }
 

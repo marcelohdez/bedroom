@@ -46,8 +46,6 @@ public class UI extends JPanel implements ActionListener {
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
-        Main.updateStats();
-
     }
 
     public void actionPerformed(ActionEvent e) {

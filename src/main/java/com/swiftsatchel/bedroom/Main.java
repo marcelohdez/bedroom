@@ -106,7 +106,7 @@ public class Main {
 
     public static void update() {
 
-        if (Main.timesChosen) // Have we chosen clock in and out times?
+        if (timesChosen) { // Have we chosen clock in and out times?
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
                 clockInTimePassed = true;
@@ -133,13 +133,14 @@ public class Main {
                 updateStats(); // Display it on screen
             }
 
-        wnd.pack();
+            wnd.pack();
+
+        }
 
     }
 
     public static void updateSettings() {
 
-        Theme.setAccents();
         Theme.reloadColors();
         wnd.reloadSettings();
 
@@ -174,15 +175,15 @@ public class Main {
                 sb.append(" left\n")
                         .append(getStats());
             }
-            UI.display(sb.toString()); // Show on UI
 
-        } else if (Main.timesChosen) { // Show "Time till clock in" =======
+        } else { // Show "Time till clock in" =======
 
             sb.append("Time until clocked in:\n");
             Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillClockIn));
-            UI.display(sb.toString()); // Show on-screen
 
         }
+
+        UI.display(sb.toString()); // Show on UI
 
     }
 
