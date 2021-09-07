@@ -3,7 +3,7 @@ Due to the pandemic people have started working remotely, _working from the bedr
 Or... maybe it just did. Bedroom is an open source Java application developed in order to aid call center 
 agents in keeping track of their orders and orders per hour to meet their quotas effectively.
 
-This is my first Java program as a self taught high school student, so it has grown and improved (and will hopefully 
+This was my first Java program as a self taught high school student, so it has grown and improved (and will hopefully 
 continue to) as i improve or learn more about the language. It was originally created for me and my friends working 
 at a call center to keep track of our orders/hr without doing the math ourselves, enabling us to share it quicker.
 
@@ -31,19 +31,23 @@ be found [online](https://plumbr.io/blog/memory-leaks/why-does-my-java-process-c
 
 ## How to use
 After opening Bedroom you can input your clock in and out times, if you every mess up on these select time dialogs you
-may close them to go to the previous one (although closing the clock in time dialog will close Bedroom.) On the right will
-be information about your current shift, on the center will be your Add Order button, and on the left will be the Set
-Break button. These buttons can be substituted by shortcuts, which you can see below. To remove orders you have to use
-a shortcut, which is currently the down arrow on your keyboard. Bedroom also contains a Settings dialog for customizing
-your theme and other things to make your experience better, this can be opened through either Backspace or Delete.
+may close them to go to the previous one (although closing the clock in time dialog will close Bedroom.) On the right 
+will be information about your current shift, on the center will be your Add Order button, and on the left will be the 
+Set Break button. These buttons can be substituted by shortcuts, which you can see below. To remove orders you have to 
+use a shortcut, which is currently the down arrow on your keyboard. Bedroom tracks your shift's performance once it is
+is closed, saving your final orders per hour with the ending date of your shift. This past history can be viewed in a 
+histogram opened with backslash, "```\```". Bedroom also contains a settings dialog for customizing your theme and 
+other things to make your experience better, this can be opened through either Backspace or Delete.
 
 ### _Shortcuts:_
 * **Adding/removing orders:** _Up Arrow_ & _Down Arrow_ respectively.
-* **Open Settings:** _Backspace_ or _Delete_
-   * Holding _Shift_ while dragging the color sliders will make them all the same value.
 * **Opening Set Break dialog:** _Number 0_
 * **Exiting select time dialogs:** _Escape_
 * **Selecting time in select time dialogs, without pressing Select button:** _Enter_
+* **Open Performance History Chart:** _Back-slash_ (```\```)
+   * _Right-clciking_ on or above a date's bar will open an option to delete this date's data.
+* **Open Settings:** _Backspace_ or _Delete_
+   * Holding _Shift_ while dragging the color sliders will make them all the same value.
 * Any default Swing shortcuts.
 
 _These shortcuts are meant to be unobtrusive to work applications,
