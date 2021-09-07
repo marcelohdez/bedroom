@@ -12,7 +12,8 @@ public final class Theme {
 
     // ======= Public reusable colors & fonts =======
     // Fonts:
-    private static final Font boldText = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    private static final Font boldFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+    private static final Font chartFont = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
 
     // UI colors:
     private static Color textColor = loadColorOf("text", 240);
@@ -126,8 +127,17 @@ public final class Theme {
      *
      * @return The bold font.
      */
-    public static Font getBoldText() {
-        return boldText;
+    public static Font getBoldFont() {
+        return boldFont;
+    }
+
+    /**
+     * Gets the default text used for the shift history chart from theme.
+     *
+     * @return The chart font
+     */
+    public static Font getChartFont() {
+        return chartFont;
     }
 
     /**

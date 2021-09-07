@@ -84,7 +84,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         addComponent(selectButton, 0, 4, 3, GridBagConstraints.BOTH, new Insets(4, 4, 4, 4));
 
         // Customize em
-        topText.setFont(Theme.getBoldText());
+        topText.setFont(Theme.getBoldFont());
         topText.setHorizontalAlignment(JLabel.CENTER);
         selectButton.addActionListener(this);
         selectButton.addKeyListener(parent);

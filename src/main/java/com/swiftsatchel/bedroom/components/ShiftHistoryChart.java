@@ -6,6 +6,10 @@ import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -15,17 +19,35 @@ import java.util.TreeMap;
 /**
  * A bar graph showing the orders per hour user ended with on existing shifts
  */
-public class ShiftHistoryChart extends JPanel {
+public class ShiftHistoryChart extends JPanel implements ActionListener, MouseListener {
 
+    private boolean noHistory = true;
     private int pointsAmount = 7; // Amount of data points to show
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
-    private final LocalDate[] keys = cleanUpKeys(shiftHistoryData.keySet().toArray(new LocalDate[0]));
-    private int totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
-    private int currentPage = totalPages; // Default to last page, being the newest shifts
+    private LocalDate[] keys = cleanUpKeys();
+    private int currentPage = 1;
+    private int totalPages = 1;
     private final Color barColor = Theme.getTextColor(); // Constant bar color
 
-    private float range = getCurrentRange();
+    private float range;
+    private int barXDiff;
+
+    private JPopupMenu delMenu;
+    private JMenuItem deleteDate;
+    private LocalDate currentlyObserved;
+
+    public ShiftHistoryChart() {
+        addMouseListener(this);
+
+        delMenu = new JPopupMenu("Edit");
+        deleteDate = new JMenuItem("Delete");
+
+        deleteDate.addActionListener(this);
+        delMenu.add(deleteDate);
+        add(delMenu);
+
+    }
 
     @Override
     public void paintComponent(Graphics graphics) { // Drawing the graph
@@ -33,23 +55,53 @@ public class ShiftHistoryChart extends JPanel {
 
         Graphics2D g = (Graphics2D) graphics; // Cast Graphics object to Graphics2D
 
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16)); // Set to font we'll use
-        range = getCurrentRange();
-
-        drawRangeLines(g);
-        drawBars(g);
+        g.setFont(Theme.getChartFont()); // Set to font we'll use
+        updatePages();
+        if (!noHistory) {
+            range = getCurrentRange();
+            barXDiff = getBarXDiff();
+            drawRangeLines(g);
+            drawBars(g);
+        } else g.drawString("There is no data to be shown.",
+                getWidth()/2 - g.getFontMetrics().stringWidth("There is no data to be shown.")/2,
+                getHeight()/2 - g.getFont().getSize()/2);
 
     }
 
-    private LocalDate[] cleanUpKeys(LocalDate[] keys) {
-
-        ArrayList<LocalDate> cleanedList = new ArrayList<>();
-        for (int i = 0; i < keys.length; i++) {
-            if (!shiftHistoryData.get(keys[i]).isNaN()) cleanedList.add(keys[i]);
+    private void updatePages() {
+        if (!noHistory) {
+            totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
+            if (currentPage > totalPages) currentPage = totalPages;
         }
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    private LocalDate[] cleanUpKeys() {
+
+        int amount = 0;
+        ArrayList<LocalDate> cleanedList = new ArrayList<>();
+        for (LocalDate key : shiftHistoryData.keySet()) {
+            if (shiftHistoryData.get(key) != null &&
+                    !shiftHistoryData.get(key).isNaN()) {
+                cleanedList.add(key);
+                amount++;
+            }
+        }
+        noHistory = !(amount > 0);
 
         return cleanedList.toArray(new LocalDate[0]);
 
+    }
+
+    /**
+     *
+     */
+    private void getNewKeys() {
+        keys = cleanUpKeys();
     }
 
     /**
@@ -59,7 +111,6 @@ public class ShiftHistoryChart extends JPanel {
      */
     private void drawBars(Graphics2D g) {
         // Difference in X coordinates between bars
-        int barXDiff = (int) ((getWidth() - g.getFont().getSize()*1.5F) / pointsAmount);
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
         for (int point = 0; point < pointsAmount; point++) { // For each point:
@@ -80,8 +131,8 @@ public class ShiftHistoryChart extends JPanel {
                 g.fillRect(x, top, (barXDiff - 1), getHeight() - top);
 
                 // Draw bar value and date
-                drawBarValue(g, keys[index].getMonthValue() != lastMonth, barXDiff, value, x, top);
-                lastMonth = drawDate(g, index, x, lastMonth, barXDiff);
+                drawBarValue(g, keys[index].getMonthValue() != lastMonth, value, x, top);
+                lastMonth = drawDate(g, index, x, lastMonth);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
         }
@@ -115,7 +166,7 @@ public class ShiftHistoryChart extends JPanel {
         } else g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 255)); // Higher contrast
 
         float divisor; // Amount of units to divide by
-        if (getHeight() / range > g.getFont().getSize() * 1.4) { // If 1 by 1 fits (ex: 1, 2, 3, 4) set divisor to 1
+        if (getHeight() / range > g.getFont().getSize() * 1.8) { // If 1 by 1 fits (ex: 1, 2, 3, 4) set divisor to 1
             divisor = 1;
         } else if (getHeight() / range > g.getFont().getSize() * 0.8) { // If 2 fits (ex: 2, 4, 6) set divisor to 2
             divisor = 2;
@@ -137,12 +188,11 @@ public class ShiftHistoryChart extends JPanel {
      * @param dateIndex Index of date on keys array
      * @param x X coordinate
      * @param lastMonth Current last month value
-     * @param barWidth Width of current bar (difference of bars)
      * @return New lastMonth value if changed
      */
-    private int drawDate(Graphics2D g, int dateIndex, int x, int lastMonth, int barWidth) {
+    private int drawDate(Graphics2D g, int dateIndex, int x, int lastMonth) {
 
-        if (barWidth > g.getFont().getSize()*1.3) { // If there is space to do so:
+        if (barXDiff > g.getFont().getSize()*1.3) { // If there is space to do so:
             g.setColor(Theme.contrastWithBnW(barColor));
 
             g.fillRect(x, getHeight() - g.getFont().getSize(), (int) (g.getFont().getSize() * 1.4),
@@ -189,12 +239,11 @@ public class ShiftHistoryChart extends JPanel {
      *
      * @param g Graphics2D object to draw with
      * @param isMonth Is the current bar starting on a new month
-     * @param barXDiff Current difference between bars (for width detection)
      * @param value Value to draw
      * @param x X coordinate
      * @param barTop Top y value of bar
      */
-    private void drawBarValue(Graphics2D g, boolean isMonth, int barXDiff, float value, int x, int barTop) {
+    private void drawBarValue(Graphics2D g, boolean isMonth, float value, int x, int barTop) {
         Color opposite = Theme.contrastWithBnW(barColor);
         int textWidth = g.getFontMetrics().stringWidth(String.valueOf(value));
         int dateMonthHeight = g.getFont().getSize()*2 + g.getFontMetrics().stringWidth("ABCD");
@@ -235,11 +284,14 @@ public class ShiftHistoryChart extends JPanel {
      * @return The range of dates currently being shown
      */
     public String getShownDates() {
-        int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown() - 1; // Index of ending date
+        if (!noHistory) {
+            System.out.println(noHistory);
+            int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown() - 1; // Index of ending date
 
-        return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
-                + "-" +
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[endDateIndex]);
+            return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
+                    + "-" +
+                    DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[endDateIndex]);
+        } return "None";
     }
 
     /**
@@ -250,17 +302,28 @@ public class ShiftHistoryChart extends JPanel {
     public int getCurrentRange() {
 
         int r = 0;
-        for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
+        if (!noHistory) {
+            for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
 
-            int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
-            if (index < keys.length) { // If index exists:
-                if (shiftHistoryData.get(keys[index]) > r) // We check if it is greater than the last max
-                    r = (int) Math.ceil(shiftHistoryData.get(keys[index])); // If it is, set to new max
+                int index = p + (pointsAmount * (currentPage - 1)); // Get its position in the array
+                if (index < keys.length) { // If index exists:
+                    if (shiftHistoryData.get(keys[index]) > r) // We check if it is greater than the last max
+                        r = (int) Math.ceil(shiftHistoryData.get(keys[index])); // If it is, set to new max
+                }
+
             }
-
         }
         return r; // Return range
 
+    }
+
+    /**
+     * Get the difference in X coordinates between the bars
+     *
+     * @return The difference in X coordinates between the bars
+     */
+    private int getBarXDiff() {
+        return (int) ((getWidth() - Theme.getChartFont().getSize()*1.5F) / pointsAmount);
     }
 
     /**
@@ -295,15 +358,24 @@ public class ShiftHistoryChart extends JPanel {
     public void setPointsAmount(int newValue) {
 
         pointsAmount = newValue;
-        totalPages = (int) Math.ceil((double) keys.length/ (double)pointsAmount);
-        currentPage = totalPages;
+        updatePages();
 
     }
 
+    /**
+     * Get current displayed page
+     *
+     * @return The current page
+     */
     public int getCurrentPage() {
         return currentPage;
     }
 
+    /**
+     * Get total amount of pages
+     *
+     * @return The total amount of pages
+     */
     public int getTotalPages() {
         return totalPages;
     }
@@ -314,5 +386,60 @@ public class ShiftHistoryChart extends JPanel {
     public int getPointsAmount() {
         return pointsAmount;
     }
+
+    /**
+     *
+     *
+     * @param x
+     * @param y
+     */
+    private void popUpMenu(int x, int y) {
+        int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get the bar which our x pos matches
+
+        deleteDate.setText("No date chosen");
+        currentlyObserved = null;
+        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) {
+
+            deleteDate.setText("Delete " +
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getMonth().name().substring(0, 3) + " " +
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getDayOfMonth() + ", " +
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getYear());
+
+            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar];
+
+        }
+
+        delMenu.show(this, x, y);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource().equals(deleteDate)) {
+            if (currentlyObserved != null) {
+                shiftHistoryData.remove(currentlyObserved);
+                Main.removeFromHistory(currentlyObserved);
+                getNewKeys();
+                updatePages();
+                repaint();
+            }
+        }
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) popUpMenu(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 
 }
