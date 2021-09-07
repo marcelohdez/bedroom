@@ -76,9 +76,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
+     * Clean up the shift history's keys to keep only valid values
      *
-     *
-     * @return
+     * @return Keys with valid values (is a number and is not null)
      */
     private LocalDate[] cleanUpKeys() {
 
@@ -98,7 +98,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     *
+     * Update keys list
      */
     private void getNewKeys() {
         keys = cleanUpKeys();
@@ -285,7 +285,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     public String getShownDates() {
         if (!noHistory) {
-            System.out.println(noHistory);
             int endDateIndex = (pointsAmount * (currentPage - 1)) + getPointsBeingShown() - 1; // Index of ending date
 
             return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
@@ -363,8 +362,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Get current displayed page
-     *
      * @return The current page
      */
     public int getCurrentPage() {
@@ -372,8 +369,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Get total amount of pages
-     *
      * @return The total amount of pages
      */
     public int getTotalPages() {
@@ -388,10 +383,10 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
+     * Pop up the delete menu for the current date being hovered over.
      *
-     *
-     * @param x
-     * @param y
+     * @param x X coordinate to create menu
+     * @param y Y coordinate to create menu
      */
     private void popUpMenu(int x, int y) {
         int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get the bar which our x pos matches
