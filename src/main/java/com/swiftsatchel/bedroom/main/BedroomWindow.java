@@ -48,6 +48,10 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         setAlwaysOnTop(Settings.getAlwaysOnTop());
     }
 
+    public void enterBreak() {
+        new SelectTimeDialog(this, TimeWindowType.START_BREAK);
+    }
+
     @Override
     public void reloadSettings() {
 
@@ -66,8 +70,14 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         setVisible(b);
     }
 
-    public void enterBreak() {
-        new SelectTimeDialog(this, TimeWindowType.START_BREAK);
+    @Override
+    public void setDisabled(boolean b) {
+        setEnabled(!b);
+    }
+
+    @Override
+    public void askForFocus() {
+        requestFocus();
     }
 
     @Override

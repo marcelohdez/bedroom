@@ -20,6 +20,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     private final WindowParent parent;
 
     public SelectTimeDialog(WindowParent parent, TimeWindowType type) {
+        parent.setDisabled(true);
         this.type = type;
         this.parent = parent;
         ui = new SelectTimeUI(this); // Create ui based on window type
@@ -29,7 +30,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     public SelectTimeDialog(WindowParent parent, TimeWindowType type, LocalDateTime lastTime) {
         this.type = type;
         this.parent = parent;
-        ui = new SelectTimeUI(this, lastTime); // Create ui based on window type
+        ui = new SelectTimeUI(this, lastTime, parent); // Create ui based on window type
         init();
     }
 
@@ -37,7 +38,6 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
         // Initial properties
         reloadAlwaysOnTop();
-        setModalityType(ModalityType.APPLICATION_MODAL);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -81,6 +81,11 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             }
             case START_BREAK, EARLY_CLOCK_OUT -> dispose();  // Close window
         }
+        parent.setDisabled(false);
+    }
+
+    public WindowParent getWindowParent() {
+        return parent;
     }
 
     @Override
@@ -102,12 +107,23 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     }
 
     @Override
+    public void setDisabled(boolean b) {
+        setEnabled(!b);
+    }
+
+    @Override
+    public void askForFocus() {
+        requestFocus();
+    }
+
+    @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER, 13 -> ui.selectTime(); // Select time with Enter (return on macOS, which is 13)
             case KeyEvent.VK_ESCAPE -> close();
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
+            case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryWindow(this);
         }
     }
 

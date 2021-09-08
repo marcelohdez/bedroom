@@ -64,6 +64,16 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         setVisible(b);
     }
 
+    @Override
+    public void setDisabled(boolean b) {
+        setEnabled(!b);
+    }
+
+    @Override
+    public void askForFocus() {
+        requestFocus();
+    }
+
     // ======= Currently unused interface methods =======
     @Override
     public void reloadSettings() {} // WindowParent

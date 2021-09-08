@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener {
 
-    private final BedroomWindow parent;
+    private final WindowParent parent;
 
     private final ShiftHistoryChart chart = new ShiftHistoryChart();
 
@@ -25,10 +25,10 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     private final JButton rightButton = new JButton(">");
     private final JLabel datesShown = new JLabel("1/1/2020-1/1/2021");
 
-    public ShiftHistoryWindow(BedroomWindow parent) {
+    public ShiftHistoryWindow(WindowParent parent) {
         this.parent = parent;
 
-        parent.setEnabled(false);
+        parent.setDisabled(true);
         addWindowListener(this);
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
@@ -129,10 +129,11 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     @Override
     public void windowClosed(WindowEvent e) {
-        parent.setEnabled(true);
-        parent.requestFocus();
+        parent.setDisabled(false);
+        parent.askForFocus();
     }
 
+    // Unused
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override

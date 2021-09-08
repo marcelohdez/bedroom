@@ -6,6 +6,7 @@ import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private final TimeWindowType type;
     private final SelectTimeDialog parent;
+    private final WindowParent windowParent;
     private final GridBagLayout layout;
     private final GridBagConstraints gbc;
 
@@ -43,16 +45,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         layout = new GridBagLayout();
         gbc = new GridBagConstraints();
         this.parent = parent;
+        windowParent = parent.getWindowParent();
         init();
     }
 
-    public SelectTimeUI(SelectTimeDialog parent, LocalDateTime lastTime) {
+    public SelectTimeUI(SelectTimeDialog parent, LocalDateTime lastTime, WindowParent windowParent) {
         // Initial properties
         type = parent.type;
         layout = new GridBagLayout();
         gbc = new GridBagConstraints();
         this.parent = parent;
         this.lastTime = lastTime;
+        this.windowParent = windowParent;
         init();
     }
 
@@ -193,6 +197,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
+        windowParent.setDisabled(false);
         parent.dispose();                       // Close clock out time window
 
     }
@@ -241,7 +246,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private void proceedWith(TimeWindowType newType) {
 
         parent.setVisible(false);
-        new SelectTimeDialog(parent, newType, lastTime);
+        new SelectTimeDialog(parent.getWindowParent(), newType, lastTime);
 
     }
 
