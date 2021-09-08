@@ -1,6 +1,5 @@
 package com.swiftsatchel.bedroom.dialog;
 
-import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Settings;
@@ -41,15 +40,9 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         // Set window title and time per type
         switch (type) {
             case CLOCK_IN -> setTitle("Clocking in:");
-            case CLOCK_OUT -> {
-                setTitle("Clocking out:");
-                setUITime(SetTime.CLOCK_IN_PLUS_DEFAULT);
-            }
+            case CLOCK_OUT -> setTitle("Clocking out:");
             case START_BREAK -> setTitle("Enter break:");
-            case END_BREAK -> {
-                setTitle("Leave break:");
-                setUITime(SetTime.BREAK_START_PLUS_30M);
-            }
+            case END_BREAK -> setTitle("Leave break:");
             case EARLY_CLOCK_OUT -> setTitle("Early clock out:");
         }
 
@@ -63,11 +56,6 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
                 parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
-    }
-
-    public void setUITime(SetTime type) {
-        // Set UI's list boxes to a time
-        ui.setListBoxIndexes(type);
     }
 
     public void reloadAlwaysOnTop() {

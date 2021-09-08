@@ -1,7 +1,6 @@
 package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.enums.SetTime;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.util.Ops;
@@ -29,7 +28,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private final JComboBox<String> hrBox;      // Hours list box
     private final JComboBox<String> minBox;     // Minutes list box
     private final JComboBox<String> targetBox;  // Targets list box
-    private final JButton selectButton;               // Select button
+    private final JButton selectButton;         // Select button
     private final JLabel targetLabel;           // Select target text
 
     public SelectTimeUI(SelectTimeDialog parent) {
@@ -51,7 +50,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         setBackground(Theme.getBgColor());  // Set background color
         setLayout(layout);                  // Set layout
-        setListBoxIndexes(SetTime.CURRENT); // Set to current time on default
         addKeyListener(parent);             // Add key listener
 
         switch (type) { // Set window type-specific things
@@ -70,6 +68,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         initComponents(); // Add and customize components
         colorSelf(); // Color self
+        setListBoxIndexes(type); // Set list boxes to wanted time
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
     }
@@ -112,21 +111,22 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     }
 
-    public void setListBoxIndexes(SetTime type) { // Set list boxes to a time:
+    private void setListBoxIndexes(TimeWindowType type) { // Set list boxes to a time:
 
         int hour = LocalTime.now().getHour();
 
         switch (type) { // Set minBox depending on type and get wanted hour int
 
-            case CURRENT -> minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set to current time
+            case CLOCK_IN, START_BREAK, EARLY_CLOCK_OUT ->
+                    minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set to current time
 
-            case CLOCK_IN_PLUS_DEFAULT -> { // Set to chosen default hour value after clock in time
+            case CLOCK_OUT -> { // Set to chosen default hour value after clock in time
                 hour = Main.clockInTime.getHour() + Main.userPrefs.getInt("defaultShiftLength", 4);
                 if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
                 minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
             }
 
-            case BREAK_START_PLUS_30M -> { // Set leave break window's default minutes to 30 above break in time.
+            case END_BREAK -> { // Set leave break window's default minutes to 30 above break in time.
                 int minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
                 hour = Main.breakInTime.getHour();      // Get break start time's hour
                 if (minute > 59) {                      // If it is over 59, loop it and add an hour
