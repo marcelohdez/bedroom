@@ -274,6 +274,14 @@ public class Main {
         return orders;
     }
 
+    public static String getOrdersPerHour() {
+        return twoDecs.format((float) (orders * 3600) / totalSecClockedIn) + "/hr";
+    }
+
+    public static void setOrders(int newVal) {
+        orders = newVal;
+    }
+
     public static void removeFromHistory(LocalDate date) {
         shiftHistory.remove(date);
     }

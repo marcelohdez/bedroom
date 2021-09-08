@@ -18,7 +18,7 @@ import java.time.LocalTime;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
 
-    private final TimeWindowType type;      // Keep track of this windows' type
+    private final TimeWindowType type;      // Keep track of this window's type
     private final SelectTimeDialog parent;  // This UI's parent (its container)
     private final WindowParent windowParent; // This set of select time dialog's parent window
     private final GridBagLayout layout;     // Layout

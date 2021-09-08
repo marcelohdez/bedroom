@@ -1,12 +1,15 @@
 package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.components.FloatingSpinner;
+import com.swiftsatchel.bedroom.dialog.AlertDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,17 +22,31 @@ public class UI extends JPanel implements ActionListener {
     private static final JButton breakButton = new JButton("Set Break");
     private static final JButton addOrder = new JButton("Add Order");
 
+    private final JMenuItem copyOrdersInfo;
+    private final JMenuItem editOrders;
+
     public UI(BedroomWindow parent) { // Set UI's properties
 
         this.parent = parent;
+        // Stats pop up menu components
+        JPopupMenu statsPopup = new JPopupMenu("Stats");
+        copyOrdersInfo = new JMenuItem("Copy orders/hr");
+        editOrders = new JMenuItem("Set orders to...");
 
         setFocusable(true);
         addKeyListener(parent);
+
+        // Init popup menu
+        copyOrdersInfo.addActionListener(this);
+        editOrders.addActionListener(this);
+        statsPopup.add(copyOrdersInfo);
+        statsPopup.add(editOrders);
 
         // Set components' properties
         stats.setEditable(false);
         stats.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         stats.addKeyListener(parent);
+        stats.setComponentPopupMenu(statsPopup);
         addOrder.addKeyListener(parent);
         addOrder.addActionListener(this);
         breakButton.addKeyListener(parent);
@@ -45,15 +62,6 @@ public class UI extends JPanel implements ActionListener {
         add(stats);
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
-
-    }
-
-    public void actionPerformed(ActionEvent e) {
-
-        switch (e.getActionCommand()) {
-            case "Add Order" -> Main.changeOrders(1);
-            case "Set Break" -> parent.enterBreak();
-        }
 
     }
 
@@ -111,6 +119,29 @@ public class UI extends JPanel implements ActionListener {
         // Set the buttons to that width, and half that for height to make identical rectangles
         addOrder.setPreferredSize(new Dimension(length, length/2));
         breakButton.setPreferredSize(new Dimension(length, length/2));
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource().equals(addOrder)) {
+            Main.changeOrders(1);
+        } else if (e.getSource().equals(breakButton)) {
+            parent.enterBreak();
+        } else if (e.getSource().equals(copyOrdersInfo)) {
+            StringSelection ordersPerHr = new StringSelection(Main.getOrdersPerHour());
+            Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .setContents(ordersPerHr, ordersPerHr);
+        } else if (e.getSource().equals(editOrders)) {
+            if (Main.getOrders() < 999) {
+                Main.setOrders(new FloatingSpinner(Main.getOrders(),
+                        0, 999).showSelf());
+            } else new AlertDialog(parent, """
+                    You have way too many orders,
+                    you are worth so much more
+                    than they are paying you.""");
+        }
 
     }
 
