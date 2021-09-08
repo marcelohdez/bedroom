@@ -183,6 +183,7 @@ public class Main {
 
             sb.append("Time until clocked in:\n");
             Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillClockIn));
+            sb.append("\n");
 
         }
 
