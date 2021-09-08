@@ -18,11 +18,11 @@ import java.time.LocalTime;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
 
-    private final TimeWindowType type;
-    private final SelectTimeDialog parent;
-    private final WindowParent windowParent;
-    private final GridBagLayout layout;
-    private final GridBagConstraints gbc;
+    private final TimeWindowType type;      // Keep track of this windows' type
+    private final SelectTimeDialog parent;  // This UI's parent (its container)
+    private final WindowParent windowParent; // This set of select time dialog's parent window
+    private final GridBagLayout layout;     // Layout
+    private final GridBagConstraints gbc;   // Constraints
 
     // ======= Components: =======
     private JLabel topText;               // Top text label
@@ -197,7 +197,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
-        windowParent.setDisabled(false);
+        windowParent.setDisabled(false);        // Re-enable parent window
+        windowParent.askForFocus();             // Give focus to parent window
         parent.dispose();                       // Close clock out time window
 
     }
@@ -219,9 +220,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         if (time.isAfter(lastTime) && time.isBefore(Main.clockOutTime)) {
 
-            Main.breakOutTime = time; // Set leave break time
-            Main.breakInTime = lastTime; // Set enter break time now
-            parent.dispose();       // Close leave break window
+            Main.breakOutTime = time;           // Set leave break time
+            Main.breakInTime = lastTime;        // Set enter break time now
+            windowParent.setDisabled(false);    // Re-enable parent window
+            windowParent.askForFocus();         // Give focus to parent window
+            parent.dispose();                   // Close leave break window
 
         } else {
             new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
