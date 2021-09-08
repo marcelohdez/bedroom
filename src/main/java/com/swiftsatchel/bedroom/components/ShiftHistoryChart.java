@@ -33,19 +33,19 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private float range;
     private int barXDiff;
 
-    private JPopupMenu delMenu;
-    private JMenuItem deleteDate;
+    private final JPopupMenu delMenu;
+    private final JMenuItem deleteDate;
     private LocalDate currentlyObserved;
 
     public ShiftHistoryChart() {
         addMouseListener(this);
 
         delMenu = new JPopupMenu("Edit");
-        deleteDate = new JMenuItem("Delete");
+        deleteDate = new JMenuItem("Delete ABC 12, 3456");
 
         deleteDate.addActionListener(this);
         delMenu.add(deleteDate);
-        add(delMenu);
+        setComponentPopupMenu(delMenu);
 
     }
 
@@ -382,32 +382,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         return pointsAmount;
     }
 
-    /**
-     * Pop up the delete menu for the current date being hovered over.
-     *
-     * @param x X coordinate to create menu
-     * @param y Y coordinate to create menu
-     */
-    private void popUpMenu(int x, int y) {
-        int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get the bar which our x pos matches
-
-        deleteDate.setText("No date chosen");
-        currentlyObserved = null;
-        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) {
-
-            deleteDate.setText("Delete " +
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getMonth().name().substring(0, 3) + " " +
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getDayOfMonth() + ", " +
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getYear());
-
-            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar];
-
-        }
-
-        delMenu.show(this, x, y);
-
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -424,12 +398,29 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger()) popUpMenu(e.getX(), e.getY());
+    public void mousePressed(MouseEvent e) {
+        // Get the bar which our x pos matches
+        int bar = (int) ((e.getX() - (Theme.getChartFont().getSize()*1.5F))/barXDiff);
+
+        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
+
+            deleteDate.setText("Delete " + // Set the popup menu to have the date's text:
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getMonth().name().substring(0, 3) + " " +
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getDayOfMonth() + ", " +
+                    keys[(pointsAmount * (currentPage - 1)) + bar].getYear());
+
+            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
+
+        } else {
+
+            deleteDate.setText("No date chosen"); // If no date exists then default to this text.
+            currentlyObserved = null; // And remove the value of currentlyObserved
+
+        }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
     @Override
     public void mouseClicked(MouseEvent e) {}
     @Override
