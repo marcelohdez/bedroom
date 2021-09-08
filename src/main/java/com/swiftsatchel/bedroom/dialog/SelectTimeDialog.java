@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.time.LocalDateTime;
 
 public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent, KeyListener {
 
@@ -19,9 +20,20 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     private final WindowParent parent;
 
     public SelectTimeDialog(WindowParent parent, TimeWindowType type) {
-
         this.type = type;
         this.parent = parent;
+        ui = new SelectTimeUI(this); // Create ui based on window type
+        init();
+    }
+
+    public SelectTimeDialog(WindowParent parent, TimeWindowType type, LocalDateTime lastTime) {
+        this.type = type;
+        this.parent = parent;
+        ui = new SelectTimeUI(this, lastTime); // Create ui based on window type
+        init();
+    }
+
+    private void init() {
 
         // Initial properties
         reloadAlwaysOnTop();
@@ -29,8 +41,6 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
-
-        ui = new SelectTimeUI(this); // Create ui based on window type
         addKeyListener(this);                   // Add key listener for shortcuts
         add(ui);                                // Add the UI
 

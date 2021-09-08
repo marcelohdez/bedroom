@@ -23,21 +23,40 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private final GridBagConstraints gbc;
 
     // ======= Components: =======
-    private final JLabel topText;               // Top text label
-    private final JComboBox<String> amPMBox;    // AM/PM list box
-    private final JComboBox<String> hrBox;      // Hours list box
-    private final JComboBox<String> minBox;     // Minutes list box
-    private final JComboBox<String> targetBox;  // Targets list box
-    private final JButton selectButton;         // Select button
-    private final JLabel targetLabel;           // Select target text
+    private JLabel topText;               // Top text label
+    private JComboBox<String> amPMBox;    // AM/PM list box
+    private JComboBox<String> hrBox;      // Hours list box
+    private JComboBox<String> minBox;     // Minutes list box
+    private JComboBox<String> targetBox;  // Targets list box
+    private JButton selectButton;         // Select button
+    private JLabel targetLabel;           // Select target text
+
+    // Keep track of last select time dialog's selected time ex: save break start time to only
+    // set break time once break end time is selected. This fixes the bug where setting a break
+    // from 3pm-3:30pm then opening a set break window and putting 2pm but then cancelling
+    // would save your break as 2pm-3:30pm
+    private LocalDateTime lastTime;
 
     public SelectTimeUI(SelectTimeDialog parent) {
-
         // Initial properties
         type = parent.type;
-        this.parent = parent;
         layout = new GridBagLayout();
         gbc = new GridBagConstraints();
+        this.parent = parent;
+        init();
+    }
+
+    public SelectTimeUI(SelectTimeDialog parent, LocalDateTime lastTime) {
+        // Initial properties
+        type = parent.type;
+        layout = new GridBagLayout();
+        gbc = new GridBagConstraints();
+        this.parent = parent;
+        this.lastTime = lastTime;
+        init();
+    }
+
+    private void init() {
 
         // Initialize component variables
         amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
@@ -121,19 +140,19 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     minBox.setSelectedIndex(LocalTime.now().getMinute()); // Set to current time
 
             case CLOCK_OUT -> { // Set to chosen default hour value after clock in time
-                hour = Main.clockInTime.getHour() + Main.userPrefs.getInt("defaultShiftLength", 4);
-                if (hour >= 24) hour -= 24;             // If it's over 24 now, loop it
-                minBox.setSelectedIndex(Main.clockInTime.getMinute()); // Set minBox to clock in time's minute
+                hour = lastTime.getHour() + Main.userPrefs.getInt("defaultShiftLength", 4);
+                if (hour >= 24) hour -= 24;     // If it's over 24 now, loop it
+                minBox.setSelectedIndex(lastTime.getMinute()); // Set minBox to clock in time's minute
             }
 
             case END_BREAK -> { // Set leave break window's default minutes to 30 above break in time.
-                int minute = Main.breakInTime.getMinute() + 30; // +30 minutes after break start
-                hour = Main.breakInTime.getHour();      // Get break start time's hour
-                if (minute > 59) {                      // If it is over 59, loop it and add an hour
+                int minute = lastTime.getMinute() + 30; // +30 minutes after break start
+                hour = lastTime.getHour();      // Get break start time's hour
+                if (minute > 59) {              // If it is over 59, loop it and add an hour
                     minute -= 60;
-                    hour = Main.breakInTime.getHour() + 1;
+                    hour = lastTime.getHour() + 1;
                 }
-                minBox.setSelectedIndex(minute);        // Set minBox's index to the minute value now
+                minBox.setSelectedIndex(minute); // Set minBox's index to the minute value now
             }
 
         }
@@ -151,7 +170,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         switch (type) {
             case CLOCK_IN -> {
-                Main.clockInTime = newTime; // Set clock in time
+                lastTime = newTime; // Set clock in time
                 proceedWith(TimeWindowType.CLOCK_OUT);
             }
             case CLOCK_OUT -> setClockOutTime(newTime);
@@ -169,7 +188,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Since the default date is the user's current date, if the clock out time is before
         // the clock in time, assume it is an overnight shift and set the clock out time's date
         // to the current date + 1 day.
-        Main.clockOutTime = time.isAfter(Main.clockInTime) ? time : time.plusDays(1);
+        Main.clockOutTime = time.isAfter(lastTime) ? time : time.plusDays(1);
+        Main.clockInTime = lastTime; // Set clock in time as well
 
         Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
         Main.timesChosen = true;                // Clock out time is now chosen
@@ -181,7 +201,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime)) {
 
-            Main.breakInTime = time; // Set enter break time
+            lastTime = time; // Set enter break time
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
@@ -192,9 +212,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setBreakEndTime(LocalDateTime time) {
 
-        if (time.isAfter(Main.breakInTime) && time.isBefore(Main.clockOutTime)) {
+        if (time.isAfter(lastTime) && time.isBefore(Main.clockOutTime)) {
 
             Main.breakOutTime = time; // Set leave break time
+            Main.breakInTime = lastTime; // Set enter break time now
             parent.dispose();       // Close leave break window
 
         } else {
@@ -220,7 +241,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private void proceedWith(TimeWindowType newType) {
 
         parent.setVisible(false);
-        new SelectTimeDialog(parent, newType);
+        new SelectTimeDialog(parent, newType, lastTime);
 
     }
 
