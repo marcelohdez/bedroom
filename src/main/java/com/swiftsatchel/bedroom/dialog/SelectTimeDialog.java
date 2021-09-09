@@ -27,10 +27,12 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         init();
     }
 
-    public SelectTimeDialog(WindowParent parent, TimeWindowType type, LocalDateTime lastTime) {
+    // Creates a continued select time dialog , given a parent and window type, plus the last selected time
+    // and the original parent of this group of select time dialogs
+    public SelectTimeDialog(WindowParent parent, TimeWindowType type, LocalDateTime lastTime, WindowParent initParent) {
         this.type = type;
         this.parent = parent;
-        ui = new SelectTimeUI(this, lastTime, parent); // Create ui based on window type
+        ui = new SelectTimeUI(this, lastTime, initParent); // Create ui based on window type
         init();
     }
 

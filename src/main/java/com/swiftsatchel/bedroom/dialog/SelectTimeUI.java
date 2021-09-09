@@ -249,7 +249,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private void proceedWith(TimeWindowType newType) {
 
         parent.setVisible(false);
-        new SelectTimeDialog(parent.getWindowParent(), newType, lastTime);
+        new SelectTimeDialog(parent, newType, lastTime, parent.getWindowParent());
 
     }
 
