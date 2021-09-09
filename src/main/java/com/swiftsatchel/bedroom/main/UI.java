@@ -145,4 +145,8 @@ public class UI extends JPanel implements ActionListener {
 
     }
 
+    public void enableButtons(boolean b) {
+        addOrder.setEnabled(b);
+        breakButton.setEnabled(b);
+    }
 }

@@ -178,12 +178,14 @@ public class Main {
                 sb.append(" left\n")
                         .append(getStats());
             }
+            wnd.enableButtons(true); // Keep buttons enabled
 
-        } else { // Show "Time till clock in" =======
+        } else { // Show "Time until clocked in" =======
 
             sb.append("Time until clocked in:\n");
             Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillClockIn));
             sb.append("\n");
+            wnd.enableButtons(false); // Disable buttons
 
         }
 
