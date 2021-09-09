@@ -24,7 +24,7 @@ import java.util.prefs.Preferences;
 public class Main {
 
     // ======= Global Variables =======
-    public static String version = "3 (Beta 3)";
+    public static String version = "3 (Beta 4)";
     public static Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     public static BedroomWindow wnd; // Main window
