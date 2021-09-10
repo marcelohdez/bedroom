@@ -227,7 +227,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             parent.dispose();                   // Close leave break window
 
         } else {
-            new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME);
+            new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME, lastTime);
         }
 
     }

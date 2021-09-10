@@ -24,7 +24,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
     public BedroomWindow() {
 
-        setTitle("Bedroom " + Main.version);
+        setTitle("Bedroom " + Main.VERSION);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         reloadAlwaysOnTop();

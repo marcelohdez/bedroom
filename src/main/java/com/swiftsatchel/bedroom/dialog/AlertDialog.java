@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
 /**
  * A JDialog with a text area to include a message and an "OK" button to dismiss.
@@ -28,6 +29,13 @@ public class AlertDialog extends JDialog implements ActionListener {
 
         this.parent = parent;
         init("Error", getErrorMessage(e));
+
+    }
+
+    public AlertDialog(SelectTimeDialog parent, ErrorType e, LocalDateTime lastTime) {
+
+        this.parent = parent;
+        init("Error", getErrorMessage(e, lastTime));
 
     }
 
@@ -83,13 +91,6 @@ public class AlertDialog extends JDialog implements ActionListener {
                         Time.makeTime12Hour(Main.clockInTime.toLocalTime()) + "-" +
                         Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
             }
-            case NEGATIVE_BREAK_TIME -> {
-                return """
-                        A break's end time can not be
-                        before the break's start time.
-                        Current break start:\040""" +
-                        Time.makeTime12Hour(Main.breakInTime.toLocalTime());
-            }
             case NON_POSITIVE_SHIFT_TIME -> {
                 return """
                         Clock out time has to be
@@ -125,6 +126,21 @@ public class AlertDialog extends JDialog implements ActionListener {
                         out time:\040""" +
                         Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
             }
+        }
+
+        // If type is not recognized return the type itself
+        return e.toString();
+
+    }
+
+    // Get error messages that need additional LocalDateTime variables
+    private String getErrorMessage(ErrorType e, LocalDateTime time) {
+
+        if (e == ErrorType.NEGATIVE_BREAK_TIME) {
+            return """
+                    A break's end time can not be
+                    before the break's start time.
+                    Current break start:\040""" + Time.makeTime12Hour(time.toLocalTime());
         }
 
         // If type is not recognized return the type itself
