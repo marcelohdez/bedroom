@@ -41,9 +41,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             1, 12, "h "));
 
     // ======= Checkboxes =======
-    // Stay on top option
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
-    // Ask before clocking out early
     private final JCheckBox askBeforeEarlyClose = new JCheckBox("Ask before clocking out early");
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
@@ -63,8 +61,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createColoringPanel();
         createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0, 0);
         createLabelRow("Misc.");
-        createCheckBoxRow(new JCheckBox[]{alwaysOnTop});
-        createCheckBoxRow(new JCheckBox[]{askBeforeEarlyClose});
+        createCheckBoxRow(alwaysOnTop);
+        createCheckBoxRow(askBeforeEarlyClose);
         createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4, -1);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
@@ -174,15 +172,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Stay on top checkbox
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
-        alwaysOnTop.setSelected(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        alwaysOnTop.setSelected(Settings.getAlwaysOnTop());
         // Default shift length
-        shiftLengthListBox.setSelectedIndex(Main.userPrefs.getInt("defaultShiftLength", 4) - 1);
+        shiftLengthListBox.setSelectedIndex(Settings.getDefaultShiftLength() - 1);
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
                 "clock out time.<br></b></html>");
         // Ask before clocking out early
         askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
                 "a dialog asks to input new clock out time</b></html>");
-        askBeforeEarlyClose.setSelected(Main.userPrefs.getBoolean("askBeforeEarlyClose", true));
+        askBeforeEarlyClose.setSelected(Settings.getAskBeforeEarlyClose());
 
     }
 
@@ -276,20 +274,16 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createCheckBoxRow(JCheckBox[] c) { // This takes an array in case of multiple checkboxes in a row.
+    private void createCheckBoxRow(JCheckBox c) { // This takes an array in case of multiple checkboxes in a row.
 
         // Create panel
         JPanel row = new JPanel();
 
         // Customize stuffs
         row.setBackground(Theme.getBgColor());
-        for (JCheckBox cb : c) {
-
-            Theme.colorThis(cb);
-            // Add to panel
-            row.add(cb);
-
-        }
+        Theme.colorThis(c);
+        // Add to panel
+        row.add(c);
 
         add(row);
 

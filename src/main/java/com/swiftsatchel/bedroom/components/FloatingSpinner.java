@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.components;
 
-import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -17,7 +17,7 @@ public class FloatingSpinner extends JDialog implements ChangeListener {
     public FloatingSpinner(int startingValue, int min, int max) {
 
         setUndecorated(true);
-        setAlwaysOnTop(Main.userPrefs.getBoolean("alwaysOnTop", false));
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
         setModalityType(ModalityType.APPLICATION_MODAL);
 
         js = new JSpinner(new SpinnerNumberModel(startingValue, min, max, 1));

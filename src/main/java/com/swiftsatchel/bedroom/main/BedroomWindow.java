@@ -106,7 +106,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
                 LocalDateTime.now().isBefore(Main.clockOutTime)) {
 
             // Clock out early
-            if (Main.userPrefs.getBoolean("askBeforeEarlyClose", true)) {
+            if (Settings.getAskBeforeEarlyClose()) {
                 // If we have the option selected, show a dialog for confirmation
                 new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
 

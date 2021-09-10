@@ -8,6 +8,11 @@ import java.util.TreeMap;
 
 public final class Settings {
 
+    // Settings variables, to return when called on methods, instead of doing storage reads every time.
+    private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
+    private static boolean askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
+    private static int defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
+
     /**
      * Check if highContrast is enabled in user preferences
      *
@@ -76,6 +81,10 @@ public final class Settings {
         Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
         Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
 
+        alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
+        Settings.askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
+        Settings.defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
+
     }
 
     /**
@@ -84,21 +93,34 @@ public final class Settings {
      * @param apps The list of directories. In format: "[C:\User\Desktop\WorkApp1, C:\WorkApps\WorkApp2]"
      */
     public static void saveWorkApps(String apps) {
-
         Main.userPrefs.put("workApps", apps);
-
     }
 
     /**
      * Get always on top value from user preferences.
-     * This is preferred over writing the line over so that when changing the default value
-     * we only have to change this method instead of digging through Bedroom to change all
-     * occurrences.
      *
      * @return The value of always on top's user preference key
      */
     public static boolean getAlwaysOnTop() {
-        return Main.userPrefs.getBoolean("alwaysOnTop", true);
+        return alwaysOnTop;
+    }
+
+    /**
+     * Get ask before early close boolean from user preferences.
+     *
+     * @return Value of ask before early close
+     */
+    public static boolean getAskBeforeEarlyClose() {
+        return askBeforeEarlyClose;
+    }
+
+    /**
+     * Get default shift length from user preferences
+     *
+     * @return Default amount of hours in a shift.
+     */
+    public static int getDefaultShiftLength() {
+        return defaultShiftLength;
     }
 
     /**
