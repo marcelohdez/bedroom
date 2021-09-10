@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.dialog;
+package com.swiftsatchel.bedroom.alert;
 
 import com.swiftsatchel.bedroom.util.WindowParent;
 

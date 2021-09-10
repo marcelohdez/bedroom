@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom;
 
-import com.swiftsatchel.bedroom.dialog.AlertDialog;
+import com.swiftsatchel.bedroom.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
