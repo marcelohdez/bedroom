@@ -52,8 +52,12 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         new SelectTimeDialog(this, TimeWindowType.START_BREAK);
     }
 
-    public void enableButtons(boolean b) {
-        ui.enableButtons(b);
+    public void enableButtons() {
+        ui.enableButtons();
+    }
+
+    public void disableButtons(UI.Buttons b) {
+        ui.disableButtons(b);
     }
 
     @Override

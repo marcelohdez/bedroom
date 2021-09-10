@@ -25,6 +25,12 @@ public class UI extends JPanel implements ActionListener {
     private final JMenuItem copyOrdersInfo;
     private final JMenuItem editOrders;
 
+    public enum Buttons {
+        ADD_ORDER,
+        SET_BREAK,
+        BOTH
+    }
+
     public UI(BedroomWindow parent) { // Set UI's properties
 
         this.parent = parent;
@@ -145,8 +151,20 @@ public class UI extends JPanel implements ActionListener {
 
     }
 
-    public void enableButtons(boolean b) {
-        addOrder.setEnabled(b);
-        breakButton.setEnabled(b);
+    public void enableButtons() {
+        addOrder.setEnabled(true);
+        breakButton.setEnabled(true);
     }
+
+    public void disableButtons(Buttons b) {
+        if (b == Buttons.BOTH) {
+            addOrder.setEnabled(false);
+            breakButton.setEnabled(false);
+        } else if (b == Buttons.ADD_ORDER) {
+            addOrder.setEnabled(false);
+        } else if (b == Buttons.SET_BREAK) {
+            breakButton.setEnabled(false);
+        }
+    }
+
 }

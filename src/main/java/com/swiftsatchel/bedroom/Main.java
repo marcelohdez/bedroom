@@ -113,6 +113,7 @@ public class Main {
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
                 clockInTimePassed = true;
+                wnd.enableButtons();
 
                 if (LocalDateTime.now().isBefore(clockOutTime)) { // If we have not finished our shift:
 
@@ -131,6 +132,7 @@ public class Main {
                 updateStats(); // Update stats and show on screen
 
             } else if (LocalDateTime.now().isBefore(clockInTime)) { // Else if it is before our shift starts:
+                wnd.disableButtons(UI.Buttons.BOTH); // Disable buttons
                 // Get seconds left until we have to clock in
                 secondsTillClockIn = LocalDateTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
                 updateStats(); // Display it on screen
@@ -178,14 +180,12 @@ public class Main {
                 sb.append(" left\n")
                         .append(getStats());
             }
-            wnd.enableButtons(true); // Keep buttons enabled
 
         } else { // Show "Time until clocked in" =======
 
             sb.append("Time until clocked in:\n");
             Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillClockIn));
             sb.append("\n");
-            wnd.enableButtons(false); // Disable buttons
 
         }
 
@@ -222,6 +222,7 @@ public class Main {
                 totalSecClockedIn = clockInTime.until(breakInTime, ChronoUnit.SECONDS);
                 secondsTillLeaveBreak = // Seconds until our break ends
                         LocalDateTime.now().until(breakOutTime, ChronoUnit.SECONDS);
+                wnd.disableButtons(UI.Buttons.ADD_ORDER);
             }
             // If break has not started, set time clocked in from start to now.
         } else totalSecClockedIn = clockInTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
