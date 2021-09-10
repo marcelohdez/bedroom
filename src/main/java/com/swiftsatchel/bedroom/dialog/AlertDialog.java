@@ -17,48 +17,62 @@ import java.time.LocalDateTime;
 public class AlertDialog extends JDialog implements ActionListener {
 
     private final WindowParent parent;
+    private final JPanel buttonRow;
+    private final JButton okButton;
 
     public AlertDialog(WindowParent parent, String message) {
 
         this.parent = parent;
-        init("Alert", message);
+        buttonRow = new JPanel();
+        okButton = new JButton("OK");
+        init("Alert", message, false);
 
     }
 
     public AlertDialog(WindowParent parent, ErrorType e) {
 
         this.parent = parent;
-        init("Error", getErrorMessage(e));
+        buttonRow = new JPanel();
+        okButton = new JButton("OK");
+        init("Error", getErrorMessage(e), false);
 
     }
 
     public AlertDialog(SelectTimeDialog parent, ErrorType e, LocalDateTime lastTime) {
 
         this.parent = parent;
-        init("Error", getErrorMessage(e, lastTime));
+        buttonRow = new JPanel();
+        okButton = new JButton("OK");
+        init("Error", getErrorMessage(e, lastTime), false);
 
     }
 
-    private void init(String title, String message) {
+    public AlertDialog(WindowParent parent, String message, boolean isYesNoDialog) {
+
+        this.parent = parent;
+        buttonRow = new JPanel();
+        okButton = new JButton("OK");
+        init("Alert", message, isYesNoDialog);
+
+    }
+
+    private void init(String title, String message, boolean isYesNoDialog) {
 
         // Create components
         JPanel topUI = new JPanel();
-        JPanel botUI = new JPanel();
         JTextArea messageBox = new JTextArea(message);
-        JButton ok = new JButton("OK");
 
         // Customize components
-        Theme.colorThese(new JComponent[]{topUI, botUI, messageBox, ok});
+        Theme.colorThese(new JComponent[]{topUI, buttonRow, messageBox});
         messageBox.setFont(Theme.getBoldFont());
         messageBox.setEditable(false);
-        ok.addActionListener(this);
-        ok.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
+        okButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
 
         // Add components
         topUI.add(messageBox);
-        botUI.add(ok);
+        if (!isYesNoDialog) addToButtonRow(okButton, this, false);
         add(topUI, BorderLayout.PAGE_START);
-        add(botUI, BorderLayout.PAGE_END);
+        add(buttonRow, BorderLayout.PAGE_END);
 
         // Set window properties
         setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from other windows
@@ -66,17 +80,25 @@ public class AlertDialog extends JDialog implements ActionListener {
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setTitle(title);
-        pack();
-        ok.setPreferredSize(new Dimension(messageBox.getWidth(), (int)(ok.getHeight()*1.5)));
-        pack();
+        sizeButtonRow();
 
         // Center on summoner
         setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
                 parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
         // Show
-        setVisible(true);
+        if (!isYesNoDialog) setVisible(true);
 
+    }
+
+    private void sizeButtonRow() {
+        pack(); // Make Swing size everything
+        for (Component c : buttonRow.getComponents()) {
+            // Set to width we want, and 1.5x teh height swing chose for font
+            c.setPreferredSize(new Dimension(getWidth()/buttonRow.getComponentCount() -
+                    (5*buttonRow.getComponentCount()), (int) (c.getHeight()*1.5)));
+        }
+        pack(); // Let Swing react accordingly
     }
 
     // Get error message per error type
@@ -148,8 +170,15 @@ public class AlertDialog extends JDialog implements ActionListener {
 
     }
 
+    protected void addToButtonRow(JButton b, ActionListener al, boolean updateSizes) {
+        Theme.colorThis(b);
+        b.addActionListener(al);
+        buttonRow.add(b);
+        if (updateSizes) sizeButtonRow();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) { // Do sum when OK is pressed
-        dispose();
+        if (e.getSource() == okButton) dispose();
     }
 }

@@ -189,17 +189,27 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setClockOutTime(LocalDateTime time) {
 
-        // Since the default date is the user's current date, if the clock out time is before
-        // the clock in time, assume it is an overnight shift and set the clock out time's date
-        // to the current date + 1 day.
-        Main.clockOutTime = time.isAfter(lastTime) ? time : time.plusDays(1);
-        Main.clockInTime = lastTime; // Set clock in time as well
+        if (new YesNoDialog(parent, """
+                It seems you have selected
+                a clock out time before
+                your clock in time. ($lastTime)
+                Is this an overnight shift?"""
+                .replace("$lastTime", Time.makeTime12Hour(lastTime.toLocalTime())))
+                .accepted()) {
 
-        Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-        Main.timesChosen = true;                // Clock out time is now chosen
-        windowParent.setDisabled(false);        // Re-enable parent window
-        windowParent.askForFocus();             // Give focus to parent window
-        parent.dispose();                       // Close clock out time window
+            // Since the default date is the user's current date, if the clock out time is before
+            // the clock in time, assume it is an overnight shift and set the clock out time's date
+            // to the current date + 1 day.
+            Main.clockOutTime = time.isAfter(lastTime) ? time : time.plusDays(1);
+            Main.clockInTime = lastTime; // Set clock in time as well
+
+            Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
+            Main.timesChosen = true;                // Clock out time is now chosen
+            windowParent.setDisabled(false);        // Re-enable parent window
+            windowParent.askForFocus();             // Give focus to parent window
+            parent.dispose();                       // Close clock out time window
+
+        }
 
     }
 
