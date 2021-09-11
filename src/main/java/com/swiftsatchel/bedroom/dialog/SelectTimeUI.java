@@ -200,7 +200,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             Main.timesChosen = true;                // Clock out time is now chosen
             windowParent.setDisabled(false);        // Re-enable parent window
             windowParent.askForFocus();             // Give focus to parent window
-            parent.dispose();                       // Close clock out time window
+            // Finish this dialog set by disposing this window and the previous
+            parent.finish();
 
         } else if (new YesNoDialog(parent, """
                 It seems you have selected
@@ -219,7 +220,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             Main.timesChosen = true;                // Clock out time is now chosen
             windowParent.setDisabled(false);        // Re-enable parent window
             windowParent.askForFocus();             // Give focus to parent window
-            parent.dispose();                       // Close clock out time window
+            // Finish this dialog set by disposing this window and the previous
+            parent.finish();
 
         }
 
@@ -246,7 +248,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             Main.breakInTime = lastTime;        // Set enter break time now
             windowParent.setDisabled(false);    // Re-enable parent window
             windowParent.askForFocus();         // Give focus to parent window
-            parent.dispose();                   // Close leave break window
+            // Finish this dialog set by disposing this window and the previous
+            parent.finish();
 
         } else {
             new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME, lastTime);

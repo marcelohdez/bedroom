@@ -86,6 +86,14 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         parent.setDisabled(false);
     }
 
+    /**
+     * Dispose this window and its parent, to finish this set and clear up memory
+     */
+    protected void finish() {
+        ((SelectTimeDialog) parent).dispose();
+        dispose();
+    }
+
     public WindowParent getWindowParent() {
         return parent;
     }
