@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom;
 
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
@@ -98,7 +98,7 @@ public class Main {
                     }
 
                 } else {
-                    new AlertDialog(wnd, ErrorType.WORK_APP_DOES_NOT_EXIST);
+                    new ErrorDialog(wnd, ErrorType.WORK_APP_DOES_NOT_EXIST);
                 }
 
             }

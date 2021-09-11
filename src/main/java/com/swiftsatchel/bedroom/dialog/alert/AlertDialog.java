@@ -1,15 +1,11 @@
 package com.swiftsatchel.bedroom.dialog.alert;
 
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 
 /**
  * A JDialog with a text area to include a message and an "OK" button to dismiss.
@@ -19,45 +15,56 @@ public class AlertDialog extends JDialog implements ActionListener {
 
     private final WindowParent parent;
     private final JPanel buttonRow;
-    private final JButton okButton;
+    private JButton okButton;
 
+    /**
+     * Default Alert Dialog constructor, creates a dialog with a message and an ok button to dismiss.
+     *
+     * @param parent WindowParent to center on
+     * @param message Message to display
+     */
     public AlertDialog(WindowParent parent, String message) {
-
         this.parent = parent;
         buttonRow = new JPanel();
         okButton = new JButton("OK");
         init("Alert", message, false);
-
     }
 
-    public AlertDialog(WindowParent parent, ErrorType e) {
-
+    /**
+     * Alert Dialog constructor which can be initialized after the fact, for sub-classes with
+     * different messages etc. (still has an OK button)
+     *
+     * @param parent WindowParent to center on
+     */
+    public AlertDialog(WindowParent parent) {
         this.parent = parent;
         buttonRow = new JPanel();
         okButton = new JButton("OK");
-        init("Error", getErrorMessage(e), false);
-
     }
 
-    public AlertDialog(SelectTimeDialog parent, ErrorType e, LocalDateTime lastTime) {
-
+    /**
+     * Alert Dialog constructor for dialogs with custom buttons.
+     * Setting isCustomDialog to false effectively makes a dialog with a message box
+     * which can not be closed.
+     *
+     * @param parent WindowParent to center on
+     * @param message Message to display
+     * @param isCustomDialog Whether it is custom or not, for the init method
+     */
+    public AlertDialog(WindowParent parent, String message, boolean isCustomDialog) {
         this.parent = parent;
         buttonRow = new JPanel();
-        okButton = new JButton("OK");
-        init("Error", getErrorMessage(e, lastTime), false);
-
+        init("Alert", message, isCustomDialog);
     }
 
-    public AlertDialog(WindowParent parent, String message, boolean isYesNoDialog) {
-
-        this.parent = parent;
-        buttonRow = new JPanel();
-        okButton = new JButton("OK");
-        init("Alert", message, isYesNoDialog);
-
-    }
-
-    private void init(String title, String message, boolean isYesNoDialog) {
+    /**
+     * Initialize the components and properties of this dialog
+     *
+     * @param title Title of dialog
+     * @param message Message to display
+     * @param isCustomDialog Does dialog have custom buttons?
+     */
+    protected void init(String title, String message, boolean isCustomDialog) {
 
         // Create components
         JPanel topUI = new JPanel();
@@ -67,11 +74,11 @@ public class AlertDialog extends JDialog implements ActionListener {
         Theme.colorThese(new JComponent[]{topUI, buttonRow, messageBox});
         messageBox.setFont(Theme.getBoldFont());
         messageBox.setEditable(false);
-        okButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
+        if (!isCustomDialog) okButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
 
         // Add components
         topUI.add(messageBox);
-        if (!isYesNoDialog) addToButtonRow(okButton, this, false);
+        if (!isCustomDialog) addToButtonRow(okButton, this, false);
         add(topUI, BorderLayout.PAGE_START);
         add(buttonRow, BorderLayout.PAGE_END);
 
@@ -88,10 +95,13 @@ public class AlertDialog extends JDialog implements ActionListener {
                 parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
         // Show
-        if (!isYesNoDialog) setVisible(true);
+        if (!isCustomDialog) setVisible(true);
 
     }
 
+    /**
+     * Split width among buttons
+     */
     private void sizeButtonRow() {
         pack(); // Make Swing size everything
         for (Component c : buttonRow.getComponents()) {
@@ -102,75 +112,13 @@ public class AlertDialog extends JDialog implements ActionListener {
         pack(); // Let Swing react accordingly
     }
 
-    // Get error message per error type
-    private String getErrorMessage(ErrorType e) {
-
-        switch(e) {
-            case BREAK_OUT_OF_SHIFT -> {
-                return """
-                        Breaks may only start or end
-                        inside of shifts. Current
-                        shift is:\040""" +
-                        Time.makeTime12Hour(Main.clockInTime.toLocalTime()) + "-" +
-                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
-            }
-            case NON_POSITIVE_SHIFT_TIME -> {
-                return """
-                        Clock out time has to be
-                        after your clock in time.
-                        Current clock in time:
-                        """ +
-                        Time.makeTime12Hour(Main.clockInTime.toLocalTime());
-            }
-            case NO_FILE_ASSOCIATION -> {
-                return """
-                        One of your work apps was not
-                        able to be started as it does
-                        not have a program associated
-                        with its file type""";
-            }
-            case WORK_APPS_FULL -> {
-                return """
-                        You can not add any more
-                        work apps.""";
-            }
-            case WORK_APP_DOES_NOT_EXIST -> {
-                return """
-                        One of your work apps was not
-                        able to be started as it no
-                        longer exists. Please go to
-                        Settings > Manage Work Apps.""";
-            }
-            case EARLY_CLOCK_OUT_NOT_EARLY -> {
-                return """
-                        Early clock outs must be
-                        before original clock out
-                        time. Your current clock
-                        out time:\040""" +
-                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
-            }
-        }
-
-        // If type is not recognized return the type itself
-        return e.toString();
-
-    }
-
-    // Get error messages that need additional LocalDateTime variables
-    private String getErrorMessage(ErrorType e, LocalDateTime time) {
-
-        if (e == ErrorType.NEGATIVE_BREAK_TIME) {
-            return """
-                    A break's end time can not be
-                    before the break's start time.
-                    Current break start:\040""" + Time.makeTime12Hour(time.toLocalTime());
-        }
-
-        // If type is not recognized return the type itself
-        return e.toString();
-
-    }
-
+    /**
+     * Add to button row
+     *
+     * @param b Button
+     * @param al The button's action listener
+     * @param updateSizes Whether we update the sizes now/update the screen
+     */
     protected void addToButtonRow(JButton b, ActionListener al, boolean updateSizes) {
         Theme.colorThis(b);
         b.addActionListener(al);

@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.dialog.time;
 
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
@@ -235,7 +235,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
-            new AlertDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
+            new ErrorDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
         }
 
     }
@@ -252,7 +252,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             parent.finish();
 
         } else {
-            new AlertDialog(parent, ErrorType.NEGATIVE_BREAK_TIME, lastTime);
+            new ErrorDialog(parent, ErrorType.NEGATIVE_BREAK_TIME, lastTime);
         }
 
     }
@@ -265,9 +265,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
                 Main.clockOut(time); // Save this shift's performance and close application
 
-            } else new AlertDialog(parent, ErrorType.EARLY_CLOCK_OUT_NOT_EARLY);
+            } else new ErrorDialog(parent, ErrorType.EARLY_CLOCK_OUT_NOT_EARLY);
 
-        } else new AlertDialog(parent, ErrorType.NON_POSITIVE_SHIFT_TIME);
+        } else new ErrorDialog(parent, ErrorType.NON_POSITIVE_SHIFT_TIME);
 
     }
 
