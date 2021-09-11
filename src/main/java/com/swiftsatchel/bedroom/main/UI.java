@@ -2,7 +2,7 @@ package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.components.FloatingSpinner;
-import com.swiftsatchel.bedroom.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;

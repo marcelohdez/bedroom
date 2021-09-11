@@ -1,7 +1,7 @@
 package com.swiftsatchel.bedroom.settings;
 
-import com.swiftsatchel.bedroom.alert.AlertDialog;
-import com.swiftsatchel.bedroom.dialog.SelectTimeDialog;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 

@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.settings;
 
-import com.swiftsatchel.bedroom.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.*;
 

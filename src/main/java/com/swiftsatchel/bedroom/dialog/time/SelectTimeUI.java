@@ -1,7 +1,7 @@
-package com.swiftsatchel.bedroom.dialog;
+package com.swiftsatchel.bedroom.dialog.time;
 
-import com.swiftsatchel.bedroom.alert.AlertDialog;
-import com.swiftsatchel.bedroom.alert.YesNoDialog;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
