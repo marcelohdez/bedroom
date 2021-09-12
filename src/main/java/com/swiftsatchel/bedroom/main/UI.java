@@ -143,6 +143,7 @@ public class UI extends JPanel implements ActionListener {
             if (Main.getOrders() < 999) {
                 Main.setOrders(new FloatingSpinner(Main.getOrders(),
                         0, 999).showSelf());
+                parent.pack(); // Update UI and window size for new number
             } else new AlertDialog(parent, """
                     You have way too many orders,
                     you are worth so much more
