@@ -1,8 +1,10 @@
 package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +23,8 @@ import java.util.TreeMap;
  */
 public class ShiftHistoryChart extends JPanel implements ActionListener, MouseListener {
 
+    private final WindowParent container;
+
     private boolean noHistory = true;
     private int pointsAmount = 7; // Amount of data points to show
 
@@ -37,7 +41,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private final JMenuItem deleteDate;
     private LocalDate currentlyObserved;
 
-    public ShiftHistoryChart() {
+    public ShiftHistoryChart(WindowParent container) {
+        this.container = container;
         addMouseListener(this);
 
         delMenu = new JPopupMenu("Edit");
@@ -387,11 +392,22 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
         if (e.getSource().equals(deleteDate)) {
             if (currentlyObserved != null) {
-                shiftHistoryData.remove(currentlyObserved);
-                Main.removeFromHistory(currentlyObserved);
-                getNewKeys();
-                updatePages();
-                repaint();
+                if (new YesNoDialog(container, """
+                        Are you sure you want to
+                        delete $observed?"""
+                        .replace("$observed",
+                                currentlyObserved.getMonth().name().substring(0, 3) + " " +
+                                        currentlyObserved.getDayOfMonth() + " " +
+                                        currentlyObserved.getYear()))
+                        .accepted()) {
+
+                    shiftHistoryData.remove(currentlyObserved);
+                    Main.removeFromHistory(currentlyObserved);
+                    getNewKeys();
+                    updatePages();
+                    repaint();
+
+                }
             }
         }
 

@@ -9,11 +9,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener {
+public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener,
+        WindowParent {
 
     private final WindowParent parent;
 
-    private final ShiftHistoryChart chart = new ShiftHistoryChart();
+    private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
     // ======= Top panel components =======
     private final JPanel topRow = new JPanel(); // The panel itself
@@ -133,6 +134,26 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         parent.askForFocus();
     }
 
+    @Override
+    public int[] getXYWidthHeight() {
+        return new int[]{getX(), getY(), getWidth(), getHeight()};
+    }
+
+    @Override
+    public void makeVisible(boolean b) {
+        setVisible(b);
+    }
+
+    @Override
+    public void setDisabled(boolean b) {
+        setEnabled(b);
+    }
+
+    @Override
+    public void askForFocus() {
+        requestFocus();
+    }
+
     // Unused
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -151,5 +172,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
+
+    @Override
+    public void reloadSettings() {}
 
 }
