@@ -2,7 +2,7 @@ package com.swiftsatchel.bedroom.dialog.time;
 
 import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 

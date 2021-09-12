@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.settings;
+package com.swiftsatchel.bedroom.dialog.settings;
 
 import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
