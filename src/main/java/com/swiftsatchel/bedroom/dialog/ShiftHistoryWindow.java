@@ -1,7 +1,6 @@
 package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.components.ShiftHistoryChart;
-import com.swiftsatchel.bedroom.main.BedroomWindow;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
@@ -18,13 +17,12 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     // ======= Top panel components =======
     private final JPanel topRow = new JPanel(); // The panel itself
-    private final JLabel showingLabel = new JLabel("Showing ");
-    private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 10, 15});
-    private final JLabel shiftsLabel = new JLabel(" shifts");
+    private final JLabel showingLabel = new JLabel("Data points to show:");
+    private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 12, 16});
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
-    private final JLabel datesShown = new JLabel("1/1/2020-1/1/2021");
+    private final JLabel datesShown = new JLabel("None");
 
     public ShiftHistoryWindow(WindowParent parent) {
         this.parent = parent;
@@ -59,16 +57,15 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         // Add to their respective places
         topRow.add(showingLabel);
         topRow.add(ptsAmount);
-        topRow.add(shiftsLabel);
+        topRow.add(datesShown);
         topRow.add(leftButton);
         topRow.add(pagesLabel);
         topRow.add(rightButton);
-        topRow.add(datesShown);
         add(topRow, BorderLayout.NORTH);
         add(chart, BorderLayout.CENTER);
 
         // Color components
-        Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount, shiftsLabel,
+        Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount,
                 pagesLabel, leftButton, rightButton, datesShown, chart});
 
     }

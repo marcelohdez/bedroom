@@ -26,7 +26,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private final WindowParent container;
 
     private boolean noHistory = true;
-    private int pointsAmount = 7; // Amount of data points to show
+    private int pointsAmount = 8; // Amount of data points to show
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
     private LocalDate[] keys = cleanUpKeys();
