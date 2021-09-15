@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom;
 
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
@@ -11,9 +12,13 @@ import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.DosFileAttributeView;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -298,8 +303,57 @@ public class Main {
                 Main.clockInTime.until(time.equals(clockInTime) ? time.plusMinutes(1) : time, ChronoUnit.SECONDS))));
 
         userPrefs.put("shiftHistory", shiftHistory.toString());
+        try {
+            saveHistoryToFile();    // Relying on Preferences will be deprecated as of Beta 5 for
+                                    // importing/exporting ability
+        } catch (IOException e) { e.printStackTrace(); }
 
         System.exit(0);
+
+    }
+
+    /**
+     * Saves shift history to a file at the default directory (usually Documents, home in linux)
+     *
+     * @throws IOException If unable to write file
+     */
+    private static void saveHistoryToFile() throws IOException {
+
+        String dir = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
+                File.separator + "bedroom-data"; // Get default directory plus bedroom-data folder
+        File path = new File(dir); // Make the directory into a File
+
+        if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
+
+            createHistoryFileAt(dir); // Create the file
+
+        } else { // If teh directory does not exist and cannot be made:
+            new AlertDialog(wnd, "Unable to save shift history.");
+            System.out.println("Error saving history to path.");
+        }
+
+    }
+
+    /**
+     * Creates a "shift.history" file storing all our shift history in text.
+     *
+     * @param path Where to create the file.
+     */
+    private static void createHistoryFileAt(String path) {
+
+        // Create the file instance
+        File shiftHistoryFile = new File(path + File.separator + "shift.history");
+
+        try {
+            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it:
+
+                FileWriter writer = new FileWriter(shiftHistoryFile);
+                writer.write(shiftHistory.toString()); // Write history
+                writer.close();
+
+            // Else if it exists, attempt to delete and remake it:
+            } else if (shiftHistoryFile.delete()) saveHistoryToFile();
+        } catch (IOException e) { e.printStackTrace(); }
 
     }
 
