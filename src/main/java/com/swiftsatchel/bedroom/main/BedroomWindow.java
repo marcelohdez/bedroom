@@ -122,7 +122,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
         } else if (LocalDateTime.now().isBefore(Main.clockInTime)) { // If we have not clocked in:
 
-            System.exit(0); // Just exit.
+            Main.exit(); // Just exit
 
         } else Main.clockOut(Main.clockOutTime); // If our shift has ended, just clock out with original times.
 

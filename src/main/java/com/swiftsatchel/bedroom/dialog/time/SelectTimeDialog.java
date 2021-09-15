@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom.dialog.time;
 
+import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
@@ -77,7 +78,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
     public void close() {
         switch (type) {
-            case CLOCK_IN -> System.exit(0);
+            case CLOCK_IN -> Main.exit();
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
                 parent.makeVisible(true);

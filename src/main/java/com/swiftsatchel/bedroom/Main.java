@@ -300,6 +300,16 @@ public class Main {
                 // we are only a few seconds clocked in) just do the math with the next minute.
                 Main.clockInTime.until(time.equals(clockInTime) ? time.plusMinutes(1) : time, ChronoUnit.SECONDS))));
 
+        exit();
+
+    }
+
+    /**
+     * Get things wrapped up before exiting
+     */
+    public static void exit() {
+
+        // Save shitHistory to Preferences and to file
         userPrefs.put("shiftHistory", shiftHistory.toString());
         try {
             saveHistoryToFile();    // Relying on Preferences will be deprecated as of Beta 5 for
