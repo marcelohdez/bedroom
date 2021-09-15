@@ -67,6 +67,13 @@ public class ErrorDialog extends AlertDialog {
                         out time:\040""" +
                         Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
             }
+            case SAVING_HISTORY_FAILED -> {
+                return "Unable to save shift history";
+            }
+            case CAN_NOT_OPEN_EXPLORER -> {
+                return """
+                        Can not open file explorer.""";
+            }
         }
 
         // If type is not recognized return the type itself

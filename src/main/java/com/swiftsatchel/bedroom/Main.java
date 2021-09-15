@@ -1,6 +1,5 @@
 package com.swiftsatchel.bedroom;
 
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
@@ -334,7 +333,7 @@ public class Main {
             createHistoryFileAt(path.toPath()); // Create the file
 
         } else { // If teh directory does not exist and cannot be made:
-            new AlertDialog(wnd, "Unable to save shift history.");
+            new ErrorDialog(wnd, ErrorType.SAVING_HISTORY_FAILED);
             System.out.println("Error saving history to path.");
         }
 
