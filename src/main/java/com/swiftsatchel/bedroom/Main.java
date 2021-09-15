@@ -68,7 +68,7 @@ public class Main {
 
         Theme.setAccents(); // Set extra color accents through UIManager
         init();
-        openWorkApps(); // Open any work apps
+        SwingUtilities.invokeLater(Main::openWorkApps); // Open any work apps
 
         // Create a timer to run every second, updating the time
         Timer t = new Timer(1000, e -> update());
