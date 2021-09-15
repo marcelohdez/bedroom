@@ -4,8 +4,10 @@ import com.swiftsatchel.bedroom.Main;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 public final class Settings {
@@ -174,7 +176,7 @@ public final class Settings {
     public static TreeMap<LocalDate, Float> loadShiftHistory() {
 
         TreeMap<LocalDate, Float> tm = new TreeMap<>();
-        String str = Main.userPrefs.get("shiftHistory", "{}");
+        String str = readShiftHistory();
 
         if (!str.equals("{}")) { // If the string is not an empty TreeMap: (to avoid null exceptions)
 
@@ -204,6 +206,30 @@ public final class Settings {
         }
 
         return tm;
+
+    }
+
+    /**
+     * Read the line of past history data from its file if available
+     *
+     * @return The string of past history data.
+     */
+    private static String readShiftHistory() {
+
+        File file = new File(Settings.getWorkingDir() + File.separator + "shift.history"); // Get file
+
+        if (file.exists()) {
+            try {
+
+                Scanner reader = new Scanner(file); // Make a new scanner
+                if (reader.hasNextLine()) // If there is a line to read:
+                    return reader.nextLine(); // Read line of data
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return "{}"; // Return this if file does not exist or is empty
 
     }
 
