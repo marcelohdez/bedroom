@@ -2,11 +2,16 @@ package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.Main;
 
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 public final class Settings {
+
+    private static final String workingDir =  // Current working directory, to store shift history files etc.
+            FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
 
     // Settings variables, to return when called on methods, instead of doing storage reads every time.
     private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
@@ -94,6 +99,15 @@ public final class Settings {
      */
     public static void saveWorkApps(String apps) {
         Main.userPrefs.put("workApps", apps);
+    }
+
+    /**
+     * Get working directory, where shift history and other data files are stored.
+     *
+     * @return Path to folder as a String
+     */
+    public static String getWorkingDir() {
+        return workingDir;
     }
 
     /**

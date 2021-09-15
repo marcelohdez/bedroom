@@ -1,11 +1,14 @@
 package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.components.ShiftHistoryChart;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener,
@@ -24,10 +27,13 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     private final JButton rightButton = new JButton(">");
     private final JLabel datesShown = new JLabel("None");
 
+    private final JPanel botRow = new JPanel(); // Bottom row panel
+    private final JButton historyFolderButton = new JButton("Open history directory");
+
     public ShiftHistoryWindow(WindowParent parent) {
         this.parent = parent;
 
-        parent.setDisabled(true);
+        parent.setDisabled(true); // Disable parent window
         addWindowListener(this);
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
@@ -53,6 +59,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         ptsAmount.addItemListener(this);
         leftButton.addActionListener(this);
         rightButton.addActionListener(this);
+        historyFolderButton.addActionListener(this);
 
         // Add to their respective places
         topRow.add(showingLabel);
@@ -61,12 +68,15 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         topRow.add(leftButton);
         topRow.add(pagesLabel);
         topRow.add(rightButton);
+        botRow.add(historyFolderButton);
         add(topRow, BorderLayout.NORTH);
         add(chart, BorderLayout.CENTER);
+        add(botRow, BorderLayout.SOUTH);
 
         // Color components
-        Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount,
-                pagesLabel, leftButton, rightButton, datesShown, chart});
+        Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount, pagesLabel,
+                leftButton, rightButton, datesShown, chart, historyFolderButton});
+        botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(), 40));
 
     }
 
@@ -104,10 +114,34 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     }
 
+    /**
+     * Open working directory in system's explorer
+     */
+    private void openHistoryDirectory() {
+
+        try {
+            // Create instance of history file to select it in explorer
+            File shiftHistoryFile = new File(Settings.getWorkingDir() + File.separator + "shift.history");
+
+            if (!System.getProperty("os.name").contains("Windows")) { // Check if we are not on Windows
+                Desktop.getDesktop().browseFileDirectory(shiftHistoryFile);
+            } else // Due to browseFileDirectory not working on Win10 we have to use a specific command:
+                try {
+                    Runtime.getRuntime().exec("explorer " + Settings.getWorkingDir());
+                } catch (SecurityException | IOException e) { e.printStackTrace(); }
+
+        } catch (SecurityException e) {  // If we encounter an exception:
+            new AlertDialog(this, "Unable to open working directory.");
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(leftButton)) chart.prevPage();
         if (e.getSource().equals(rightButton)) chart.nextPage();
+        if (e.getSource().equals(historyFolderButton)) openHistoryDirectory();
         updatePageInfo();
     }
 

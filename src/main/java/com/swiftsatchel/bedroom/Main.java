@@ -12,13 +12,11 @@ import com.swiftsatchel.bedroom.util.Theme;
 import com.swiftsatchel.bedroom.util.Time;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.DosFileAttributeView;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -319,13 +317,11 @@ public class Main {
      */
     private static void saveHistoryToFile() throws IOException {
 
-        String dir = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() +
-                File.separator + "bedroom-data"; // Get default directory plus bedroom-data folder
-        File path = new File(dir); // Make the directory into a File
+        File path = new File(Settings.getWorkingDir()); // Make the directory into a File
 
         if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
 
-            createHistoryFileAt(dir); // Create the file
+            createHistoryFileAt(path.toPath()); // Create the file
 
         } else { // If teh directory does not exist and cannot be made:
             new AlertDialog(wnd, "Unable to save shift history.");
@@ -339,7 +335,7 @@ public class Main {
      *
      * @param path Where to create the file.
      */
-    private static void createHistoryFileAt(String path) {
+    private static void createHistoryFileAt(Path path) {
 
         // Create the file instance
         File shiftHistoryFile = new File(path + File.separator + "shift.history");
