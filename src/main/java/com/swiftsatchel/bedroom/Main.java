@@ -284,7 +284,7 @@ public class Main {
     }
 
     public static void setOrders(int newVal) {
-        orders = newVal;
+        if (clockInTimePassed) orders = newVal;
     }
 
     public static void removeFromHistory(LocalDate date) {
