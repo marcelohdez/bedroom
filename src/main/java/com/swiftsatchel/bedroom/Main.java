@@ -125,9 +125,11 @@ public class Main {
                         totalSecClockedIn = clockInTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
                     }
 
-                } else getTotalShiftTime();
+                // If we have passed our clock out time get total time worked:
+                } else totalSecClockedIn = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
 
-                getOrdersNeeded();
+                ordersNeeded = Math.round(target * (timeWorkedTill(clockOutTime, ChronoUnit.MINUTES) / 60F));
+
                 sec = (int) (totalSecClockedIn % 60);
                 min = (int) (totalSecClockedIn / 60) % 60;
                 hr = (int) Math.floor(totalSecClockedIn / 60F / 60F);
@@ -231,30 +233,6 @@ public class Main {
 
     }
 
-    private static void getOrdersNeeded() {
-
-        if (breakOutTime == null) { // Check if we have not chosen break times
-            ordersNeeded = Math.round(target *
-                    // If so, get ordersNeeded with clock in and out times
-                    (clockInTime.until(clockOutTime, ChronoUnit.MINUTES) / 60F));
-        } else ordersNeeded = Math.round(target *
-                // If we did choose break times, then get ordersNeeded from minutes we work
-                // minus the break length.
-                ((clockInTime.until(clockOutTime, ChronoUnit.MINUTES) -
-                        breakInTime.until(breakOutTime, ChronoUnit.MINUTES)) / 60F));
-
-    }
-
-    private static void getTotalShiftTime() {
-        // Get shift length, used once our shift has ended as to not keep updating time,
-        // If we have chosen breaks, get shift length minus break length, for worked time.
-        if (breakOutTime != null) {
-            totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS) -
-                    breakInTime.until(breakOutTime, ChronoUnit.SECONDS);
-        } else totalSecClockedIn = clockInTime.until(clockOutTime, ChronoUnit.SECONDS);
-
-    }
-
     public static TreeMap<LocalDate, Float> getShiftHistory() {
         return shiftHistory;
     }
@@ -320,12 +298,32 @@ public class Main {
     public static void clockOut(LocalDateTime time) {
 
         // Store the current shift end date and the orders per hour within the chosen time.
-        shiftHistory.put(LocalDate.now(), Float.valueOf(twoDecs.format((float) (orders*3600)/
-                // If the selected time is the same as our clock in time (down to the minute, so if
-                // we are only a few seconds clocked in) just do the math with the next minute.
-                Main.clockInTime.until(time.equals(clockInTime) ? time.plusMinutes(1) : time, ChronoUnit.SECONDS))));
+        shiftHistory.put(LocalDate.now(),
+                Float.valueOf(twoDecs.format((float) (orders * 3600) /
+                        timeWorkedTill(time, ChronoUnit.SECONDS))));
 
         exit();
+
+    }
+
+    /**
+     * Get time worked from clock in time to a specified time, in the unit chosen.
+     *
+     * @param till Time to calculate off of
+     * @param unit Unit of time to use
+     * @return The amount of *unit* worked from clock in time to chosen *till* time
+     */
+    private static long timeWorkedTill(LocalDateTime till, ChronoUnit unit) {
+
+        if (breakOutTime == null) { // If there is no break:
+            return clockInTime.until(till, unit); // Get seconds until the time chosen
+        } else {
+            if (LocalDateTime.now().isBefore(breakInTime)) { // If we have not started our break:
+                return clockInTime.until(till, unit); // Get seconds until the time chosen
+            } else {
+                return clockInTime.until(breakInTime, unit) - breakOutTime.until(till, unit);
+            }
+        }
 
     }
 
