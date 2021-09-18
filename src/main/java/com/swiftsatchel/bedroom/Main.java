@@ -262,7 +262,7 @@ public class Main {
     }
 
     public static void setOrders(int newVal) {
-        if (clockInTimePassed) orders = newVal;
+        if (clockInTimePassed && !inBreak) orders = newVal;
     }
 
     public static LocalDateTime getBreakStart() {
