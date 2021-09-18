@@ -29,8 +29,8 @@ public class ErrorDialog extends AlertDialog {
                         Breaks may only start or end
                         inside of shifts. Current
                         shift is:\040""" +
-                        Time.makeTime12Hour(Main.clockInTime.toLocalTime()) + "-" +
-                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
+                        Time.makeTime12Hour(Main.getClockInTime().toLocalTime()) + "-" +
+                        Time.makeTime12Hour(Main.getClockOutTime().toLocalTime());
             }
             case NON_POSITIVE_SHIFT_TIME -> {
                 return """
@@ -38,7 +38,7 @@ public class ErrorDialog extends AlertDialog {
                         after your clock in time.
                         Current clock in time:
                         """ +
-                        Time.makeTime12Hour(Main.clockInTime.toLocalTime());
+                        Time.makeTime12Hour(Main.getClockInTime().toLocalTime());
             }
             case NO_FILE_ASSOCIATION -> {
                 return """
@@ -65,7 +65,7 @@ public class ErrorDialog extends AlertDialog {
                         before original clock out
                         time. Your current clock
                         out time:\040""" +
-                        Time.makeTime12Hour(Main.clockOutTime.toLocalTime());
+                        Time.makeTime12Hour(Main.getClockOutTime().toLocalTime());
             }
             case SAVING_HISTORY_FAILED -> {
                 return "Unable to save shift history";

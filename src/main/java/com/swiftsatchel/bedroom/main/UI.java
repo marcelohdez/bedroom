@@ -100,9 +100,9 @@ public class UI extends JPanel implements ActionListener {
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");
-            Time.append12HrTimeTo(sb, Main.breakInTime.toLocalTime());
+            Time.append12HrTimeTo(sb, Main.getBreakStart().toLocalTime());
             sb.append("-");
-            Time.append12HrTimeTo(sb, Main.breakOutTime.toLocalTime());
+            Time.append12HrTimeTo(sb, Main.getBreakEnd().toLocalTime());
             sb.append("</b></html>");
 
             breakButton.setToolTipText(sb.toString());

@@ -193,9 +193,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         if (time.isAfter(lastTime)) {
 
-            Main.clockOutTime = time;
-            Main.clockInTime = lastTime; // Set clock in time as well
-
+            Main.setShift(lastTime, time);          // Set new shift times
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
             Main.timesChosen = true;                // Clock out time is now chosen
             windowParent.setDisabled(false);        // Re-enable parent window
@@ -213,8 +211,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
             // Since the default date is the user's current date, if the clock out time is before
             // the clock in time, ask if an overnight shift is desired, if so add a day to time.
-            Main.clockOutTime = time.plusDays(1);
-            Main.clockInTime = lastTime; // Set clock in time as well
+            Main.setShift(lastTime, time.plusDays(1)); // Set new shift times, plus 1 day on clock out for overnight shift
 
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
             Main.timesChosen = true;                // Clock out time is now chosen
@@ -229,7 +226,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setBreakStartTime(LocalDateTime time) {
 
-        if ((time.isAfter(Main.clockInTime)) && time.isBefore(Main.clockOutTime)) {
+        if ((time.isAfter(Main.getClockInTime())) && time.isBefore(Main.getClockOutTime())) {
 
             lastTime = time; // Set enter break time
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
@@ -242,10 +239,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setBreakEndTime(LocalDateTime time) {
 
-        if (time.isAfter(lastTime) && time.isBefore(Main.clockOutTime)) {
+        if (time.isAfter(lastTime) && time.isBefore(Main.getClockOutTime())) {
 
-            Main.breakOutTime = time;           // Set leave break time
-            Main.breakInTime = lastTime;        // Set enter break time now
+            Main.setBreak(lastTime, time);      // Set new break times
             windowParent.setDisabled(false);    // Re-enable parent window
             windowParent.askForFocus();         // Give focus to parent window
             // Finish this dialog set by disposing this window and the previous
@@ -259,9 +255,9 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void clockOutEarly(LocalDateTime time) {
 
-        if (time.isAfter(Main.clockInTime)) {
+        if (time.isAfter(Main.getClockInTime())) {
 
-            if (time.isBefore(Main.clockOutTime)) {
+            if (time.isBefore(Main.getClockOutTime())) {
 
                 Main.clockOut(time); // Save this shift's performance and close application
 

@@ -42,7 +42,7 @@ public class Main {
     private static long secondsTillLeaveBreak = -1;
 
     // Time values
-    public static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
+    private static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
 
     // Shift stats
     private static int orders = 0;
@@ -285,6 +285,32 @@ public class Main {
 
     public static void setOrders(int newVal) {
         if (clockInTimePassed) orders = newVal;
+    }
+
+    public static LocalDateTime getBreakStart() {
+        return breakInTime;
+    }
+
+    public static LocalDateTime getBreakEnd() {
+        return breakOutTime;
+    }
+
+    public static void setBreak(LocalDateTime start, LocalDateTime end) {
+        breakInTime = start;
+        breakOutTime = end;
+    }
+
+    public static LocalDateTime getClockInTime() {
+        return clockInTime;
+    }
+
+    public static LocalDateTime getClockOutTime() {
+        return clockOutTime;
+    }
+
+    public static void setShift(LocalDateTime start, LocalDateTime end) {
+        clockInTime = start;
+        clockOutTime = end;
     }
 
     public static void removeFromHistory(LocalDate date) {

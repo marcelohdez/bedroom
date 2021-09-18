@@ -106,8 +106,8 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     public void windowClosing(WindowEvent e) {
 
         // If we are currently in our shift:
-        if (LocalDateTime.now().isAfter(Main.clockInTime) &&
-                LocalDateTime.now().isBefore(Main.clockOutTime)) {
+        if (LocalDateTime.now().isAfter(Main.getClockInTime()) &&
+                LocalDateTime.now().isBefore(Main.getClockOutTime())) {
 
             // Clock out early
             if (Settings.getAskBeforeEarlyClose()) {
@@ -120,11 +120,11 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
                     Ops.addZeroUnder10(LocalTime.now().getHour()) + ":" +
                     Ops.addZeroUnder10(LocalTime.now().getMinute()))));
 
-        } else if (LocalDateTime.now().isBefore(Main.clockInTime)) { // If we have not clocked in:
+        } else if (LocalDateTime.now().isBefore(Main.getClockInTime())) { // If we have not clocked in:
 
             Main.exit(); // Just exit
 
-        } else Main.clockOut(Main.clockOutTime); // If our shift has ended, just clock out with original times.
+        } else Main.clockOut(Main.getClockOutTime()); // If our shift has ended, just clock out with original times.
 
     }
 
