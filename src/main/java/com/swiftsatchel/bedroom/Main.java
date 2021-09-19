@@ -318,10 +318,13 @@ public class Main {
         if (breakOutTime == null) { // If there is no break:
             return clockInTime.until(till, unit); // Get seconds until the time chosen
         } else {
-            if (LocalDateTime.now().isBefore(breakInTime)) { // If we have not started our break:
+            if (till.isBefore(breakInTime)) { // If we have not started our break:
                 return clockInTime.until(till, unit); // Get seconds until the time chosen
-            } else {
-                return clockInTime.until(breakInTime, unit) - breakOutTime.until(till, unit);
+            } else if (till.isBefore(breakOutTime)) { // If we are in our break:
+                return clockInTime.until(breakInTime, unit);
+            } else { // If we have passed our break:
+                // Return the time between clocking in and wanted time minus the break length
+                return clockInTime.until(till, unit) - breakInTime.until(breakOutTime, unit);
             }
         }
 
