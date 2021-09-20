@@ -37,19 +37,15 @@ public class Main {
     private static int hr = 0;
     private static int min = 0;
     private static int sec = 0;
-    private static long totalSecClockedIn = 0;
-    private static long secondsTillClockIn = -1;
-    private static long secondsTillLeaveBreak = -1;
 
     // Time values
     private static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
 
     // Shift stats
     private static int orders = 0;
-    private static boolean inBreak = false;
-    private static boolean clockInTimePassed = false;
     private static int target; // Target orders/hr
     private static int ordersNeeded = 0;
+    private static long secondsWorked = 0;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
     private static final TreeMap<LocalDate, Float> shiftHistory = Settings.loadShiftHistory();
@@ -112,36 +108,40 @@ public class Main {
     public static void update() {
 
         if (timesChosen) { // Have we chosen clock in and out times?
+            long seconds;
+
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
-                clockInTimePassed = true;
                 wnd.enableButtons(); // Default to enabled buttons
 
                 if (LocalDateTime.now().isBefore(clockOutTime)) { // If we have not finished our shift:
 
-                    if (breakOutTime != null) { // Have we chosen break times?
-                        getBreakTime();
-                    } else { // If not, set totalSecClocked to time from clock in to now
-                        totalSecClockedIn = clockInTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
+                    if (isInBreak()) { // If we are in our break, get time left until break ends:
+                        seconds = LocalDateTime.now().until(breakOutTime, ChronoUnit.SECONDS);
+                        wnd.disableButtons(UI.Buttons.ADD_ORDER); // Disable add order button during break
+                    } else { // If not, get time worked
+                        seconds = timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS);
                     }
 
                 // If we have passed our clock out time get total time worked:
-                } else totalSecClockedIn = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
+                } else seconds = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
 
                 ordersNeeded = Math.round(target * (timeWorkedTill(clockOutTime, ChronoUnit.MINUTES) / 60F));
 
-                sec = (int) (totalSecClockedIn % 60);
-                min = (int) (totalSecClockedIn / 60) % 60;
-                hr = (int) Math.floor(totalSecClockedIn / 60F / 60F);
-                updateStats(); // Update stats and show on screen
+            } else { // Else if it is before our shift starts:
 
-            } else if (LocalDateTime.now().isBefore(clockInTime)) { // Else if it is before our shift starts:
                 wnd.disableButtons(UI.Buttons.BOTH); // Disable buttons until we clock in
                 // Get seconds left until we have to clock in
-                secondsTillClockIn = LocalDateTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
-                updateStats(); // Display it on screen
+                seconds = LocalDateTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
+
             }
 
+            sec = (int) (seconds % 60);
+            min = (int) (seconds / 60) % 60;
+            hr = (int) Math.floor(seconds / 60F / 60F);
+            secondsWorked = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
+
+            updateStats(); // Update stats and show on screen
             wnd.pack();
 
         }
@@ -157,7 +157,7 @@ public class Main {
 
     public static void changeOrders(int amount) { // Change orders
 
-        if (!inBreak) {
+        if (!isInBreak()) {
             orders += amount;
             if (orders < 0) orders = 0;
             updateStats();
@@ -170,9 +170,9 @@ public class Main {
     public static void updateStats() {
 
         StringBuilder sb = new StringBuilder();
-        if (clockInTimePassed) { // Get stats =======
+        if (clockInTimePassed()) { // Get stats =======
 
-            if (!inBreak) { // Show time clocked in
+            if (!isInBreak()) { // Show time clocked in
                 sb.append("Time: ");
                 Time.appendReadableTimeTo(sb, hr, min, sec);
                 if (LocalDateTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
@@ -180,7 +180,7 @@ public class Main {
                         .append(getStats());
             } else { // Show time left until our break ends =======
                 sb.append("On break, ");
-                Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillLeaveBreak));
+                Time.appendReadableTimeTo(sb, hr, min, sec);
                 sb.append(" left\n")
                         .append(getStats());
             }
@@ -188,7 +188,7 @@ public class Main {
         } else { // Show "Time until clocked in" =======
 
             sb.append("Time until clocked in:\n");
-            Time.appendReadableTimeTo(sb, Time.shrinkTime(secondsTillClockIn));
+            Time.appendReadableTimeTo(sb, hr, min, sec);
             sb.append("\n");
 
         }
@@ -204,33 +204,21 @@ public class Main {
                 Needed: $needed, $left left"""
                 .replace("$orders", String.valueOf(orders))
                 .replace("$perHr",
-                        twoDecs.format((float) (orders*3600)/totalSecClockedIn))
+                        twoDecs.format((float) (orders*3600)/secondsWorked))
                 .replace("$needed", String.valueOf(ordersNeeded))
                 .replace("$left", (orders < ordersNeeded) ?
                         String.valueOf(ordersNeeded - orders) : "0");
 
     }
 
-    private static void getBreakTime() {
+    public static boolean isInBreak() {
+        return breakTimesChosen() && LocalDateTime.now().isAfter(breakInTime) &&
+                LocalDateTime.now().isBefore(breakOutTime);
+    }
 
-        if (LocalDateTime.now().isAfter(breakInTime)) { // Has our break started?
-            if (LocalDateTime.now().isAfter(breakOutTime)) { // Has our break ended?
-                inBreak = false; // If so, we are not in break.
-                // Set totalSecClocked to the seconds from clocking in to the break's start,
-                // then from break end to the current time.
-                totalSecClockedIn = (clockInTime.until(breakInTime, ChronoUnit.SECONDS) +
-                        breakOutTime.until(LocalDateTime.now(), ChronoUnit.SECONDS));
-            } else { // If our break has not ended:
-                inBreak = true; // We are still in break
-                // Set totalSecClocked to the seconds from clocking in to the break's start
-                totalSecClockedIn = clockInTime.until(breakInTime, ChronoUnit.SECONDS);
-                secondsTillLeaveBreak = // Seconds until our break ends
-                        LocalDateTime.now().until(breakOutTime, ChronoUnit.SECONDS);
-                wnd.disableButtons(UI.Buttons.ADD_ORDER); // Disable add order button during break
-            }
-            // If break has not started, set time clocked in from start to now.
-        } else totalSecClockedIn = clockInTime.until(LocalDateTime.now(), ChronoUnit.SECONDS);
-
+    public static boolean clockInTimePassed() {
+        if (clockOutTime != null) return LocalDateTime.now().isAfter(clockInTime);
+        return false;
     }
 
     public static TreeMap<LocalDate, Float> getShiftHistory() {
@@ -238,10 +226,10 @@ public class Main {
     }
 
     public static long getTotalSecClockedIn() {
-        return totalSecClockedIn;
+        return secondsWorked;
     }
 
-    public static boolean isBreakTimesChosen() {
+    public static boolean breakTimesChosen() {
         return breakOutTime != null;
     }
 
@@ -258,11 +246,11 @@ public class Main {
     }
 
     public static String getOrdersPerHour() {
-        return twoDecs.format((float) (orders * 3600) / totalSecClockedIn) + "/hr";
+        return twoDecs.format((float) (orders * 3600) / secondsWorked) + "/hr";
     }
 
     public static void setOrders(int newVal) {
-        if (clockInTimePassed && !inBreak) orders = newVal;
+        if (clockInTimePassed() && !isInBreak()) orders = newVal;
     }
 
     public static LocalDateTime getBreakStart() {

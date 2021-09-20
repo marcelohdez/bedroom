@@ -96,7 +96,7 @@ public class UI extends JPanel implements ActionListener {
         } else addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
 
         // Set Break's tool tips
-        if (Main.isBreakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
+        if (Main.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");
