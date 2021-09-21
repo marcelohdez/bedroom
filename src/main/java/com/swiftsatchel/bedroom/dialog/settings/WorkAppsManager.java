@@ -18,8 +18,8 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
     private final WindowParent parent;
 
-    private ArrayList<String> workAppDirs; // Keep track of work apps' directories
-    private DefaultListModel<String> workAppNames; // Work apps' names
+    private final ArrayList<String> workAppDirs = new ArrayList<>(); // Keep track of work apps' directories
+    private final DefaultListModel<String> workAppNames = new DefaultListModel<>(); // Work apps' names (list to show)
     private JList<String> list; // The JList to be displayed
 
     public WorkAppsManager(SettingsDialog parent) {
@@ -77,15 +77,12 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JPanel panel = new JPanel();
 
         // Add work apps
-        workAppDirs = new ArrayList<>();
-        workAppNames = new DefaultListModel<>();
         for (String app : Settings.getWorkAppsList()) {
             if (!app.equals("")) {
                 workAppDirs.add(app);
                 workAppNames.addElement(new File(app).getName());
             }
         }
-
 
         // Create list
         list = new JList<>(workAppNames);
@@ -123,8 +120,8 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter(
-                    // Set a filter of apps, text files (for scripts), and python scripts (for tech-y ppl)
-                    "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf", "py"));
+                    // Set a filter of apps and text files (for scripts)
+                    "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf"));
             fc.setApproveButtonText("Add");
             int returnVal = fc.showOpenDialog(this);
 
