@@ -29,9 +29,9 @@ public class Main {
     public static final String VERSION = "3 (Beta 5)";
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
-    public static BedroomWindow wnd; // Main window
-
     // ======= Variables =======
+    private static BedroomWindow wnd; // Main window
+
     // Time variables
     private static int hr = 0;
     private static int min = 0;
