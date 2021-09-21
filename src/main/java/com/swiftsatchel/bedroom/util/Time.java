@@ -5,21 +5,6 @@ import java.time.LocalTime;
 public final class Time { // Time operations
 
     /**
-     * Returns an int[] of the hours, minutes, and seconds respectively of the seconds value.
-     *
-     * @param seconds The value to divide into hours, minutes, and seconds
-     * @return Hours, minutes and seconds.
-     */
-    public static int[] shrinkTime(long seconds) {
-
-        // The list of time values
-        return new int[]{(int) Math.floor(seconds/60F/60F), // Hours
-            (int) (seconds/60) % 60, // Minutes
-            (int) (seconds % 60)}; // Seconds
-
-    }
-
-    /**
      * Appends time converted to 12-hour format (ex: 16:00 -> 4:00pm) to a StringBuilder.
      *
      * @param sb The StringBuilder to append to
@@ -66,17 +51,6 @@ public final class Time { // Time operations
         }
         sb.append(s); // Always show seconds
 
-    }
-
-    /**
-     * Appends human-readable time from the 3 values in an int[] to a StringBuilder.
-     * Human-readable time is in 00:00:00 format, with the : being added when needed.
-     *
-     * @param sb The StringBuilder to append to
-     * @param values Hour, minute, and second values respectively
-     */
-    public static void appendReadableTimeTo(StringBuilder sb, int[] values) {
-        appendReadableTimeTo(sb, values[0], values[1], values[2]);
     }
 
     /**
