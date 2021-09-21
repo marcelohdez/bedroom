@@ -185,7 +185,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             case EARLY_CLOCK_OUT -> clockOutEarly(newTime);
         }
 
-        if (Main.timesChosen) Main.update();
+        if (Main.timesChosen()) Main.update();
 
     }
 
@@ -195,7 +195,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
             Main.setShift(lastTime, time);          // Set new shift times
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.timesChosen = true;                // Clock out time is now chosen
             windowParent.setDisabled(false);        // Re-enable parent window
             windowParent.askForFocus();             // Give focus to parent window
             // Finish this dialog set by disposing this window and the previous
@@ -214,7 +213,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             Main.setShift(lastTime, time.plusDays(1)); // Set new shift times, plus 1 day on clock out for overnight shift
 
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.timesChosen = true;                // Clock out time is now chosen
             windowParent.setDisabled(false);        // Re-enable parent window
             windowParent.askForFocus();             // Give focus to parent window
             // Finish this dialog set by disposing this window and the previous

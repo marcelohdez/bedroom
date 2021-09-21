@@ -30,7 +30,6 @@ public class Main {
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     public static BedroomWindow wnd; // Main window
-    public static boolean timesChosen = false; // Have clock in/clock out times been chosen?
 
     // ======= Variables =======
     // Time variables
@@ -105,9 +104,16 @@ public class Main {
 
     }
 
+    public static void updateSettings() {
+
+        Theme.reloadColors();
+        wnd.reloadSettings();
+
+    }
+
     public static void update() {
 
-        if (timesChosen) { // Have we chosen clock in and out times?
+        if (timesChosen()) { // Have we chosen clock in and out times?
             long seconds;
 
             // Has our clock in time passed?
@@ -139,7 +145,7 @@ public class Main {
             sec = (int) (seconds % 60);
             min = (int) (seconds / 60) % 60;
             hr = (int) Math.floor(seconds / 60F / 60F);
-            secondsWorked = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
+            secondsWorked = timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS);
 
             updateStats(); // Update stats and show on screen
             wnd.pack();
@@ -148,11 +154,8 @@ public class Main {
 
     }
 
-    public static void updateSettings() {
-
-        Theme.reloadColors();
-        wnd.reloadSettings();
-
+    public static boolean timesChosen() {
+        return clockOutTime != null;
     }
 
     public static void changeOrders(int amount) { // Change orders
@@ -200,11 +203,10 @@ public class Main {
     private static String getStats() {
 
         return """
-                Orders: $orders ($perHr/hr)
+                Orders: $orders ($perHr)
                 Needed: $needed, $left left"""
                 .replace("$orders", String.valueOf(orders))
-                .replace("$perHr",
-                        twoDecs.format((float) (orders*3600)/secondsWorked))
+                .replace("$perHr", getOrdersPerHour())
                 .replace("$needed", String.valueOf(ordersNeeded))
                 .replace("$left", (orders < ordersNeeded) ?
                         String.valueOf(ordersNeeded - orders) : "0");
@@ -217,8 +219,7 @@ public class Main {
     }
 
     public static boolean clockInTimePassed() {
-        if (clockOutTime != null) return LocalDateTime.now().isAfter(clockInTime);
-        return false;
+        return timesChosen() && LocalDateTime.now().isAfter(clockInTime);
     }
 
     public static TreeMap<LocalDate, Float> getShiftHistory() {
