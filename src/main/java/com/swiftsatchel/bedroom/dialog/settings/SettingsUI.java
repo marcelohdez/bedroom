@@ -35,7 +35,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
     // Themes
     private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
-            "Khaki Green", "Light", "Pink+White", "Pastel Blue"});
+            "Light", "Pink+White", "Pastel Blue"});
     // Default shift length in hours.
     private final JComboBox<String> shiftLengthListBox = new JComboBox<>(Ops.createNumberList(false,
             1, 12, "h "));
@@ -367,12 +367,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 newBgRGB = new int[]{72, 0, 0};
             }
             case "Contrast" -> highContrast = true; // Enable high contrast
-            case "Khaki Green" -> {
-                newTextRGB = new int[]{240, 240, 240};
-                newButtonTextRGB = new int[]{240, 240, 240};
-                newButtonRGB = new int[]{0, 0, 0};
-                newBgRGB = new int[]{90, 120, 0};
-            }
             case "Light" -> {
                 newTextRGB = new int[]{0, 0, 0};
                 newButtonTextRGB = new int[]{0, 0, 0};
