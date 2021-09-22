@@ -76,16 +76,19 @@ public class Main {
     private static void init() {
 
         wnd = new BedroomWindow(); // Set main window
+
         if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) {
 
-            setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),
-                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
+            setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
+                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));    // times
+            setTarget(userPrefs.getInt("target", 9));   // Set target to saved value
+            setOrders(userPrefs.getInt("orders", 0));   // Set orders to saved value
 
-            if (lastSavedBreakIsInShift())
+            if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
                 setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
                     LocalDateTime.parse(userPrefs.get("breakEnd", "")));
 
-            update();
+            update(); // Update stats etc
 
         } else new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
 
@@ -332,8 +335,6 @@ public class Main {
         if (Settings.isCrashRecoveryEnabled()) {
             userPrefs.put("shiftStart", start.toString());
             userPrefs.put("shiftEnd", end.toString());
-            setTarget(userPrefs.getInt("target", 9));
-            setOrders(userPrefs.getInt("orders", 0));
         }
     }
 
