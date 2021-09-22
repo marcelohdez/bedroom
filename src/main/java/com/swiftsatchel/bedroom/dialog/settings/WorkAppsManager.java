@@ -6,7 +6,6 @@ import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -126,10 +125,13 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         if (workAppNames.getSize() < 7) { // Add a work app if under limit
 
             JFileChooser fc = new JFileChooser();
+
             fc.setFileFilter(new FileNameExtensionFilter(
                     // Set a filter of apps and text files (for scripts)
                     "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf"));
             fc.setApproveButtonText("Add");
+            Ops.setHandCursorOnCompsFrom(fc);
+
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {

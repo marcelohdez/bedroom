@@ -65,7 +65,7 @@ public final class Ops { // Operations
     /**
      * Sets hand cursor on the needed components in the given JPanel
      */
-    public static void setHandCursorOnCompsFrom(JPanel pnl) {
+    public static void setHandCursorOnCompsFrom(Container pnl) {
 
         for (Component c : pnl.getComponents()) { // Go through the component list in this JPanel
 
