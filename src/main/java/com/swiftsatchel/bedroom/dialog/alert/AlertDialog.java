@@ -71,7 +71,7 @@ public class AlertDialog extends JDialog implements ActionListener {
         JTextArea messageBox = new JTextArea(message);
 
         // Customize components
-        Theme.colorThese(new JComponent[]{topUI, buttonRow, messageBox});
+        Theme.color(topUI, buttonRow, messageBox);
         messageBox.setFont(Theme.getBoldFont());
         messageBox.setEditable(false);
         if (!isCustomDialog) okButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on button
@@ -120,7 +120,7 @@ public class AlertDialog extends JDialog implements ActionListener {
      * @param updateSizes Whether we update the sizes now/update the screen
      */
     protected void addToButtonRow(JButton b, ActionListener al, boolean updateSizes) {
-        Theme.colorThis(b);
+        Theme.color(b);
         b.addActionListener(al);
         buttonRow.add(b);
         if (updateSizes) sizeButtonRow();

@@ -290,10 +290,10 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     public void colorSelf() {
 
-        Theme.colorThese(new JComponent[]{this, topText, selectButton, hrBox, minBox, amPMBox});
+        Theme.color(this, topText, selectButton, hrBox, minBox, amPMBox);
 
         if (type.equals(TimeWindowType.CLOCK_OUT)) {
-            Theme.colorThese(new JComponent[]{targetLabel, targetBox});
+            Theme.color(targetLabel, targetBox);
         }
 
     }

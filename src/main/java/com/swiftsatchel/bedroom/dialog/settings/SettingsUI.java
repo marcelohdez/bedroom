@@ -206,8 +206,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         greenLabel = new JLabel("Green:");
         blueLabel = new JLabel("Blue:");
 
-        Theme.colorThese(new JComponent[]{redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
-                blueRow, blueLabel, blueSlider});
+        Theme.color(redRow, redLabel, redSlider, greenRow, greenLabel, greenSlider,
+                blueRow, blueLabel, blueSlider);
 
         // Add labels and sliders to their respective rows
         FontMetrics fm = redLabel.getFontMetrics(redLabel.getFont());
@@ -255,7 +255,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize them
         row.setBackground(Theme.getBgColor());
-        Theme.colorThis(button);
+        Theme.color(button);
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(this);
 
@@ -273,7 +273,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JLabel label = new JLabel(labelText);
 
         // Customize them
-        Theme.colorThese(new JComponent[]{label, listBox, row});
+        Theme.color(label, listBox, row);
         // For list boxes not already initialized: make sure the index we want to select is available
         listBox.setSelectedIndex(Math.min(selected, listBox.getItemCount() - 1));
         listBox.addItemListener(this);
@@ -293,7 +293,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JLabel label = new JLabel(labelText);
 
         // Customize them
-        Theme.colorThese(new JComponent[]{label, listBox, row});
+        Theme.color(label, listBox, row);
         listBox.addItemListener(this);
 
         // Add to row
@@ -312,7 +312,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         for (JCheckBox c : comps) {
             // Customize stuffs
             row.setBackground(Theme.getBgColor());
-            Theme.colorThis(c);
+            Theme.color(c);
             // Add to panel
             row.add(c);
         }

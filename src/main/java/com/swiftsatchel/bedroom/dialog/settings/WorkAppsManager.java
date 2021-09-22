@@ -59,7 +59,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JButton remove = new JButton("Remove");
 
         // Customize em
-        Theme.colorThese(new JComponent[]{panel, add, remove});
+        Theme.color(panel, add, remove);
         add.addActionListener(this);
         remove.addActionListener(this);
 
@@ -89,7 +89,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         list.setVisibleRowCount(7);
 
         // Customize
-        Theme.colorThese(new JComponent[]{list, panel});
+        Theme.color(list, panel);
         JScrollPane sp = new JScrollPane(list);
 
         // Add to panel

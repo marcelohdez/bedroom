@@ -22,31 +22,20 @@ public final class Theme {
     private static Color bg = loadColorOf("bg", 64);
 
     /**
-     * Colors a JComponent's background and foreground.
-     *
-     * @param c Component to color
-     */
-    public static void colorThis(JComponent c) {
-
-        if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
-            c.setBackground(getButtonColor());
-            c.setForeground(getButtonTextColor());
-        } else {
-            c.setBackground(getBgColor());
-            c.setForeground(getTextColor());
-        }
-
-    }
-
-    /**
-     * Colors a list of components' background and foreground.
+     * Colors the given JComponents' background and foreground.
      *
      * @param comps Components to color
      */
-    public static void colorThese(JComponent[] comps) {
+    public static void color(JComponent... comps) {
 
         for (JComponent c : comps) {
-            colorThis(c);
+            if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
+                c.setBackground(getButtonColor());
+                c.setForeground(getButtonTextColor());
+            } else {
+                c.setBackground(getBgColor());
+                c.setForeground(getTextColor());
+            }
         }
 
     }

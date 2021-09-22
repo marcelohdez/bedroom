@@ -113,7 +113,7 @@ public class UI extends JPanel implements ActionListener {
 
     public void colorComponents() {
 
-        Theme.colorThese(new JComponent[]{addOrder, breakButton, stats});
+        Theme.color(addOrder, breakButton, stats);
         setBackground(Theme.getBgColor());
 
     }

@@ -75,8 +75,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         add(botRow, BorderLayout.SOUTH);
 
         // Color components
-        Theme.colorThese(new JComponent[]{topRow, showingLabel, ptsAmount, pagesLabel,
-                leftButton, rightButton, datesShown, chart, historyFolderButton});
+        Theme.color(topRow, showingLabel, ptsAmount, pagesLabel, leftButton, rightButton,
+                datesShown, chart, historyFolderButton);
         botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(),
                 Settings.isContrastEnabled() ? 200 : 20));
 
