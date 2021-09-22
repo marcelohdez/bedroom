@@ -65,9 +65,9 @@ public final class Ops { // Operations
     /**
      * Sets hand cursor on the needed components in the given JPanel
      */
-    public static void setHandCursorOnCompsFrom(Container pnl) {
+    public static void setHandCursorOnCompsFrom(Container container) {
 
-        for (Component c : pnl.getComponents()) { // Go through the component list in this JPanel
+        for (Component c : container.getComponents()) { // Go through the component list of this container
 
             // If it is of a desired class, set the cursor
             if (c instanceof JButton || c instanceof JComboBox || c instanceof JSlider || c instanceof JCheckBox) {
