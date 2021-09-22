@@ -382,12 +382,17 @@ public class Main {
      */
     public static void exit() {
 
-        // Save shitHistory to Preferences and to file
-        userPrefs.put("shiftHistory", shiftHistory.toString());
+        // Save shitHistory to file
         try {
-            saveHistoryToFile();    // Relying on Preferences will be deprecated as of Beta 5 for
-                                    // importing/exporting ability
-        } catch (IOException e) { e.printStackTrace(); }
+
+            saveHistoryToFile();
+
+        } catch (IOException e) {
+
+            new ErrorDialog(wnd, ErrorType.SAVING_HISTORY_FAILED);
+            e.printStackTrace();
+
+        }
 
         System.exit(0);
 
