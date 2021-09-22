@@ -69,7 +69,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createCheckBoxRow(askBeforeEarlyClose);
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
-        createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
+        createButtonRow("Manage Work Apps", "Work apps open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components

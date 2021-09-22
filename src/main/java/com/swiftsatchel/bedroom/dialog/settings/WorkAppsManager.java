@@ -36,6 +36,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBackground(Theme.getBgColor());
 
+        content.add(createTipTextArea());
         content.add(createList());
         content.add(createToolsPanel());
         Ops.setHandCursorOnCompsFrom(content); // Set hand cursor on needed components
@@ -48,6 +49,15 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
                 parent.getY() + ((parent.getHeight()/2) - (getHeight()/2)));
 
         setVisible(true);
+
+    }
+
+    private JLabel createTipTextArea() {
+
+        JLabel label = new JLabel("Work apps open along with Bedroom.");
+        label.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+        Theme.color(label);
+        return label;
 
     }
 
@@ -94,9 +104,6 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         // Add to panel
         panel.add(sp);
-        pack();
-        sp.setPreferredSize(new Dimension((int)(getWidth()*1.5), getWidth()));
-        pack();
 
         return panel;
 
