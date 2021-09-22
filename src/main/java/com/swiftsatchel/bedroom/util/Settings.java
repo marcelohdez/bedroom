@@ -20,6 +20,7 @@ public final class Settings {
     private static boolean recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
     private static boolean askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
     private static int defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
+    private static int defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
 
     /**
      * Check if highContrast is enabled in user preferences
@@ -84,17 +85,19 @@ public final class Settings {
      * @param stayOnTop Make window always stay on top
      */
     public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength,
-                                boolean crashRecovery) {
+                                boolean crashRecovery, int defTarget) {
 
         Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
         Main.userPrefs.putBoolean("recoverFromCrashes", crashRecovery);
         Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
         Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
+        Main.userPrefs.putInt("defaultTarget", defTarget);
 
         alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
         recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
         Settings.askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
         Settings.defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
+        defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
 
     }
 
@@ -150,6 +153,15 @@ public final class Settings {
      */
     public static int getDefaultShiftLength() {
         return defaultShiftLength;
+    }
+
+    /**
+     * Get default target value from user preferences
+     *
+     * @return Default target to set in clock in window.
+     */
+    public static int getDefaultTarget() {
+        return defaultTarget;
     }
 
     /**

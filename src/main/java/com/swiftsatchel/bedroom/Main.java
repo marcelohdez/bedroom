@@ -81,7 +81,7 @@ public class Main {
 
             setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
                     LocalDateTime.parse(userPrefs.get("shiftEnd", "")));    // times
-            setTarget(userPrefs.getInt("target", 9));   // Set target to saved value
+            setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
             setOrders(userPrefs.getInt("orders", 0));   // Set orders to saved value
 
             if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:

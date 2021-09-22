@@ -5,10 +5,7 @@ import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.Time;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +113,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         minBox.addKeyListener(parent);
         amPMBox.addKeyListener(parent);
         targetLabel.setHorizontalAlignment(JLabel.CENTER);
-        targetBox.setSelectedIndex(8); // Set default to 9 (what I need @ my job, so a lil Easter egg)
+        targetBox.setSelectedIndex(Settings.getDefaultTarget()-1); // Set index to target - 1 since list starts at 1
         targetBox.addKeyListener(parent);
 
     }

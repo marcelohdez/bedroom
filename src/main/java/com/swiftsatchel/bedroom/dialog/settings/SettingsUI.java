@@ -39,6 +39,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     // Default shift length in hours.
     private final JComboBox<String> shiftLengthListBox = new JComboBox<>(Ops.createNumberList(false,
             1, 12, "h "));
+    private final JComboBox<String> defTargetListBox = new JComboBox<>(Ops.createNumberList(false,
+            1, 24, "   "));
 
     // ======= Checkboxes =======
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
@@ -58,13 +60,15 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Add rows
         createLabelRow("Colors");
-        createListBoxRow("Preset:", themeListBox, "lastTheme", 0, 0);
+
+        createListBoxRow("Preset:", themeListBox, Main.userPrefs.getInt("lastTheme", 0));
         createColoringPanel();
-        createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0, 0);
+        createListBoxRow("Currently editing:", coloringListBox, Main.userPrefs.getInt("lastColoring", 0));
         createLabelRow("Misc.");
         createCheckBoxRow(alwaysOnTop, recoverCrash);
         createCheckBoxRow(askBeforeEarlyClose);
-        createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4, -1);
+        createListBoxRow("Default shift length:", shiftLengthListBox);
+        createListBoxRow("Default target:", defTargetListBox);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
         createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
 
@@ -179,9 +183,12 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 "to clock out</html></b>");
         recoverCrash.setSelected(Settings.isCrashRecoveryEnabled());
         // Default shift length
-        shiftLengthListBox.setSelectedIndex(Settings.getDefaultShiftLength() - 1);
+        shiftLengthListBox.setSelectedIndex(Math.min(Settings.getDefaultShiftLength() - 1, defTargetListBox.getItemCount()));
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
                 "clock out time.<br></b></html>");
+        // Default target value
+        defTargetListBox.setSelectedIndex(Math.min(Settings.getDefaultTarget() - 1, defTargetListBox.getItemCount()));
+        defTargetListBox.setToolTipText("<html><b>Bruh Moment</b></html>");
         // Ask before clocking out early
         askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
                 "a dialog asks to input new clock out time</b></html>");
@@ -259,7 +266,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createListBoxRow(String labelText, JComboBox<String> listBox, String indexPrefKey, int def, int offset) {
+    private void createListBoxRow(String labelText, JComboBox<?> listBox, int selected) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -267,8 +274,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize them
         Theme.colorThese(new JComponent[]{label, listBox, row});
-        listBox.setSelectedIndex(Math.min(Main.userPrefs.getInt(indexPrefKey, def) + offset,
-                listBox.getItemCount() - 1));
+        // For list boxes not already initialized: make sure the index we want to select is available
+        listBox.setSelectedIndex(Math.min(selected, listBox.getItemCount() - 1));
         listBox.addItemListener(this);
 
         // Add to row
@@ -279,7 +286,25 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createCheckBoxRow(JCheckBox... comps) { // This takes an array in case of multiple checkboxes in a row.
+    private void createListBoxRow(String labelText, JComboBox<?> listBox) {
+
+        // Create the components
+        JPanel row = new JPanel();
+        JLabel label = new JLabel(labelText);
+
+        // Customize them
+        Theme.colorThese(new JComponent[]{label, listBox, row});
+        listBox.addItemListener(this);
+
+        // Add to row
+        row.add(label);
+        row.add(listBox);
+
+        add(row);
+
+    }
+
+    private void createCheckBoxRow(JCheckBox... comps) { // Creates a row with 1 or more checkboxes
 
         // Create panel
         JPanel row = new JPanel();
@@ -409,6 +434,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         alwaysOnTop.setSelected(true);
         askBeforeEarlyClose.setSelected(true);
         shiftLengthListBox.setSelectedIndex(3);
+        defTargetListBox.setSelectedIndex(8);
 
     }
 
@@ -425,7 +451,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Save settings
         Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
-                shiftLengthListBox.getSelectedIndex() + 1, recoverCrash.isSelected());
+                shiftLengthListBox.getSelectedIndex() + 1, recoverCrash.isSelected(),
+                defTargetListBox.getSelectedIndex() + 1);
         Settings.setHighContrastTo(highContrast);
         // Since high contrast overwrites colors anyways, only do this if it is false
         if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
