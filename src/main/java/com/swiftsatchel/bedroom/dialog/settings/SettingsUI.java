@@ -42,6 +42,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     // ======= Checkboxes =======
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
+    private final JCheckBox recoverCrash = new JCheckBox("Crash recovery");
     private final JCheckBox askBeforeEarlyClose = new JCheckBox("Ask before clocking out early");
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
@@ -61,7 +62,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createColoringPanel();
         createListBoxRow("Currently editing:", coloringListBox, "lastColoring", 0, 0);
         createLabelRow("Misc.");
-        createCheckBoxRow(alwaysOnTop);
+        createCheckBoxRow(alwaysOnTop, recoverCrash);
         createCheckBoxRow(askBeforeEarlyClose);
         createListBoxRow("Default shift length:", shiftLengthListBox, "defaultShiftLength", 4, -1);
         createButtonRow("Manage Work Apps", "Work apps will open along with Bedroom.");
@@ -173,6 +174,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Stay on top checkbox
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         alwaysOnTop.setSelected(Settings.getAlwaysOnTop());
+        // Recover from crashes (closing Bedroom suddenly)
+        recoverCrash.setToolTipText("<html><b>Load last shift if currently in it if Bedroom wasn't able<br>" +
+                "to clock out</html></b>");
+        recoverCrash.setSelected(Settings.isCrashRecoveryEnabled());
         // Default shift length
         shiftLengthListBox.setSelectedIndex(Settings.getDefaultShiftLength() - 1);
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
@@ -274,16 +279,18 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createCheckBoxRow(JCheckBox c) { // This takes an array in case of multiple checkboxes in a row.
+    private void createCheckBoxRow(JCheckBox... comps) { // This takes an array in case of multiple checkboxes in a row.
 
         // Create panel
         JPanel row = new JPanel();
 
-        // Customize stuffs
-        row.setBackground(Theme.getBgColor());
-        Theme.colorThis(c);
-        // Add to panel
-        row.add(c);
+        for (JCheckBox c : comps) {
+            // Customize stuffs
+            row.setBackground(Theme.getBgColor());
+            Theme.colorThis(c);
+            // Add to panel
+            row.add(c);
+        }
 
         add(row);
 
@@ -418,7 +425,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Save settings
         Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
-                shiftLengthListBox.getSelectedIndex() + 1);
+                shiftLengthListBox.getSelectedIndex() + 1, recoverCrash.isSelected());
         Settings.setHighContrastTo(highContrast);
         // Since high contrast overwrites colors anyways, only do this if it is false
         if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);

@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
@@ -75,7 +76,48 @@ public class Main {
     private static void init() {
 
         wnd = new BedroomWindow(); // Set main window
-        new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
+        if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) {
+
+            setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),
+                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
+
+            if (lastSavedBreakIsInShift())
+                setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
+                    LocalDateTime.parse(userPrefs.get("breakEnd", "")));
+
+            update();
+
+        } else new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
+
+    }
+
+    private static boolean isInSavedShift() {
+
+        try { // Try to parse:
+
+            // Return if we are within the last saved shift start and end values
+            return LocalDateTime.now().isAfter(LocalDateTime.parse(userPrefs.get("shiftStart", ""))) &&
+                    LocalDateTime.now().isBefore(LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
+
+        } catch (DateTimeParseException e) {
+            // If unable to parse just return false
+            return false;
+        }
+
+    }
+
+    private static boolean lastSavedBreakIsInShift() {
+
+        try { // Try to parse:
+
+            // Return if last break set was inside our shift
+            return clockInTime.isBefore(LocalDateTime.parse(userPrefs.get("breakStart", ""))) &&
+                    clockOutTime.isAfter(LocalDateTime.parse(userPrefs.get("breakEnd", "")));
+
+        } catch (DateTimeParseException e) {
+            // If unable to parse just return false
+            return false;
+        }
 
     }
 
@@ -166,6 +208,7 @@ public class Main {
             updateStats();
         }
 
+        userPrefs.putInt("orders", orders);
         wnd.pack(); // Pack the window in case of text changes.
 
     }
@@ -240,6 +283,7 @@ public class Main {
 
     public static void setTarget(int newTarget) {
         target = newTarget;
+        userPrefs.putInt("target", newTarget);
     }
 
     public static int getOrders() {
@@ -251,7 +295,10 @@ public class Main {
     }
 
     public static void setOrders(int newVal) {
-        if (clockInTimePassed() && !isInBreak()) orders = newVal;
+        if (clockInTimePassed() && !isInBreak()) {
+            orders = newVal;
+            userPrefs.putInt("orders", newVal);
+        }
     }
 
     public static LocalDateTime getBreakStart() {
@@ -265,6 +312,10 @@ public class Main {
     public static void setBreak(LocalDateTime start, LocalDateTime end) {
         breakInTime = start;
         breakOutTime = end;
+        if (Settings.isCrashRecoveryEnabled()) {
+            userPrefs.put("breakStart", start.toString());
+            userPrefs.put("breakEnd", end.toString());
+        }
     }
 
     public static LocalDateTime getClockInTime() {
@@ -278,6 +329,12 @@ public class Main {
     public static void setShift(LocalDateTime start, LocalDateTime end) {
         clockInTime = start;
         clockOutTime = end;
+        if (Settings.isCrashRecoveryEnabled()) {
+            userPrefs.put("shiftStart", start.toString());
+            userPrefs.put("shiftEnd", end.toString());
+            setTarget(userPrefs.getInt("target", 9));
+            setOrders(userPrefs.getInt("orders", 0));
+        }
     }
 
     public static void removeFromHistory(LocalDate date) {
@@ -290,6 +347,7 @@ public class Main {
         shiftHistory.put(LocalDate.now(),
                 Float.valueOf(twoDecs.format((float) (orders * 3600) /
                         timeWorkedTill(time, ChronoUnit.SECONDS))));
+        userPrefs.put("shiftEnd", time.toString()); // Save clocked out time
 
         exit();
 

@@ -17,6 +17,7 @@ public final class Settings {
 
     // Settings variables, to return when called on methods, instead of doing storage reads every time.
     private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
+    private static boolean recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
     private static boolean askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
     private static int defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
 
@@ -82,13 +83,16 @@ public final class Settings {
      *
      * @param stayOnTop Make window always stay on top
      */
-    public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength) {
+    public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength,
+                                boolean crashRecovery) {
 
         Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
+        Main.userPrefs.putBoolean("recoverFromCrashes", crashRecovery);
         Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
         Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
 
         alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
+        recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
         Settings.askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
         Settings.defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
 
@@ -119,6 +123,15 @@ public final class Settings {
      */
     public static boolean getAlwaysOnTop() {
         return alwaysOnTop;
+    }
+
+    /**
+     * Get whether the crash recovery setting is enabled
+     *
+     * @return Whether crash recovery is enabled
+     */
+    public static boolean isCrashRecoveryEnabled() {
+        return recoverFromCrashes;
     }
 
     /**
