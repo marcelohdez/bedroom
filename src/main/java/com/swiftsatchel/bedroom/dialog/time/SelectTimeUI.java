@@ -20,17 +20,20 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     private final TimeWindowType type;      // Keep track of this window's type
     private final SelectTimeDialog parent;  // This UI's parent (its container)
     private final WindowParent windowParent; // This set of select time dialog's parent window
-    private final GridBagLayout layout;     // Layout
-    private final GridBagConstraints gbc;   // Constraints
+    private final GridBagLayout layout = new GridBagLayout();     // Layout
+    private final GridBagConstraints gbc = new GridBagConstraints();   // Constraints
 
     // ======= Components: =======
-    private JLabel topText;               // Top text label
-    private JComboBox<String> amPMBox;    // AM/PM list box
-    private JComboBox<String> hrBox;      // Hours list box
-    private JComboBox<String> minBox;     // Minutes list box
-    private JComboBox<String> targetBox;  // Targets list box
-    private JButton selectButton;         // Select button
-    private JLabel targetLabel;           // Select target text
+    private final JLabel topText = new JLabel("CLOCK IN time:"); // Top text label
+    private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});    // AM/PM list box
+    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1,
+            12, ":"));  // Hours list box
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0,
+            59));               // Minutes list box
+    private final JComboBox<String> targetBox = new JComboBox<>(Ops.createNumberList(true, 1,
+            24));               // Targets list box
+    private final JButton selectButton = new JButton("Select"); // Select button
+    private final JLabel targetLabel = new JLabel("Your hourly target:"); // Select target text
 
     // Keep track of last select time dialog's selected time ex: save break start time to only
     // set break time once break end time is selected. This fixes the bug where setting a break
@@ -41,8 +44,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(SelectTimeDialog parent) {
         // Initial properties
         type = parent.type;
-        layout = new GridBagLayout();
-        gbc = new GridBagConstraints();
         this.parent = parent;
         windowParent = parent.getWindowParent();
         init();
@@ -51,8 +52,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     public SelectTimeUI(SelectTimeDialog parent, LocalDateTime lastTime, WindowParent windowParent) {
         // Initial properties
         type = parent.type;
-        layout = new GridBagLayout();
-        gbc = new GridBagConstraints();
         this.parent = parent;
         this.lastTime = lastTime;
         this.windowParent = windowParent;
@@ -60,15 +59,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     }
 
     private void init() {
-
-        // Initialize component variables
-        amPMBox = new JComboBox<>(new String[]{"AM", "PM"});
-        hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
-        minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
-        targetBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
-        selectButton = new JButton("Select");
-        topText = new JLabel("CLOCK IN time:");
-        targetLabel = new JLabel("Your hourly target:");
 
         setBackground(Theme.getBgColor());  // Set background color
         setLayout(layout);                  // Set layout
