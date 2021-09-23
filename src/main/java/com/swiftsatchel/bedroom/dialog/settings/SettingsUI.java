@@ -188,7 +188,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 "clock out time.<br></b></html>");
         // Default target value
         defTargetListBox.setSelectedIndex(Math.min(Settings.getDefaultTarget() - 1, defTargetListBox.getItemCount()));
-        defTargetListBox.setToolTipText("<html><b>Bruh Moment</b></html>");
+        defTargetListBox.setToolTipText("<html><b>Default target value in clock out time dialog</b></html>");
         // Ask before clocking out early
         askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
                 "a dialog asks to input new clock out time</b></html>");
