@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 
 public class SelectTimeUI extends JPanel implements ActionListener {
 
@@ -195,9 +197,11 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 .replace("$lastTime", Time.makeTime12Hour(lastTime.toLocalTime())))
                 .accepted()) {
 
-            // Since the default date is the user's current date, if the clock out time is before
-            // the clock in time, ask if an overnight shift is desired, if so add a day to time.
-            Main.setShift(lastTime, time.plusDays(1)); // Set new shift times, plus 1 day on clock out for overnight shift
+            // If the overnight shift dialog is accepted, make a date time format to check if tomorrow's date is valid
+            // (ex: not february 30 or something) with lenient resolver style to change to next month if invalid.
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
+            // Now parse the new date with that format, if it works set it
+            Main.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
             windowParent.setDisabled(false);        // Re-enable parent window
