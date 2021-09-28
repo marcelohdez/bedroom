@@ -98,7 +98,7 @@ public final class Theme {
      * Also takes into account high contrast, if it is enabled accents will be much
      * more exaggerated, and certain colors will change.
      */
-    public static void setAccents() {
+    public static void setColors() {
 
         Color c = contrastWithShade(buttonColor, Settings.isContrastEnabled() ? 240 : 30);
         UIManager.put("Button.select", c);
@@ -186,7 +186,7 @@ public final class Theme {
         buttonTextColor = loadColorOf("buttonText", 240);
         buttonColor = loadColorOf("button", 80);
         bg = loadColorOf("bg", 64);
-        setAccents();
+        setColors();
 
     }
 

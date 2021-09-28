@@ -62,7 +62,7 @@ public class Main {
                     Settings.setHighContrastTo(true);
         } catch(Exception e) { e.printStackTrace(); }
 
-        Theme.setAccents(); // Set extra color accents through UIManager
+        Theme.setColors(); // Set extra color accents through UIManager
         init();
         SwingUtilities.invokeLater(Main::openWorkApps); // Open any work apps
 
