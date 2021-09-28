@@ -90,9 +90,11 @@ public class AlertDialog extends JDialog implements ActionListener {
         setTitle(title);
         sizeButtonRow();
 
-        // Center on summoner
-        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
-                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
+        // Center on summoner if it exists
+        if (parent != null) {
+            setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
+                    parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
+        } else setLocationRelativeTo(null);
 
         // Show
         if (!isCustomDialog) setVisible(true);
