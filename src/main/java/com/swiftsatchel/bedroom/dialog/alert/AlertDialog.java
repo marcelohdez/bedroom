@@ -128,8 +128,13 @@ public class AlertDialog extends JDialog implements ActionListener {
         if (updateSizes) sizeButtonRow();
     }
 
+    public JPanel getButtonRow() {
+        return buttonRow;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) { // Do sum when OK is pressed
         if (e.getSource() == okButton) dispose();
     }
+
 }
