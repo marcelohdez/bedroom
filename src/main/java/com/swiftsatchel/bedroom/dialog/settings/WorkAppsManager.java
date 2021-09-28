@@ -56,7 +56,6 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
         JLabel label = new JLabel("Work apps open along with Bedroom.");
         label.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
-        Theme.color(label);
         return label;
 
     }
@@ -69,7 +68,6 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         JButton remove = new JButton("Remove");
 
         // Customize em
-        Theme.color(panel, add, remove);
         add.addActionListener(this);
         remove.addActionListener(this);
 
@@ -98,8 +96,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         list = new JList<>(workAppNames);
         list.setVisibleRowCount(7);
 
-        // Customize
-        Theme.color(list, panel);
+        // Create scroll pane
         JScrollPane sp = new JScrollPane(list);
 
         // Add to panel

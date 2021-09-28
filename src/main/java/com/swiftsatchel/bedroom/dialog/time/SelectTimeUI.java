@@ -62,7 +62,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void init() {
 
-        setBackground(Theme.getBgColor());  // Set background color
         setLayout(layout);                  // Set layout
         addKeyListener(parent);             // Add key listener
 
@@ -81,7 +80,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         }
 
         initComponents(); // Add and customize components
-        colorSelf(); // Color self
         setListBoxIndexes(type); // Set list boxes to wanted time
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 

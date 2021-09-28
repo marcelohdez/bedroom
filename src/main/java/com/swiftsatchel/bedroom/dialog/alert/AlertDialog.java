@@ -107,7 +107,7 @@ public class AlertDialog extends JDialog implements ActionListener {
     private void sizeButtonRow() {
         pack(); // Make Swing size everything
         for (Component c : buttonRow.getComponents()) {
-            // Set to width we want, and 1.5x teh height swing chose for font
+            // Set to width we want, and 1.5x the height swing chose
             c.setPreferredSize(new Dimension(getWidth()/buttonRow.getComponentCount() -
                     (5*buttonRow.getComponentCount()), (int) (c.getHeight()*1.5)));
         }

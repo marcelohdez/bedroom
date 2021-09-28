@@ -22,7 +22,8 @@ public final class Theme {
     private static Color bg = loadColorOf("bg", 64);
 
     /**
-     * Colors the given JComponents' background and foreground.
+     * Colors the given JComponents' background and foreground after being created.
+     * Used for UIs that can have their colors changed after initializing.
      *
      * @param comps Components to color
      */
@@ -101,9 +102,20 @@ public final class Theme {
 
         Color c = contrastWithShade(buttonColor, Settings.isContrastEnabled() ? 240 : 30);
         UIManager.put("Button.select", c);
+        UIManager.put("Button.background", getButtonColor());
+        UIManager.put("Button.foreground", getButtonTextColor());
+        UIManager.put("Panel.background", getBgColor());
+        UIManager.put("Label.foreground", getTextColor());
+        UIManager.put("ComboBox.background", getButtonColor());
+        UIManager.put("ComboBox.foreground", getButtonTextColor());
         UIManager.put("Button.focus", c);
         UIManager.put("ComboBox.selectionBackground", c);
         UIManager.put("ComboBox.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
+        UIManager.put("List.background", getBgColor());
+        UIManager.put("List.foreground", getTextColor());
+        UIManager.put("CheckBox.background", getBgColor());
+        UIManager.put("CheckBox.foreground", getTextColor());
+        UIManager.put("Slider.background", getBgColor());
         UIManager.put("List.selectionBackground", c);
         UIManager.put("List.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
         UIManager.put("ScrollBar.background", bg);
