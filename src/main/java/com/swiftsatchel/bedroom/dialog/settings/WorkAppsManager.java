@@ -28,6 +28,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         setTitle("Work Apps");
         addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setAlwaysOnTop(Settings.getAlwaysOnTop());
         setResizable(false);
 

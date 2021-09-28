@@ -20,6 +20,7 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
 
         setModalityType(ModalityType.APPLICATION_MODAL);
         setAlwaysOnTop(Settings.getAlwaysOnTop());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(this);
         setTitle("Settings");
         setResizable(false);
