@@ -1,6 +1,9 @@
 package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
+import com.swiftsatchel.bedroom.enums.ErrorType;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -214,6 +217,7 @@ public final class Settings {
             int start = 1; // Start 1 character ahead to avoid the beginning bracket
             int end = start;
             String currentKey = "";
+            int fails = 0; // Keep track of failed attempts at parsing the dates read, if any.
             for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
 
                 if (str.charAt(i) != 44) { // If it is not a comma then check:
@@ -225,20 +229,39 @@ public final class Settings {
                         end = i + 1;
                     }
                 } else { // Else if it is a comma, set the key we got before the = to the value after the =.
-                    tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+                    if (canParseString(currentKey)) {
+                        tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+                    } else fails++;
                     start = i + 2; // Go 2 characters ahead to avoid the space in between items.
                     end = i + 1;
                 }
 
             }
             // Once loop is finished add last bit
-            tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+            if (canParseString(currentKey)) {
+                tm.put(LocalDate.parse(currentKey), Float.valueOf(str.substring(start, end)));
+            } else fails++;
+
+            if (fails > 0) new AlertDialog(null, """
+                        Bedroom was unable to load
+                        some dates from your past
+                        shifts, it has recovered
+                        what it could.""");
 
         }
 
         isDoneLoadingShiftHistory = true;
         return tm;
 
+    }
+
+    private static boolean canParseString(String string) {
+        try {
+            LocalDate.parse(string);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**

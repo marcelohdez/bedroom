@@ -10,6 +10,7 @@ public enum ErrorType { // Types of user errors we can catch
     WORK_APP_DOES_NOT_EXIST,
     EARLY_CLOCK_OUT_NOT_EARLY,
     SAVING_HISTORY_FAILED,
-    CAN_NOT_OPEN_EXPLORER
+    CAN_NOT_OPEN_EXPLORER,
+    FAILED_TO_LOAD_SHIFT_HISTORY
 
 }

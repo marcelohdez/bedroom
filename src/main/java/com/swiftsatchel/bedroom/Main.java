@@ -1,5 +1,6 @@
 package com.swiftsatchel.bedroom;
 
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
@@ -66,7 +67,13 @@ public class Main {
         init();
         SwingUtilities.invokeLater(() -> {
             Main.openWorkApps();    // Open any work apps
-            shiftHistory = Settings.loadShiftHistory(); // Load shift history
+            try { // Try to load shift history
+
+                shiftHistory = Settings.loadShiftHistory();
+
+            } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
+                new ErrorDialog(null, ErrorType.FAILED_TO_LOAD_SHIFT_HISTORY);
+            }
         });
 
         // Create a timer to run every second, updating the time
@@ -416,7 +423,7 @@ public class Main {
             createHistoryFileAt(path.toPath()); // Create the file
 
         } else { // If teh directory does not exist and cannot be made:
-            new ErrorDialog(wnd, ErrorType.SAVING_HISTORY_FAILED);
+            new ErrorDialog(null, ErrorType.SAVING_HISTORY_FAILED);
             System.out.println("Error saving history to path.");
         }
 
@@ -433,15 +440,29 @@ public class Main {
         File shiftHistoryFile = new File(path + File.separator + "shift.history");
 
         try {
+
             if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it:
 
                 FileWriter writer = new FileWriter(shiftHistoryFile);
-                writer.write(shiftHistory.toString()); // Write history
+
+                if (shiftHistory != null) {
+
+                    writer.write(shiftHistory.toString()); // Write history
+
+                } else writer.write("{}"); // If history is null, just write empty brackets
+
                 writer.close();
 
             // Else if it exists, attempt to delete and remake it:
             } else if (shiftHistoryFile.delete()) saveHistoryToFile();
-        } catch (IOException e) { e.printStackTrace(); }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            new AlertDialog(null, """
+                    Unable to save history to file.""");
+
+        }
 
     }
 

@@ -8,6 +8,12 @@ import com.swiftsatchel.bedroom.util.WindowParent;
 
 import java.time.LocalDateTime;
 
+/**
+ * An AlertDialog that has a predefined message from an ErrorType.
+ * Used to inform the user of an error which does not allow a certain
+ * immediate action, ex: when selecting break times an error dialog
+ * could pop up if user attempts to set break times out of shift.
+ */
 public class ErrorDialog extends AlertDialog {
 
     public ErrorDialog(WindowParent parent, ErrorType e) {
@@ -73,6 +79,14 @@ public class ErrorDialog extends AlertDialog {
             case CAN_NOT_OPEN_EXPLORER -> {
                 return """
                         Can not open file explorer.""";
+            }
+            case FAILED_TO_LOAD_SHIFT_HISTORY -> {
+                return """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""";
             }
         }
 
