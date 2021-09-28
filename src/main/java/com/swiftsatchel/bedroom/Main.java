@@ -48,7 +48,7 @@ public class Main {
     private static long secondsWorked = 0;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
-    private static final TreeMap<LocalDate, Float> shiftHistory = Settings.loadShiftHistory();
+    private static TreeMap<LocalDate, Float> shiftHistory;
 
     private static final DecimalFormat twoDecs = new DecimalFormat("#.00");
 
@@ -64,7 +64,10 @@ public class Main {
 
         Theme.setColors(); // Set extra color accents through UIManager
         init();
-        SwingUtilities.invokeLater(Main::openWorkApps); // Open any work apps
+        SwingUtilities.invokeLater(() -> {
+            Main.openWorkApps();    // Open any work apps
+            shiftHistory = Settings.loadShiftHistory(); // Load shift history
+        });
 
         // Create a timer to run every second, updating the time
         Timer t = new Timer(1000, e -> update());

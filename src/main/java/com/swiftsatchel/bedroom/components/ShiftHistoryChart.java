@@ -45,7 +45,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         this.container = container;
         addMouseListener(this);
 
-        delMenu = new JPopupMenu("Edit");
+        delMenu = new JPopupMenu();
         deleteDate = new JMenuItem("Delete ABC 12, 3456");
 
         deleteDate.addActionListener(this);
@@ -67,9 +67,16 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             barXDiff = getBarXDiff();
             drawRangeLines(g);
             drawBars(g);
-        } else g.drawString("There is no data to be shown.",
-                getWidth()/2 - g.getFontMetrics().stringWidth("There is no data to be shown.")/2,
-                getHeight()/2 - g.getFont().getSize()/2);
+        } else {
+
+            String text = Settings.isDoneLoadingShiftHistory() ? // Are we done loading the history?
+                    "There is no data to be shown." : "Still loading data, please reopen."; // If not inform user.
+
+            g.drawString("There is no data to be shown.",
+                    getWidth()/2 - g.getFontMetrics().stringWidth("There is no data to be shown.")/2,
+                    getHeight()/2 - g.getFont().getSize()/2);
+
+        }
 
     }
 
@@ -87,18 +94,24 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     private LocalDate[] cleanUpKeys() {
 
-        int amount = 0;
-        ArrayList<LocalDate> cleanedList = new ArrayList<>();
-        for (LocalDate key : shiftHistoryData.keySet()) {
-            if (shiftHistoryData.get(key) != null &&
-                    !shiftHistoryData.get(key).isNaN()) {
-                cleanedList.add(key);
-                amount++;
-            }
-        }
-        noHistory = !(amount > 0);
+        if (shiftHistoryData != null) {
 
-        return cleanedList.toArray(new LocalDate[0]);
+            ArrayList<LocalDate> cleanedList = new ArrayList<>();
+            for (LocalDate key : shiftHistoryData.keySet()) {
+                if (shiftHistoryData.get(key) != null && !shiftHistoryData.get(key).isNaN()) {
+                    cleanedList.add(key);
+                }
+            }
+            noHistory = !(cleanedList.size() > 0);
+
+            return cleanedList.toArray(new LocalDate[0]); // Convert cleanedList to LocalDate array
+
+        } else {
+
+            noHistory = true;
+            return new LocalDate[0];
+
+        }
 
     }
 

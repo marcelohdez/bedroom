@@ -15,6 +15,8 @@ public final class Settings {
     private static final String workingDir =  // Current working directory, to store shift history files etc.
             FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
 
+    private static boolean isDoneLoadingShiftHistory = false;
+
     // Settings variables, to return when called on methods, instead of doing storage reads every time.
     private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
     private static boolean recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
@@ -164,6 +166,10 @@ public final class Settings {
         return defaultTarget;
     }
 
+    public static boolean isDoneLoadingShiftHistory() {
+        return isDoneLoadingShiftHistory;
+    }
+
     /**
      * Returns an ArrayList<String> from the String of work apps saved in preferences.
      *
@@ -230,6 +236,7 @@ public final class Settings {
 
         }
 
+        isDoneLoadingShiftHistory = true;
         return tm;
 
     }
