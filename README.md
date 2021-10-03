@@ -35,13 +35,13 @@ be found online on this topic.
 After opening Bedroom you will be asked for your clock in and out times, if you ever mess up on these dialogs 
 you may close them to go to the previous (closing the clock in time dialog will close Bedroom.) On the left 
 will be the Set Break button, on the center will be your Add Order button, and on the right will be information 
-about your current shift. These buttons can be substituted by shortcuts. 
+about your current shift. These buttons can be substituted by shortcuts, while some actions can only be done
+through these shortcuts. 
 
-To remove orders, press down arrow on your keyboard. Bedroom tracks your shift's performance once it is closed, 
-saving your final orders per hour with the ending date of your shift. This past history can be viewed in a 
-histogram opened with backslash, "```\```". Bedroom also contains a settings dialog for customizing your theme 
-and other things to make your experience better, this can be opened through either Backspace or Delete. Other
-shortcuts can be seen below:
+Here are some examples of shortcut-only actions: to remove orders, press ```down arrow``` on your keyboard, to 
+open Bedroom's settings dialog you can press either Backspace or Delete. Finally, Bedroom tracks your shift's 
+performance once it is closed, saving your final orders per hour with the ending date of your shift, this past 
+history can be viewed in a histogram opened with backslash, ```\```. More shortcuts can be seen below:
 
 ### _Shortcuts:_
 * **Adding/removing orders:** _Up Arrow_ & _Down Arrow_ respectively.
@@ -62,8 +62,8 @@ _This is not supported, there could be loss of data or other bugs with things cu
 
 After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
 extracted folder with your Terminal/Command Prompt (on Windows this can simply be done by selecting the address 
-bar on top of File Explorer, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS, you 
-may need to run ```chmod +x gradlew``` before this works, open the Terminal in the location of the extracted 
+bar on top of File Explorer, typing ```cmd```, then pressing Enter) and run ```gradlew build```. In macOS (you 
+may need to run ```chmod +x gradlew``` before this works) open the Terminal in the location of the extracted 
 folder and run ```./gradlew build```. Once finished, the resulting files will be in the ```build``` folder. The 
 .jar will be in ```build > libs``` and gradle's default build scripts will be in ```build > bin```.
 
