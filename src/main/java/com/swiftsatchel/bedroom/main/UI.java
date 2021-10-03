@@ -59,9 +59,6 @@ public class UI extends JPanel implements ActionListener {
         breakButton.addActionListener(this);
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
 
-        // Set colors
-        colorComponents();
-
         // Add components
         add(breakButton);
         add(addOrder);
@@ -120,11 +117,10 @@ public class UI extends JPanel implements ActionListener {
 
     void sizeButtons() {
 
-        // Get the largest width * 1.2 for some buffer
-        int length = (int) ((Math.max(addOrder.getWidth(), breakButton.getWidth())) * 1.2);
-        // Set the buttons to that width, and half that for height to make identical rectangles
-        addOrder.setPreferredSize(new Dimension(length, length/2));
-        breakButton.setPreferredSize(new Dimension(length, length/2));
+        // Get height of stats text box to base buttons off of that:
+        int size = stats.getHeight() - 5;
+        addOrder.setPreferredSize(new Dimension(size*2, size));
+        breakButton.setPreferredSize(new Dimension(size*2, size));
 
     }
 

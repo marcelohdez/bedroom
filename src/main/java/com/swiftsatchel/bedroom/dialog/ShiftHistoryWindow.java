@@ -42,7 +42,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
         centerOnParent();
 
-        Ops.setHandCursorOnCompsFrom((JPanel) getContentPane()); // Add hand cursor to needed components
+        Ops.setHandCursorOnCompsFrom(this); // Add hand cursor to needed components
         setVisible(true); // Show dialog
 
     }
@@ -74,9 +74,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         add(chart, BorderLayout.CENTER);
         add(botRow, BorderLayout.SOUTH);
 
-        // Color components
-        Theme.color(topRow, showingLabel, ptsAmount, pagesLabel, leftButton, rightButton,
-                datesShown, chart, historyFolderButton);
+        // Color bottom row:
         botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(),
                 Settings.isContrastEnabled() ? 200 : 20));
 

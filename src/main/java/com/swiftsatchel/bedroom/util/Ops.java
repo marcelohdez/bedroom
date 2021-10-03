@@ -17,7 +17,8 @@ public final class Ops { // Operations
 
         String[] list = new String[end-start+1];
         for (int i = 0; i < list.length; i++) {
-            list[i] = (addZeroUnder10 && (start+i) < 10 ? "0" + (start+i) : (start+i)) + extraText;
+            // If addZeroUnder10 is true use the addZeroUnder10 method else use current number, then add the extra text
+            list[i] = (addZeroUnder10 ? addZeroUnder10(start + i) : start+i) + extraText;
         }
 
         return list;
@@ -29,13 +30,14 @@ public final class Ops { // Operations
      *
      * @param start Starting number
      * @param end Ending number
-     * @return A String[] of numbers with optional added text to each.
+     * @return A String[] of numbers
      */
     public static String[] createNumberList(boolean addZeroUnder10, int start, int end) {
 
         String[] list = new String[end-start+1];
         for (int i = 0; i < list.length; i++) {
-            list[i] = String.valueOf(addZeroUnder10 && (start+i) < 10 ? "0" + (start+i) : (start+i));
+            // If addZeroUnder10 is true use the addZeroUnder10 method else use current number
+            list[i] = String.valueOf(addZeroUnder10 ? addZeroUnder10(start + i) : start + i);
         }
 
         return list;

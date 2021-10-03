@@ -235,9 +235,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(labelText);
 
-        row.setBackground(Theme.contrastWithShade(Theme.getBgColor(), 20));
         row.add(colorLabel);
         colorLabel.setFont(Theme.getBoldFont());
+        // Color row a bit darker or lighter than bg color:
+        row.setBackground(Theme.contrastWithShade(Theme.getBgColor(), 20));
         colorLabel.setForeground(Theme.contrastWithBnW(row.getBackground()));
 
         add(row);
@@ -251,7 +252,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         JButton button = new JButton(buttonText);
 
         // Customize them
-        row.setBackground(Theme.getBgColor());
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(this);
 
