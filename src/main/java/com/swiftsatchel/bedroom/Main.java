@@ -311,6 +311,7 @@ public class Main {
         if (clockInTimePassed() && !isInBreak()) {
             orders = newVal;
             userPrefs.putInt("orders", newVal);
+            update();
         }
     }
 
