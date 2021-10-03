@@ -14,6 +14,7 @@ to share it quicker.
 * [How to use](https://github.com/swiftsatchel/bedroom#how-to-use)
 * [Shortcuts](https://github.com/swiftsatchel/bedroom#shortcuts)
 * [Compiling from source](https://github.com/swiftsatchel/bedroom#compiling-from-source)
+* [License](https://github.com/swiftsatchel/bedroom#license)
 
 ## Prerequisites
 **For running and/or compiling the program** the newest version of Java is recommended, while the minimum 
@@ -57,7 +58,7 @@ _These shortcuts are meant to be unobtrusive to work applications,
 hence their seemingly random keyboard placements._
 
 ## Compiling from source
-_This is not supported; there could be loss of data or other bugs with things currently being experimented on._
+_This is not supported, there could be loss of data or other bugs with things currently being experimented on._
 
 After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
 extracted folder with your Terminal/Command Prompt (on Windows this can simply be done by selecting the address 
@@ -65,3 +66,6 @@ bar on top of File Explorer, typing ```cmd```, then pressing Enter) and run ```g
 may need to run ```chmod +x gradlew``` before this works, open the Terminal in the location of the extracted 
 folder and run ```./gradlew build```. Once finished, the resulting files will be in the ```build``` folder. The 
 .jar will be in ```build > libs``` and gradle's default build scripts will be in ```build > bin```.
+
+## License
+This program is licensed under the GPLv3 license, more information can be seen in the license file.

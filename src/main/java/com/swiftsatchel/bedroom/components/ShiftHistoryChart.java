@@ -72,8 +72,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             String text = Settings.isDoneLoadingShiftHistory() ? // Are we done loading the history?
                     "There is no data to be shown." : "Still loading data, please reopen."; // If not inform user.
 
-            g.drawString("There is no data to be shown.",
-                    getWidth()/2 - g.getFontMetrics().stringWidth("There is no data to be shown.")/2,
+            g.drawString(text,
+                    getWidth()/2 - g.getFontMetrics().stringWidth(text)/2,
                     getHeight()/2 - g.getFont().getSize()/2);
 
         }
