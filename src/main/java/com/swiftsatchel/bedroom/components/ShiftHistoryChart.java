@@ -2,6 +2,7 @@ package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
+import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
@@ -405,13 +406,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff);
 
         if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
-
             currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
-
         } else {
-
             currentlyObserved = null; // And remove the value of currentlyObserved
-
         }
     }
 
@@ -436,6 +433,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                     container.updatePageInfo();
                     repaint();
                 }
+            } else {
+                new AlertDialog(container, """
+                        No date selected""");
             }
         }
 
