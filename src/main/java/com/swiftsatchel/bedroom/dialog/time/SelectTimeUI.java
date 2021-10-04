@@ -234,6 +234,18 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             // Finish this dialog set by disposing this window and the previous
             parent.finish();
 
+        } else if (time.plusDays(1).isAfter(lastTime) && time.plusDays(1).isBefore(Main.getClockOutTime())) {
+
+            // If the break end time is before the start time, check if user meant tomorrow's time with
+            // a format to make sure tomorrow's date exists (ex: not July 32):
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
+            // Now parse the new date with that format, if it works set it
+            Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
+            windowParent.setDisabled(false);    // Re-enable parent window
+            windowParent.askForFocus();         // Give focus to parent window
+            // Finish this dialog set by disposing this window and the previous
+            parent.finish();
+
         } else {
             new ErrorDialog(parent, ErrorType.NEGATIVE_BREAK_TIME, lastTime);
         }
