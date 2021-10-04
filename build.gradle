@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.swiftsatchel'
-version '3b6'
+version '3b6-rc'
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
