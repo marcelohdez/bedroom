@@ -213,9 +213,19 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setBreakStartTime(LocalDateTime time) {
 
-        if ((time.isAfter(Main.getClockInTime())) && time.isBefore(Main.getClockOutTime())) {
+        if (time.isAfter(Main.getClockInTime()) && time.isBefore(Main.getClockOutTime())) {
 
             lastTime = time; // Set enter break time
+            proceedWith(TimeWindowType.END_BREAK); // Open end break window
+
+        } else if (time.plusDays(1).isAfter(Main.getClockInTime()) &&
+                time.plusDays(1).isBefore(Main.getClockOutTime())) {
+
+            // If the break end time is before the start time, check if user meant tomorrow's time with
+            // a format to make sure tomorrow's date exists (ex: not July 32):
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
+            // Now parse the new date with that format, if it works set it
+            lastTime = LocalDateTime.parse(time.plusDays(1).format(dtf));
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
