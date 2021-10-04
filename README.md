@@ -8,45 +8,42 @@ This was my first Java program as a self taught high school student, it contains
 the visuals created using the Swing API. It was originally created for me and my friends working at a call 
 center to keep track of our orders/hr without doing the math ourselves, enabling us to share it quicker.
 
+---
+
 ## Table of contents
 * [Prerequisites](https://github.com/swiftsatchel/bedroom#prerequisites)
 * [How to set up](https://github.com/swiftsatchel/bedroom#how-to-set-up)
 * [How to use](https://github.com/swiftsatchel/bedroom#how-to-use)
-* [All shortcuts](https://github.com/swiftsatchel/bedroom#all-shortcuts)
+   * [Keyboard shortcuts](https://github.com/swiftsatchel/bedroom#keyboard-shortcuts)
 * [Compiling from source](https://github.com/swiftsatchel/bedroom#compiling-from-source)
 * [License](https://github.com/swiftsatchel/bedroom#license)
 
 ## Prerequisites
 **For running and/or compiling the program** the newest [JDK](https://www.adoptium.net) is recommended, while 
-the minimum required version is stated under the release you are trying to run (Ex: For Bedroom 3 Java 16+ is 
+the minimum required version is stated under the release you are trying to run (Ex: For Bedroom 3, Java 16+ is 
 required.)
 
-### _How to set up_
-Download the .jar file from the Releases section, and double click it like any other application.
+## How to set up
+Download the .jar file from the Releases section of the version you want to use, and double click it like any 
+other application.
 
 **Optionally, a start script** could be used to reduce Bedroom's memory usage. For Windows, a .bat file can 
 be made in Bedroom's location containing ```start javaw -Xmx32M -Xms16M -jar bedroom-3.jar``` (replacing 
-_bedroom-3_ with the correct file name) and then making a shortcut to it. If you want a command prompt 
-opened for debugging, remove the w in ```javaw```. The arguments ```-Xmx``` and ```-Xms``` set the maximum 
-and initial amounts of memory Bedroom can allocate to itself respectively. Actual memory usage may be more 
-due to [the way Java is run](https://en.wikipedia.org/wiki/Java_virtual_machine).
+_bedroom-3_ with the correct file name) and then making a shortcut to it. To keep a command prompt opened, 
+remove the w in ```javaw```. The arguments ```-Xmx``` and ```-Xms``` set the maximum and initial amounts of 
+memory the [JVM](https://en.wikipedia.org/wiki/Java_virtual_machine) can allocate to itself respectively.
 
 ## How to use
 Upon opening Bedroom you can set your clock in and out times, if you ever mess up on these dialogs you may 
 close them to go back (closing the clock in time dialog will close Bedroom.) You should then see your Set 
-Break and Add Order buttons, with information on the right about your current shift. These buttons can be 
-substituted by shortcuts, with some actions only being done through shortcuts. 
+Break and Add Order buttons, with information on the right about your current shift. Bedroom saves your
+shift's performance when it closes, storing your final orders per hour with the ending date of your shift.
 
-Some shortcut-only actions are: pressing **down arrow** to remove orders, pressing **Backspace** or **Delete** 
-to open Bedroom's settings dialog, and pressing **backslash** (```\```) to view your performance history. Ah
-yes, performance history, this is saved once Bedroom is closed, storing your final orders per hour with the 
-ending date of your shift.
-
-### _All shortcuts:_
+### _Keyboard shortcuts:_
 * **Adding/removing orders:** _Up Arrow_ & _Down Arrow_ respectively.
-* **Opening Set Break dialog:** _Number 0_
-* **Exiting select time dialogs:** _Escape_
-* **Accepting time in select time dialogs:** _Enter_
+* **Open Set Break dialog:** _Number Row 0_
+* **Exit/go to previous select time dialog:** _Escape_
+* **Accept time in select time dialog:** _Enter_
 * **Open Performance History Chart:** _Back-slash_ (```\```)
    * _Right-clciking_ on or above a date's bar will open an option to delete this date's data.
 * **Open Settings:** _Backspace_ or _Delete_
@@ -62,12 +59,12 @@ _This is not supported, there could be loss of data or other bugs with things cu
 After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
 extracted folder with your Terminal/Command Prompt and running gradle's build command.
 
-* **On Windows** this can be done by selecting the address bar on the top of the File Explorer window while viewing 
-the folder, typing ```cmd```, pressing **Enter** and running ```gradlew build```.
+* **On Windows** you can cd into the folder's directory in Command Prompt and run ```gradlew build```.
 * **On macOS** or other UNIX operating systems, (on macOS you may need to run ```chmod +x gradlew``` before this
-works) open the Terminal in the location of the extracted folder and run ```./gradlew build```. Once finished, 
-the resulting files will be in the ```build``` folder. The .jar will be in ```build > libs``` and gradle's 
-default build scripts will be in ```build > bin```.
+works) cd into the folder's directory and run ```./gradlew build```. 
+
+Once finished, the resulting files will be in the ```build``` folder. The .jar will be in ```build > libs``` and 
+gradle's default run scripts will be in ```build > bin```.
 
 ## License
 Bedroom is licensed under the GPLv3 license, more information can be seen in the 
