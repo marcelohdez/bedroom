@@ -275,6 +275,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setListBoxesByHour(int hour) { // Convert time to 12-hour format for list boxes
 
+        if (hour > 23) hour -= 24;
+
         if (hour >= 12) {
             amPMBox.setSelectedIndex(1);            // Set AM/PM list box to PM
             // This if statement sets the list box index to current hour,
@@ -282,12 +284,12 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             // to get it to 12hr am/pm.
             if (hour != 12) {                       // Set hour to 1-11pm
                 hrBox.setSelectedIndex(hour - 13);
-            } else hrBox.setSelectedIndex(11); // Set hour to 12pm
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12pm
         } else {
             amPMBox.setSelectedIndex(0);            // Set AM/PM list box to AM
             if (hour != 0) {                        // Set hour to 1-11am
                 hrBox.setSelectedIndex(hour - 1);
-            } else hrBox.setSelectedIndex(11); // Set hour to 12am (or 0 in 24hr)
+            } else hrBox.setSelectedIndex(11);      // Set hour to 12am (or 0 in 24hr)
         }
 
     }
