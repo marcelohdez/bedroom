@@ -117,10 +117,11 @@ public class UI extends JPanel implements ActionListener {
 
     void sizeButtons() {
 
-        // Get height of stats text box to base buttons off of that:
-        int size = stats.getHeight() - 5;
+        // Get height of stats text box (minus 2 for some buffer) to base buttons off of that:
+        int size = stats.getHeight() - 2;
         addOrder.setPreferredSize(new Dimension(size*2, size));
         breakButton.setPreferredSize(new Dimension(size*2, size));
+                //(int) (size*1.8), size));
 
     }
 
