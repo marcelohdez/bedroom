@@ -42,7 +42,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
         centerOnParent();
 
-        Ops.setHandCursorOnCompsFrom(this); // Add hand cursor to needed components
+        Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setVisible(true); // Show dialog
 
     }
