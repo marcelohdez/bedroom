@@ -121,7 +121,6 @@ public class UI extends JPanel implements ActionListener {
         int size = stats.getHeight() - 2;
         addOrder.setPreferredSize(new Dimension(size*2, size));
         breakButton.setPreferredSize(new Dimension(size*2, size));
-                //(int) (size*1.8), size));
 
     }
 
