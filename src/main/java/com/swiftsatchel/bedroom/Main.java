@@ -66,14 +66,15 @@ public class Main {
         Theme.setColors(); // Set extra color accents through UIManager
         init();
         SwingUtilities.invokeLater(() -> {
-            Main.openWorkApps();    // Open any work apps
+
+            Main.openStartupItems();
+
             try { // Try to load shift history
-
                 shiftHistory = Settings.loadShiftHistory();
-
             } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
                 new ErrorDialog(null, ErrorType.FAILED_TO_LOAD_SHIFT_HISTORY);
             }
+
         });
 
         // Create a timer to run every second, updating the time
@@ -134,9 +135,9 @@ public class Main {
 
     }
 
-    private static void openWorkApps() {
+    private static void openStartupItems() {
 
-        for (String location : Settings.getWorkAppsList()) {
+        for (String location : Settings.getStartupItemsList()) {
 
             if (!location.equals("")) {
 
@@ -150,7 +151,7 @@ public class Main {
                     }
 
                 } else {
-                    new ErrorDialog(wnd, ErrorType.WORK_APP_DOES_NOT_EXIST);
+                    new ErrorDialog(wnd, ErrorType.STARTUP_ITEM_NONEXISTENT);
                 }
 
             }

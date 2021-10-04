@@ -13,19 +13,19 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class WorkAppsManager extends JDialog implements ActionListener, WindowListener {
+public class StartupItemsManager extends JDialog implements ActionListener, WindowListener {
 
     private final WindowParent parent;
 
-    private final ArrayList<String> workAppDirs = new ArrayList<>(); // Keep track of work apps' directories
-    private final DefaultListModel<String> workAppNames = new DefaultListModel<>(); // Work apps' names (list to show)
+    private final ArrayList<String> itemDirs = new ArrayList<>(); // List of startup items' directories
+    private final DefaultListModel<String> itemNames = new DefaultListModel<>(); // List of startup items' names
     private JList<String> list; // The JList to be displayed
 
-    public WorkAppsManager(SettingsDialog parent) {
+    public StartupItemsManager(SettingsDialog parent) {
 
         this.parent = parent;
 
-        setTitle("Work Apps");
+        setTitle("Startup Items");
         addWindowListener(this);
         setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -54,7 +54,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
     private JLabel createTipTextArea() {
 
-        JLabel label = new JLabel("Work apps open along with Bedroom.");
+        JLabel label = new JLabel("Startup items open along with Bedroom.");
         label.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
         return label;
 
@@ -84,16 +84,16 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
         // Create stuffs
         JPanel panel = new JPanel();
 
-        // Add work apps
-        for (String app : Settings.getWorkAppsList()) {
-            if (!app.equals("")) {
-                workAppDirs.add(app);
-                workAppNames.addElement(new File(app).getName());
+        // Add startup items
+        for (String item : Settings.getStartupItemsList()) {
+            if (!item.equals("")) {
+                itemDirs.add(item);
+                itemNames.addElement(new File(item).getName());
             }
         }
 
         // Create list
-        list = new JList<>(workAppNames);
+        list = new JList<>(itemNames);
         list.setVisibleRowCount(7);
 
         // Create scroll pane
@@ -120,7 +120,7 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
 
     private void addAnApp() {
 
-        if (workAppNames.getSize() < 7) { // Add a work app if under limit
+        if (itemNames.getSize() < 7) { // Add an item if under limit
 
             JFileChooser fc = new JFileChooser();
             fc.setFileFilter(new FileNameExtensionFilter(
@@ -130,13 +130,13 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                workAppNames.addElement(fc.getSelectedFile().getName()); // Add name of app
-                workAppDirs.add(fc.getSelectedFile().toString()); // Add its directory
+                itemNames.addElement(fc.getSelectedFile().getName()); // Add name of app
+                itemDirs.add(fc.getSelectedFile().toString()); // Add its directory
             }
 
 
         } else {
-            new ErrorDialog(parent, ErrorType.WORK_APPS_FULL);
+            new ErrorDialog(parent, ErrorType.STARTUP_ITEMS_FULL);
         }
 
     }
@@ -158,13 +158,13 @@ public class WorkAppsManager extends JDialog implements ActionListener, WindowLi
     }
 
     private void removeAppFromBoth(int index) {
-        workAppNames.remove(index);
-        workAppDirs.remove(index);
+        itemNames.remove(index);
+        itemDirs.remove(index);
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        Settings.saveWorkApps(workAppDirs.toString());
+        Settings.saveStartupItems(itemDirs.toString());
     }
 
     public void windowOpened(WindowEvent e) {}

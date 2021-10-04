@@ -107,12 +107,14 @@ public final class Settings {
     }
 
     /**
-     * Saves a list of directories into Preferences
+     * Saves the list of startup item directories into Preferences
      *
-     * @param apps The list of directories. In format: "[C:\User\Desktop\WorkApp1, C:\WorkApps\WorkApp2]"
+     * @param items The list of directories. In format: "[C:\User\Desktop\Item1, C:\StartupItems\Item2]"
      */
-    public static void saveWorkApps(String apps) {
-        Main.userPrefs.put("workApps", apps);
+    public static void saveStartupItems(String items) {
+        // The Startup Items feature was originally called Work Apps,
+        // hence, the preferences key is still workApps to not lose beta tester's data
+        Main.userPrefs.put("workApps", items);
     }
 
     /**
@@ -174,11 +176,11 @@ public final class Settings {
     }
 
     /**
-     * Returns an ArrayList<String> from the String of work apps saved in preferences.
+     * Returns an ArrayList<String> from the String of startup items saved in preferences.
      *
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> getWorkAppsList() {
+    public static ArrayList<String> getStartupItemsList() {
 
         ArrayList<String> list = new ArrayList<>();
         String str = Main.userPrefs.get("workApps", "[]");

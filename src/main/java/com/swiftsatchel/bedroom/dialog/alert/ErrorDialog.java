@@ -48,22 +48,22 @@ public class ErrorDialog extends AlertDialog {
             }
             case NO_FILE_ASSOCIATION -> {
                 return """
-                        One of your work apps was not
-                        able to be started as it does
-                        not have a program associated
-                        with its file type""";
+                        One of your startup items was
+                        not able to be started as it
+                        does not have a program
+                        associated with its file type""";
             }
-            case WORK_APPS_FULL -> {
+            case STARTUP_ITEMS_FULL -> {
                 return """
                         You can not add any more
-                        work apps.""";
+                        startup items.""";
             }
-            case WORK_APP_DOES_NOT_EXIST -> {
+            case STARTUP_ITEM_NONEXISTENT -> {
                 return """
-                        One of your work apps was not
-                        able to be started as it no
-                        longer exists. Please go to
-                        Settings > Manage Work Apps.""";
+                        One of your startup items was
+                        not able to be started as it
+                        no longer exists. Please go to
+                        Settings > Manage Startup Items.""";
             }
             case EARLY_CLOCK_OUT_NOT_EARLY -> {
                 return """

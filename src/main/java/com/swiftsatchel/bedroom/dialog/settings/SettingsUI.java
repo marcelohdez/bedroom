@@ -69,8 +69,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createCheckBoxRow(askBeforeEarlyClose);
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
-        createButtonRow("Manage Work Apps", "Work apps open along with Bedroom.");
-        createButtonRow("Set Defaults", "Reset Misc. options, excluding work apps.");
+        createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.");
+        createButtonRow("Set Defaults", "Reset Misc. options, excluding startup items.");
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
@@ -459,7 +459,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     public void actionPerformed(ActionEvent e) {
 
         switch (e.getActionCommand()) {
-            case "Manage Work Apps" -> new WorkAppsManager(parent);
+            case "Manage Startup Items" -> new StartupItemsManager(parent);
             case "Set Defaults" -> setDefaultMisc();
         }
 
