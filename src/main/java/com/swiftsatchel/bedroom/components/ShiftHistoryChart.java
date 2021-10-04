@@ -1,6 +1,7 @@
 package com.swiftsatchel.bedroom.components;
 
 import com.swiftsatchel.bedroom.Main;
+import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
@@ -37,7 +38,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private float range;
     private int barXDiff;
 
-    private final JMenuItem deleteDate;
+    private final JMenuItem deleteDate = new JMenuItem("Delete");
     private LocalDate currentlyObserved;
 
     public ShiftHistoryChart(WindowParent container) {
@@ -45,11 +46,11 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         addMouseListener(this);
 
         JPopupMenu delMenu = new JPopupMenu();
-        deleteDate = new JMenuItem("Delete");
-
         deleteDate.addActionListener(this);
         delMenu.add(deleteDate);
         setComponentPopupMenu(delMenu);
+
+        updatePages(); // Update page numbers
 
     }
 
@@ -433,7 +434,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                     getNewKeys();
                     updatePages();
                     repaint();
-
                 }
             }
         }
