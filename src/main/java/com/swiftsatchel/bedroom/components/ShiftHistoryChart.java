@@ -37,7 +37,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private float range;
     private int barXDiff;
 
-    private final JPopupMenu delMenu;
     private final JMenuItem deleteDate;
     private LocalDate currentlyObserved;
 
@@ -45,8 +44,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         this.container = container;
         addMouseListener(this);
 
-        delMenu = new JPopupMenu();
-        deleteDate = new JMenuItem("Delete ABC 12, 3456");
+        JPopupMenu delMenu = new JPopupMenu();
+        deleteDate = new JMenuItem("Delete");
 
         deleteDate.addActionListener(this);
         delMenu.add(deleteDate);
@@ -400,6 +399,21 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         return pointsAmount;
     }
 
+    private void rightClickBarAt(int x) {
+        // Get the bar which our x pos matches
+        int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff);
+
+        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
+
+            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
+
+        } else {
+
+            currentlyObserved = null; // And remove the value of currentlyObserved
+
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -407,7 +421,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             if (currentlyObserved != null) {
                 if (new YesNoDialog(container, """
                         Are you sure you want to
-                        delete $observed?"""
+                        delete shift $observed?"""
                         .replace("$observed",
                                 currentlyObserved.getMonth().name().substring(0, 3) + " " +
                                         currentlyObserved.getDayOfMonth() + " " +
@@ -428,28 +442,14 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // Get the bar which our x pos matches
-        int bar = (int) ((e.getX() - (Theme.getChartFont().getSize()*1.5F))/barXDiff);
-
-        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
-
-            deleteDate.setText("Delete " + // Set the popup menu to have the date's text:
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getMonth().name().substring(0, 3) + " " +
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getDayOfMonth() + ", " +
-                    keys[(pointsAmount * (currentPage - 1)) + bar].getYear());
-
-            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
-
-        } else {
-
-            deleteDate.setText("No date chosen"); // If no date exists then default to this text.
-            currentlyObserved = null; // And remove the value of currentlyObserved
-
-        }
+        rightClickBarAt(e.getX());
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+        rightClickBarAt(e.getX());
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {}
     @Override
