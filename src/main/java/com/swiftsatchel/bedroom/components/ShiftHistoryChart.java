@@ -24,7 +24,7 @@ import java.util.TreeMap;
  */
 public class ShiftHistoryChart extends JPanel implements ActionListener, MouseListener {
 
-    private final WindowParent container;
+    private final ShiftHistoryWindow container;
 
     private boolean noHistory = true;
     private int pointsAmount = 8; // Amount of data points to show
@@ -41,7 +41,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private final JMenuItem deleteDate = new JMenuItem("Delete");
     private LocalDate currentlyObserved;
 
-    public ShiftHistoryChart(WindowParent container) {
+    public ShiftHistoryChart(ShiftHistoryWindow container) {
         this.container = container;
         addMouseListener(this);
 
@@ -433,6 +433,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                     Main.removeFromHistory(currentlyObserved);
                     getNewKeys();
                     updatePages();
+                    container.updatePageInfo();
                     repaint();
                 }
             }

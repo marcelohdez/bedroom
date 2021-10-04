@@ -103,7 +103,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     }
 
-    private void updatePageInfo() {
+    public void updatePageInfo() {
 
         pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
         leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
