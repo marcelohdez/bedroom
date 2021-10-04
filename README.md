@@ -24,13 +24,12 @@ required.)
 ### _How to set up_
 Download the .jar file from the Releases section, and double click it like any other application.
 
-**A start script** could be used to reduce Bedroom's memory usage if you are into that stuff. For Windows, 
-a .bat file can be made in Bedroom's location with the text ```start javaw -Xmx32M -Xms16M -jar bedroom-3.jar``` 
-(replacing _bedroom-3_ with the correct file name,) and then making a shortcut to it wherever you like. If 
-you want a command prompt opened for debugging, remove the w in ```javaw```. The arguments ```-Xmx``` and 
-```-Xms``` set the maximum and initial amounts of memory Bedroom can allocate to itself respectively.
-Actual memory usage may be more due to the way Java works, 
-[learn more about the JVM here](https://en.wikipedia.org/wiki/Java_virtual_machine).
+**Optionally, a start script** could be used to reduce Bedroom's memory usage. For Windows, a .bat file can 
+be made in Bedroom's location containing ```start javaw -Xmx32M -Xms16M -jar bedroom-3.jar``` (replacing 
+_bedroom-3_ with the correct file name) and then making a shortcut to it. If you want a command prompt 
+opened for debugging, remove the w in ```javaw```. The arguments ```-Xmx``` and ```-Xms``` set the maximum 
+and initial amounts of memory Bedroom can allocate to itself respectively. Actual memory usage may be more 
+due to [the way Java is run](https://en.wikipedia.org/wiki/Java_virtual_machine).
 
 ## How to use
 Upon opening Bedroom you can set your clock in and out times, if you ever mess up on these dialogs you may 
