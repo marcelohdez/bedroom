@@ -28,17 +28,23 @@ public class SelectTimeUI extends JPanel implements ActionListener {
     // ======= Components: =======
     private final JLabel topText = new JLabel("CLOCK IN time:"); // Top text label
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});    // AM/PM list box
-    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1,
-            12, ":"));  // Hours list box
-    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0,
-            59));               // Minutes list box
-    private final JComboBox<String> targetBox = new JComboBox<>(Ops.createNumberList(true, 1,
-            24));               // Targets list box
+
+    // Hours list box
+    private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
+    // Minutes list box
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
+    // Targets list box
+    private final JComboBox<String> targetBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
+
     private final JButton selectButton = new JButton("Select"); // Select button
     private final JLabel targetLabel = new JLabel("Your hourly target:"); // Select target text
 
+    // If the overnight shift dialog is accepted, make a date time format to check if tomorrow or
+    // yesterday's date is valid (ex: not Feb 30)
+    private DateTimeFormatter dtf;
+
     // Keep track of last select time dialog's selected time ex: save break start time to only
-    // set break time once break end time is selected. This fixes the bug where setting a break
+    // set break time once both times have been selected. This fixes the bug where setting a break
     // from 3pm-3:30pm then opening a set break window and putting 2pm but then cancelling
     // would save your break as 2pm-3:30pm
     private LocalDateTime lastTime;
@@ -195,9 +201,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                 .replace("$lastTime", Time.makeTime12Hour(lastTime.toLocalTime())))
                 .accepted()) {
 
-            // If the overnight shift dialog is accepted, make a date time format to check if tomorrow's date is valid
-            // (ex: not february 30 or something) with lenient resolver style to change to next month if invalid.
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
+            // Create DateTimeFormatter as an overnight shift has been initialized
+            dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
             // Now parse the new date with that format, if it works set it
             Main.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
@@ -213,19 +218,22 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
     private void setBreakStartTime(LocalDateTime time) {
 
+        // Make sure time chosen is inside of shift
         if (time.isAfter(Main.getClockInTime()) && time.isBefore(Main.getClockOutTime())) {
 
             lastTime = time; // Set enter break time
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
-        } else if (time.plusDays(1).isAfter(Main.getClockInTime()) &&
+        } else if (time.plusDays(1).isAfter(Main.getClockInTime()) && // If not, check if user meant tomorrow's date
                 time.plusDays(1).isBefore(Main.getClockOutTime())) {
 
-            // If the break end time is before the start time, check if user meant tomorrow's time with
-            // a format to make sure tomorrow's date exists (ex: not July 32):
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
-            // Now parse the new date with that format, if it works set it
             lastTime = LocalDateTime.parse(time.plusDays(1).format(dtf));
+            proceedWith(TimeWindowType.END_BREAK); // Open end break window
+
+        } else if (time.minusDays(1).isAfter(Main.getClockInTime()) && // If not, check if user meant yesterday's date
+                time.minusDays(1).isBefore(Main.getClockOutTime())) {
+
+            lastTime = LocalDateTime.parse(time.minusDays(1).format(dtf));
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
         } else {
@@ -246,11 +254,15 @@ public class SelectTimeUI extends JPanel implements ActionListener {
 
         } else if (time.plusDays(1).isAfter(lastTime) && time.plusDays(1).isBefore(Main.getClockOutTime())) {
 
-            // If the break end time is before the start time, check if user meant tomorrow's time with
-            // a format to make sure tomorrow's date exists (ex: not July 32):
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
-            // Now parse the new date with that format, if it works set it
             Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
+            windowParent.setDisabled(false);    // Re-enable parent window
+            windowParent.askForFocus();         // Give focus to parent window
+            // Finish this dialog set by disposing this window and the previous
+            parent.finish();
+
+        } else if (time.minusDays(1).isAfter(lastTime) && time.minusDays(1).isBefore(Main.getClockOutTime())) {
+
+            Main.setBreak(lastTime, LocalDateTime.parse(time.minusDays(1).format(dtf)));
             windowParent.setDisabled(false);    // Re-enable parent window
             windowParent.askForFocus();         // Give focus to parent window
             // Finish this dialog set by disposing this window and the previous

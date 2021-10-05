@@ -184,7 +184,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 120)); // Set color to grey-ish color
         } else g.setColor(Theme.contrastWithShade(Theme.getBgColor(), 255)); // Higher contrast
 
-        float divisor; // Amount of units to divide by
+        int divisor; // Amount of units to divide by
         if (getHeight() / range > g.getFont().getSize() * 1.8) { // If 1 by 1 fits (ex: 1, 2, 3, 4) set divisor to 1
             divisor = 1;
         } else if (getHeight() / range > g.getFont().getSize() * 0.8) { // If 2 fits (ex: 2, 4, 6) set divisor to 2
