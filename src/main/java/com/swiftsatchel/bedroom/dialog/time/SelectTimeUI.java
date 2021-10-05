@@ -165,16 +165,47 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         // Parse the current date and time in format: "2021-8-16T17:20" for 5:20PM on Aug 18, 2021
         LocalDateTime newTime = LocalDateTime.parse(LocalDate.now() + "T" +
                 Time.makeTime24Hour(hrBox.getSelectedIndex() + 1,
-                minBox.getSelectedIndex(), (amPMBox.getSelectedIndex() == 1)));
+                        minBox.getSelectedIndex(), (amPMBox.getSelectedIndex() == 1)));
 
         switch (type) {
             case CLOCK_IN -> {
-                lastTime = newTime; // Set clock in time
-                proceedWith(TimeWindowType.CLOCK_OUT);
+                if (parent.isShifting()) { // If user is shifting while selecting the time, ask if this shift started yesterday
+                    if (new YesNoDialog(parent, """
+                    You selected your clock in time
+                    while holding shift. Would you
+                    like to start your shift at this
+                    time yesterday?""").accepted()) {
+
+                        lastTime = newTime.minusDays(1); // Set clock in time
+                        proceedWith(TimeWindowType.CLOCK_OUT);
+
+                    }
+                } else { // If not shifting, set clock in time as selected time
+                    lastTime = newTime; // Set clock in time
+                    proceedWith(TimeWindowType.CLOCK_OUT);
+                }
             }
             case CLOCK_OUT -> setClockOutTime(newTime);
-            case START_BREAK -> setBreakStartTime(newTime);
-            case END_BREAK -> setBreakEndTime(newTime);
+            case START_BREAK -> {
+                if (parent.isShifting()) {
+                    if (new YesNoDialog(parent, """
+                            You selected this time while
+                            holding shift. Would you like
+                            to set it yesterday?""").accepted()) {
+                        setBreakStartTime(newTime.minusDays(1));
+                    }
+                } else setBreakStartTime(newTime);
+            }
+            case END_BREAK -> {
+                if (parent.isShifting()) {
+                    if (new YesNoDialog(parent, """
+                            You selected this time while
+                            holding shift. Would you like
+                            to set it yesterday?""").accepted()) {
+                        setBreakEndTime(newTime.minusDays(1));
+                    }
+                } else setBreakEndTime(newTime);
+            }
             case EARLY_CLOCK_OUT -> clockOutEarly(newTime);
         }
 
@@ -196,10 +227,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         } else if (new YesNoDialog(parent, """
                 It seems you have selected
                 a clock out time before
-                your clock in time. ($lastTime)
-                Is this an overnight shift?"""
-                .replace("$lastTime", Time.makeTime12Hour(lastTime.toLocalTime())))
-                .accepted()) {
+                your clock in time. Is
+                this an overnight shift?""").accepted()) {
 
             // Create DateTimeFormatter as an overnight shift has been initialized
             dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
@@ -230,12 +259,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
             lastTime = LocalDateTime.parse(time.plusDays(1).format(dtf));
             proceedWith(TimeWindowType.END_BREAK); // Open end break window
 
-        } else if (time.minusDays(1).isAfter(Main.getClockInTime()) && // If not, check if user meant yesterday's date
-                time.minusDays(1).isBefore(Main.getClockOutTime())) {
-
-            lastTime = LocalDateTime.parse(time.minusDays(1).format(dtf));
-            proceedWith(TimeWindowType.END_BREAK); // Open end break window
-
         } else {
             new ErrorDialog(parent, ErrorType.BREAK_OUT_OF_SHIFT);
         }
@@ -255,14 +278,6 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         } else if (time.plusDays(1).isAfter(lastTime) && time.plusDays(1).isBefore(Main.getClockOutTime())) {
 
             Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
-            windowParent.setDisabled(false);    // Re-enable parent window
-            windowParent.askForFocus();         // Give focus to parent window
-            // Finish this dialog set by disposing this window and the previous
-            parent.finish();
-
-        } else if (time.minusDays(1).isAfter(lastTime) && time.minusDays(1).isBefore(Main.getClockOutTime())) {
-
-            Main.setBreak(lastTime, LocalDateTime.parse(time.minusDays(1).format(dtf)));
             windowParent.setDisabled(false);    // Re-enable parent window
             windowParent.askForFocus();         // Give focus to parent window
             // Finish this dialog set by disposing this window and the previous

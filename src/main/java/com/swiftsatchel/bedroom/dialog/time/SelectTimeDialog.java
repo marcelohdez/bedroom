@@ -20,6 +20,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     private final SelectTimeUI ui;
     public final TimeWindowType type;
     private final WindowParent parent;
+    private boolean shifting = false;
 
     public SelectTimeDialog(WindowParent parent, TimeWindowType type) {
         parent.setDisabled(true);
@@ -100,6 +101,10 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         return parent;
     }
 
+    public boolean isShifting() {
+        return shifting;
+    }
+
     @Override
     public int[] getXYWidthHeight() {
         return new int[]{getX(), getY(), getWidth(), getHeight()};
@@ -136,7 +141,13 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
             case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryWindow(this);
+            case KeyEvent.VK_SHIFT -> shifting = true;
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) shifting = false;
     }
 
     @Override
@@ -158,7 +169,5 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     public void windowDeactivated(WindowEvent e) {}
     @Override
     public void keyTyped(KeyEvent e) {}
-    @Override
-    public void keyReleased(KeyEvent e) {}
 
 }
