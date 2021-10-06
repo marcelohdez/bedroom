@@ -101,6 +101,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
                 parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
+        if (getX() < 0) setLocation(0, getY()); // If title bar is outside of screen, move it down.
+
     }
 
     public void updatePageInfo() {

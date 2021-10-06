@@ -92,8 +92,12 @@ public class AlertDialog extends JDialog implements ActionListener {
 
         // Center on summoner if it exists
         if (parent != null) {
+
             setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
                     parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
+
+            if (getY() < 0) setLocation(getX(), 0); // If title bar is outside of screen, move it down.
+
         } else setLocationRelativeTo(null);
 
         // Show
