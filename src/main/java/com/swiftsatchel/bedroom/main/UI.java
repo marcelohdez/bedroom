@@ -97,8 +97,14 @@ public class UI extends JPanel implements ActionListener {
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");
+
+            if (Main.isOvernightShift()) sb.append(Main.getBreakStart().getDayOfWeek().toString(), 0, 3).append(" ");
+
             Time.append12HrTimeTo(sb, Main.getBreakStart().toLocalTime());
             sb.append("-");
+
+            if (Main.isOvernightShift()) sb.append(Main.getBreakEnd().getDayOfWeek().toString(), 0, 3).append(" ");
+
             Time.append12HrTimeTo(sb, Main.getBreakEnd().toLocalTime());
             sb.append("</b></html>");
 
@@ -154,14 +160,10 @@ public class UI extends JPanel implements ActionListener {
     }
 
     public void disableButtons(Buttons b) {
-        if (b == Buttons.BOTH) {
-            addOrder.setEnabled(false);
-            breakButton.setEnabled(false);
-        } else if (b == Buttons.ADD_ORDER) {
-            addOrder.setEnabled(false);
-        } else if (b == Buttons.SET_BREAK) {
-            breakButton.setEnabled(false);
-        }
+
+        addOrder.setEnabled(!(b == Buttons.ADD_ORDER || b == Buttons.BOTH));
+        breakButton.setEnabled(!(b == Buttons.SET_BREAK || b == Buttons.BOTH));
+
     }
 
 }

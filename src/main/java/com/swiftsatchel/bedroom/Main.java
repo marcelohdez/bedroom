@@ -47,6 +47,7 @@ public class Main {
     private static int target; // Target orders/hr
     private static int ordersNeeded = 0;
     private static long secondsWorked = 0;
+    private static boolean isOvernight = false;
 
     // Shift performance history (key: shift end date, value: float of orders per hour)
     private static TreeMap<LocalDate, Float> shiftHistory;
@@ -275,6 +276,10 @@ public class Main {
                 LocalDateTime.now().isBefore(breakOutTime);
     }
 
+    public static boolean isOvernightShift() {
+        return isOvernight;
+    }
+
     public static boolean clockInTimePassed() {
         return timesChosen() && LocalDateTime.now().isAfter(clockInTime);
     }
@@ -342,6 +347,9 @@ public class Main {
     }
 
     public static void setShift(LocalDateTime start, LocalDateTime end) {
+        // If clock in time is 1 day before clock out time, then it is an overnight shift
+        isOvernight = (start.getDayOfWeek().plus(1) == end.getDayOfWeek());
+
         clockInTime = start;
         clockOutTime = end;
         if (Settings.isCrashRecoveryEnabled()) {
