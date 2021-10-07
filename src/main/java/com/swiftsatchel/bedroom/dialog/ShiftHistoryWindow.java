@@ -130,7 +130,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
                     Runtime.getRuntime().exec("explorer " + Settings.getWorkingDir());
                 } catch (SecurityException | IOException e) { e.printStackTrace(); }
 
-        } catch (SecurityException e) {  // If we encounter an exception:
+        } catch (Exception e) {  // If we encounter an exception:
             new ErrorDialog(this, ErrorType.CAN_NOT_OPEN_EXPLORER);
             e.printStackTrace();
         }
@@ -141,7 +141,9 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(leftButton)) chart.prevPage();
         if (e.getSource().equals(rightButton)) chart.nextPage();
-        if (e.getSource().equals(historyFolderButton)) openHistoryDirectory();
+        if (e.getSource().equals(historyFolderButton)) {
+            SwingUtilities.invokeLater(this::openHistoryDirectory);
+        }
         updatePageInfo();
     }
 

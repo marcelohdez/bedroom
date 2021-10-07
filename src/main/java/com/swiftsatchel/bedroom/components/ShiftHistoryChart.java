@@ -6,7 +6,6 @@ import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,6 +69,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             drawBars(g);
         } else {
 
+            g.setColor(Theme.getTextColor());
             String text = Settings.isDoneLoadingShiftHistory() ? // Are we done loading the history?
                     "There is no data to be shown." : "Still loading data, please reopen."; // If not inform user.
 
