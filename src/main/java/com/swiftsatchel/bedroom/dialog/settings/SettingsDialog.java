@@ -6,13 +6,16 @@ import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SettingsDialog extends JDialog implements WindowListener, WindowParent {
+public class SettingsDialog extends JDialog implements WindowListener, WindowParent, KeyListener {
 
     private final SettingsUI sui;
     private final WindowParent parent;
+    private boolean shifting = false;
 
     public SettingsDialog(WindowParent parent) {
 
@@ -24,6 +27,7 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         addWindowListener(this);
         setTitle("Settings");
         setResizable(false);
+        addKeyListener(this);
 
         sui = new SettingsUI(this);
         add(sui);
@@ -42,6 +46,10 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         return parent;
     }
 
+    public boolean isShifting() {
+        return shifting;
+    }
+
     public void save() {
 
         sui.updateValues();
@@ -52,6 +60,22 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
                     until the select time
                     dialog is reopened.""");
 
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_SHIFT -> shifting = true; // If shift is pressed, we are shifting
+            case KeyEvent.VK_ESCAPE -> {
+                save();  // Save changes
+                dispose(); // If escape is pressed, close window
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) shifting = false;
     }
 
     @Override
@@ -95,5 +119,8 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
+
+    @Override
+    public void keyTyped(KeyEvent e) {} // KeyListener
 
 }

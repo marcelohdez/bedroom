@@ -12,11 +12,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener,
-        MouseListener, KeyListener {
+public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener, MouseListener {
 
     private final SettingsDialog parent;
-    private boolean shifting = false; // Keeps track if user is shifting
 
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB; // Component color values
     private int currentlyColoring = // Component(s) currently being colored,
@@ -51,6 +49,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         this.parent = parent;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        addKeyListener(parent);
 
         loadRGBValues();
         // Creates misc. checkboxes and sets their default values. must be done before createColorSliders as
@@ -109,11 +108,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         blueSlider = new JSlider(0, 255);
 
         redSlider.addMouseListener(this);
-        redSlider.addKeyListener(this);
+        redSlider.addKeyListener(parent);
         greenSlider.addMouseListener(this);
-        greenSlider.addKeyListener(this);
+        greenSlider.addKeyListener(parent);
         blueSlider.addMouseListener(this);
-        blueSlider.addKeyListener(this);
+        blueSlider.addKeyListener(parent);
 
         updateColorSliders(); // Set their values
 
@@ -254,6 +253,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Customize them
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(this);
+        button.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(button);
@@ -271,6 +271,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // For list boxes not already initialized: make sure the index we want to select is available
         listBox.setSelectedIndex(Math.min(selected, listBox.getItemCount() - 1));
         listBox.addItemListener(this);
+        listBox.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(label);
@@ -288,6 +289,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize them
         listBox.addItemListener(this);
+        listBox.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(label);
@@ -304,6 +306,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         for (JCheckBox c : comps) {
             // Add to panel
+            c.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
             row.add(c);
         }
 
@@ -473,7 +476,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         if (e.getSource() instanceof JSlider) {
             setColorLabelsToValues();
-            if (shifting) equalizeSliders(e); // Make all sliders same value if shifting
+            if (parent.isShifting()) equalizeSliders(e); // Make all sliders same value if shifting
         }
 
     }
@@ -500,28 +503,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_SHIFT -> shifting = true; // If shift is pressed, we are shifting
-            case KeyEvent.VK_ESCAPE -> {
-                parent.save();  // Save changes
-                parent.dispose(); // If escape is pressed, close window
-            }
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT) shifting = false;
-    }
-
-    @Override
     public void mouseClicked(MouseEvent e) {}
     @Override
     public void mouseEntered(MouseEvent e) {}
     @Override
     public void mouseExited(MouseEvent e) {}
-    @Override
-    public void keyTyped(KeyEvent e) {}
 
 }
