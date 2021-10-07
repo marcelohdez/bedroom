@@ -42,17 +42,21 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         return parent;
     }
 
-    @Override
-    public void windowClosing(WindowEvent e) { // Save settings upon exiting
+    public void save() {
 
         sui.updateValues();
         if (sui.changeCount > 2 && parent instanceof SelectTimeDialog)
             new AlertDialog(this, // If colors were changed, create an alert
-                """
-                Some colors may not change
-                until the select time
-                dialog is reopened.""");
+                    """
+                    Some colors may not change
+                    until the select time
+                    dialog is reopened.""");
 
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) { // Save settings upon exiting
+        save();
     }
 
     @Override

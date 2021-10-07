@@ -501,12 +501,18 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-        shifting = e.getKeyCode() == KeyEvent.VK_SHIFT; // If shift is pressed, we are shifting
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_SHIFT -> shifting = true; // If shift is pressed, we are shifting
+            case KeyEvent.VK_ESCAPE -> {
+                parent.save();  // Save changes
+                parent.dispose(); // If escape is pressed, close window
+            }
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        shifting = false;
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) shifting = false;
     }
 
     @Override
