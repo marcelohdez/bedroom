@@ -184,6 +184,7 @@ public class SelectTimeUI extends JPanel implements ActionListener {
                     lastTime = newTime; // Set clock in time
                     proceedWith(TimeWindowType.CLOCK_OUT);
                 }
+                Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             }
             case CLOCK_OUT -> setClockOutTime(newTime);
             case START_BREAK -> {

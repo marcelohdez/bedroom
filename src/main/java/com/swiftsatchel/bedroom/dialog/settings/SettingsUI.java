@@ -35,10 +35,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
             "Light", "Pink+White", "Pastel Blue"});
     // Default shift length in hours.
-    private final JComboBox<String> shiftLengthListBox = new JComboBox<>(Ops.createNumberList(false,
-            1, 12, "h "));
-    private final JComboBox<String> defTargetListBox = new JComboBox<>(Ops.createNumberList(false,
-            1, 24, "   "));
+    private final JComboBox<String> shiftLengthListBox =
+            new JComboBox<>(Ops.createNumberList(false, 1, 12, "h "));
+    private final JComboBox<String> defTargetListBox =
+            new JComboBox<>(Ops.createNumberList(false, 1, 24, "   "));
 
     // ======= Checkboxes =======
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
