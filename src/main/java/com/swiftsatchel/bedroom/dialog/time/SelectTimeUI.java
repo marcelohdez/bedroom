@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 
+// TODO: Lots of code cleanup, set***Time methods should be made to return time values instead
 public class SelectTimeUI extends JPanel implements ActionListener {
 
     private final TimeWindowType type;      // Keep track of this window's type

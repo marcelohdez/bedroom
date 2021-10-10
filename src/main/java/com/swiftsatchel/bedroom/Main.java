@@ -309,6 +309,10 @@ public class Main {
         return orders;
     }
 
+    public static int getOrdersNeeded() {
+        return ordersNeeded;
+    }
+
     public static String getOrdersPerHour() {
         return twoDecs.format((float) (orders * 3600) / secondsWorked) + "/hr";
     }

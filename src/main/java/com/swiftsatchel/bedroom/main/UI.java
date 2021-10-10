@@ -90,7 +90,11 @@ public class UI extends JPanel implements ActionListener {
                     .append(Ops.isPlural(amountMissing))
                     .append(" behind your hourly target</b></html>").toString());
 
-        } else addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
+        } else if (!(Main.getOrders() > Main.getOrdersNeeded())) {
+            addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
+        } else { // If we have gotten all the orders needed for our shift.
+            addOrder.setToolTipText("<html><b>You are done for the day!</b></html>");
+        }
 
         // Set Break's tool tips
         if (Main.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
