@@ -44,10 +44,12 @@ shift's performance when it closes, storing your final orders per hour with the 
 * **Open Set Break dialog:** _Number Row 0_
 * **Exit/go to previous select time dialog:** _Escape_
 * **Accept time in select time dialog:** _Enter_
+   * Holding _shift_ while selecting time (through the button or through Enter) will select that time for yesterday (ex: to set shift start time for yesterday @ 4pm, hold shift while selecting 4pm.) 
 * **Open Performance History Chart:** _Back-slash_ (```\```)
    * _Right-clciking_ on or above a date's bar will open an option to delete this date's data.
 * **Open Settings:** _Backspace_ or _Delete_
    * Holding _Shift_ while dragging the color sliders will make them all the same value.
+   * Pressing _Escape_ closes settings.
 * Any default Swing shortcuts.
 
 _These shortcuts are meant to be unobtrusive to work applications,
