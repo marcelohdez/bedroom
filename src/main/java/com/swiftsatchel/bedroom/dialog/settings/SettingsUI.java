@@ -32,8 +32,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     // Components we can color
     private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
     // Themes
-    private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Demonic Red", "Contrast",
-            "Light", "Pink+White", "Pastel Blue"});
+    private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Contrast",
+            "Jelly Sandwich", "Midnight", "Light", "Pink+White"});
     // Default shift length in hours.
     private final JComboBox<String> shiftLengthListBox =
             new JComboBox<>(Ops.createNumberList(false, 1, 12, "h "));
@@ -385,13 +385,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 newButtonRGB = new int[]{80, 80, 80};
                 newBgRGB = new int[]{64, 64, 64};
             }
-            case "Demonic Red" -> {
-                newTextRGB = new int[]{240, 240, 240};
-                newButtonTextRGB = new int[]{240, 240, 240};
-                newButtonRGB = new int[]{0, 0, 0};
-                newBgRGB = new int[]{72, 0, 0};
-            }
             case "Contrast" -> highContrast = true; // Enable high contrast
+            case "Midnight" -> {
+                newTextRGB = new int[]{255, 255, 255};
+                newButtonTextRGB = new int[]{255, 255, 255};
+                newButtonRGB = new int[]{105, 105, 165};
+                newBgRGB = new int[]{75, 80, 140};
+            }
             case "Light" -> {
                 newTextRGB = new int[]{0, 0, 0};
                 newButtonTextRGB = new int[]{0, 0, 0};
@@ -402,13 +402,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
                 newTextRGB = new int[]{0, 0, 0};
                 newButtonTextRGB = new int[]{0, 0, 0};
                 newButtonRGB = new int[]{240, 240, 240};
-                newBgRGB = new int[]{220, 150, 200};
+                newBgRGB = new int[]{235, 150, 200};
             }
-            case "Pastel Blue" -> {
-                newTextRGB = new int[]{255, 255, 255};
+            case "Jelly Sandwich" -> {
+                newTextRGB = new int[]{0, 0, 0};
                 newButtonTextRGB = new int[]{255, 255, 255};
-                newButtonRGB = new int[]{100, 160, 240};
-                newBgRGB = new int[]{140, 190, 255};
+                newButtonRGB = new int[]{75, 35, 125};
+                newBgRGB = new int[]{215, 180, 155};
             }
         }
 
