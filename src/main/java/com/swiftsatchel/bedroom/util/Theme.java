@@ -50,7 +50,7 @@ public final class Theme {
     public static Color contrastWithBnW(Color c) {
 
         // If colors add up to 525+ return black, else return white
-        return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? Color.BLACK : Color.WHITE;
+        return (c.getRed() + c.getGreen() + c.getBlue() > 500) ? Color.BLACK : Color.WHITE;
 
     }
 
@@ -64,7 +64,7 @@ public final class Theme {
     public static Color contrastWithShade(Color c, int amount) {
 
         // If colors add up to 525+ return black, else return white
-        return (c.getRed() + c.getGreen() + c.getBlue() > 525) ? darkenBy(c, amount) :
+        return (c.getRed() + c.getGreen() + c.getBlue() > 500) ? darkenBy(c, amount) :
                 darkenBy(c, -amount);
 
     }
