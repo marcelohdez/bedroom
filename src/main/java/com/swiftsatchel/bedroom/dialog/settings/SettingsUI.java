@@ -389,8 +389,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
             case "Midnight" -> {
                 newTextRGB = new int[]{255, 255, 255};
                 newButtonTextRGB = new int[]{255, 255, 255};
-                newButtonRGB = new int[]{105, 105, 165};
-                newBgRGB = new int[]{75, 80, 140};
+                newButtonRGB = new int[]{85, 85, 135};
+                newBgRGB = new int[]{55, 60, 110};
             }
             case "Light" -> {
                 newTextRGB = new int[]{0, 0, 0};
