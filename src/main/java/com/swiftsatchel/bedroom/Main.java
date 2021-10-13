@@ -387,6 +387,10 @@ public class Main {
      */
     private static long timeWorkedTill(LocalDateTime till, ChronoUnit unit) {
 
+        if (till.isAfter(clockOutTime)) { // If time is beyond clock out time, only measure up to clock out time:
+            return timeWorkedTill(clockOutTime, unit);
+        }
+
         if (breakOutTime == null) { // If there is no break:
             return clockInTime.until(till, unit); // Get seconds until the time chosen
         } else {
