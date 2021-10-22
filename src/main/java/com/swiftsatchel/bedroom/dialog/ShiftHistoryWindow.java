@@ -22,7 +22,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     // ======= Top panel components =======
     private final JPanel topRow = new JPanel(); // The panel itself
     private final JLabel showingLabel = new JLabel("Data points to show:");
-    private final JComboBox<Integer> ptsAmount = new JComboBox<>(new Integer[]{chart.getPointsAmount(), 12, 16});
+    private final JComboBox<String> ptsAmount = new JComboBox<>(new String[]{String.valueOf(chart.getPointsAmount()),
+            "12", "16", "All"});
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
@@ -38,7 +39,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         addWindowListener(this);
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
-        packAndSize();
+        pack();
+        setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
 
         centerOnParent();
 
@@ -80,22 +82,6 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     }
 
-    private void packAndSize() {
-
-        Dimension last = getSize(); // Get size before packing
-        pack(); // Let swing size window appropriately with updated components
-        Dimension minimum = new Dimension(getWidth(), (int) (getWidth() /1.5)); // Store new minimum
-        setMinimumSize(minimum); // Set new minimum size
-
-        if (last.getWidth() > minimum.getWidth() && last.getHeight() > minimum.getHeight()) {
-            setSize(last); // If it was greater than the new minimum, set size back to where it was.
-        } else if (last.getWidth() > minimum.getWidth()) {
-            setSize(new Dimension((int)last.getWidth(), (int)minimum.getHeight()));
-        } else if (last.getHeight() > minimum.getHeight())
-            setSize(new Dimension((int)minimum.getWidth(), (int)last.getHeight()));
-
-    }
-
     private void centerOnParent() {
 
         setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
@@ -109,8 +95,6 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
         rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
         datesShown.setText(chart.getShownDates());
-
-        packAndSize();
 
     }
 
@@ -154,8 +138,14 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if (e.getSource().equals(ptsAmount))
-            chart.setPointsAmount((int) Objects.requireNonNull(ptsAmount.getSelectedItem()));
+        if (e.getSource().equals(ptsAmount)) {
+            if (!Objects.equals(ptsAmount.getSelectedItem(), "All")) {
+                chart.setPointsAmount(Integer.parseInt((String) Objects.requireNonNull(ptsAmount.getSelectedItem())));
+            } else {
+                chart.setPointsAmountToAll();
+            }
+        }
+
 
         updatePageInfo();
         repaint();

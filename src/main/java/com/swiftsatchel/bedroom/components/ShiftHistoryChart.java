@@ -26,7 +26,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     private final ShiftHistoryWindow container;
 
-    private boolean noHistory = true;
+    private boolean showAll = false; // True if showing all dates
+    private boolean noHistory = true; // Stays true if there's no history data to show
     private int pointsAmount = 8; // Amount of data points to show
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
@@ -39,7 +40,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private int barXDiff;
 
     private final JMenuItem deleteDate = new JMenuItem("Delete");
-    private LocalDate currentlyObserved;
+    private LocalDate currentlyObserved; // Date that got right-clicked on
 
     public ShiftHistoryChart(ShiftHistoryWindow container) {
         this.container = container;
@@ -83,6 +84,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     private void updatePages() {
         if (!noHistory) {
+            if (showAll) // If we have set to show all and the points do not match, update values:
+                if (pointsAmount != keys.length) setPointsAmountToAll();
+
             totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
             if (currentPage > totalPages) currentPage = totalPages;
         }
@@ -376,6 +380,19 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     public void setPointsAmount(int newValue) {
 
         pointsAmount = newValue;
+        showAll = false;
+        updatePages();
+
+    }
+
+    /**
+     * Set amount of data points to show on screen
+     *
+     */
+    public void setPointsAmountToAll() {
+
+        pointsAmount = keys.length; // All keys
+        showAll = true;
         updatePages();
 
     }
