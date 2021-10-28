@@ -97,4 +97,4 @@ gradle's default run scripts will be in ```build > bin```.
 
 ## License
 Bedroom is licensed under the GPLv3 license, more information can be seen in the 
-[license](https://www.github.com/swiftsatchel/bedroom/blob/v3.0-dev/LICENSE) file.
+[license](https://www.github.com/swiftsatchel/bedroom/blob/master/LICENSE) file.
