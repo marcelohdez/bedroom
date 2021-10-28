@@ -31,11 +31,20 @@ public class ErrorDialog extends AlertDialog {
 
         switch(e) {
             case BREAK_OUT_OF_SHIFT -> {
-                return """
-                        Breaks may only start or end
-                        inside of shifts. Current
-                        shift is:\040""" +
+                if (!Main.isOvernightShift()) {
+                    return """
+                            Breaks may only start or end
+                            inside of shifts. Current
+                            shift is:\040""" +
+                            Time.makeTime12Hour(Main.getClockInTime().toLocalTime()) + "-" +
+                            Time.makeTime12Hour(Main.getClockOutTime().toLocalTime());
+                } else return """
+                            Breaks may only start or end
+                            inside of shifts. Current
+                            shift is:\040""" +
+                        Main.getClockInTime().getDayOfWeek().toString().substring(0,3) + " " +
                         Time.makeTime12Hour(Main.getClockInTime().toLocalTime()) + "-" +
+                        Main.getClockOutTime().getDayOfWeek().toString().substring(0,3) + " " +
                         Time.makeTime12Hour(Main.getClockOutTime().toLocalTime());
             }
             case NON_POSITIVE_SHIFT_TIME -> {
