@@ -154,8 +154,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                 g.fillRect(x, top, (barXDiff - 1), getHeight() - top);
 
                 // Draw bar value and date
+                if (index != 0) lastMonth = keys[index-1].getMonthValue();
                 drawBarValue(g, keys[index].getMonthValue() != lastMonth, value, x, top);
-                lastMonth = drawDate(g, index, x, lastMonth);
+                drawDate(g, index, x, lastMonth);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
         }
@@ -211,9 +212,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param dateIndex Index of date on keys array
      * @param x X coordinate
      * @param lastMonth Current last month value
-     * @return New lastMonth value if changed
      */
-    private int drawDate(Graphics2D g, int dateIndex, int x, int lastMonth) {
+    private void drawDate(Graphics2D g, int dateIndex, int x, int lastMonth) {
 
         if (barXDiff > g.getFont().getSize()*1.3) { // If there is space to do so:
             g.setColor(Theme.contrastWithBnW(barColor));
@@ -222,12 +222,11 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                     g.getFont().getSize()); // Draw box behind date
 
             if (keys[dateIndex].getMonthValue() != lastMonth) { // If the month has changed:
-                lastMonth = drawMonth(g, barColor, dateIndex, x); // Draw month and save new value
+                drawMonth(g, barColor, dateIndex, x); // Draw month and save new value
             } else g.setColor(barColor); // Set color to write text on top of box
             g.drawString(String.valueOf(keys[dateIndex].getDayOfMonth()), x, getHeight() - 1); // Draw date number
 
         }
-        return lastMonth;
 
     }
 
@@ -239,9 +238,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param textColor Text color
      * @param dateIndex Index of date on keys array
      * @param y Y coordinate of drawing (really x, because coordinate system is flipped -90 deg.)
-     * @return The new month value
      */
-    private int drawMonth(Graphics2D g, Color textColor, int dateIndex, int y) {
+    private void drawMonth(Graphics2D g, Color textColor, int dateIndex, int y) {
 
         int fontSize = g.getFont().getSize();
         g.rotate(-Math.PI/2); // Rotate -90 degrees
@@ -250,8 +248,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         g.setColor(textColor); // Set back to text color
         g.drawString(keys[dateIndex].getMonth().name().substring(0, 3), -(getHeight() - (int)(fontSize*1.2)), y + fontSize);
         g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
-
-        return keys[dateIndex].getMonthValue(); // return new month value
 
     }
 
@@ -267,12 +263,11 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param barTop Top y value of bar
      */
     private void drawBarValue(Graphics2D g, boolean isMonth, float value, int x, int barTop) {
-        Color opposite = Theme.contrastWithBnW(barColor);
         int textWidth = g.getFontMetrics().stringWidth(String.valueOf(value));
         int dateMonthHeight = g.getFont().getSize()*2 + g.getFontMetrics().stringWidth("ABCD");
+        g.setColor(Theme.contrastWithBnW(barColor)); // Set to opposite of bar color for text
 
         if (barXDiff > textWidth + 4) { // If bar is thick enough to fit the text plus some legroom:
-            g.setColor(opposite); // Set to opposite of bar color
             // If bar is taller than the date/month text, draw text inside
             if (barTop < getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*2)) {
                 g.drawString(String.valueOf(value), x + 2, barTop + g.getFont().getSize());
@@ -284,7 +279,6 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                         g.getFont().getSize()*2.5F)) + g.getFont().getSize())); // Draw text
             }
         } else if (barXDiff > g.getFont().getSize()) { // Else if it is thick enough to fit the text horizontally:
-            g.setColor(opposite); // Set to opposite of bar color
             g.rotate(-Math.PI/2); // Rotate canvas -90 degrees
             if (barTop < getHeight() - (isMonth ? dateMonthHeight : g.getFont().getSize()*3)) {
                 // If bar is taller than the date/month text then draw value inside
@@ -298,6 +292,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             }
             g.rotate(Math.PI/2); // Rotate 90 degrees to get canvas back to normal
         }
+        g.setColor(barColor);
 
     }
 
