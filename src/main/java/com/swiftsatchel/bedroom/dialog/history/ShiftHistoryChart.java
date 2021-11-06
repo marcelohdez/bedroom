@@ -1,7 +1,7 @@
-package com.swiftsatchel.bedroom.components;
+package com.swiftsatchel.bedroom.dialog.history;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
+import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;

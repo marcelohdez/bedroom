@@ -1,6 +1,6 @@
 package com.swiftsatchel.bedroom.dialog.settings;
 
-import com.swiftsatchel.bedroom.components.FloatingSpinner;
+import com.swiftsatchel.bedroom.dialog.FloatingSpinner;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.util.*;

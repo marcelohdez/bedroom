@@ -1,6 +1,5 @@
-package com.swiftsatchel.bedroom.dialog;
+package com.swiftsatchel.bedroom.dialog.history;
 
-import com.swiftsatchel.bedroom.components.ShiftHistoryChart;
 import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.*;
