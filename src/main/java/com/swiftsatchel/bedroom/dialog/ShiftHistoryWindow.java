@@ -10,24 +10,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener,
-        WindowParent {
+public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener {
 
     private final WindowParent parent;
-
     private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
-    // ======= Top panel components =======
-    private final JPanel topRow = new JPanel(); // The panel itself
+    private final JPanel topRow = new JPanel();
     private final JLabel showingLabel = new JLabel("Data points to show:");
-    private final JComboBox<String> ptsAmount = new JComboBox<>(new String[]{String.valueOf(chart.getPointsAmount()),
-            "12", "16", "All"});
+    private final JComboBox<String> ptsAmount = new JComboBox<>(getAllowedAmounts());
+    private final JLabel datesShown = new JLabel("None");
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
-    private final JLabel datesShown = new JLabel("None");
 
     private final JPanel botRow = new JPanel(); // Bottom row panel
     private final JButton historyFolderButton = new JButton("Open history directory");
@@ -46,6 +43,24 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setVisible(true); // Show dialog
+
+    }
+
+    private String[] getAllowedAmounts() {
+
+        ArrayList<String> amounts = new ArrayList<>();
+        amounts.add("8"); // View of 8 will always be available
+        if (chart.getTotalDates() >= 8) {
+            if (chart.getTotalDates() >= 16) {
+                amounts.add("16");
+                if (chart.getTotalDates() >= 32) {
+                    amounts.add("32");
+                }
+            }
+            amounts.add("All");
+        }
+
+        return amounts.toArray(new String[0]);
 
     }
 
@@ -94,7 +109,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
         leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
         rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
-        datesShown.setText(chart.getShownDates());
+        datesShown.setText(chart.getShownDateRange());
 
     }
 
@@ -115,7 +130,7 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
                 } catch (SecurityException | IOException e) { e.printStackTrace(); }
 
         } catch (Exception e) {  // If we encounter an exception:
-            new ErrorDialog(this, ErrorType.CAN_NOT_OPEN_EXPLORER);
+            new ErrorDialog(null, ErrorType.CAN_NOT_OPEN_EXPLORER);
             e.printStackTrace();
         }
 
@@ -146,9 +161,8 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
             }
         }
 
-
         updatePageInfo();
-        repaint();
+        chart.repaint();
     }
 
     @Override
@@ -157,32 +171,11 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         parent.askForFocus();
     }
 
-    @Override
-    public int[] getXYWidthHeight() {
-        return new int[]{getX(), getY(), getWidth(), getHeight()};
-    }
-
-    @Override
-    public void makeVisible(boolean b) {
-        setVisible(b);
-    }
-
-    @Override
-    public void setDisabled(boolean b) {
-        setEnabled(b);
-    }
-
-    @Override
-    public void askForFocus() {
-        requestFocus();
-    }
-
     // Unused
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent e) {}
-
     @Override
     public void windowOpened(WindowEvent e) {}
     @Override
@@ -195,8 +188,5 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
-
-    @Override
-    public void reloadSettings() {}
 
 }

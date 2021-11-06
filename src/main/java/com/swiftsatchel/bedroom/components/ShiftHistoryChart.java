@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 /**
- * A bar graph showing the orders per hour user ended with on existing shifts
+ * A histogram showing the orders per hour user ended with on past shifts
  */
 public class ShiftHistoryChart extends JPanel implements ActionListener, MouseListener {
 
@@ -285,7 +285,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      *
      * @return The range of dates currently being shown
      */
-    public String getShownDates() {
+    public String getShownDateRange() {
         if (!noHistory) { // If there is history to show, get first and last dates currently shown:
             // Get how many dates are currently shown:
             int shown = 0; // Start at 0 and iterate through the dates on the current page to get amount shown
@@ -358,10 +358,10 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * @return Amount of data points currently being shown
+     * @return Amount of dates available
      */
-    public int getPointsAmount() {
-        return pointsAmount;
+    public int getTotalDates() {
+        return keys.length;
     }
 
     private void rightClickBarAt(int x) {
@@ -379,7 +379,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
         if (e.getSource().equals(deleteDate)) {
             if (currentlyObserved != null) {
-                if (new YesNoDialog(container, """
+                if (new YesNoDialog(null, """
                         Are you sure you want to
                         delete shift $observed?"""
                         .replace("$observed",
@@ -394,7 +394,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                     container.updatePageInfo();
                 }
             } else {
-                new AlertDialog(container, """
+                new AlertDialog(null, """
                         No date selected""");
             }
         }
