@@ -20,7 +20,7 @@ import java.time.LocalTime;
 
 public class BedroomWindow extends JFrame implements WindowParent, WindowListener, KeyListener {
 
-    private final UI ui;
+    private final UI ui = new UI(this);
 
     public BedroomWindow() {
 
@@ -31,15 +31,10 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         addWindowListener(this);
         addKeyListener(this);
 
-        ui = new UI(this);
         add(ui);
 
         pack();
-        ui.sizeButtons();
-        pack();
-
         setLocationRelativeTo(null);
-
         setVisible(true);
 
     }

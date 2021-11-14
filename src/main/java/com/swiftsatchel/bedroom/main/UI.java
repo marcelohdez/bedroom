@@ -55,9 +55,11 @@ public class UI extends JPanel implements ActionListener {
         stats.setComponentPopupMenu(statsPopup);
         addOrder.addKeyListener(parent);
         addOrder.addActionListener(this);
+        addOrder.setMargin(new Insets(17, 24, 17, 24));
         breakButton.addKeyListener(parent);
         breakButton.addActionListener(this);
         breakButton.setToolTipText("<html><b>Currently no break is set</b></html>"); // Default tooltip
+        breakButton.setMargin(new Insets(17, 24, 17, 24));
 
         // Add components
         add(breakButton);
@@ -125,15 +127,6 @@ public class UI extends JPanel implements ActionListener {
 
     }
 
-    void sizeButtons() {
-
-        // Get height of stats text box (minus 2 for some buffer) to base buttons off of that:
-        int size = stats.getHeight() - 2;
-        addOrder.setPreferredSize(new Dimension(size*2, size));
-        breakButton.setPreferredSize(new Dimension(size*2, size));
-
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -164,10 +157,8 @@ public class UI extends JPanel implements ActionListener {
     }
 
     public void disableButtons(Buttons b) {
-
         addOrder.setEnabled(!(b == Buttons.ADD_ORDER || b == Buttons.BOTH));
         breakButton.setEnabled(!(b == Buttons.SET_BREAK || b == Buttons.BOTH));
-
     }
 
 }
