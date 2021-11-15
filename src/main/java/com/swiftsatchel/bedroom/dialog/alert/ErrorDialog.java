@@ -18,12 +18,12 @@ public class ErrorDialog extends AlertDialog {
 
     public ErrorDialog(WindowParent parent, ErrorType e) {
         super(parent);
-        init("Error", getErrorMessage(e), false);
+        initDialog("Error", getErrorMessage(e));
     }
 
     public ErrorDialog(SelectTimeDialog parent, ErrorType e, LocalDateTime lastTime) {
         super(parent);
-        init("Error", getErrorMessage(e, lastTime), false);
+        initDialog("Error", getErrorMessage(e, lastTime));
     }
 
     // Get error message per error type

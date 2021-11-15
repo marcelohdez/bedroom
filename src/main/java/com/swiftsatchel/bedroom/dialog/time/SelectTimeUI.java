@@ -229,8 +229,8 @@ public class SelectTimeUI extends JPanel implements ActionListener {
         } else if (new YesNoDialog(parent, """
                 It seems you have selected
                 a clock out time before
-                your clock in time. Is
-                this an overnight shift?""").accepted()) {
+                your clock in time. Is this
+                an overnight shift?""").accepted()) {
 
             // Create DateTimeFormatter as an overnight shift has been initialized
             dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm").withResolverStyle(ResolverStyle.LENIENT);
