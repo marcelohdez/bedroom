@@ -139,8 +139,10 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
             // Make sure graph is getting filled on last page wih dates and not have 1 date on the page for example.
-            if (currentPage == totalPages && keys.length != pointsAmount)
-                index -= (pointsAmount - keys.length % pointsAmount);
+            if (currentPage == totalPages) {
+                if (index - (pointsAmount - keys.length % pointsAmount) > 0)
+                    index -= (pointsAmount - keys.length % pointsAmount);
+            }
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
@@ -367,8 +369,11 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     private void rightClickBarAt(int x) {
         int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get bar at x coordinate
-        if (currentPage == totalPages && keys.length != pointsAmount)
-            bar -= (pointsAmount - keys.length % pointsAmount);
+        // Make sure to account for the difference in index when on last page.
+        if (currentPage == totalPages) {
+            if (bar - (pointsAmount - keys.length % pointsAmount) > 0)
+                bar -= (pointsAmount - keys.length % pointsAmount);
+        }
 
         if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
             currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
