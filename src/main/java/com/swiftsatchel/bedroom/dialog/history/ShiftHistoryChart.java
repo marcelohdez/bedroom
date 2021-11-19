@@ -366,6 +366,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     private void rightClickBarAt(int x) {
         int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get bar at x coordinate
+        if (currentPage == totalPages) bar -= (pointsAmount - keys.length % pointsAmount);
 
         if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
             currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
