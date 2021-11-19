@@ -1,7 +1,6 @@
 package com.swiftsatchel.bedroom.dialog.history;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
 import com.swiftsatchel.bedroom.dialog.alert.YesNoDialog;
 import com.swiftsatchel.bedroom.util.Settings;
@@ -86,7 +85,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             int lastTotal = totalPages;
             totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
             if (totalPages != lastTotal) currentPage = totalPages; // If page amount changed, go to newest dates
-            // Update range
+            // Update range for drawing the background lines
             max = 0;
             for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
 
@@ -134,12 +133,13 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param g Graphics2D object to draw with
      */
     private void drawBars(Graphics2D g) {
-        // Difference in X coordinates between bars
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
+            // Make sure graph is getting filled on last page wih dates and not have 1 date on the page for example.
+            if (currentPage == totalPages) index -= (pointsAmount - keys.length % pointsAmount);
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
