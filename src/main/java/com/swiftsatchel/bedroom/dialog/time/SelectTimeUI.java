@@ -32,8 +32,8 @@ public class SelectTimeUI extends JPanel {
 
     // List boxes:
     private final JComboBox<String> hrBox = new JComboBox<>(Ops.createNumberList(true, 1, 12, ":"));
-    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59));
-    private final JComboBox<String> targetBox = new JComboBox<>(Ops.createNumberList(true, 1, 24));
+    private final JComboBox<String> minBox = new JComboBox<>(Ops.createNumberList(true, 0, 59, null));
+    private final JComboBox<String> targetBox = new JComboBox<>(Ops.createNumberList(true, 1, 24, null));
     private final JComboBox<String> amPMBox = new JComboBox<>(new String[]{"AM", "PM"});    // AM/PM list box
 
     // Time selected from last Select Time Dialog, used in dialog sets ex: break end and start time

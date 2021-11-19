@@ -18,7 +18,6 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
     private boolean shifting = false;
 
     public SettingsDialog(WindowParent parent) {
-
         this.parent = parent;
 
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -28,15 +27,13 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         setTitle("Settings");
         setResizable(false);
         addKeyListener(this);
-
         sui = new SettingsUI(this);
         add(sui);
-
         pack();
 
         // Center on parent window
-        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
-                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
+        int[] arr = parent.getXYWidthHeight();
+        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         setVisible(true);
 

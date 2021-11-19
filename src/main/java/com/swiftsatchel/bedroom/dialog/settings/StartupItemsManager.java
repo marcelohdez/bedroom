@@ -6,14 +6,12 @@ import com.swiftsatchel.bedroom.util.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class StartupItemsManager extends JDialog implements ActionListener, WindowListener {
+public class StartupItemsManager extends JDialog implements WindowListener {
 
     private final WindowParent parent;
 
@@ -35,7 +33,6 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
         JPanel content = new JPanel(); // Content panel to set a background color
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBackground(Theme.getBgColor());
-
         content.add(createTipTextArea());
         content.add(createList());
         content.add(createToolsPanel());
@@ -45,8 +42,8 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
         pack();
 
         // Center on parent window
-        setLocation(parent.getX() + ((parent.getWidth()/2) - (getWidth()/2)),
-                parent.getY() + ((parent.getHeight()/2) - (getHeight()/2)));
+        int[] arr = parent.getXYWidthHeight();
+        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         setVisible(true);
 
@@ -68,8 +65,8 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
         JButton remove = new JButton("Remove");
 
         // Customize em
-        add.addActionListener(this);
-        remove.addActionListener(this);
+        add.addActionListener((e) -> addAnApp());
+        remove.addActionListener((e) -> removeAnApp());
 
         // Add tools to panel
         panel.add(add);
@@ -106,18 +103,6 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        switch (e.getActionCommand()) {
-
-            case "Add" -> addAnApp();
-            case "Remove" -> removeAnApp();
-
-        }
-
-    }
-
     private void addAnApp() {
 
         if (itemNames.getSize() < 7) { // Add an item if under limit
@@ -147,7 +132,10 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
         if (!list.isSelectionEmpty()) {
 
             int selected = list.getSelectedIndex(); // Get selected index
-            removeAppFromBoth(selected);
+            // Remove index from both lists:
+            itemNames.remove(selected);
+            itemDirs.remove(selected);
+
             list.setSelectedIndex(selected);    // Keep cursor on same position
             if (list.isSelectionEmpty())
                 // If where we put the cursor is empty, move it up.
@@ -155,11 +143,6 @@ public class StartupItemsManager extends JDialog implements ActionListener, Wind
 
         }
 
-    }
-
-    private void removeAppFromBoth(int index) {
-        itemNames.remove(index);
-        itemDirs.remove(index);
     }
 
     @Override

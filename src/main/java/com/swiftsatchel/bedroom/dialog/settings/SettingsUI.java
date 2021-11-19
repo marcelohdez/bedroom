@@ -59,7 +59,6 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Add rows
         createLabelRow("Colors");
-
         createListBoxRow("Preset:", themeListBox, Main.userPrefs.getInt("lastTheme", 0));
         createColoringPanel();
         createListBoxRow("Currently editing:", coloringListBox, Main.userPrefs.getInt("lastColoring", 0));

@@ -6,7 +6,7 @@ import java.awt.*;
 public final class Ops { // Operations
 
     /**
-     * Creates a String[] of numbers with added text to each.
+     * Creates a String[] of numbers with optional added text to each.
      *
      * @param start Starting number
      * @param end Ending number
@@ -15,31 +15,14 @@ public final class Ops { // Operations
      */
     public static String[] createNumberList(boolean addZeroUnder10, int start, int end, String extraText) {
 
-        String[] list = new String[end-start+1];
-        for (int i = 0; i < list.length; i++) {
-            // If addZeroUnder10 is true use the addZeroUnder10 method else use current number, then add the extra text
-            list[i] = (addZeroUnder10 ? addZeroUnder10(start + i) : start+i) + extraText;
+        String[] list = new String[end - start + 1];
+        if (extraText != null) {
+            for (int i = 0; i < list.length; i++) // If told to, add zero when needed else use current number
+                list[i] = (addZeroUnder10 ? addZeroUnder10(start + i) : start + i) + extraText;
+        } else {
+            for (int i = 0; i < list.length; i++) // If told to, add zero when needed else use current number
+                list[i] = String.valueOf(addZeroUnder10 ? addZeroUnder10(start + i) : start + i);
         }
-
-        return list;
-
-    }
-
-    /**
-     * Creates a String[] of numbers.
-     *
-     * @param start Starting number
-     * @param end Ending number
-     * @return A String[] of numbers
-     */
-    public static String[] createNumberList(boolean addZeroUnder10, int start, int end) {
-
-        String[] list = new String[end-start+1];
-        for (int i = 0; i < list.length; i++) {
-            // If addZeroUnder10 is true use the addZeroUnder10 method else use current number
-            list[i] = String.valueOf(addZeroUnder10 ? addZeroUnder10(start + i) : start + i);
-        }
-
         return list;
 
     }
@@ -70,18 +53,10 @@ public final class Ops { // Operations
     public static void setHandCursorOnCompsFrom(Container container) {
 
         for (Component c : container.getComponents()) { // Go through the component list of this container
-
             // If it is of a desired class, set the cursor
             if (c instanceof JButton || c instanceof JComboBox || c instanceof JSlider || c instanceof JCheckBox) {
-
                 c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-            } else if (c instanceof JPanel) { // If it is another JPanel, use recursion to get those components as well.
-
-                setHandCursorOnCompsFrom((JPanel) c);
-
-            }
-
+            } else if (c instanceof JPanel) setHandCursorOnCompsFrom((JPanel) c);
         }
 
     }
