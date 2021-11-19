@@ -139,7 +139,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
             int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
             // Make sure graph is getting filled on last page wih dates and not have 1 date on the page for example.
-            if (currentPage == totalPages) index -= (pointsAmount - keys.length % pointsAmount);
+            if (currentPage == totalPages && keys.length != pointsAmount)
+                index -= (pointsAmount - keys.length % pointsAmount);
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
