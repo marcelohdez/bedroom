@@ -10,7 +10,7 @@ public enum ErrorType { // Types of user errors we can catch
     STARTUP_ITEM_NONEXISTENT,
     EARLY_CLOCK_OUT_NOT_EARLY,
     SAVING_HISTORY_FAILED,
-    CAN_NOT_OPEN_EXPLORER,
+    EXPLORER_UNSUPPORTED,
     FAILED_TO_LOAD_SHIFT_HISTORY
 
 }

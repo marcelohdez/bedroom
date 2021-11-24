@@ -10,9 +10,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyListener, ItemListener, WindowListener {
+public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener {
 
     private final WindowParent parent;
     private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
@@ -37,8 +36,9 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
         setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
-
-        centerOnParent();
+        // Center on parent
+        int[] arr = parent.getXYWidthHeight();
+        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setVisible(true); // Show dialog
@@ -73,10 +73,22 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
         // Apply listeners to needed components
         addKeyListener(this); // Add key listener to self
-        ptsAmount.addItemListener(this);
-        leftButton.addActionListener(this);
-        rightButton.addActionListener(this);
-        historyFolderButton.addActionListener(this);
+        ptsAmount.addItemListener((e) -> {
+            if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
+                chart.setPointsAmountToAll();
+            } else if (ptsAmount.getSelectedItem() != null)
+                chart.setPointsAmount(Integer.parseInt((String) ptsAmount.getSelectedItem()));
+
+            chart.repaint();
+        });
+
+        leftButton.addActionListener((e) -> chart.prevPage());
+        rightButton.addActionListener((e) -> chart.nextPage());
+        historyFolderButton.addActionListener((e) -> SwingUtilities.invokeLater(() -> {
+            try {
+                openHistoryDirectory();
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }));
 
         // Add to their respective places
         topRow.add(showingLabel);
@@ -96,13 +108,6 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
 
     }
 
-    private void centerOnParent() {
-
-        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
-                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
-
-    }
-
     public void updatePageInfo() {
 
         pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
@@ -115,53 +120,31 @@ public class ShiftHistoryWindow extends JFrame implements ActionListener, KeyLis
     /**
      * Open working directory in system's explorer
      */
-    private void openHistoryDirectory() {
+    private void openHistoryDirectory() throws IOException {
+
+        // Create instance of history file to select it in explorer
+        File shiftHistoryFile = new File(Settings.getWorkingDir() + File.separator + "shift.history");
 
         try {
-            // Create instance of history file to select it in explorer
-            File shiftHistoryFile = new File(Settings.getWorkingDir() + File.separator + "shift.history");
+            Desktop.getDesktop().browseFileDirectory(shiftHistoryFile); // Only works on macOS and Win7/8 :(
+        } catch (Exception e) {
+            // Due to browseFileDirectory not working on these OSs use specific commands:
+            if (System.getProperty("os.name").contains("Windows")) { // Win10+
 
-            if (!System.getProperty("os.name").contains("Windows")) { // Check if we are not on Windows
-                Desktop.getDesktop().browseFileDirectory(shiftHistoryFile);
-            } else // Due to browseFileDirectory not working on Win10 we have to use a specific command:
-                try {
-                    Runtime.getRuntime().exec("explorer " + Settings.getWorkingDir());
-                } catch (SecurityException | IOException e) { e.printStackTrace(); }
+                Runtime.getRuntime().exec("explorer \"$d\"".replace("$d", Settings.getWorkingDir()));
 
-        } catch (Exception e) {  // If we encounter an exception:
-            new ErrorDialog(null, ErrorType.CAN_NOT_OPEN_EXPLORER);
-            e.printStackTrace();
+            } else if (System.getProperty("os.name").contains("Linux")) { // Linux
+
+                Runtime.getRuntime().exec("gio open \"$d\"".replace("$d", Settings.getWorkingDir()));
+
+            } else new ErrorDialog(null, ErrorType.EXPLORER_UNSUPPORTED, shiftHistoryFile.toString());
         }
 
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(leftButton)) chart.prevPage();
-        if (e.getSource().equals(rightButton)) chart.nextPage();
-        if (e.getSource().equals(historyFolderButton)) {
-            SwingUtilities.invokeLater(this::openHistoryDirectory);
-        }
-        updatePageInfo();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) dispose(); // Close self with Escape
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        if (e.getSource().equals(ptsAmount)) {
-            if (!Objects.equals(ptsAmount.getSelectedItem(), "All")) {
-                chart.setPointsAmount(Integer.parseInt((String) Objects.requireNonNull(ptsAmount.getSelectedItem())));
-            } else {
-                chart.setPointsAmountToAll();
-            }
-        }
-
-        updatePageInfo();
-        chart.repaint();
     }
 
     @Override

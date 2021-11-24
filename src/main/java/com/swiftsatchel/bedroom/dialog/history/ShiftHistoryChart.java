@@ -309,6 +309,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         if (currentPage > 1) { // If we are above page 1, subtract 1.
             currentPage--;
             updateInfo();
+            container.updatePageInfo();
             repaint();
         }
 
@@ -322,6 +323,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         if (currentPage < totalPages) { // If we are not at last page, add 1.
             currentPage++;
             updateInfo();
+            container.updatePageInfo();
             repaint();
         }
 

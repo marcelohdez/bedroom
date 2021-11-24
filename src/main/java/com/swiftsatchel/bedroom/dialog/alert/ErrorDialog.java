@@ -6,8 +6,6 @@ import com.swiftsatchel.bedroom.enums.ErrorType;
 import com.swiftsatchel.bedroom.util.Time;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
-import java.time.LocalDateTime;
-
 /**
  * An AlertDialog that has a predefined message from an ErrorType.
  * Used to inform the user of an error which does not allow a certain
@@ -21,9 +19,9 @@ public class ErrorDialog extends AlertDialog {
         initDialog("Error", getErrorMessage(e));
     }
 
-    public ErrorDialog(SelectTimeDialog parent, ErrorType e, LocalDateTime lastTime) {
+    public ErrorDialog(SelectTimeDialog parent, ErrorType e, String extraInfo) {
         super(parent);
-        initDialog("Error", getErrorMessage(e, lastTime));
+        initDialog("Error", getErrorMessage(e, extraInfo));
     }
 
     // Get error message per error type
@@ -85,10 +83,6 @@ public class ErrorDialog extends AlertDialog {
             case SAVING_HISTORY_FAILED -> {
                 return "Unable to save shift history";
             }
-            case CAN_NOT_OPEN_EXPLORER -> {
-                return """
-                        Can not open file explorer.""";
-            }
             case FAILED_TO_LOAD_SHIFT_HISTORY -> {
                 return """
                     Bedroom was unable to load
@@ -104,18 +98,47 @@ public class ErrorDialog extends AlertDialog {
 
     }
 
-    // Get error messages that need additional LocalDateTime variables
-    private String getErrorMessage(ErrorType e, LocalDateTime time) {
+    // Get error messages that need additional info
+    private String getErrorMessage(ErrorType e, String extraInfo) {
 
-        if (e == ErrorType.NEGATIVE_BREAK_TIME) {
-            return """
-                    A break's end time can not be
-                    before the break's start time.
-                    Current break start:\040""" + Time.makeTime12Hour(time.toLocalTime());
+        switch (e) {
+            case NEGATIVE_BREAK_TIME -> {
+                return """
+                        A break's end time can not be
+                        before the break's start time.
+                        Current break start:\040""" + extraInfo;
+            }
+            case EXPLORER_UNSUPPORTED -> {
+                System.out.println(extraInfo.length());
+                return """
+                        Unable to open directory, this
+                        desktop's file explorer is not
+                        supported, wanted directory:
+                        
+                        """ + limitStringLines(extraInfo);
+            }
         }
 
         // If type is not recognized return the type itself
         return e.toString();
+
+    }
+
+    private String limitStringLines(String s) {
+        // Get how many times 30 goes into the string length
+        int limit = 30;
+        int divisions = s.length() / limit;
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+
+        while (i < divisions) {
+            sb.append(s, i * limit, (i * limit) + limit).append("\n");
+            i++;
+        }
+        sb.append(s, i * limit, (i * limit) + s.length() % limit);
+
+        return sb.toString();
 
     }
 

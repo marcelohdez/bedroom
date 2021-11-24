@@ -250,7 +250,7 @@ public class SelectTimeUI extends JPanel {
             Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
         } else {
-            new ErrorDialog(dialog, ErrorType.NEGATIVE_BREAK_TIME, lastTime);
+            new ErrorDialog(dialog, ErrorType.NEGATIVE_BREAK_TIME, Time.makeTime12Hour(time.toLocalTime()));
         }
 
     }
