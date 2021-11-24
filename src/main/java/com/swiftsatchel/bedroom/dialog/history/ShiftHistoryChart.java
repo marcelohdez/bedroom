@@ -28,6 +28,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
 
     private boolean noHistory = true; // Stays true if there's no history data to show
     private int pointsAmount = 8; // Amount of data points to show
+    private boolean showingAll = false;
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
     private LocalDate[] keys = cleanUpKeys();
@@ -66,15 +67,13 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             drawRangeLines(g);
             drawBars(g);
         } else {
-
             g.setColor(Theme.getTextColor());
+
             String text = Settings.isDoneLoadingShiftHistory() ? // Are we done loading the history?
                     "There is no data to be shown." : "Still loading data, please reopen."; // If not inform user.
 
-            g.drawString(text,
-                    getWidth()/2 - g.getFontMetrics().stringWidth(text)/2,
+            g.drawString(text, getWidth()/2 - g.getFontMetrics().stringWidth(text)/2,
                     getHeight()/2 - g.getFont().getSize()/2);
-
         }
 
     }
@@ -88,13 +87,12 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             // Update range for drawing the background lines
             max = 0;
             for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
+                int index = getTrueIndex(p + pointsAmount * (currentPage - 1)); // Get its index
 
-                int index = p + (pointsAmount * (currentPage - 1)); // Get its index
                 if (index < keys.length) { // If index exists:
                     if (shiftHistoryData.get(keys[index]) > max) // We check if it is greater than the last max
                         max = (int) Math.ceil(shiftHistoryData.get(keys[index])); // If it is, set to new max
                 }
-
             }
         }
     }
@@ -119,10 +117,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             return cleanedList.toArray(new LocalDate[0]); // Convert cleanedList to LocalDate array
 
         } else {
-
             noHistory = true;
             return new LocalDate[0];
-
         }
 
     }
@@ -137,12 +133,8 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         int lastMonth = 0;      // Keep track of last month value to only put month name when changed
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
-            int index = pointsAmount * (currentPage - 1) + point; // Get actual index by adding the offset
-            // Make sure graph is getting filled on last page wih dates and not have 1 date on the page for example.
-            if (currentPage == totalPages) {
-                if (index - (pointsAmount - keys.length % pointsAmount) > 0)
-                    index -= (pointsAmount - keys.length % pointsAmount);
-            }
+            // Get actual index by adding the offset and make sure graph is filled on last page
+            int index = getTrueIndex(pointsAmount * (currentPage - 1) + point);
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
 
@@ -290,14 +282,14 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     public String getShownDateRange() {
         if (!noHistory) { // If there is history to show, get first and last dates currently shown:
-            // Get how many dates are currently shown:
-            int shown = 0; // Start at 0 and iterate through the dates on the current page to get amount shown
-            for (int i = 0; i < pointsAmount; i++) if (pointsAmount * (currentPage - 1) + i < keys.length) shown++;
+            int startingIndex = getTrueIndex(pointsAmount * (currentPage - 1)); // Get the true starting index
 
-            return DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[pointsAmount * (currentPage - 1)])
-                    + "-" +
-                    DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT) // Maths to get last index shown:
-                            .format(keys[(pointsAmount * (currentPage - 1)) + shown - 1]);
+            int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
+            if (keys.length < pointsAmount) shown = keys.length;
+
+            return "$s-$e"
+                    .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[startingIndex]))
+                    .replace("$e", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[startingIndex + shown - 1]));
         } else return "None";
     }
 
@@ -335,6 +327,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param newValue New amount
      */
     public void setPointsAmount(int newValue) {
+        showingAll = false;
         pointsAmount = newValue;
         updateInfo();
     }
@@ -345,6 +338,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     public void setPointsAmountToAll() {
         pointsAmount = keys.length; // All keys
+        showingAll = true;
         updateInfo();
     }
 
@@ -369,13 +363,21 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         return keys.length;
     }
 
+    /**
+     * Make sure to account for remainder of dates needed to fill a whole page, to
+     * not have 1 date shown on the last page, but rather the last X dates.
+     *
+     * @param val value which will be subtracted from
+     * @return new index
+     */
+    private int getTrueIndex(int val) {
+        if (!showingAll && currentPage == totalPages) val -= (pointsAmount - keys.length % pointsAmount);
+        return val;
+    }
+
     private void rightClickBarAt(int x) {
-        int bar = (int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff); // Get bar at x coordinate
-        // Make sure to account for the difference in index when on last page.
-        if (currentPage == totalPages) {
-            if (bar - (pointsAmount - keys.length % pointsAmount) > 0)
-                bar -= (pointsAmount - keys.length % pointsAmount);
-        }
+        // Get bar at x coordinate
+        int bar = getTrueIndex((int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff));
 
         if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
             currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved

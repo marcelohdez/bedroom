@@ -109,7 +109,6 @@ public class ErrorDialog extends AlertDialog {
                         Current break start:\040""" + extraInfo;
             }
             case EXPLORER_UNSUPPORTED -> {
-                System.out.println(extraInfo.length());
                 return """
                         Unable to open directory, this
                         desktop's file explorer is not

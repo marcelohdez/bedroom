@@ -78,6 +78,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
                 chart.setPointsAmount(Integer.parseInt((String) ptsAmount.getSelectedItem()));
 
             chart.repaint();
+            updatePageInfo();
         });
 
         leftButton.addActionListener((e) -> chart.prevPage());
