@@ -29,9 +29,14 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     public ShiftHistoryWindow(WindowParent parent) {
         this.parent = parent;
-
         parent.setDisabled(true); // Disable parent window
+
+        // Set window properties
+        setAlwaysOnTop(Settings.getAlwaysOnTop());
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle("Shift Performance History");
         addWindowListener(this);
+        addKeyListener(this);
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
@@ -65,14 +70,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     private void init() {
 
-        // Set window properties
-        setAlwaysOnTop(Settings.getAlwaysOnTop());
-        ///setResizable(false);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle("Shift Performance History");
-
         // Apply listeners to needed components
-        addKeyListener(this); // Add key listener to self
         ptsAmount.addItemListener((e) -> {
             if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
                 chart.setPointsAmountToAll();
@@ -102,7 +100,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         add(chart, BorderLayout.CENTER);
         add(botRow, BorderLayout.SOUTH);
 
-        // Color bottom row:
+        // Color bottom row a bit brighter than the background:
         botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(),
                 Settings.isContrastEnabled() ? 200 : 20));
 
@@ -121,25 +119,17 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
      * Open working directory in system's explorer
      */
     private void openHistoryDirectory() throws IOException {
-
-        // Create instance of history file to select it in explorer
-        File shiftHistoryFile = new File(Settings.getWorkingDir() + File.separator + "shift.history");
-
         try {
+            // Create instance of history file to select it in explorer
+            File shiftHistoryFile = new File(Settings.getWorkingDir() + File.separator + "shift.history");
             Desktop.getDesktop().browseFileDirectory(shiftHistoryFile); // Only works on macOS and Win7/8 :(
+
         } catch (Exception e) {
-            // Due to browseFileDirectory not working on these OSs use specific commands:
-            if (System.getProperty("os.name").contains("Windows")) { // Win10+
-
+            if (System.getProperty("os.name").contains("Windows")) {
+                // Due to browseFileDirectory not working on Windows10+ we use specific commands:
                 Runtime.getRuntime().exec("explorer \"$d\"".replace("$d", Settings.getWorkingDir()));
-
-            } else if (System.getProperty("os.name").contains("Linux")) { // Linux
-
-                Runtime.getRuntime().exec("gio open \"$d\"".replace("$d", Settings.getWorkingDir()));
-
-            } else new ErrorDialog(null, ErrorType.EXPLORER_UNSUPPORTED, shiftHistoryFile.toString());
+            } else new ErrorDialog(null, ErrorType.EXPLORER_UNSUPPORTED, Settings.getWorkingDir());
         }
-
     }
 
     @Override
