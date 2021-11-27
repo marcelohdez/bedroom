@@ -166,7 +166,6 @@ public class SelectTimeUI extends JPanel {
                     }
                     // If not shifting, set clock in time as selected time
                 } else proceedWith(TimeWindowType.CLOCK_OUT, newTime);
-                Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             }
             case CLOCK_OUT -> setClockOutTime(newTime);
             case START_BREAK -> {
@@ -200,6 +199,7 @@ public class SelectTimeUI extends JPanel {
 
             Main.setShift(lastTime, time);          // Set new shift times
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
+            Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             Main.update();
             finishSet();
 
@@ -213,6 +213,7 @@ public class SelectTimeUI extends JPanel {
             Main.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
+            Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             Main.update();
             finishSet();
 
