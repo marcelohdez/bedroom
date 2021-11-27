@@ -79,9 +79,7 @@ public class Main {
         });
 
         // Create a timer to run every second, updating the time
-        Timer t = new Timer(1000, e -> update());
-        t.setRepeats(true);
-        t.start(); // Start timer
+        new Timer(1000, e -> update()).start();
 
     }
 
@@ -236,6 +234,7 @@ public class Main {
             if (!isInBreak()) { // Show time clocked in
                 sb.append("Time: ");
                 Time.appendReadableTimeTo(sb, hr, min, sec);
+                if (Settings.showMoreShiftInfo()) sb.append(" - ($%)".replace("$", getPercentDone()));
                 if (LocalDateTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
                 sb.append("\n") // Line break
                         .append(getStats());
@@ -258,16 +257,45 @@ public class Main {
 
     }
 
+    public static String getPercentDone() {
+
+        DecimalFormat oneDecimal = new DecimalFormat("#.0");
+        return oneDecimal.format(((float) timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS) /
+                (float) timeWorkedTill(clockOutTime, ChronoUnit.SECONDS)) * 100);
+
+    }
+
     private static String getStats() {
 
-        return """
-                Orders: $orders ($perHr)
-                Needed: $needed, $left left"""
-                .replace("$orders", String.valueOf(orders))
-                .replace("$perHr", getOrdersPerHour())
-                .replace("$needed", String.valueOf(ordersNeeded))
-                .replace("$left", (orders < ordersNeeded) ?
-                        String.valueOf(ordersNeeded - orders) : "0");
+        if (!Settings.showMoreShiftInfo()) {
+            return """
+                    Orders: $o ($pH)
+                    Needed: $n, $l left"""
+                    .replace("$o", String.valueOf(orders))
+                    .replace("$pH", getOrdersPerHour())
+                    .replace("$n", String.valueOf(ordersNeeded))
+                    .replace("$l", (orders < ordersNeeded) ?
+                            String.valueOf(ordersNeeded - orders) : "0");
+        } else return """
+                Orders: $o/$n @ $pH,
+                $u until target ($t/hr)"""
+                .replace("$o", String.valueOf(orders))
+                .replace("$n", String.valueOf(ordersNeeded))
+                .replace("$pH", getOrdersPerHour())
+                .replace("$u", String.valueOf(getOrdersNeededForTarget()))
+                .replace("$t", String.valueOf(target));
+
+    }
+
+    // Tell us how many orders we need to reach our target
+    public static int getOrdersNeededForTarget() {
+
+        double neededForTarget = (double) secondsWorked/3600 * target;
+        if (neededForTarget > orders) {
+
+            return (int) Math.ceil(neededForTarget - orders);
+
+        } else return 0;
 
     }
 

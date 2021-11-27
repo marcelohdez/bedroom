@@ -85,7 +85,7 @@ public class UI extends JPanel implements ActionListener {
         if (neededForTarget > Main.getOrders()) { // Tell us how many orders we need to reach our target
 
             sb = new StringBuilder();
-            int amountMissing = (int) Math.round(Math.ceil(neededForTarget - Main.getOrders()));
+            int amountMissing = (int) Math.ceil(neededForTarget - Main.getOrders());
             addOrder.setToolTipText(sb.append("<html><b>You are ")
                     .append(amountMissing)
                     .append(" order")
@@ -103,14 +103,12 @@ public class UI extends JPanel implements ActionListener {
 
             sb = new StringBuilder();
             sb.append("<html><b>Current: ");
-
+            // Start time:
             if (Main.isOvernightShift()) sb.append(Main.getBreakStart().getDayOfWeek().toString(), 0, 3).append(" ");
-
             Time.append12HrTimeTo(sb, Main.getBreakStart().toLocalTime());
             sb.append("-");
-
+            // End time:
             if (Main.isOvernightShift()) sb.append(Main.getBreakEnd().getDayOfWeek().toString(), 0, 3).append(" ");
-
             Time.append12HrTimeTo(sb, Main.getBreakEnd().toLocalTime());
             sb.append("</b></html>");
 
