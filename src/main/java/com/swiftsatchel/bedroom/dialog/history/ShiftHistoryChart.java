@@ -8,8 +8,6 @@ import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
@@ -22,13 +20,12 @@ import java.util.TreeMap;
 /**
  * A histogram showing the orders per hour user ended with on past shifts
  */
-public class ShiftHistoryChart extends JPanel implements ActionListener, MouseListener {
+public class ShiftHistoryChart extends JPanel implements MouseListener {
 
     private final ShiftHistoryWindow container;
 
     private boolean noHistory = true; // Stays true if there's no history data to show
     private int pointsAmount = 8; // Amount of data points to show
-    private boolean showingAll = false;
 
     private final TreeMap<LocalDate, Float> shiftHistoryData = Main.getShiftHistory();
     private LocalDate[] keys = cleanUpKeys();
@@ -39,15 +36,15 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
     private float max; // Current max orders/hr value
     private int barXDiff; // Space from one bar to the next (really the thickness)
 
-    private final JMenuItem deleteDate = new JMenuItem("Delete");
     private LocalDate currentlyObserved; // Date that got right-clicked on
 
     public ShiftHistoryChart(ShiftHistoryWindow container) {
         this.container = container;
         addMouseListener(this);
 
+        JMenuItem deleteDate = new JMenuItem("Delete");
+        deleteDate.addActionListener((e) -> deleteSelectedDate());
         JPopupMenu delMenu = new JPopupMenu();
-        deleteDate.addActionListener(this);
         delMenu.add(deleteDate);
         setComponentPopupMenu(delMenu);
 
@@ -130,7 +127,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     private void drawBars(Graphics2D g) {
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
-        int lastMonth = 0;      // Keep track of last month value to only put month name when changed
+        boolean hasMonthChanged = false;
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
             // Get actual index by adding the offset and make sure graph is filled on last page
@@ -150,9 +147,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
                 g.fillRect(x, top, (barXDiff - 1), getHeight() - top);
 
                 // Draw bar value and date
-                if (point > 0) lastMonth = keys[index-1].getMonthValue();
-                drawBarValue(g, keys[index].getMonthValue() != lastMonth, value, x, top);
-                drawDate(g, index, x, lastMonth);
+                if (point > 0) hasMonthChanged = (keys[index].getMonthValue() != keys[index-1].getMonthValue());
+                drawBarValue(g, hasMonthChanged, value, x, top);
+                drawDate(g, index, x, hasMonthChanged);
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
         }
@@ -190,9 +187,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param g Graphics2D object to draw with
      * @param dateIndex Index of date on keys array
      * @param x X coordinate
-     * @param lastMonth Current last month value
+     * @param monthChanged whether the month value has changed since previous bar drawn
      */
-    private void drawDate(Graphics2D g, int dateIndex, int x, int lastMonth) {
+    private void drawDate(Graphics2D g, int dateIndex, int x, boolean monthChanged) {
 
         if (barXDiff > g.getFont().getSize()*1.3) { // If there is space to do so:
             g.setColor(Theme.contrastWithBnW(barColor));
@@ -200,7 +197,7 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
             g.fillRect(x, getHeight() - g.getFont().getSize(), (int) (g.getFont().getSize() * 1.4),
                     g.getFont().getSize()); // Draw box behind date
 
-            if (keys[dateIndex].getMonthValue() != lastMonth) { // If the month has changed:
+            if (monthChanged) { // If the month has changed:
                 drawMonth(g, barColor, dateIndex, x); // Draw month and save new value
             } else g.setColor(barColor); // Set color to write text on top of box
             g.drawString(String.valueOf(keys[dateIndex].getDayOfMonth()), x, getHeight() - 1); // Draw date number
@@ -282,14 +279,14 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      */
     public String getShownDateRange() {
         if (!noHistory) { // If there is history to show, get first and last dates currently shown:
-            int startingIndex = getTrueIndex(pointsAmount * (currentPage - 1)); // Get the true starting index
+            int start = getTrueIndex(pointsAmount * (currentPage - 1)); // Get the true starting index
 
             int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
             if (keys.length < pointsAmount) shown = keys.length;
 
             return "$s-$e"
-                    .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[startingIndex]))
-                    .replace("$e", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[startingIndex + shown - 1]));
+                    .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[start]))
+                    .replace("$e", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[start + shown - 1]));
         } else return "None";
     }
 
@@ -327,39 +324,27 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @param newValue New amount
      */
     public void setPointsAmount(int newValue) {
-        showingAll = false;
         pointsAmount = newValue;
         updateInfo();
     }
 
     /**
-     * Set amount of data points to show on screen
-     *
+     * Set amount of data points shown to be all available dates.
      */
     public void setPointsAmountToAll() {
         pointsAmount = keys.length; // All keys
-        showingAll = true;
         updateInfo();
     }
 
-    /**
-     * @return The current page
-     */
-    public int getCurrentPage() {
+    public int currentPage() {
         return currentPage;
     }
 
-    /**
-     * @return The total amount of pages
-     */
-    public int getTotalPages() {
+    public int totalPages() {
         return totalPages;
     }
 
-    /**
-     * @return Amount of dates available
-     */
-    public int getTotalDates() {
+    public int totalDates() {
         return keys.length;
     }
 
@@ -371,7 +356,9 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
      * @return new index
      */
     private int getTrueIndex(int val) {
-        if (!showingAll && currentPage == totalPages) val -= (pointsAmount - keys.length % pointsAmount);
+        if (keys.length > pointsAmount && currentPage == totalPages && keys.length % pointsAmount > 0)
+            val -= (pointsAmount - keys.length % pointsAmount);
+
         return val;
     }
 
@@ -379,36 +366,31 @@ public class ShiftHistoryChart extends JPanel implements ActionListener, MouseLi
         // Get bar at x coordinate
         int bar = getTrueIndex((int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff));
 
-        if ((pointsAmount * (currentPage - 1)) + bar < keys.length) { // If a date exists at this X position:
+        if (pointsAmount * (currentPage - 1) + bar < keys.length) { // If a date exists at this X position:
             currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
         } else {
             currentlyObserved = null; // And remove the value of currentlyObserved
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    private void deleteSelectedDate() {
 
-        if (e.getSource().equals(deleteDate)) {
-            if (currentlyObserved != null) {
-                if (new YesNoDialog(null, """
+        if (currentlyObserved != null) {
+            if (new YesNoDialog(null, """
                         Are you sure you want to
                         delete shift $observed?"""
-                        .replace("$observed",
-                                currentlyObserved.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                                        .toUpperCase(Locale.ROOT)))
-                        .accepted()) {
+                    .replace("$observed",
+                            currentlyObserved.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                                    .toUpperCase(Locale.ROOT)))
+                    .accepted()) {
 
-                    shiftHistoryData.remove(currentlyObserved);
-                    Main.removeFromHistory(currentlyObserved);
-                    keys = cleanUpKeys();
-                    repaint();
-                    container.updatePageInfo();
-                }
-            } else {
-                new AlertDialog(null, "No date selected");
+                shiftHistoryData.remove(currentlyObserved);
+                Main.removeFromHistory(currentlyObserved);
+                keys = cleanUpKeys();
+                repaint();
+                container.updatePageInfo();
             }
-        }
+        } else new AlertDialog(null, "No date selected");
 
     }
 

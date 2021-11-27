@@ -54,10 +54,10 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
         ArrayList<String> amounts = new ArrayList<>();
         amounts.add("8"); // View of 8 will always be available
-        if (chart.getTotalDates() >= 8) {
-            if (chart.getTotalDates() >= 16) {
+        if (chart.totalDates() >= 8) {
+            if (chart.totalDates() >= 16) {
                 amounts.add("16");
-                if (chart.getTotalDates() >= 32) {
+                if (chart.totalDates() >= 32) {
                     amounts.add("32");
                 }
             }
@@ -102,16 +102,15 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         add(botRow, BorderLayout.SOUTH);
 
         // Color bottom row a bit brighter than the background:
-        botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(),
-                Settings.isContrastEnabled() ? 200 : 20));
+        botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(), Settings.isContrastEnabled() ? 200 : 20));
 
     }
 
     public void updatePageInfo() {
 
-        pagesLabel.setText("Page " + chart.getCurrentPage() + "/" + chart.getTotalPages());
-        leftButton.setEnabled(chart.getCurrentPage() != 1); // Disable left button if on first page
-        rightButton.setEnabled(chart.getCurrentPage() != chart.getTotalPages()); // Disable right button if on last page
+        pagesLabel.setText("Page " + chart.currentPage() + "/" + chart.totalPages());
+        leftButton.setEnabled(chart.currentPage() != 1); // Disable left button if on first page
+        rightButton.setEnabled(chart.currentPage() != chart.totalPages()); // Disable right button if on last page
         datesShown.setText(chart.getShownDateRange());
 
     }
