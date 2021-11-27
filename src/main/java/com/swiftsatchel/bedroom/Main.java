@@ -213,19 +213,6 @@ public class Main {
         return clockOutTime != null;
     }
 
-    public static void changeOrders(int amount) { // Change orders
-
-        if (!isInBreak()) {
-            orders += amount;
-            if (orders < 0) orders = 0;
-            updateStats();
-        }
-
-        userPrefs.putInt("orders", orders);
-        wnd.pack(); // Pack the window in case of text changes.
-
-    }
-
     public static void updateStats() {
 
         StringBuilder sb = new StringBuilder();
@@ -253,7 +240,7 @@ public class Main {
 
         }
 
-        UI.display(sb.toString()); // Show on UI
+        wnd.display(sb.toString()); // Show on UI
 
     }
 
@@ -316,16 +303,8 @@ public class Main {
         return shiftHistory;
     }
 
-    public static long getTotalSecClockedIn() {
-        return secondsWorked;
-    }
-
     public static boolean breakTimesChosen() {
         return breakOutTime != null;
-    }
-
-    public static int getTarget() {
-        return target;
     }
 
     public static void setTarget(int newTarget) {

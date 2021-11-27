@@ -39,6 +39,10 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
     }
 
+    public void display(String text) {
+        ui.display(text);
+    }
+
     public void reloadAlwaysOnTop() {
         setAlwaysOnTop(Settings.getAlwaysOnTop());
     }
@@ -87,10 +91,9 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     public void keyPressed(KeyEvent e) {
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_DOWN ->
-                    Main.changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-            case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
-            case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
+            case KeyEvent.VK_DOWN -> Main.setOrders(Main.getOrders() - 1); // Remove orders
+            case KeyEvent.VK_0 -> enterBreak();             // Set break times
+            case KeyEvent.VK_UP -> Main.setOrders(Main.getOrders() + 1); // Add orders
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
             case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryWindow(this);
