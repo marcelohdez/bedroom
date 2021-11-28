@@ -221,8 +221,10 @@ public class Main {
             if (!isInBreak()) { // Show time clocked in
                 sb.append("Time: ");
                 Time.appendReadableTimeTo(sb, hr, min, sec);
-                if (Settings.showMoreShiftInfo()) sb.append(" - ($%)".replace("$", getPercentDone()));
-                if (LocalDateTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
+                if (Settings.showMoreShiftInfo()) {
+                    sb.append(" - ($%)".replace("$", getPercentDone()));
+
+                } else if (LocalDateTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
                 sb.append("\n") // Line break
                         .append(getStats());
             } else { // Show time left until our break ends =======
@@ -247,8 +249,12 @@ public class Main {
     public static String getPercentDone() {
 
         DecimalFormat oneDecimal = new DecimalFormat("#.0");
-        return oneDecimal.format(((float) timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS) /
-                (float) timeWorkedTill(clockOutTime, ChronoUnit.SECONDS)) * 100);
+        float percent = ((float) timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS) /
+                (float) timeWorkedTill(clockOutTime, ChronoUnit.SECONDS)) * 100;
+
+        if (percent < 100f) {
+            return oneDecimal.format(percent);
+        } else return "Done";
 
     }
 
