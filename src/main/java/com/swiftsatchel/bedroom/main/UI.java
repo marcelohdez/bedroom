@@ -96,7 +96,7 @@ public class UI extends JPanel {
 
         // Set Break button's tool tip
         if (Main.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
-            breakButton.setToolTipText("<html><b>Current break: $s-$e"
+            breakButton.setToolTipText("<html><b>Current break: $s-$e</b></html>"
                     // Start time:
                     .replace("$s", (Main.isOvernightShift() ?
                             Main.getBreakStart().getDayOfWeek().toString().substring(0, 3) : "") +
