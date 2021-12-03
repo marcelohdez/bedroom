@@ -34,15 +34,11 @@ public class Main {
     // ======= Variables =======
     private static BedroomWindow wnd; // Main window
 
-    // Time variables
-    private static int hr = 0;
-    private static int min = 0;
-    private static int sec = 0;
-
     // Time values
     private static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
 
     // Shift stats
+    private static long lastOrderChange; // Time of last order change, in milliseconds
     private static int orders = 0;
     private static int target; // Target orders/hr
     private static int ordersNeeded = 0;
@@ -169,40 +165,17 @@ public class Main {
     public static void update() {
 
         if (timesChosen()) { // Have we chosen clock in and out times?
-            long seconds;
 
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
                 wnd.enableButtons(); // Default to enabled buttons
 
-                if (LocalDateTime.now().isBefore(clockOutTime)) { // If we have not finished our shift:
+                if (isInBreak()) wnd.disableButtons(UI.Buttons.ADD_ORDER); // Disable add order button during break
+                ordersNeeded = Math.round(target * (secondsWorkedBy(clockOutTime) / 3600f));
 
-                    if (isInBreak()) { // If we are in our break, get time left until break ends:
-                        seconds = LocalDateTime.now().until(breakOutTime, ChronoUnit.SECONDS);
-                        wnd.disableButtons(UI.Buttons.ADD_ORDER); // Disable add order button during break
-                    } else { // If not, get time worked
-                        seconds = timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS);
-                    }
+            } else wnd.disableButtons(UI.Buttons.BOTH); // Disable buttons until we clock in
 
-                // If we have passed our clock out time get total time worked:
-                } else seconds = timeWorkedTill(clockOutTime, ChronoUnit.SECONDS);
-
-                ordersNeeded = Math.round(target * (timeWorkedTill(clockOutTime, ChronoUnit.MINUTES) / 60F));
-
-            } else { // Else if it is before our shift starts:
-
-                wnd.disableButtons(UI.Buttons.BOTH); // Disable buttons until we clock in
-                // Get seconds left until we have to clock in
-                seconds = LocalDateTime.now().until(clockInTime, ChronoUnit.SECONDS) + 1;
-
-            }
-
-            sec = (int) (seconds % 60);
-            min = (int) (seconds / 60) % 60;
-            hr = (int) Math.floor(seconds / 60F / 60F);
-            secondsWorked = timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS);
-
-            updateStats(); // Update stats and show on screen
+            updateStatsText(); // Update stats and show on screen
             wnd.pack();
 
         }
@@ -213,49 +186,47 @@ public class Main {
         return clockOutTime != null;
     }
 
-    public static void updateStats() {
+    public static void updateStatsText() {
 
         StringBuilder sb = new StringBuilder();
         if (clockInTimePassed()) { // Get stats =======
 
             if (!isInBreak()) { // Show time clocked in
-                sb.append("Time: ");
-                Time.appendReadableTimeTo(sb, hr, min, sec);
-                if (Settings.showMoreShiftInfo()) {
-                    sb.append(" - ($%)".replace("$", getPercentDone()));
-
-                } else if (LocalDateTime.now().isAfter(clockOutTime)) sb.append(" (Done)");
-                sb.append("\n") // Line break
-                        .append(getStats());
+                sb.append("Time: $t $e\n"
+                        .replace("$t", Time.secondsToTime(secondsWorked))
+                        .replace("$e", getPercentDone()));
             } else { // Show time left until our break ends =======
-                sb.append("On break, ");
-                Time.appendReadableTimeTo(sb, hr, min, sec);
-                sb.append(" left\n")
-                        .append(getStats());
+                sb.append("On break, $t left\n"
+                        .replace("$t",
+                                Time.secondsToTime(LocalDateTime.now().until(breakOutTime, ChronoUnit.SECONDS))));
             }
 
+            sb.append(getStats()); // Add stats at the end
+
         } else { // Show "Time until clocked in" =======
-
-            sb.append("Time until clocked in:\n");
-            Time.appendReadableTimeTo(sb, hr, min, sec);
-            sb.append("\n");
-
+            sb.append("""
+                    Time until clocked in:
+                    $t
+                    """
+                    .replace("$t",
+                            Time.secondsToTime(LocalDateTime.now().until(clockInTime, ChronoUnit.SECONDS))));
         }
 
+        secondsWorked = secondsWorkedBy(LocalDateTime.now());
         wnd.display(sb.toString()); // Show on UI
 
     }
 
     public static String getPercentDone() {
+        float percent = (secondsWorked / (float) secondsWorkedBy(clockOutTime)) * 100f;
 
-        DecimalFormat oneDecimal = new DecimalFormat("#.0");
-        float percent = ((float) timeWorkedTill(LocalDateTime.now(), ChronoUnit.SECONDS) /
-                (float) timeWorkedTill(clockOutTime, ChronoUnit.SECONDS)) * 100;
+        if (Settings.showMoreShiftInfo()) {
+            if (percent < 100f) {
+                return "(p)".replace("p", new DecimalFormat("#.0").format(percent));
+            } else return "(Done)";
+        } else if (percent >= 100f) return "(Done)";
 
-        if (percent < 100f) {
-            return oneDecimal.format(percent);
-        } else return "Done";
-
+        return "";
     }
 
     private static String getStats() {
@@ -271,7 +242,7 @@ public class Main {
                             String.valueOf(ordersNeeded - orders) : "0");
         } else return """
                 Orders: $o/$n @ $pH,
-                $u until target ($t/hr)"""
+                $u until target of $t/hr"""
                 .replace("$o", String.valueOf(orders))
                 .replace("$n", String.valueOf(ordersNeeded))
                 .replace("$pH", getOrdersPerHour())
@@ -318,6 +289,10 @@ public class Main {
         userPrefs.putInt("target", newTarget);
     }
 
+    public static long getLastOrderChange() {
+        return lastOrderChange;
+    }
+
     public static int getOrders() {
         return orders;
     }
@@ -327,13 +302,14 @@ public class Main {
     }
 
     public static String getOrdersPerHour() {
-        return twoDecs.format((float) (orders * 3600) / secondsWorked) + "/hr";
+        return twoDecs.format(orders * 3600f / secondsWorked) + "/hr";
     }
 
     public static void setOrders(int newVal) {
         if (clockInTimePassed() && !isInBreak()) {
             orders = newVal;
             userPrefs.putInt("orders", newVal);
+            lastOrderChange = System.currentTimeMillis();
             update();
         }
     }
@@ -383,8 +359,7 @@ public class Main {
 
         // Store the current shift end date and the orders per hour within the chosen time.
         shiftHistory.put(LocalDate.now(),
-                Float.valueOf(twoDecs.format((float) (orders * 3600) /
-                        timeWorkedTill(time, ChronoUnit.SECONDS))));
+                Float.valueOf(twoDecs.format(orders * 3600f / secondsWorkedBy(time))));
         userPrefs.put("shiftEnd", time.toString()); // Save clocked out time
 
         exit();
@@ -392,28 +367,28 @@ public class Main {
     }
 
     /**
-     * Get time worked from clock in time to a specified time, in the unit chosen.
+     * Get time worked from clock in time to the specified time, in seconds.
      *
      * @param till Time to calculate off of
-     * @param unit Unit of time to use
-     * @return The amount of *unit* worked from clock in time to chosen *till* time
+     * @return The amount of seconds worked from clock in time to chosen time
      */
-    private static long timeWorkedTill(LocalDateTime till, ChronoUnit unit) {
+    private static long secondsWorkedBy(LocalDateTime till) {
 
         if (till.isAfter(clockOutTime)) { // If time is beyond clock out time, only measure up to clock out time:
-            return timeWorkedTill(clockOutTime, unit);
+            return secondsWorkedBy(clockOutTime);
         }
 
         if (breakOutTime == null) { // If there is no break:
-            return clockInTime.until(till, unit); // Get seconds until the time chosen
+            return clockInTime.until(till, ChronoUnit.SECONDS); // Get seconds until the time chosen
         } else {
             if (till.isBefore(breakInTime)) { // If we have not started our break:
-                return clockInTime.until(till, unit); // Get seconds until the time chosen
+                return clockInTime.until(till, ChronoUnit.SECONDS); // Get seconds until the time chosen
             } else if (till.isBefore(breakOutTime)) { // If we are in our break:
-                return clockInTime.until(breakInTime, unit);
+                return clockInTime.until(breakInTime, ChronoUnit.SECONDS);
             } else { // If we have passed our break:
                 // Return the time between clocking in and wanted time minus the break length
-                return clockInTime.until(till, unit) - breakInTime.until(breakOutTime, unit);
+                return clockInTime.until(till, ChronoUnit.SECONDS) -
+                        breakInTime.until(breakOutTime, ChronoUnit.SECONDS);
             }
         }
 

@@ -10,12 +10,10 @@ import com.swiftsatchel.bedroom.util.Time;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class UI extends JPanel {
 
-    // Components used outside of constructor
+    // Components
     private final JTextArea stats = new JTextArea("Please clock in.\n\n");
     private final JButton breakButton = new JButton("Set Break");
     private final JButton addOrder = new JButton("Add Order");
@@ -59,7 +57,7 @@ public class UI extends JPanel {
         stats.addKeyListener(parent);
         stats.setComponentPopupMenu(statsPopup);
         addOrder.addKeyListener(parent);
-        addOrder.addActionListener((e) -> Main.setOrders(Main.getOrders() + 1));
+        addOrder.addActionListener((e) -> Main.setOrders(Main.getOrders() + 1)); // Add an order
         addOrder.setMargin(new Insets(17, 24, 17, 24));
         breakButton.addKeyListener(parent);
         breakButton.addActionListener((e) -> parent.enterBreak());
@@ -77,24 +75,26 @@ public class UI extends JPanel {
 
     public void display(String message) {
         stats.setText(message);
-        setTooltips();
+        setAddOrderToolTip();
+        setBreakButtonToolTip();
+        setStatsToolTip();
     }
 
-    private void setTooltips() {
+    private void setAddOrderToolTip() {
 
-        // Add Order button's tool tips
         if (Main.getOrdersNeededForTarget() > Main.getOrders()) { // Tell us how many orders we need to reach our target
-
             addOrder.setToolTipText("<html><b>You are $n orders behind your hourly target."
                     .replace("$n", String.valueOf(Main.getOrdersNeededForTarget())));
-
         } else if (Main.getOrders() > Main.getOrdersNeeded()) {
             addOrder.setToolTipText("<html><b>You are done for the day!</b></html>");
         } else { // If we have gotten all the orders needed for our shift.
             addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
         }
 
-        // Set Break button's tool tip
+    }
+
+    private void setBreakButtonToolTip() {
+
         if (Main.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
             breakButton.setToolTipText("<html><b>Current break: $s-$e</b></html>"
                     // Start time:
@@ -105,6 +105,17 @@ public class UI extends JPanel {
                     .replace("$e", (Main.isOvernightShift() ?
                             Main.getBreakEnd().getDayOfWeek().toString().substring(0, 3) : "") +
                             Time.makeTime12Hour(Main.getBreakEnd().toLocalTime())));
+        }
+
+    }
+
+    private void setStatsToolTip() {
+
+        if (Main.getLastOrderChange() > 0) {
+            long secondsSince = (System.currentTimeMillis() - Main.getLastOrderChange())/1000;
+
+            stats.setToolTipText("<html><b>Last order change was $ts ago</b></html>"
+                    .replace("$t", Time.secondsToTime(secondsSince)));
         }
 
     }
