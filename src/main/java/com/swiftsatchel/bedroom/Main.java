@@ -222,7 +222,7 @@ public class Main {
 
         if (Settings.showMoreShiftInfo()) {
             if (percent < 100f) {
-                return "(p)".replace("p", new DecimalFormat("#.0").format(percent));
+                return "(p%)".replace("p", new DecimalFormat("#.0").format(percent));
             } else return "(Done)";
         } else if (percent >= 100f) return "(Done)";
 
