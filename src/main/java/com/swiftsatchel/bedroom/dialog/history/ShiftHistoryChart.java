@@ -127,7 +127,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      */
     private void drawBars(Graphics2D g) {
         int emptySpaces = 0;    // Amount of NaN values, to ignore them when drawing the bars
-        boolean hasMonthChanged = false;
+        boolean hasMonthChanged = true;
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
             // Get actual index by adding the offset and make sure graph is filled on last page
