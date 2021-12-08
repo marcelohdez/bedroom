@@ -1,10 +1,10 @@
 package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;

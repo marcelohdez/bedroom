@@ -2,7 +2,10 @@ package com.swiftsatchel.bedroom.dialog.settings;
 
 import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
 import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.util.*;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
+import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

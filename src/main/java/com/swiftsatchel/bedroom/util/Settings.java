@@ -2,8 +2,6 @@ package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
-import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;

@@ -1,6 +1,8 @@
 package com.swiftsatchel.bedroom.dialog.alert;
 
-import com.swiftsatchel.bedroom.util.*;
+import com.swiftsatchel.bedroom.util.Settings;
+import com.swiftsatchel.bedroom.util.Theme;
+import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;

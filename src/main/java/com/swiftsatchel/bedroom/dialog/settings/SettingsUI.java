@@ -1,9 +1,11 @@
 package com.swiftsatchel.bedroom.dialog.settings;
 
+import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.FloatingSpinner;
 import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.util.*;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
+import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
