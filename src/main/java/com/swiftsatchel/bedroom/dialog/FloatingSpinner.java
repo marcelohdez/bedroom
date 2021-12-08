@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.components;
+package com.swiftsatchel.bedroom.dialog;
 
 import com.swiftsatchel.bedroom.util.Settings;
 

@@ -100,4 +100,22 @@ public final class Time { // Time operations
 
     }
 
+    /**
+     * Converts the amount of seconds given into "readable" time, or HH:MM:SS format,
+     * with the hours and minutes values being added as needed.
+     *
+     * @param seconds Seconds to convert
+     * @return "Readable" time, in HH:MM:SS format, if there are hours or minutes to show.
+     */
+    public static String secondsToTime(long seconds) {
+        StringBuilder sb = new StringBuilder();
+
+        int sec = (int) seconds % 60;
+        int min = ((int) seconds / 60) % 60;
+        int hr = (int) Math.floor(seconds / 3600f);
+
+        appendReadableTimeTo(sb, hr, min, sec);
+        return sb.toString();
+    }
+
 }

@@ -1,9 +1,11 @@
 package com.swiftsatchel.bedroom.dialog.settings;
 
-import com.swiftsatchel.bedroom.components.FloatingSpinner;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.util.*;
+import com.swiftsatchel.bedroom.dialog.FloatingSpinner;
+import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
+import com.swiftsatchel.bedroom.util.Ops;
+import com.swiftsatchel.bedroom.util.Settings;
+import com.swiftsatchel.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,6 +46,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
     private final JCheckBox recoverCrash = new JCheckBox("Crash recovery");
     private final JCheckBox askBeforeEarlyClose = new JCheckBox("Ask before clocking out early");
+    private final JCheckBox showMoreShiftInfo = new JCheckBox("Show more shift info");
 
     public SettingsUI(SettingsDialog parent) { // Settings UI constructor
         this.parent = parent;
@@ -59,13 +62,13 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Add rows
         createLabelRow("Colors");
-
         createListBoxRow("Preset:", themeListBox, Main.userPrefs.getInt("lastTheme", 0));
         createColoringPanel();
         createListBoxRow("Currently editing:", coloringListBox, Main.userPrefs.getInt("lastColoring", 0));
         createLabelRow("Misc.");
         createCheckBoxRow(alwaysOnTop, recoverCrash);
         createCheckBoxRow(askBeforeEarlyClose);
+        createCheckBoxRow(showMoreShiftInfo);
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
         createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.");
@@ -174,24 +177,29 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     private void createMiscOptions() {
 
-        // Stay on top checkbox
         alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
         alwaysOnTop.setSelected(Settings.getAlwaysOnTop());
-        // Recover from crashes (closing Bedroom suddenly)
+
         recoverCrash.setToolTipText("<html><b>Load last shift if currently in it if Bedroom wasn't able<br>" +
                 "to clock out</html></b>");
         recoverCrash.setSelected(Settings.isCrashRecoveryEnabled());
-        // Default shift length
+
         shiftLengthListBox.setSelectedIndex(Math.min(Settings.getDefaultShiftLength() - 1, defTargetListBox.getItemCount()));
         shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
                 "clock out time.<br></b></html>");
-        // Default target value
+
         defTargetListBox.setSelectedIndex(Math.min(Settings.getDefaultTarget() - 1, defTargetListBox.getItemCount()));
         defTargetListBox.setToolTipText("<html><b>Default target value in clock out time dialog</b></html>");
-        // Ask before clocking out early
+
         askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
                 "a dialog asks to input new clock out time</b></html>");
         askBeforeEarlyClose.setSelected(Settings.getAskBeforeEarlyClose());
+
+        showMoreShiftInfo.setToolTipText("<html><b>Show more information about the current shift in main window<br></b>" +
+                "Like how many orders are left until you reach your target<br>" +
+                "orders/hr, which can always be seen by hovering over the<br>" +
+                "Add Order button.</html>");
+        showMoreShiftInfo.setSelected(Settings.showMoreShiftInfo());
 
     }
 
@@ -445,7 +453,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Save settings
         Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
                 shiftLengthListBox.getSelectedIndex() + 1, recoverCrash.isSelected(),
-                defTargetListBox.getSelectedIndex() + 1);
+                defTargetListBox.getSelectedIndex() + 1, showMoreShiftInfo.isSelected());
         Settings.setHighContrastTo(highContrast);
         // Since high contrast overwrites colors anyways, only do this if it is false
         if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);

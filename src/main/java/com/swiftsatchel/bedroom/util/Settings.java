@@ -2,8 +2,6 @@ package com.swiftsatchel.bedroom.util;
 
 import com.swiftsatchel.bedroom.Main;
 import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
-import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -24,6 +22,7 @@ public final class Settings {
     private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
     private static boolean recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
     private static boolean askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
+    private static boolean showMoreShiftInfo = Main.userPrefs.getBoolean("showMoreShiftInfo", false);
     private static int defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
     private static int defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
 
@@ -90,17 +89,19 @@ public final class Settings {
      * @param stayOnTop Make window always stay on top
      */
     public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength,
-                                boolean crashRecovery, int defTarget) {
+                                boolean crashRecovery, int defTarget, boolean showMoreShiftInfo) {
 
         Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
         Main.userPrefs.putBoolean("recoverFromCrashes", crashRecovery);
         Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
+        Main.userPrefs.putBoolean("showMoreShiftInfo", showMoreShiftInfo);
         Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
         Main.userPrefs.putInt("defaultTarget", defTarget);
 
         alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
         recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
         Settings.askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
+        Settings.showMoreShiftInfo = Main.userPrefs.getBoolean("showMoreShiftInfo", false);
         Settings.defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
         defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
 
@@ -118,17 +119,13 @@ public final class Settings {
     }
 
     /**
-     * Get working directory, where shift history and other data files are stored.
-     *
-     * @return Path to folder as a String
+     * @return Path to working directory (where non preference data should be stored) as a String
      */
     public static String getWorkingDir() {
         return workingDir;
     }
 
     /**
-     * Get always on top value from user preferences.
-     *
      * @return The value of always on top's user preference key
      */
     public static boolean getAlwaysOnTop() {
@@ -136,8 +133,6 @@ public final class Settings {
     }
 
     /**
-     * Get whether the crash recovery setting is enabled
-     *
      * @return Whether crash recovery is enabled
      */
     public static boolean isCrashRecoveryEnabled() {
@@ -145,8 +140,6 @@ public final class Settings {
     }
 
     /**
-     * Get ask before early close boolean from user preferences.
-     *
      * @return Value of ask before early close
      */
     public static boolean getAskBeforeEarlyClose() {
@@ -154,8 +147,13 @@ public final class Settings {
     }
 
     /**
-     * Get default shift length from user preferences
-     *
+     * @return Whether user has enabled "Show more shift info" option
+     */
+    public static boolean showMoreShiftInfo() {
+        return showMoreShiftInfo;
+    }
+
+    /**
      * @return Default amount of hours in a shift.
      */
     public static int getDefaultShiftLength() {
@@ -163,8 +161,6 @@ public final class Settings {
     }
 
     /**
-     * Get default target value from user preferences
-     *
      * @return Default target to set in clock in window.
      */
     public static int getDefaultTarget() {

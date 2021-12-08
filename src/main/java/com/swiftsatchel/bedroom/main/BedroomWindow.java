@@ -1,10 +1,10 @@
 package com.swiftsatchel.bedroom.main;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
 import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
@@ -20,7 +20,7 @@ import java.time.LocalTime;
 
 public class BedroomWindow extends JFrame implements WindowParent, WindowListener, KeyListener {
 
-    private final UI ui;
+    private final UI ui = new UI(this);
 
     public BedroomWindow() {
 
@@ -31,17 +31,16 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
         addWindowListener(this);
         addKeyListener(this);
 
-        ui = new UI(this);
         add(ui);
 
         pack();
-        ui.sizeButtons();
-        pack();
-
         setLocationRelativeTo(null);
-
         setVisible(true);
 
+    }
+
+    public void display(String text) {
+        ui.display(text);
     }
 
     public void reloadAlwaysOnTop() {
@@ -92,10 +91,9 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
     public void keyPressed(KeyEvent e) {
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_DOWN ->
-                    Main.changeOrders(-1); // Remove orders with BckSpc & Down Arrow
-            case KeyEvent.VK_0 -> enterBreak();             // Set break times with 0
-            case KeyEvent.VK_UP -> Main.changeOrders(1); // Add orders with up arrow
+            case KeyEvent.VK_DOWN -> Main.setOrders(Main.getOrders() - 1, true); // Remove orders
+            case KeyEvent.VK_0 -> enterBreak();             // Set break times
+            case KeyEvent.VK_UP -> Main.setOrders(Main.getOrders() + 1, true); // Add orders
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
             case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryWindow(this);

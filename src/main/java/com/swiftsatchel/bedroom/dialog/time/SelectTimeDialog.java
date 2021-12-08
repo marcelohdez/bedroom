@@ -1,9 +1,10 @@
 package com.swiftsatchel.bedroom.dialog.time;
 
 import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.ShiftHistoryWindow;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
 import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
+import com.swiftsatchel.bedroom.enums.TimeWindowType;
+import com.swiftsatchel.bedroom.main.BedroomWindow;
 import com.swiftsatchel.bedroom.util.Settings;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
@@ -19,40 +20,32 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
 
     private final SelectTimeUI ui;
     public final TimeWindowType type;
-    private final WindowParent parent;
+    private final BedroomWindow initParent;
+    private final SelectTimeDialog lastDialog; // Used in cases where two select time dialogs are needed
     private boolean shifting = false;
 
-    public SelectTimeDialog(WindowParent parent, TimeWindowType type) {
+    public SelectTimeDialog(BedroomWindow parent, TimeWindowType type) {
         parent.setDisabled(true);
         this.type = type;
-        this.parent = parent;
-        ui = new SelectTimeUI(this); // Create ui based on window type
+        this.initParent = parent;
+        lastDialog = null;
+        ui = new SelectTimeUI(this);
         init();
     }
 
     // Creates a continued select time dialog , given a parent and window type, plus the last selected time
     // and the original parent of this group of select time dialogs
-    public SelectTimeDialog(WindowParent parent, TimeWindowType type, LocalDateTime lastTime, WindowParent initParent) {
+    public SelectTimeDialog(SelectTimeDialog parent, TimeWindowType type, LocalDateTime lastTime) {
         this.type = type;
-        this.parent = parent;
-        ui = new SelectTimeUI(this, lastTime, initParent); // Create ui based on window type
+        initParent = parent.getInitParent();
+        lastDialog = parent;
+        ui = new SelectTimeUI(this, lastTime); // Create continuation UI
         init();
     }
 
     private void init() {
 
-        // Initial properties
-        reloadAlwaysOnTop();
-        setResizable(false);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(this);
-        addKeyListener(this);                   // Add key listener for shortcuts
-        add(ui);                                // Add the UI
-
-        pack();
-        setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
-
-        // Set window title and time per type
+        // Set window title per type
         switch (type) {
             case CLOCK_IN -> setTitle("Clocking in:");
             case CLOCK_OUT -> setTitle("Clocking out:");
@@ -61,15 +54,19 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             case EARLY_CLOCK_OUT -> setTitle("Early clock out:");
         }
 
-        centerOnParent();
+        // Initial properties
+        reloadAlwaysOnTop();
+        setResizable(false);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
+        addKeyListener(this);                   // Add key listener for shortcuts
+        add(ui);                                // Add the UI
+        pack();
+        setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
+        // Center on parent
+        int[] arr = initParent.getXYWidthHeight();
+        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
         setVisible(true); // Show self
-
-    }
-
-    private void centerOnParent() {
-
-        setLocation(parent.getXYWidthHeight()[0] + ((parent.getXYWidthHeight()[2] / 2) - (getWidth() / 2)),
-                parent.getXYWidthHeight()[1] + ((parent.getXYWidthHeight()[3] / 2) - (getHeight() / 2)));
 
     }
 
@@ -82,23 +79,25 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             case CLOCK_IN -> Main.exit();
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
-                parent.makeVisible(true);
+                lastDialog.makeVisible(true);
             }
             case START_BREAK, EARLY_CLOCK_OUT -> dispose();  // Close window
         }
-        parent.setDisabled(false);
+        if (lastDialog != null) {
+            lastDialog.setDisabled(false);
+        } else initParent.setDisabled(false);
     }
 
     /**
      * Dispose this window and its parent, to finish this set and clear up memory
      */
     protected void finish() {
-        ((SelectTimeDialog) parent).dispose();
+        if (lastDialog != null) lastDialog.dispose();
         dispose();
     }
 
-    public WindowParent getWindowParent() {
-        return parent;
+    public BedroomWindow getInitParent() {
+        return initParent;
     }
 
     public boolean isShifting() {
@@ -118,7 +117,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     @Override
     public void reloadSettings() {
 
-        ui.colorSelf();
+        ui.reColorComps();
         reloadAlwaysOnTop();
 
     }

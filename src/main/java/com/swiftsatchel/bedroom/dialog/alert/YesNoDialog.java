@@ -1,39 +1,36 @@
 package com.swiftsatchel.bedroom.dialog.alert;
 
-import com.swiftsatchel.bedroom.util.Ops;
 import com.swiftsatchel.bedroom.util.WindowParent;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class YesNoDialog extends AlertDialog implements ActionListener {
+public class YesNoDialog extends AlertDialog {
 
-    private final JButton acceptButton;
-    private boolean accepted;
+    private boolean accepted = false;
 
     public YesNoDialog(WindowParent parent, String message) {
-        super(parent, message, true);
+        super(parent);
 
-        JButton cancelButton = new JButton("No");
-        acceptButton = new JButton("Yes");
-        addToButtonRow(acceptButton, this, false);
-        addToButtonRow(cancelButton, this, true);
-        Ops.setHandCursorOnCompsFrom(getButtonRow());
+        okButton.setText("Yes");
+        okButton.addActionListener((e) -> {
+            accepted = true;
+            setVisible(false); // Hide, allowing any one asking for accepted() to get their value
+            dispose();  // Dispose window
+        });
+
+        JButton noButton = new JButton("No");
+        noButton.setMargin(okButton.getMargin()); // Set margins to match okButton's
+        addToButtonRow(noButton, (e) -> {
+            setVisible(false); // Hide, allowing any one asking for accepted() to get their value
+            dispose();  // Dispose window
+        });
+
+        initDialog("Alert", message);
 
     }
 
     public boolean accepted() {
-        requestFocus();
-        setVisible(true);
         return accepted;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        accepted = (e.getSource() == acceptButton);
-        setVisible(false);
-        dispose();
     }
 
 }
