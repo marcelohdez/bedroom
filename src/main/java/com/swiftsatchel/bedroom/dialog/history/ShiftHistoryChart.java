@@ -411,7 +411,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
                 repaint();
                 container.updatePageInfo();
             }
-        } else new AlertDialog(null, "No date selected");
+        } else new AlertDialog(null, "No existing date selected");
 
     }
 
