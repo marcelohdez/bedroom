@@ -80,7 +80,9 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
             // Update pages
             int lastTotal = totalPages;
             totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
-            if (totalPages != lastTotal) currentPage = totalPages; // If page amount changed, go to newest dates
+            if (totalPages != lastTotal) currentPage = totalPages; // If page amount changed, go to the newest dates
+            canShowToday = Main.timesChosen() && currentPage == totalPages;
+
             // Update range for drawing the background lines
             max = 0;
             for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
@@ -147,9 +149,12 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
                 g.fillRect(x, top, (barXDiff - 1), getHeight() - top);
 
                 // Draw bar value and date
-                if (point > 0) hasMonthChanged = (keys[index].getMonthValue() != keys[index-1].getMonthValue());
-                drawBarValue(g, hasMonthChanged, value, x, top);
-                drawDate(g, index, x, hasMonthChanged);
+                if (point > 0 && !onToday) hasMonthChanged = (keys[index].getMonthValue() != keys[index-1].getMonthValue());
+                drawBarValue(g, onToday || hasMonthChanged, value, x, top);
+                drawDate(g, onToday ? LocalDate.now().getDayOfMonth() : keys[index].getDayOfMonth(), x,
+                        onToday || hasMonthChanged,
+                        onToday ? "NOW" : keys[index].getMonth().name().substring(0, 3));
+                if (onToday) break;
 
             } else emptySpaces++; // Else add as a spot to ignore on next data point
         }
@@ -185,11 +190,11 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      * Draw date of shift at the bottom of the bar if there is space
      *
      * @param g Graphics2D object to draw with
-     * @param dateIndex Index of date on keys array
+     * @param dayOfMonth Current day of month
      * @param x X coordinate
      * @param monthChanged whether the month value has changed since previous bar drawn
      */
-    private void drawDate(Graphics2D g, int dateIndex, int x, boolean monthChanged) {
+    private void drawDate(Graphics2D g, int dayOfMonth, int x, boolean monthChanged, String month) {
 
         if (barXDiff > g.getFont().getSize()*1.3) { // If there is space to do so:
             g.setColor(Theme.contrastWithBnW(barColor));
@@ -198,9 +203,9 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
                     g.getFont().getSize()); // Draw box behind date
 
             if (monthChanged) { // If the month has changed:
-                drawMonth(g, barColor, dateIndex, x); // Draw month and save new value
+                drawMonthText(g, barColor, month, x); // Draw month and save new value
             } else g.setColor(barColor); // Set color to write text on top of box
-            g.drawString(String.valueOf(keys[dateIndex].getDayOfMonth()), x, getHeight() - 1); // Draw date number
+            g.drawString(String.valueOf(dayOfMonth), x, getHeight() - 1); // Draw date number
 
         }
 
@@ -212,17 +217,17 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      *
      * @param g Graphics2D object to draw with
      * @param textColor Text color
-     * @param dateIndex Index of date on keys array
+     * @param text Text to show
      * @param y Y coordinate of drawing (really x, because coordinate system is flipped -90 deg.)
      */
-    private void drawMonth(Graphics2D g, Color textColor, int dateIndex, int y) {
+    private void drawMonthText(Graphics2D g, Color textColor, String text, int y) {
 
         int fontSize = g.getFont().getSize();
         g.rotate(-Math.PI/2); // Rotate -90 degrees
         // Draw box behind month name
         g.fillRect(-(getHeight() - (int)(fontSize*1.1)), y, (int)(fontSize * 2.4), (int)(fontSize * 1.2));
         g.setColor(textColor); // Set back to text color
-        g.drawString(keys[dateIndex].getMonth().name().substring(0, 3), -(getHeight() - (int)(fontSize*1.2)), y + fontSize);
+        g.drawString(text, -(getHeight() - (int)(fontSize*1.2)), y + fontSize);
         g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
 
     }
