@@ -38,7 +38,7 @@ public class Main {
     private static LocalDateTime clockInTime, clockOutTime, breakInTime, breakOutTime;
 
     // Shift stats
-    private static long lastOrderChange; // Time of last order change, in milliseconds
+    private static long lastOrderChange = 0; // Time of last order change, in milliseconds
     private static int orders = 0;
     private static int target; // Target orders/hr
     private static int ordersNeeded = 0;
@@ -81,14 +81,14 @@ public class Main {
 
     private static void init() {
 
-        wnd = new BedroomWindow(); // Set main window
+        wnd = new BedroomWindow(); // Create  window
 
-        if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) {
+        if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) { // Recover from crash
 
             setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
-                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));    // times
+                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
             setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
-            setOrders(userPrefs.getInt("orders", 0));   // Set orders to saved value
+            setOrders(userPrefs.getInt("orders", 0), false);   // Set orders to saved value
 
             if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
                 setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
@@ -305,11 +305,11 @@ public class Main {
         return twoDecs.format(orders * 3600f / secondsWorked) + "/hr";
     }
 
-    public static void setOrders(int newVal) {
+    public static void setOrders(int newVal, boolean changeLastOrderTime) {
         if (clockInTimePassed() && !isInBreak()) {
             orders = newVal;
             userPrefs.putInt("orders", newVal);
-            lastOrderChange = System.currentTimeMillis();
+            if (changeLastOrderTime) lastOrderChange = System.currentTimeMillis();
             update();
         }
     }

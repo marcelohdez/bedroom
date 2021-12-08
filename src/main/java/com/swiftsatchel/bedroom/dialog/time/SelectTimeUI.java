@@ -202,7 +202,7 @@ public class SelectTimeUI extends JPanel {
 
             Main.setShift(lastTime, time);          // Set new shift times
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
+            Main.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             Main.update();
             finishSet();
 
@@ -216,7 +216,7 @@ public class SelectTimeUI extends JPanel {
             Main.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
             Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.setOrders(0); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
+            Main.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
             Main.update();
             finishSet();
 

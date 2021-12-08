@@ -43,7 +43,7 @@ public class UI extends JPanel {
         editOrders.addActionListener((e) -> {
             if (Main.getOrders() < 999) {
                 Main.setOrders(new FloatingSpinner(Main.getOrders(),
-                        0, 999).showSelf());
+                        0, 999).showSelf(), true);
                 parent.pack(); // Update UI and window size for new number
             } else new AlertDialog(parent, """
                     You have way too many orders,
@@ -57,7 +57,7 @@ public class UI extends JPanel {
         stats.addKeyListener(parent);
         stats.setComponentPopupMenu(statsPopup);
         addOrder.addKeyListener(parent);
-        addOrder.addActionListener((e) -> Main.setOrders(Main.getOrders() + 1)); // Add an order
+        addOrder.addActionListener((e) -> Main.setOrders(Main.getOrders() + 1, true)); // Add an order
         addOrder.setMargin(new Insets(17, 24, 17, 24));
         breakButton.addKeyListener(parent);
         breakButton.addActionListener((e) -> parent.enterBreak());
@@ -112,7 +112,7 @@ public class UI extends JPanel {
     private void setStatsToolTip() {
 
         if (Main.getLastOrderChange() > 0) {
-            long secondsSince = (System.currentTimeMillis() - Main.getLastOrderChange())/1000;
+            long secondsSince = (System.currentTimeMillis() - Main.getLastOrderChange()) / 1000;
 
             stats.setToolTipText("<html><b>Last order change was $ts ago</b></html>"
                     .replace("$t", Time.secondsToTime(secondsSince)));
