@@ -60,10 +60,10 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
         ArrayList<String> amounts = new ArrayList<>();
         amounts.add("8"); // View of 8 will always be available
-        if (chart.totalDates() >= 8) {
-            if (chart.totalDates() >= 16) {
+        if (chart.totalDates() > 8) {
+            if (chart.totalDates() > 16) {
                 amounts.add("16");
-                if (chart.totalDates() >= 32) {
+                if (chart.totalDates() > 32) {
                     amounts.add("32");
                 }
             }
