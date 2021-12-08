@@ -24,6 +24,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
 
     private final ShiftHistoryWindow container;
 
+    private boolean canShowToday;
     private boolean noHistory = true; // Stays true if there's no history data to show
     private int pointsAmount = 8; // Amount of data points to show
 
@@ -40,6 +41,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
 
     public ShiftHistoryChart(ShiftHistoryWindow container) {
         this.container = container;
+        canShowToday = Main.timesChosen();
         addMouseListener(this);
 
         JMenuItem deleteDate = new JMenuItem("Delete");
@@ -78,7 +80,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
     private void updateInfo() {
         if (!noHistory) {
             // Update pages
-            int lastTotal = totalPages;
+            final int lastTotal = totalPages;
             totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
             if (totalPages != lastTotal) currentPage = totalPages; // If page amount changed, go to the newest dates
             canShowToday = Main.timesChosen() && currentPage == totalPages;
@@ -87,11 +89,19 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
             max = 0;
             for (int p = 0; p < pointsAmount; p++) { // For each point we can show:
                 int index = getTrueIndex(p + pointsAmount * (currentPage - 1)); // Get its index
+                if (canShowToday) index += 1;
+
+                float valueToCheck = max;
 
                 if (index < keys.length) { // If index exists:
-                    if (shiftHistoryData.get(keys[index]) > max) // We check if it is greater than the last max
-                        max = (int) Math.ceil(shiftHistoryData.get(keys[index])); // If it is, set to new max
+                    valueToCheck = shiftHistoryData.get(keys[index]);
+                } else if (canShowToday && index == keys.length) {
+                    String text = Main.getOrdersPerHour();
+                    valueToCheck = Float.parseFloat(text.substring(0, text.length() - 3));
                 }
+
+                if (valueToCheck > max) // We check if it is greater than the last max
+                    max = (int) Math.ceil(valueToCheck); // If it is, set to new max
             }
         }
     }
@@ -132,10 +142,15 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
         boolean hasMonthChanged = true;
         for (int point = 0; point < pointsAmount; point++) { // For each point:
 
+            boolean onToday = canShowToday && (point == pointsAmount - 1 || point == keys.length);
             // Get actual index by adding the offset and make sure graph is filled on last page
             int index = getTrueIndex(pointsAmount * (currentPage - 1) + point);
             // If index exists get its value, else default to negative one.
             float value = (index < keys.length) ? shiftHistoryData.get(keys[index]) : -1F;
+            if (onToday) {
+                String text = Main.getOrdersPerHour();
+                value = Float.parseFloat(text.substring(0, text.length() - 3));
+            }
 
             if (value != -1F) { // draw the bar (a rectangle) if value is not -1 (to filter out nonexistent values)
 
@@ -223,9 +238,10 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
     private void drawMonthText(Graphics2D g, Color textColor, String text, int y) {
 
         int fontSize = g.getFont().getSize();
+        int textWidth = g.getFontMetrics().stringWidth(text) + 4;
         g.rotate(-Math.PI/2); // Rotate -90 degrees
         // Draw box behind month name
-        g.fillRect(-(getHeight() - (int)(fontSize*1.1)), y, (int)(fontSize * 2.4), (int)(fontSize * 1.2));
+        g.fillRect(-(getHeight() - (int)(fontSize*1.1)), y, textWidth, (int)(fontSize * 1.2));
         g.setColor(textColor); // Set back to text color
         g.drawString(text, -(getHeight() - (int)(fontSize*1.2)), y + fontSize);
         g.rotate(Math.PI/2); // Rotate back to normal (+90 degrees)
