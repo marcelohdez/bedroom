@@ -242,13 +242,24 @@ public class Main {
                             String.valueOf(ordersNeeded - orders) : "0");
         } else return """
                 Orders: $o/$n @ $pH,
-                $u until target of $t/hr"""
+                $u"""
                 .replace("$o", String.valueOf(orders))
                 .replace("$n", String.valueOf(ordersNeeded))
                 .replace("$pH", getOrdersPerHour())
-                .replace("$u", String.valueOf(getOrdersNeededForTarget()))
-                .replace("$t", String.valueOf(target));
+                .replace("$u", getUntilTargetText());
 
+    }
+
+    private static String getUntilTargetText() {
+        int ordersNeeded = getOrdersNeededForTarget();
+
+        if (ordersNeeded > 0) {
+            return "$u until target of $t/hr"
+                .replace("$u", String.valueOf(ordersNeeded))
+                .replace("$t", String.valueOf(target));
+        } else {
+            return "You are on target.";
+        }
     }
 
     // Tell us how many orders we need to reach our target
