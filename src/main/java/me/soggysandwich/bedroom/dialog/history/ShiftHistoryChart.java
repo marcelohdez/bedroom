@@ -306,7 +306,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
             int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
             if (keys.length < pointsAmount) {
                 shown = keys.length;
-            } else if (Main.timesChosen() && lastPageRemainder == 0) shown = 1;
+            } else if (lastPageRemainder == 0 && Main.timesChosen()) shown = 1;
 
             return "$s-$e"
                     .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[start]))
@@ -381,10 +381,9 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      * @return new index
      */
     private int getTrueIndex(int val) {
-        if (keys.length > pointsAmount && currentPage == totalPages) {
+        if (totalDates() > pointsAmount && currentPage == totalPages) {
             if (lastPageRemainder > 0) {
                 val -= (pointsAmount - lastPageRemainder);
-
             } else if (lastPageRemainder == 0 && Main.timesChosen()) // Make space to show our current orders/hr:
                 val -= (pointsAmount - (keys.length + 1) % pointsAmount);
         }
