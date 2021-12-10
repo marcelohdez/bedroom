@@ -34,6 +34,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
     private int totalPages = 1;
     private final Color barColor = Theme.getTextColor(); // Constant bar color
 
+    private int lastPageRemainder = keys.length % pointsAmount;
     private float max; // Current max orders/hr value
     private int barXDiff; // Space from one bar to the next (really the thickness)
 
@@ -81,7 +82,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
         if (!noHistory) {
             // Update pages
             final int lastTotal = totalPages;
-            totalPages = (int) Math.ceil((double) keys.length / (double) pointsAmount);
+            totalPages = (int) Math.ceil((double) totalDates() / (double) pointsAmount);
             if (totalPages != lastTotal) currentPage = totalPages; // If page amount changed, go to the newest dates
             canShowToday = Main.timesChosen() && currentPage == totalPages;
 
@@ -303,7 +304,9 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
             int start = getTrueIndex(pointsAmount * (currentPage - 1)); // Get the true starting index
 
             int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
-            if (keys.length < pointsAmount) shown = keys.length;
+            if (keys.length < pointsAmount) {
+                shown = keys.length;
+            } else if (Main.timesChosen() && lastPageRemainder == 0) shown = 1;
 
             return "$s-$e"
                     .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[start]))
@@ -346,6 +349,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      */
     public void setPointsAmount(int newValue) {
         pointsAmount = newValue;
+        lastPageRemainder = keys.length % pointsAmount;
         updateInfo();
     }
 
@@ -366,7 +370,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
     }
 
     public int totalDates() {
-        return keys.length;
+        return keys.length + (Main.timesChosen() ? 1 : 0);
     }
 
     /**
@@ -377,8 +381,13 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      * @return new index
      */
     private int getTrueIndex(int val) {
-        if (keys.length > pointsAmount && currentPage == totalPages && keys.length % pointsAmount > 0)
-            val -= (pointsAmount - keys.length % pointsAmount);
+        if (keys.length > pointsAmount && currentPage == totalPages) {
+            if (lastPageRemainder > 0) {
+                val -= (pointsAmount - lastPageRemainder);
+
+            } else if (lastPageRemainder == 0 && Main.timesChosen()) // Make space to show our current orders/hr:
+                val -= (pointsAmount - (keys.length + 1) % pointsAmount);
+        }
 
         return val;
     }
@@ -387,11 +396,10 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
         // Get bar at x coordinate
         int bar = getTrueIndex((int) ((x - (Theme.getChartFont().getSize()*1.5F))/barXDiff));
 
-        if (pointsAmount * (currentPage - 1) + bar < keys.length) { // If a date exists at this X position:
-            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar]; // Set this date to currentlyObserved
-        } else {
-            currentlyObserved = null; // And remove the value of currentlyObserved
-        }
+        if (pointsAmount * (currentPage - 1) + bar < keys.length) {
+            // If a date exists at this X position set currentlyObserved to it
+            currentlyObserved = keys[(pointsAmount * (currentPage - 1)) + bar];
+        } else currentlyObserved = null; // Else set currentlyObserved to none
     }
 
     private void deleteSelectedDate() {
