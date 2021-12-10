@@ -407,8 +407,8 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
         if (currentlyObserved != null) {
             if (new YesNoDialog(null, """
                         Are you sure you want to
-                        delete shift $observed?"""
-                    .replace("$observed",
+                        delete shift $o?"""
+                    .replace("$o",
                             currentlyObserved.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
                                     .toUpperCase(Locale.ROOT)))
                     .accepted()) {
@@ -416,6 +416,8 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
                 shiftHistoryData.remove(currentlyObserved);
                 Main.removeFromHistory(currentlyObserved);
                 keys = cleanUpKeys();
+                lastPageRemainder = keys.length % pointsAmount;
+                updateInfo();
                 repaint();
                 container.updatePageInfo();
             }
