@@ -1,0 +1,16 @@
+package me.soggysandwich.bedroom.enums;
+
+public enum ErrorType { // Types of user errors we can catch
+
+    BREAK_OUT_OF_SHIFT,
+    NEGATIVE_BREAK_TIME,
+    NON_POSITIVE_SHIFT_TIME,
+    NO_FILE_ASSOCIATION,
+    STARTUP_ITEMS_FULL,
+    STARTUP_ITEM_NONEXISTENT,
+    EARLY_CLOCK_OUT_NOT_EARLY,
+    SAVING_HISTORY_FAILED,
+    EXPLORER_UNSUPPORTED,
+    FAILED_TO_LOAD_SHIFT_HISTORY
+
+}
