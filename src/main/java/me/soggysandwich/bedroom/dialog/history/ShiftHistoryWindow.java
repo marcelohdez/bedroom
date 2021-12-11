@@ -5,7 +5,6 @@ import me.soggysandwich.bedroom.enums.ErrorType;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.WindowParent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener {
 
-    private final WindowParent parent;
+    private final Component parent;
     private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
     private final JPanel topRow = new JPanel();
@@ -33,9 +32,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final JPanel botRow = new JPanel(); // Bottom row panel
     private final JButton historyFolderButton = new JButton("Open history directory");
 
-    public ShiftHistoryWindow(WindowParent parent) {
+    public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
-        parent.setDisabled(true); // Disable parent window
+        parent.setEnabled(false); // Disable parent window
 
         // Set window properties
         setAlwaysOnTop(Settings.getAlwaysOnTop());
@@ -48,7 +47,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         pack();
         setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
         // Center on parent
-        int[] arr = parent.getXYWidthHeight();
+        int[] arr = new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()};
         setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
@@ -145,8 +144,8 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     @Override
     public void windowClosed(WindowEvent e) {
-        parent.setDisabled(false);
-        parent.askForFocus();
+        parent.setEnabled(true); // Re-enable the summoner window
+        parent.requestFocus();
     }
 
     // Unused

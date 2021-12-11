@@ -274,7 +274,7 @@ public class SelectTimeUI extends JPanel {
     }
 
     private void finishSet() { // Finish this set of select time dialogs
-        dialog.getInitParent().setDisabled(false); // Re-enable main bedroom window
+        dialog.getInitParent().setEnabled(true); // Re-enable main bedroom window
         // Finish this dialog set by disposing this window and the previous
         dialog.finish();
     }

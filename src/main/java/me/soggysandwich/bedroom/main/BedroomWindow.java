@@ -7,7 +7,7 @@ import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.enums.TimeWindowType;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.util.Reloadable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class BedroomWindow extends JFrame implements WindowParent, WindowListener, KeyListener {
+public class BedroomWindow extends JFrame implements Reloadable, WindowListener, KeyListener {
 
     private final UI ui = new UI(this);
 
@@ -61,30 +61,8 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
     @Override
     public void reloadSettings() {
-
         ui.colorComponents();
         reloadAlwaysOnTop();
-
-    }
-
-    @Override
-    public int[] getXYWidthHeight() {
-        return new int[]{getX(), getY(), getWidth(), getHeight()};
-    }
-
-    @Override
-    public void makeVisible(boolean b) {
-        setVisible(b);
-    }
-
-    @Override
-    public void setDisabled(boolean b) {
-        setEnabled(!b);
-    }
-
-    @Override
-    public void askForFocus() {
-        requestFocus();
     }
 
     @Override

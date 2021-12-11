@@ -458,8 +458,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Since high contrast overwrites colors anyways, only do this if it is false
         if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
 
-        if (parent.getWindowParent() instanceof SelectTimeDialog)
-            parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
+        if (parent.getReloadableComponent() instanceof SelectTimeDialog)
+            parent.getReloadableComponent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
                                                         // its settings too
 
         Main.updateSettings();

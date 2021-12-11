@@ -1,14 +1,13 @@
 package me.soggysandwich.bedroom.dialog.alert;
 
-import me.soggysandwich.bedroom.util.WindowParent;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class YesNoDialog extends AlertDialog {
 
     private boolean accepted = false;
 
-    public YesNoDialog(WindowParent parent, String message) {
+    public YesNoDialog(Component parent, String message) {
         super(parent);
 
         okButton.setText("Yes");

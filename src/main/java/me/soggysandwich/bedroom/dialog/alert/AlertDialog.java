@@ -1,7 +1,7 @@
 package me.soggysandwich.bedroom.dialog.alert;
 
 import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.util.Reloadable;
 import me.soggysandwich.bedroom.util.Settings;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
  */
 public class AlertDialog extends JDialog {
 
-    private final WindowParent parent;
+    private final Component parent;
     private final JPanel buttonRow = new JPanel();
     protected final JButton okButton = new JButton("OK");
 
@@ -24,7 +24,7 @@ public class AlertDialog extends JDialog {
      * @param parent Window parent, only used to center window after creating its UI
      * @param message Message to display
      */
-    public AlertDialog(WindowParent parent, String message) {
+    public AlertDialog(Component parent, String message) {
         this(parent);
         initDialog("Alert", message);
     }
@@ -34,7 +34,7 @@ public class AlertDialog extends JDialog {
      *
      * @param parent Window parent, only used to center window after creating its UI
      */
-    protected AlertDialog(WindowParent parent) {
+    protected AlertDialog(Component parent) {
         this.parent = parent;
         // Initialize okButton
         okButton.setMargin(new Insets(8, 20, 8, 20));
@@ -71,7 +71,7 @@ public class AlertDialog extends JDialog {
         // Show dialog
         pack();
         if (parent != null) { // Center on parent if it is not null
-            int[] arr = parent.getXYWidthHeight();
+            int[] arr = new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()};
             setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
         } else setLocationRelativeTo(null);
 

@@ -2,9 +2,10 @@ package me.soggysandwich.bedroom.dialog.alert;
 
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.util.Time;
-import me.soggysandwich.bedroom.util.WindowParent;
 import me.soggysandwich.bedroom.Main;
 import me.soggysandwich.bedroom.enums.ErrorType;
+
+import java.awt.*;
 
 /**
  * An AlertDialog that has a predefined message from an ErrorType.
@@ -14,7 +15,7 @@ import me.soggysandwich.bedroom.enums.ErrorType;
  */
 public class ErrorDialog extends AlertDialog {
 
-    public ErrorDialog(WindowParent parent, ErrorType e) {
+    public ErrorDialog(Component parent, ErrorType e) {
         super(parent);
         initDialog("Error", getErrorMessage(e));
     }

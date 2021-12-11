@@ -2,7 +2,7 @@ package me.soggysandwich.bedroom.dialog.time;
 
 import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
 import me.soggysandwich.bedroom.main.BedroomWindow;
-import me.soggysandwich.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.util.Reloadable;
 import me.soggysandwich.bedroom.Main;
 import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
 import me.soggysandwich.bedroom.enums.TimeWindowType;
@@ -16,7 +16,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.time.LocalDateTime;
 
-public class SelectTimeDialog extends JDialog implements WindowListener, WindowParent, KeyListener {
+public class SelectTimeDialog extends JDialog implements WindowListener, Reloadable, KeyListener {
 
     private final SelectTimeUI ui;
     public final TimeWindowType type;
@@ -25,7 +25,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     private boolean shifting = false;
 
     public SelectTimeDialog(BedroomWindow parent, TimeWindowType type) {
-        parent.setDisabled(true);
+        parent.setEnabled(false);
         this.type = type;
         this.initParent = parent;
         lastDialog = null;
@@ -64,7 +64,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
         pack();
         setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
         // Center on parent
-        int[] arr = initParent.getXYWidthHeight();
+        int[] arr = new int[]{initParent.getX(), initParent.getY(), initParent.getWidth(), initParent.getHeight()};
         setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
         setVisible(true); // Show self
 
@@ -79,13 +79,13 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
             case CLOCK_IN -> Main.exit();
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
-                lastDialog.makeVisible(true);
+                lastDialog.setVisible(true);
             }
             case START_BREAK, EARLY_CLOCK_OUT -> dispose();  // Close window
         }
         if (lastDialog != null) {
-            lastDialog.setDisabled(false);
-        } else initParent.setDisabled(false);
+            lastDialog.setEnabled(true);
+        } else initParent.setEnabled(true); // Re-enable parent
     }
 
     /**
@@ -105,31 +105,11 @@ public class SelectTimeDialog extends JDialog implements WindowListener, WindowP
     }
 
     @Override
-    public int[] getXYWidthHeight() {
-        return new int[]{getX(), getY(), getWidth(), getHeight()};
-    }
-
-    @Override
-    public void makeVisible(boolean b) {
-        setVisible(b);
-    }
-
-    @Override
     public void reloadSettings() {
 
         ui.reColorComps();
         reloadAlwaysOnTop();
 
-    }
-
-    @Override
-    public void setDisabled(boolean b) {
-        setEnabled(!b);
-    }
-
-    @Override
-    public void askForFocus() {
-        requestFocus();
     }
 
     @Override
