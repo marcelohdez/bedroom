@@ -306,7 +306,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
             int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
             if (keys.length < pointsAmount) {
                 shown = keys.length;
-            } else if (lastPageRemainder == 0 && Main.timesChosen()) shown = 1;
+            } else if (canShowToday) shown--; // Take into account today's orders/hr bar
 
             return "$s-$e"
                     .replace("$s", DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(keys[start]))
@@ -349,7 +349,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      */
     public void setPointsAmount(int newValue) {
         pointsAmount = newValue;
-        lastPageRemainder = keys.length % pointsAmount;
+        lastPageRemainder = totalDates() % pointsAmount;
         updateInfo();
     }
 
@@ -381,13 +381,10 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
      * @return new index
      */
     private int getTrueIndex(int val) {
-        if (totalDates() > pointsAmount && currentPage == totalPages) {
-            if (lastPageRemainder > 0) {
-                val -= (pointsAmount - lastPageRemainder);
-            } else if (lastPageRemainder == 0 && Main.timesChosen()) // Make space to show our current orders/hr:
-                val -= (pointsAmount - (keys.length + 1) % pointsAmount);
-        }
+        if (totalDates() > pointsAmount && currentPage == totalPages)
+            if (lastPageRemainder > 0) val -= (pointsAmount - lastPageRemainder);
 
+        if (canShowToday) val++; // Take into account today's orders/hr bar
         return val;
     }
 
@@ -415,7 +412,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
                 shiftHistoryData.remove(currentlyObserved);
                 Main.removeFromHistory(currentlyObserved);
                 keys = cleanUpKeys();
-                lastPageRemainder = keys.length % pointsAmount;
+                lastPageRemainder = totalDates() % pointsAmount;
                 updateInfo();
                 repaint();
                 container.updatePageInfo();
