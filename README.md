@@ -9,14 +9,14 @@ the visuals created using the Swing API. It was originally created for me and my
 center to keep track of our orders/hr without doing the math ourselves, letting us share it quicker.
 
 ## Table of contents
-* [Prerequisites](https://github.com/swiftsatchel/bedroom#prerequisites)
-* [How to set up](https://github.com/swiftsatchel/bedroom#how-to-set-up)
-* [How to use](https://github.com/swiftsatchel/bedroom#how-to-use)
-   * [Settings](https://github.com/swiftsatchel/bedroom#settings)
-   * [Shift performance history](https://github.com/swiftsatchel/bedroom#shift-performance-history)
-   * [Keyboard shortcuts](https://github.com/swiftsatchel/bedroom#keyboard-shortcuts)
-* [Compiling from source](https://github.com/swiftsatchel/bedroom#compiling-from-source)
-* [License](https://github.com/swiftsatchel/bedroom#license)
+* [Prerequisites](https://github.com/soggy-sandwich/bedroom#prerequisites)
+* [How to set up](https://github.com/soggy-sandwich/bedroom#how-to-set-up)
+* [How to use](https://github.com/soggy-sandwich/bedroom#how-to-use)
+   * [Settings](https://github.com/soggy-sandwich/bedroom#settings)
+   * [Shift performance history](https://github.com/soggy-sandwich/bedroom#shift-performance-history)
+   * [Keyboard shortcuts](https://github.com/soggy-sandwich/bedroom#keyboard-shortcuts)
+* [Compiling from source](https://github.com/soggy-sandwich/bedroom#compiling-from-source)
+* [License](https://github.com/soggy-sandwich/bedroom#license)
 
 ---
 
@@ -29,12 +29,6 @@ required.)
 Download the .jar file from the Releases section of the version you want to use, and double click it like any 
 other application.
 
-**Optionally, a start script** could be used to reduce Bedroom's memory usage. For Windows, a .bat file can 
-be made in Bedroom's location containing ```start javaw -Xmx32M -Xms16M -jar bedroom-3.jar``` (replacing 
-_bedroom-3_ with the correct file name) and then making a shortcut to it. To keep a command prompt opened, 
-remove the w in ```javaw```. The arguments ```-Xmx``` and ```-Xms``` set the maximum and initial amounts of 
-memory the [JVM](https://en.wikipedia.org/wiki/Java_virtual_machine) can allocate to itself respectively.
-
 ## How to use
 Upon opening Bedroom you can set your clock in and out times, if you ever mess up on these dialogs you may 
 close them to go back (closing the clock in time dialog will close Bedroom.) You should then see your Set 
@@ -46,8 +40,8 @@ are needed for the day.
 
 ### Settings
 A **settings dialog** can be accessed by pressing ```Backspace```, allowing you to customize Bedroom's
-[colors](https://github.com/swiftsatchel/bedroom#colors), 
-[startup items](https://github.com/swiftsatchel/bedroom#startup-items), and other miscellaneous aspects
+[colors](https://github.com/soggy-sandwich/bedroom#colors), 
+[startup items](https://github.com/soggy-sandwich/bedroom#startup-items), and other miscellaneous aspects
 such as the default shift length and target values.
 
 #### Colors
@@ -83,18 +77,19 @@ _These shortcuts are meant to be unobtrusive to work applications,
 hence their seemingly random keyboard placements._
 
 ## Compiling from source
-_This is not supported, there could be loss of data or other bugs with things currently being experimented on._
+_This is not officially supported, as there may be unwanted side effects from currently experimental features._
 
 After downloading the source code, extract the folder inside and delete the original zipped file. Then, open the 
-extracted folder with your Terminal/Command Prompt and running gradle's build command.
+extracted folder with your Terminal/Command Prompt and running gradle's build command:
 
-* **On Windows** you can cd into the folder's directory in Command Prompt and run ```gradlew build```.
-* **On macOS** or other UNIX operating systems, (on macOS you may need to run ```chmod +x gradlew``` before this
-works) cd into the folder's directory and run ```./gradlew build```. 
+* **On Windows** you can cd into the folder's directory in Command Prompt and run ```gradlew build --no-daemon```.
+* **On macOS** or **Linux OSs**, cd into the folder's directory and (you may need to run ```chmod +x gradlew``` first) run ```./gradlew build --no-daemon```. 
+
+_The ```--no-deamon``` option can be omitted if you would like to keep the gradle daemon in memory, which makes future gradle builds quicker._
 
 Once finished, the resulting files will be in the ```build``` folder. The .jar will be in ```build > libs``` and 
 gradle's default run scripts will be in ```build > bin```.
 
 ## License
 Bedroom is licensed under the GPLv3 license, more information can be seen in the 
-[license](https://www.github.com/swiftsatchel/bedroom/blob/master/LICENSE) file.
+[license](https://www.github.com/soggy-sandwich/bedroom/blob/master/LICENSE) file.
