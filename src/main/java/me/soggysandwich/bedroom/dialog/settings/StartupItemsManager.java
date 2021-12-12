@@ -42,10 +42,7 @@ public class StartupItemsManager extends JDialog implements WindowListener {
         add(content);
         pack();
 
-        // Center on parent window
-        int[] arr = new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()};
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
-
+        setLocationRelativeTo(parent); // Center on parent window
         setVisible(true);
 
     }

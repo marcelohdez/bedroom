@@ -68,15 +68,10 @@ public class AlertDialog extends JDialog {
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-        // Show dialog
-        pack();
-        if (parent != null) { // Center on parent if it is not null
-            int[] arr = new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()};
-            setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
-        } else setLocationRelativeTo(null);
-
+        pack(); // Let swing size the window
+        setLocationRelativeTo(parent); // Center on parent, if there is one, else center on screen
         setModalityType(ModalityType.APPLICATION_MODAL); // Retain input from other windows
-        setVisible(true);
+        setVisible(true); // Show dialog
 
     }
 

@@ -2,7 +2,7 @@ package me.soggysandwich.bedroom;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.enums.TimeWindowType;
+import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.main.BedroomWindow;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
@@ -79,6 +79,7 @@ public class Main {
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
+        System.out.println(LocalDateTime.now().toString().substring(0, 16));
 
     }
 
@@ -163,10 +164,8 @@ public class Main {
     }
 
     public static void updateSettings() {
-
         Theme.reloadColors();
         wnd.reloadSettings();
-
     }
 
     public static void update() {
@@ -419,14 +418,10 @@ public class Main {
 
         // Save shitHistory to file
         try {
-
             saveHistoryToFile();
-
         } catch (IOException e) {
-
             new AlertDialog(wnd, "Unable to save shift history");
             e.printStackTrace();
-
         }
 
         System.exit(0);
@@ -439,17 +434,13 @@ public class Main {
      * @throws IOException If unable to write file
      */
     private static void saveHistoryToFile() throws IOException {
-
         File path = new File(Settings.getWorkingDir()); // Make the directory into a File
 
         if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
-
             createHistoryFileAt(path.toPath()); // Create the file
-
-        } else { // If teh directory does not exist and cannot be made:
+        } else { // If the directory does not exist and cannot be made:
             new AlertDialog(wnd, "Unable to save shift history");
         }
-
     }
 
     /**
@@ -482,8 +473,7 @@ public class Main {
         } catch (Exception e) {
 
             e.printStackTrace();
-            new AlertDialog(null, """
-                    Unable to save history to file.""");
+            new AlertDialog(wnd, "Unable to save history to file.");
 
         }
 

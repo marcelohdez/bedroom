@@ -45,11 +45,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
         setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
-        // Center on parent
-        int[] arr = new int[]{parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight()};
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
+        setLocationRelativeTo(parent); // Center on parent window
         setVisible(true); // Show dialog
 
     }

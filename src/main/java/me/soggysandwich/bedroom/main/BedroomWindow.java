@@ -4,8 +4,7 @@ import me.soggysandwich.bedroom.Main;
 import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
 import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.enums.TimeWindowType;
-import me.soggysandwich.bedroom.util.Ops;
+import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Reloadable;
 
@@ -14,9 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class BedroomWindow extends JFrame implements Reloadable, WindowListener, KeyListener {
 
@@ -92,9 +89,7 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
                 // If we do not have the option selected, just clock out early at
                 // the current time down to the minute
-            } else Main.clockOut(LocalDateTime.parse((LocalDate.now() + "T" +
-                    Ops.addZeroUnder10(LocalTime.now().getHour()) + ":" +
-                    Ops.addZeroUnder10(LocalTime.now().getMinute()))));
+            } else Main.clockOut(LocalDateTime.parse(LocalDateTime.now().toString().substring(0, 16)));
 
         } else if (LocalDateTime.now().isBefore(Main.getClockInTime())) { // If we have not clocked in:
 

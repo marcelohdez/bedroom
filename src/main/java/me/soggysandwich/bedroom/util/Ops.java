@@ -28,16 +28,6 @@ public final class Ops { // Operations
     }
 
     /**
-     * Returns an "s" if number is greater than 1
-     *
-     * @param number Number to check
-     * @return An "s" if number is greater than 1, else ""
-     */
-    public static String isPlural(int number) { // Return "s" if there is more than 1 of number
-        return number > 1 ? "s" : "";
-    }
-
-    /**
      * Returns a 0 + the number if the number is under 10
      *
      * @param number The number to check

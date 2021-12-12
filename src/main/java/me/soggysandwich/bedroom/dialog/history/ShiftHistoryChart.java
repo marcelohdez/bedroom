@@ -401,7 +401,7 @@ public class ShiftHistoryChart extends JPanel implements MouseListener {
     private void deleteSelectedDate() {
 
         if (currentlyObserved != null) {
-            if (new YesNoDialog(null, """
+            if (new YesNoDialog(this, """
                         Are you sure you want to
                         delete shift $o?"""
                     .replace("$o",

@@ -5,7 +5,7 @@ import me.soggysandwich.bedroom.main.BedroomWindow;
 import me.soggysandwich.bedroom.util.Reloadable;
 import me.soggysandwich.bedroom.Main;
 import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
-import me.soggysandwich.bedroom.enums.TimeWindowType;
+import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.util.Settings;
 
 import javax.swing.*;
@@ -59,13 +59,12 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
-        addKeyListener(this);                   // Add key listener for shortcuts
-        add(ui);                                // Add the UI
+        addKeyListener(this); // Add key listener for shortcuts
+        add(ui); // Add the UI
         pack();
         setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
-        // Center on parent
-        int[] arr = new int[]{initParent.getX(), initParent.getY(), initParent.getWidth(), initParent.getHeight()};
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
+
+        setLocationRelativeTo(initParent); // Center on initial parent
         setVisible(true); // Show self
 
     }
@@ -106,10 +105,8 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
 
     @Override
     public void reloadSettings() {
-
         ui.reColorComps();
         reloadAlwaysOnTop();
-
     }
 
     @Override

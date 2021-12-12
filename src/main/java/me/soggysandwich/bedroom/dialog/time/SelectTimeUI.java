@@ -3,7 +3,7 @@ package me.soggysandwich.bedroom.dialog.time;
 import me.soggysandwich.bedroom.Main;
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.enums.TimeWindowType;
+import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
