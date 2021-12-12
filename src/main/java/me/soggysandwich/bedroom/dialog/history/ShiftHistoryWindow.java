@@ -1,7 +1,6 @@
 package me.soggysandwich.bedroom.dialog.history;
 
-import me.soggysandwich.bedroom.dialog.alert.ErrorDialog;
-import me.soggysandwich.bedroom.enums.ErrorType;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
@@ -133,8 +132,29 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             if (System.getProperty("os.name").contains("Windows")) {
                 // Due to browseFileDirectory not working on Windows10+ we use specific commands:
                 Runtime.getRuntime().exec("explorer \"$d\"".replace("$d", Settings.getWorkingDir()));
-            } else new ErrorDialog(null, ErrorType.EXPLORER_UNSUPPORTED, Settings.getWorkingDir());
+            } else new AlertDialog(null, """
+                        Unable to open directory, this
+                        desktop's file explorer is not
+                        supported, wanted directory:
+                        
+                        """ + limitLineLength(Settings.getWorkingDir()));
         }
+    }
+
+    private String limitLineLength(String s) {
+        // Get how many times 30 goes into the string length
+        int limit = 30;
+        int divisions = s.length() / limit;
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < divisions) { // Append all *limit* length lines:
+            sb.append(s, i * limit, (i * limit) + limit).append("\n");
+            i++;
+        } // Then append what's left of the last line:
+        sb.append(s, i * limit, (i * limit) + s.length() % limit);
+
+        return sb.toString();
     }
 
     @Override

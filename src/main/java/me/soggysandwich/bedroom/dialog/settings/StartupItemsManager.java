@@ -1,7 +1,6 @@
 package me.soggysandwich.bedroom.dialog.settings;
 
-import me.soggysandwich.bedroom.dialog.alert.ErrorDialog;
-import me.soggysandwich.bedroom.enums.ErrorType;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
@@ -123,7 +122,9 @@ public class StartupItemsManager extends JDialog implements WindowListener {
 
 
         } else {
-            new ErrorDialog(parent, ErrorType.STARTUP_ITEMS_FULL);
+            new AlertDialog(parent, """
+                        You can not add any more
+                        startup items.""");
         }
 
     }

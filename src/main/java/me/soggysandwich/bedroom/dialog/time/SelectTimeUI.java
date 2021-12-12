@@ -1,9 +1,8 @@
 package me.soggysandwich.bedroom.dialog.time;
 
 import me.soggysandwich.bedroom.Main;
-import me.soggysandwich.bedroom.dialog.alert.ErrorDialog;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.enums.ErrorType;
 import me.soggysandwich.bedroom.enums.TimeWindowType;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
@@ -237,9 +236,29 @@ public class SelectTimeUI extends JPanel {
             proceedWith(TimeWindowType.END_BREAK, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
         } else {
-            new ErrorDialog(dialog, ErrorType.BREAK_OUT_OF_SHIFT);
+            new AlertDialog(dialog, getBreakOutOfShiftMsg());
         }
 
+    }
+
+    private String getBreakOutOfShiftMsg() {
+        if (!Main.isOvernightShift()) {
+            return """
+                            Breaks may only start or end
+                            inside of shifts. Current
+                            shift is:
+                            $s-$e"""
+                    .replace("$s", Time.makeTime12Hour(Main.getClockInTime().toLocalTime()))
+                    .replace("$e", Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
+        } else return """
+                            Breaks may only start or end
+                            inside of shifts. Current
+                            shift is:
+                            $sDay $sTime-$eDay $eTime"""
+                .replace("$sDay", Main.getClockInTime().getDayOfWeek().toString().substring(0,3))
+                .replace("$sTime", Time.makeTime12Hour(Main.getClockInTime().toLocalTime()))
+                .replace("$eDay", Main.getClockOutTime().getDayOfWeek().toString().substring(0,3))
+                .replace("$eTime", Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
     }
 
     private void setBreakEndTime(LocalDateTime time) {
@@ -254,7 +273,10 @@ public class SelectTimeUI extends JPanel {
             Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
         } else {
-            new ErrorDialog(dialog, ErrorType.NEGATIVE_BREAK_TIME, Time.makeTime12Hour(time.toLocalTime()));
+            new AlertDialog(dialog, """
+                        A break's end time can not be
+                        before the break's start time.
+                        Current break start:\040""" + Time.makeTime12Hour(time.toLocalTime()));
         }
 
     }
@@ -264,12 +286,20 @@ public class SelectTimeUI extends JPanel {
         if (time.isAfter(Main.getClockInTime())) {
 
             if (time.isBefore(Main.getClockOutTime())) {
-
                 Main.clockOut(time); // Save this shift's performance and close application
+            } else new AlertDialog(dialog, """
+                        Early clock outs must be
+                        before original clock out
+                        time. Your current clock
+                        out time:\040""" +
+                    Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
 
-            } else new ErrorDialog(dialog, ErrorType.EARLY_CLOCK_OUT_NOT_EARLY);
-
-        } else new ErrorDialog(dialog, ErrorType.NON_POSITIVE_SHIFT_TIME);
+        } else new AlertDialog(dialog, """
+                        Clock out time has to be
+                        after your clock in time.
+                        Current clock in time:
+                        """ +
+                Time.makeTime12Hour(Main.getClockInTime().toLocalTime()));
 
     }
 

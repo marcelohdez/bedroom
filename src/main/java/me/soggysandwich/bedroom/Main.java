@@ -1,9 +1,7 @@
 package me.soggysandwich.bedroom;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.dialog.alert.ErrorDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.enums.ErrorType;
 import me.soggysandwich.bedroom.enums.TimeWindowType;
 import me.soggysandwich.bedroom.main.BedroomWindow;
 import me.soggysandwich.bedroom.util.Settings;
@@ -69,7 +67,12 @@ public class Main {
             try { // Try to load shift history
                 shiftHistory = Settings.loadShiftHistory();
             } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
-                new ErrorDialog(null, ErrorType.FAILED_TO_LOAD_SHIFT_HISTORY);
+                new AlertDialog(null, """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""");
             }
 
         });
@@ -146,7 +149,11 @@ public class Main {
                     }
 
                 } else {
-                    new ErrorDialog(wnd, ErrorType.STARTUP_ITEM_NONEXISTENT);
+                    new AlertDialog(wnd, """
+                        One of your startup items was
+                        not able to be started as it
+                        no longer exists. Please go to
+                        Settings > Manage Startup Items.""");
                 }
 
             }
@@ -417,7 +424,7 @@ public class Main {
 
         } catch (IOException e) {
 
-            new ErrorDialog(wnd, ErrorType.SAVING_HISTORY_FAILED);
+            new AlertDialog(wnd, "Unable to save shift history");
             e.printStackTrace();
 
         }
@@ -440,8 +447,7 @@ public class Main {
             createHistoryFileAt(path.toPath()); // Create the file
 
         } else { // If teh directory does not exist and cannot be made:
-            new ErrorDialog(null, ErrorType.SAVING_HISTORY_FAILED);
-            System.out.println("Error saving history to path.");
+            new AlertDialog(wnd, "Unable to save shift history");
         }
 
     }
