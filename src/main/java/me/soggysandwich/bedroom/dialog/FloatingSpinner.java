@@ -1,6 +1,6 @@
-package com.swiftsatchel.bedroom.dialog;
+package me.soggysandwich.bedroom.dialog;
 
-import com.swiftsatchel.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

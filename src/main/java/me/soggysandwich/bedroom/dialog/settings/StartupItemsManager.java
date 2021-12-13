@@ -1,14 +1,13 @@
-package com.swiftsatchel.bedroom.dialog.settings;
+package me.soggysandwich.bedroom.dialog.settings;
 
-import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.util.Ops;
+import me.soggysandwich.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Theme;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -16,14 +15,13 @@ import java.util.ArrayList;
 
 public class StartupItemsManager extends JDialog implements WindowListener {
 
-    private final WindowParent parent;
+    private final Component parent;
 
     private final ArrayList<String> itemDirs = new ArrayList<>(); // List of startup items' directories
     private final DefaultListModel<String> itemNames = new DefaultListModel<>(); // List of startup items' names
     private JList<String> list; // The JList to be displayed
 
     public StartupItemsManager(SettingsDialog parent) {
-
         this.parent = parent;
 
         setTitle("Startup Items");
@@ -44,10 +42,7 @@ public class StartupItemsManager extends JDialog implements WindowListener {
         add(content);
         pack();
 
-        // Center on parent window
-        int[] arr = parent.getXYWidthHeight();
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
-
+        setLocationRelativeTo(parent); // Center on parent window
         setVisible(true);
 
     }
@@ -124,7 +119,9 @@ public class StartupItemsManager extends JDialog implements WindowListener {
 
 
         } else {
-            new ErrorDialog(parent, ErrorType.STARTUP_ITEMS_FULL);
+            new AlertDialog(parent, """
+                        You can not add any more
+                        startup items.""");
         }
 
     }

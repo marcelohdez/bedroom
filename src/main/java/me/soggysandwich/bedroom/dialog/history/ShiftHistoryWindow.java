@@ -1,11 +1,9 @@
-package com.swiftsatchel.bedroom.dialog.history;
+package me.soggysandwich.bedroom.dialog.history;
 
-import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.util.Ops;
+import me.soggysandwich.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 
 public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener {
 
-    private final WindowParent parent;
+    private final Component parent;
     private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
     private final JPanel topRow = new JPanel();
@@ -33,9 +31,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final JPanel botRow = new JPanel(); // Bottom row panel
     private final JButton historyFolderButton = new JButton("Open history directory");
 
-    public ShiftHistoryWindow(WindowParent parent) {
+    public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
-        parent.setDisabled(true); // Disable parent window
+        parent.setEnabled(false); // Disable parent window
 
         // Set window properties
         setAlwaysOnTop(Settings.getAlwaysOnTop());
@@ -47,11 +45,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
         setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
-        // Center on parent
-        int[] arr = parent.getXYWidthHeight();
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
+        setLocationRelativeTo(parent); // Center on parent window
         setVisible(true); // Show dialog
 
     }
@@ -134,8 +130,29 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             if (System.getProperty("os.name").contains("Windows")) {
                 // Due to browseFileDirectory not working on Windows10+ we use specific commands:
                 Runtime.getRuntime().exec("explorer \"$d\"".replace("$d", Settings.getWorkingDir()));
-            } else new ErrorDialog(null, ErrorType.EXPLORER_UNSUPPORTED, Settings.getWorkingDir());
+            } else new AlertDialog(null, """
+                        Unable to open directory, this
+                        desktop's file explorer is not
+                        supported, wanted directory:
+                        
+                        """ + limitLineLength(Settings.getWorkingDir()));
         }
+    }
+
+    private String limitLineLength(String s) {
+        // Get how many times 30 goes into the string length
+        int limit = 30;
+        int divisions = s.length() / limit;
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < divisions) { // Append all *limit* length lines:
+            sb.append(s, i * limit, (i * limit) + limit).append("\n");
+            i++;
+        } // Then append what's left of the last line:
+        sb.append(s, i * limit, (i * limit) + s.length() % limit);
+
+        return sb.toString();
     }
 
     @Override
@@ -145,8 +162,8 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     @Override
     public void windowClosed(WindowEvent e) {
-        parent.setDisabled(false);
-        parent.askForFocus();
+        parent.setEnabled(true); // Re-enable the summoner window
+        parent.requestFocus();
     }
 
     // Unused

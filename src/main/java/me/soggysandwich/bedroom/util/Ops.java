@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.util;
+package me.soggysandwich.bedroom.util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,16 +25,6 @@ public final class Ops { // Operations
         }
         return list;
 
-    }
-
-    /**
-     * Returns an "s" if number is greater than 1
-     *
-     * @param number Number to check
-     * @return An "s" if number is greater than 1, else ""
-     */
-    public static String isPlural(int number) { // Return "s" if there is more than 1 of number
-        return number > 1 ? "s" : "";
     }
 
     /**

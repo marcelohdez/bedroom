@@ -1,11 +1,11 @@
-package com.swiftsatchel.bedroom.main;
+package me.soggysandwich.bedroom.main;
 
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.FloatingSpinner;
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.Time;
+import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.dialog.FloatingSpinner;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.util.Ops;
+import me.soggysandwich.bedroom.util.Theme;
+import me.soggysandwich.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;

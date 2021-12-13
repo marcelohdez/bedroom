@@ -1,46 +1,44 @@
-package com.swiftsatchel.bedroom.dialog.settings;
+package me.soggysandwich.bedroom.dialog.settings;
 
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
+import me.soggysandwich.bedroom.util.Reloadable;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.util.Settings;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SettingsDialog extends JDialog implements WindowListener, WindowParent, KeyListener {
+public class SettingsDialog extends JDialog implements WindowListener, KeyListener {
 
     private final SettingsUI sui;
-    private final WindowParent parent;
+    private final Component parent;
     private boolean shifting = false;
 
-    public SettingsDialog(WindowParent parent) {
+    public SettingsDialog(Component parent) {
         this.parent = parent;
 
+        setTitle("Settings");
         setModalityType(ModalityType.APPLICATION_MODAL);
         setAlwaysOnTop(Settings.getAlwaysOnTop());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(this);
-        setTitle("Settings");
         setResizable(false);
         addKeyListener(this);
         sui = new SettingsUI(this);
         add(sui);
+
         pack();
-
-        // Center on parent window
-        int[] arr = parent.getXYWidthHeight();
-        setLocation(arr[0] + ((arr[2] / 2) - (getWidth() / 2)), arr[1] + ((arr[3] / 2) - (getHeight() / 2)));
-
-        setVisible(true);
+        setLocationRelativeTo(parent); // Center on parent window
+        setVisible(true); // Show
 
     }
 
-    WindowParent getWindowParent() {
-        return parent;
+    Reloadable getReloadableComponent() {
+        return (Reloadable) parent;
     }
 
     public boolean isShifting() {
@@ -80,30 +78,7 @@ public class SettingsDialog extends JDialog implements WindowListener, WindowPar
         save();
     }
 
-    @Override
-    public int[] getXYWidthHeight() {
-        return new int[]{getX(), getY(), getWidth(), getHeight()};
-    }
-
-    @Override
-    public void makeVisible(boolean b) {
-        setVisible(b);
-    }
-
-    @Override
-    public void setDisabled(boolean b) {
-        setEnabled(!b);
-    }
-
-    @Override
-    public void askForFocus() {
-        requestFocus();
-    }
-
     // ======= Currently unused interface methods =======
-    @Override
-    public void reloadSettings() {} // WindowParent
-
     @Override
     public void windowOpened(WindowEvent e) {} // WindowListener
     @Override

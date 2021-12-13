@@ -1,4 +1,4 @@
-package com.swiftsatchel.bedroom.util;
+package me.soggysandwich.bedroom.util;
 
 import java.time.LocalTime;
 

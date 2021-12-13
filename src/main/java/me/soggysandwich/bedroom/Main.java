@@ -1,15 +1,13 @@
-package com.swiftsatchel.bedroom;
+package me.soggysandwich.bedroom;
 
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
-import com.swiftsatchel.bedroom.dialog.alert.ErrorDialog;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.enums.ErrorType;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.main.BedroomWindow;
-import com.swiftsatchel.bedroom.main.UI;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
-import com.swiftsatchel.bedroom.util.Time;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
+import me.soggysandwich.bedroom.util.TimeWindowType;
+import me.soggysandwich.bedroom.main.BedroomWindow;
+import me.soggysandwich.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Theme;
+import me.soggysandwich.bedroom.util.Time;
+import me.soggysandwich.bedroom.main.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +26,7 @@ import java.util.prefs.Preferences;
 public class Main {
 
     // ======= Global Variables =======
-    public static final String VERSION = "3.1";
+    public static final String VERSION = "3.1.1";
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     // ======= Variables =======
@@ -69,13 +67,19 @@ public class Main {
             try { // Try to load shift history
                 shiftHistory = Settings.loadShiftHistory();
             } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
-                new ErrorDialog(null, ErrorType.FAILED_TO_LOAD_SHIFT_HISTORY);
+                new AlertDialog(null, """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""");
             }
 
         });
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
+        System.out.println(LocalDateTime.now().toString().substring(0, 16));
 
     }
 
@@ -146,7 +150,11 @@ public class Main {
                     }
 
                 } else {
-                    new ErrorDialog(wnd, ErrorType.STARTUP_ITEM_NONEXISTENT);
+                    new AlertDialog(wnd, """
+                        One of your startup items was
+                        not able to be started as it
+                        no longer exists. Please go to
+                        Settings > Manage Startup Items.""");
                 }
 
             }
@@ -156,10 +164,8 @@ public class Main {
     }
 
     public static void updateSettings() {
-
         Theme.reloadColors();
         wnd.reloadSettings();
-
     }
 
     public static void update() {
@@ -412,14 +418,10 @@ public class Main {
 
         // Save shitHistory to file
         try {
-
             saveHistoryToFile();
-
         } catch (IOException e) {
-
-            new ErrorDialog(wnd, ErrorType.SAVING_HISTORY_FAILED);
+            new AlertDialog(wnd, "Unable to save shift history");
             e.printStackTrace();
-
         }
 
         System.exit(0);
@@ -432,18 +434,13 @@ public class Main {
      * @throws IOException If unable to write file
      */
     private static void saveHistoryToFile() throws IOException {
-
         File path = new File(Settings.getWorkingDir()); // Make the directory into a File
 
         if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
-
             createHistoryFileAt(path.toPath()); // Create the file
-
-        } else { // If teh directory does not exist and cannot be made:
-            new ErrorDialog(null, ErrorType.SAVING_HISTORY_FAILED);
-            System.out.println("Error saving history to path.");
+        } else { // If the directory does not exist and cannot be made:
+            new AlertDialog(wnd, "Unable to save shift history");
         }
-
     }
 
     /**
@@ -476,8 +473,7 @@ public class Main {
         } catch (Exception e) {
 
             e.printStackTrace();
-            new AlertDialog(null, """
-                    Unable to save history to file.""");
+            new AlertDialog(wnd, "Unable to save history to file.");
 
         }
 

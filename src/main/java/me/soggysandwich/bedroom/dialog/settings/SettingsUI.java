@@ -1,11 +1,11 @@
-package com.swiftsatchel.bedroom.dialog.settings;
+package me.soggysandwich.bedroom.dialog.settings;
 
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.FloatingSpinner;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.Theme;
+import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
+import me.soggysandwich.bedroom.util.Ops;
+import me.soggysandwich.bedroom.util.Theme;
+import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.dialog.FloatingSpinner;
+import me.soggysandwich.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Objects;
 
-public class SettingsUI extends JPanel implements ActionListener, ChangeListener, ItemListener, MouseListener {
+public class SettingsUI extends JPanel implements ChangeListener, ItemListener, MouseListener {
 
     private final SettingsDialog parent;
 
@@ -32,7 +32,8 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     // ======= Combo Boxes: =======
     // Components we can color
-    private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons", "Background"});
+    private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons",
+            "Background"});
     // Themes
     private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Contrast",
             "Jelly Sandwich", "Midnight", "Light", "Pink+White"});
@@ -71,8 +72,10 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         createCheckBoxRow(showMoreShiftInfo);
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
-        createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.");
-        createButtonRow("Set Defaults", "Reset Misc. options, excluding startup items.");
+        createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.",
+                e -> new StartupItemsManager(parent));
+        createButtonRow("Set Defaults", "Reset Misc. options, excluding startup items.",
+                e -> setDefaultMisc());
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
@@ -252,7 +255,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
     }
 
-    private void createButtonRow(String buttonText, String toolTip) {
+    private void createButtonRow(String buttonText, String toolTip, ActionListener al) {
 
         // Create the components
         JPanel row = new JPanel();
@@ -260,7 +263,7 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
 
         // Customize them
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
-        button.addActionListener(this);
+        button.addActionListener(al);
         button.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
 
         // Add to row
@@ -458,21 +461,11 @@ public class SettingsUI extends JPanel implements ActionListener, ChangeListener
         // Since high contrast overwrites colors anyways, only do this if it is false
         if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
 
-        if (parent.getWindowParent() instanceof SelectTimeDialog)
-            parent.getWindowParent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
+        if (parent.getReloadableComponent() instanceof SelectTimeDialog)
+            parent.getReloadableComponent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
                                                         // its settings too
 
         Main.updateSettings();
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        switch (e.getActionCommand()) {
-            case "Manage Startup Items" -> new StartupItemsManager(parent);
-            case "Set Defaults" -> setDefaultMisc();
-        }
 
     }
 

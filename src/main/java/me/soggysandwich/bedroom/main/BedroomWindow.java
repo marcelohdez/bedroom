@@ -1,24 +1,21 @@
-package com.swiftsatchel.bedroom.main;
+package me.soggysandwich.bedroom.main;
 
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.history.ShiftHistoryWindow;
-import com.swiftsatchel.bedroom.dialog.settings.SettingsDialog;
-import com.swiftsatchel.bedroom.dialog.time.SelectTimeDialog;
-import com.swiftsatchel.bedroom.enums.TimeWindowType;
-import com.swiftsatchel.bedroom.util.Ops;
-import com.swiftsatchel.bedroom.util.Settings;
-import com.swiftsatchel.bedroom.util.WindowParent;
+import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
+import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
+import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
+import me.soggysandwich.bedroom.util.TimeWindowType;
+import me.soggysandwich.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Reloadable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-public class BedroomWindow extends JFrame implements WindowParent, WindowListener, KeyListener {
+public class BedroomWindow extends JFrame implements Reloadable, WindowListener, KeyListener {
 
     private final UI ui = new UI(this);
 
@@ -61,30 +58,8 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
     @Override
     public void reloadSettings() {
-
         ui.colorComponents();
         reloadAlwaysOnTop();
-
-    }
-
-    @Override
-    public int[] getXYWidthHeight() {
-        return new int[]{getX(), getY(), getWidth(), getHeight()};
-    }
-
-    @Override
-    public void makeVisible(boolean b) {
-        setVisible(b);
-    }
-
-    @Override
-    public void setDisabled(boolean b) {
-        setEnabled(!b);
-    }
-
-    @Override
-    public void askForFocus() {
-        requestFocus();
     }
 
     @Override
@@ -114,9 +89,7 @@ public class BedroomWindow extends JFrame implements WindowParent, WindowListene
 
                 // If we do not have the option selected, just clock out early at
                 // the current time down to the minute
-            } else Main.clockOut(LocalDateTime.parse((LocalDate.now() + "T" +
-                    Ops.addZeroUnder10(LocalTime.now().getHour()) + ":" +
-                    Ops.addZeroUnder10(LocalTime.now().getMinute()))));
+            } else Main.clockOut(LocalDateTime.parse(LocalDateTime.now().toString().substring(0, 16)));
 
         } else if (LocalDateTime.now().isBefore(Main.getClockInTime())) { // If we have not clocked in:
 

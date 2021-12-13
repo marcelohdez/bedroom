@@ -1,7 +1,7 @@
-package com.swiftsatchel.bedroom.util;
+package me.soggysandwich.bedroom.util;
 
-import com.swiftsatchel.bedroom.Main;
-import com.swiftsatchel.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.Main;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
