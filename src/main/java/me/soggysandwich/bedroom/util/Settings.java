@@ -176,7 +176,7 @@ public final class Settings {
      *
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> getStartupItemsList() {
+    public static String[] getStartupItemsList() {
 
         ArrayList<String> list = new ArrayList<>();
         String str = Main.userPrefs.get("workApps", "[]");
@@ -188,15 +188,15 @@ public final class Settings {
             if (str.charAt(i) != 44) { // If it is not a comma, extend end point
                 end++;
             } else { // Else return the string we have
-                list.add(str.substring(start, end));
+                if (!str.substring(start,end).isBlank()) list.add(str.substring(start, end));
                 start = i+2; // Go 2 characters ahead to avoid the space in between items.
                 end = i+1;
             }
 
         }
-        list.add(str.substring(start, end));
+        if (!str.substring(start, end).isBlank()) list.add(str.substring(start, end));
 
-        return list;
+        return list.toArray(new String[0]);
 
     }
 
@@ -272,11 +272,10 @@ public final class Settings {
         File file = new File(Settings.getWorkingDir() + File.separator + "shift.history"); // Get file
 
         if (file.exists()) {
-            try {
+            try (Scanner reader = new Scanner(file)) {
 
-                Scanner reader = new Scanner(file); // Make a new scanner
-                if (reader.hasNextLine()) // If there is a line to read:
-                    return reader.nextLine(); // Read line of data
+                if (reader.hasNextLine()) // Read the next line (we only save history in a single line)
+                    return reader.nextLine();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

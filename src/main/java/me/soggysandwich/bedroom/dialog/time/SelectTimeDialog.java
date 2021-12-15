@@ -33,8 +33,10 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         init();
     }
 
-    // Creates a continued select time dialog , given a parent and window type, plus the last selected time
-    // and the original parent of this group of select time dialogs
+    /**
+     * Creates a continued select time dialog , given a parent and window type, plus the last selected time
+     * and the original parent of this group of select time dialogs
+     */
     public SelectTimeDialog(SelectTimeDialog parent, TimeWindowType type, LocalDateTime lastTime) {
         this.type = type;
         initParent = parent.getInitParent();
@@ -87,9 +89,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         } else initParent.setEnabled(true); // Re-enable parent
     }
 
-    /**
-     * Dispose this window and its parent, to finish this set and clear up memory
-     */
+    /** Dispose this window and its parent, to finish this set and clear up memory */
     protected void finish() {
         if (lastDialog != null) lastDialog.dispose();
         dispose();

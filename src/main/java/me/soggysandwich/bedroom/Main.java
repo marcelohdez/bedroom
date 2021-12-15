@@ -1,6 +1,7 @@
 package me.soggysandwich.bedroom;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.main.BedroomWindow;
@@ -20,13 +21,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
 public class Main {
 
     // ======= Global Variables =======
-    public static final String VERSION = "3.1.1";
+    public static final String VERSION = "3.1.2";
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     // ======= Variables =======
@@ -61,25 +63,12 @@ public class Main {
         Theme.setColors(); // Set extra color accents through UIManager
         init();
         SwingUtilities.invokeLater(() -> {
-
             Main.openStartupItems();
-
-            try { // Try to load shift history
-                shiftHistory = Settings.loadShiftHistory();
-            } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
-                new AlertDialog(null, """
-                    Bedroom was unable to load
-                    your past shift history as
-                    a character loaded was not
-                    a number. Please check
-                    your history file.""");
-            }
-
+            Main.loadShiftHistory();
         });
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
-        System.out.println(LocalDateTime.now().toString().substring(0, 16));
 
     }
 
@@ -134,33 +123,52 @@ public class Main {
 
     }
 
-    private static void openStartupItems() {
-
-        for (String location : Settings.getStartupItemsList()) {
-
-            if (!location.equals("")) {
-
-                File workApp = new File(location);
-                if (workApp.exists()) {
-
-                    try {
-                        Desktop.getDesktop().open(workApp);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    new AlertDialog(wnd, """
-                        One of your startup items was
-                        not able to be started as it
-                        no longer exists. Please go to
-                        Settings > Manage Startup Items.""");
-                }
-
-            }
-
+    private static void loadShiftHistory() {
+        try { // Try to load shift history
+            shiftHistory = Settings.loadShiftHistory();
+        } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
+            new AlertDialog(null, """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""");
         }
+    }
 
+    private static void openStartupItems() {
+        String[] list = Settings.getStartupItemsList();
+
+        for (String location : list) {
+            if (!location.isEmpty()) {
+                openItem(location);
+            }
+        }
+    }
+
+    private static void openItem(String loc) {
+        File workApp = new File(loc);
+        if (!loc.toLowerCase(Locale.ROOT).endsWith(".jar") || new YesNoDialog(null, """
+                        For safety reasons, Bedroom does not
+                        automatically open .jar files so users
+                        do not create an endless loop of
+                        Bedroom processes, is this startup item
+                        ok to run?:
+                        
+                        """ + loc).accepted()) {
+
+            if (workApp.exists()) {
+                try {
+                    Desktop.getDesktop().open(workApp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else new AlertDialog(wnd, """
+                    One of your startup items was
+                    not able to be started as it
+                    no longer exists. Please go to
+                    Settings > Manage Startup Items.""");
+        }
     }
 
     public static void updateSettings() {
@@ -257,7 +265,7 @@ public class Main {
     }
 
     private static String getUntilTargetText() {
-        int ordersNeeded = getOrdersNeededForTarget();
+        int ordersNeeded = getOrdersLeftForTarget();
 
         if (ordersNeeded > 0) {
             return "$u until target of $t/hr"
@@ -268,8 +276,8 @@ public class Main {
         }
     }
 
-    // Tell us how many orders we need to reach our target
-    public static int getOrdersNeededForTarget() {
+    /** Returns how many orders user has left to reach their target */
+    public static int getOrdersLeftForTarget() {
 
         double neededForTarget = (double) secondsWorked/3600 * target;
         if (neededForTarget > orders) {
@@ -455,26 +463,19 @@ public class Main {
 
         try {
 
-            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it:
+            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it
+                try (FileWriter writer = new FileWriter(shiftHistoryFile)) {
+                    if (shiftHistory != null) {
 
-                FileWriter writer = new FileWriter(shiftHistoryFile);
+                        writer.write(shiftHistory.toString()); // Write history
 
-                if (shiftHistory != null) {
-
-                    writer.write(shiftHistory.toString()); // Write history
-
-                } else writer.write("{}"); // If history is null, just write empty brackets
-
-                writer.close();
-
-            // Else if it exists, attempt to delete and remake it:
-            } else if (shiftHistoryFile.delete()) saveHistoryToFile();
+                    } else writer.write("{}"); // If history is null, just write empty brackets
+                }
+            } else if (shiftHistoryFile.delete()) saveHistoryToFile(); // delete and remake it if it does exists
 
         } catch (Exception e) {
-
             e.printStackTrace();
             new AlertDialog(wnd, "Unable to save history to file.");
-
         }
 
     }
