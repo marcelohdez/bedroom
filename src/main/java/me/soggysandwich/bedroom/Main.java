@@ -455,26 +455,19 @@ public class Main {
 
         try {
 
-            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it:
+            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it
+                try (FileWriter writer = new FileWriter(shiftHistoryFile)) {
+                    if (shiftHistory != null) {
 
-                FileWriter writer = new FileWriter(shiftHistoryFile);
+                        writer.write(shiftHistory.toString()); // Write history
 
-                if (shiftHistory != null) {
-
-                    writer.write(shiftHistory.toString()); // Write history
-
-                } else writer.write("{}"); // If history is null, just write empty brackets
-
-                writer.close();
-
-            // Else if it exists, attempt to delete and remake it:
-            } else if (shiftHistoryFile.delete()) saveHistoryToFile();
+                    } else writer.write("{}"); // If history is null, just write empty brackets
+                }
+            } else if (shiftHistoryFile.delete()) saveHistoryToFile(); // delete and remake it if it does exists
 
         } catch (Exception e) {
-
             e.printStackTrace();
             new AlertDialog(wnd, "Unable to save history to file.");
-
         }
 
     }

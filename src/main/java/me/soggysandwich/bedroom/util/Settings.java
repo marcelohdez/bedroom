@@ -272,11 +272,10 @@ public final class Settings {
         File file = new File(Settings.getWorkingDir() + File.separator + "shift.history"); // Get file
 
         if (file.exists()) {
-            try {
+            try (Scanner reader = new Scanner(file)) {
 
-                Scanner reader = new Scanner(file); // Make a new scanner
-                if (reader.hasNextLine()) // If there is a line to read:
-                    return reader.nextLine(); // Read line of data
+                if (reader.hasNextLine()) // Read the next line (we only save history in a single line)
+                    return reader.nextLine();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
