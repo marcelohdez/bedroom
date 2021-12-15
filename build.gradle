@@ -14,7 +14,6 @@ repositories {
 
 application {
     mainClass = 'me.soggysandwich.bedroom.Main'
-    applicationDefaultJvmArgs = ['-Xmx32M', '-Xms16M']
 }
 
 jar {
