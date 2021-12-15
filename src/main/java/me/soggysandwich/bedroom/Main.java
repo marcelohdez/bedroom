@@ -257,7 +257,7 @@ public class Main {
     }
 
     private static String getUntilTargetText() {
-        int ordersNeeded = getOrdersNeededForTarget();
+        int ordersNeeded = getOrdersLeftForTarget();
 
         if (ordersNeeded > 0) {
             return "$u until target of $t/hr"
@@ -268,8 +268,8 @@ public class Main {
         }
     }
 
-    // Tell us how many orders we need to reach our target
-    public static int getOrdersNeededForTarget() {
+    /** Returns how many orders user has left to reach their target */
+    public static int getOrdersLeftForTarget() {
 
         double neededForTarget = (double) secondsWorked/3600 * target;
         if (neededForTarget > orders) {

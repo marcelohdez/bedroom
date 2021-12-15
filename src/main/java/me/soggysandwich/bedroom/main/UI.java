@@ -82,9 +82,9 @@ public class UI extends JPanel {
 
     private void setAddOrderToolTip() {
 
-        if (Main.getOrdersNeededForTarget() > Main.getOrders()) { // Tell us how many orders we need to reach our target
+        if (Main.getOrdersLeftForTarget() > 0) { // Tell us how many orders we need to reach our target
             addOrder.setToolTipText("<html><b>You are $n orders behind your hourly target."
-                    .replace("$n", String.valueOf(Main.getOrdersNeededForTarget())));
+                    .replace("$n", String.valueOf(Main.getOrdersLeftForTarget())));
         } else if (Main.getOrders() > Main.getOrdersNeeded()) {
             addOrder.setToolTipText("<html><b>You are done for the day!</b></html>");
         } else { // If we have gotten all the orders needed for our shift.
