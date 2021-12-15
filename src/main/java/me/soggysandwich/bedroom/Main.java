@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
 public class Main {
 
     // ======= Global Variables =======
-    public static final String VERSION = "3.1.1";
+    public static final String VERSION = "3.1.2";
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     // ======= Variables =======
