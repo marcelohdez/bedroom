@@ -1,6 +1,7 @@
 package me.soggysandwich.bedroom;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.main.BedroomWindow;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
@@ -61,25 +63,12 @@ public class Main {
         Theme.setColors(); // Set extra color accents through UIManager
         init();
         SwingUtilities.invokeLater(() -> {
-
             Main.openStartupItems();
-
-            try { // Try to load shift history
-                shiftHistory = Settings.loadShiftHistory();
-            } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
-                new AlertDialog(null, """
-                    Bedroom was unable to load
-                    your past shift history as
-                    a character loaded was not
-                    a number. Please check
-                    your history file.""");
-            }
-
+            Main.loadShiftHistory();
         });
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
-        System.out.println(LocalDateTime.now().toString().substring(0, 16));
 
     }
 
@@ -134,33 +123,52 @@ public class Main {
 
     }
 
-    private static void openStartupItems() {
-
-        for (String location : Settings.getStartupItemsList()) {
-
-            if (!location.equals("")) {
-
-                File workApp = new File(location);
-                if (workApp.exists()) {
-
-                    try {
-                        Desktop.getDesktop().open(workApp);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    new AlertDialog(wnd, """
-                        One of your startup items was
-                        not able to be started as it
-                        no longer exists. Please go to
-                        Settings > Manage Startup Items.""");
-                }
-
-            }
-
+    private static void loadShiftHistory() {
+        try { // Try to load shift history
+            shiftHistory = Settings.loadShiftHistory();
+        } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
+            new AlertDialog(null, """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""");
         }
+    }
 
+    private static void openStartupItems() {
+        String[] list = Settings.getStartupItemsList();
+
+        for (String location : list) {
+            if (!location.isEmpty()) {
+                openItem(location);
+            }
+        }
+    }
+
+    private static void openItem(String loc) {
+        File workApp = new File(loc);
+        if (!loc.toLowerCase(Locale.ROOT).endsWith(".jar") || new YesNoDialog(null, """
+                        For safety reasons, Bedroom does not
+                        automatically open .jar files so users
+                        do not create an endless loop of
+                        Bedroom processes, is this startup item
+                        ok to run?:
+                        
+                        """ + loc).accepted()) {
+
+            if (workApp.exists()) {
+                try {
+                    Desktop.getDesktop().open(workApp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else new AlertDialog(wnd, """
+                    One of your startup items was
+                    not able to be started as it
+                    no longer exists. Please go to
+                    Settings > Manage Startup Items.""");
+        }
     }
 
     public static void updateSettings() {

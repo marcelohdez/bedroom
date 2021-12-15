@@ -176,7 +176,7 @@ public final class Settings {
      *
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> getStartupItemsList() {
+    public static String[] getStartupItemsList() {
 
         ArrayList<String> list = new ArrayList<>();
         String str = Main.userPrefs.get("workApps", "[]");
@@ -188,15 +188,15 @@ public final class Settings {
             if (str.charAt(i) != 44) { // If it is not a comma, extend end point
                 end++;
             } else { // Else return the string we have
-                list.add(str.substring(start, end));
+                if (!str.substring(start,end).isBlank()) list.add(str.substring(start, end));
                 start = i+2; // Go 2 characters ahead to avoid the space in between items.
                 end = i+1;
             }
 
         }
-        list.add(str.substring(start, end));
+        if (!str.substring(start, end).isBlank()) list.add(str.substring(start, end));
 
-        return list;
+        return list.toArray(new String[0]);
 
     }
 
