@@ -376,10 +376,6 @@ public class Main {
         }
     }
 
-    public static void removeFromHistory(LocalDate date) {
-        shiftHistory.remove(date);
-    }
-
     public static void clockOut(LocalDateTime time) {
 
         // Store the current shift end date and the orders per hour within the chosen time.

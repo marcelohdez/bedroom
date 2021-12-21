@@ -1,24 +1,25 @@
 package me.soggysandwich.bedroom.dialog.history;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener {
+public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener, MouseListener {
 
     private final Component parent;
-    private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
+    private final ShiftHistoryChart chart = new ShiftHistoryChart();
 
     private final JPanel topRow = new JPanel();
     private final JLabel showingLabel = new JLabel("Data points to show:");
@@ -29,11 +30,13 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final JButton rightButton = new JButton(">");
 
     private final JPanel botRow = new JPanel(); // Bottom row panel
-    private final JButton historyFolderButton = new JButton("Open history directory");
+
+    private int clickedDateIndex = -1;
 
     public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
         parent.setEnabled(false); // Disable parent window
+        chart.addMouseListener(this);
 
         // Set window properties
         setAlwaysOnTop(Settings.getAlwaysOnTop());
@@ -71,27 +74,55 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     }
 
     private void init() {
+        JButton historyFolderButton = new JButton("Open history directory");
+        // Right-click menu stuffs:
+        JPopupMenu delMenu = new JPopupMenu();
+        JMenuItem deleteDate = new JMenuItem("Delete");
 
         // Apply listeners to needed components
         ptsAmount.addItemListener((e) -> {
             if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
                 chart.setPointsAmountToAll();
             } else if (ptsAmount.getSelectedItem() != null)
-                chart.setPointsAmount(Integer.parseInt((String) ptsAmount.getSelectedItem()));
+                chart.show(Integer.parseInt((String) ptsAmount.getSelectedItem()));
 
             chart.repaint();
             updatePageInfo();
         });
 
-        leftButton.addActionListener((e) -> chart.prevPage());
-        rightButton.addActionListener((e) -> chart.nextPage());
+        leftButton.addActionListener((e) -> {
+            chart.prevPage();
+            updatePageInfo();
+        });
+        rightButton.addActionListener((e) -> {
+            chart.nextPage();
+            updatePageInfo();
+        });
         historyFolderButton.addActionListener((e) -> SwingUtilities.invokeLater(() -> {
             try {
                 openHistoryDirectory();
             } catch (Exception ex) { ex.printStackTrace(); }
         }));
+        deleteDate.addActionListener(e -> {
+            System.out.println(clickedDateIndex);
+            if (clickedDateIndex >= 0) {
+                if (new YesNoDialog(this, """
+                        Are you sure you want to
+                        delete your shift from
+                        $d?"""
+                        .replace("$d", chart.getDateAt(clickedDateIndex)
+                                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)).toUpperCase(Locale.ROOT)))
+                        .accepted()) {
+
+                    chart.deleteDateAt(clickedDateIndex);
+                    updatePageInfo();
+                }
+            } else new AlertDialog(null, "No existing date selected");
+        });
 
         // Add to their respective places
+        delMenu.add(deleteDate);
+        chart.setComponentPopupMenu(delMenu);
         topRow.add(showingLabel);
         topRow.add(ptsAmount);
         topRow.add(datesShown);
@@ -110,10 +141,10 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     public void updatePageInfo() {
 
-        pagesLabel.setText("Page " + chart.currentPage() + "/" + chart.totalPages());
-        leftButton.setEnabled(chart.currentPage() != 1); // Disable left button if on first page
-        rightButton.setEnabled(chart.currentPage() != chart.totalPages()); // Disable right button if on last page
-        datesShown.setText(chart.getShownDateRange());
+        pagesLabel.setText("Page " + chart.page() + "/" + chart.totalPages());
+        leftButton.setEnabled(chart.page() != 1); // Disable left button if on first page
+        rightButton.setEnabled(chart.page() != chart.totalPages()); // Disable right button if on last page
+        datesShown.setText(chart.pageDateRange());
 
     }
 
@@ -166,6 +197,16 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         parent.requestFocus();
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+        clickedDateIndex = chart.getDateFromBarAt(e.getX());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        clickedDateIndex = chart.getDateFromBarAt(e.getX());
+    }
+
     // Unused
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -183,5 +224,11 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     public void windowActivated(WindowEvent e) {}
     @Override
     public void windowDeactivated(WindowEvent e) {}
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
 
 }
