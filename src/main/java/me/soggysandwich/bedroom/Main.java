@@ -155,7 +155,7 @@ public class Main {
                         Bedroom processes, is this startup item
                         ok to run?:
                         
-                        """ + loc).accepted()) {
+                        """ + workApp.getName()).accepted()) {
 
             if (workApp.exists()) {
                 try {
