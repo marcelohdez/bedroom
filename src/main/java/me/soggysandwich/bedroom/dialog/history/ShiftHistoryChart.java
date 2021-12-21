@@ -241,12 +241,12 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     /**
-     * Gets the true index of the given value in the data array, taking into account
+     * Gets the true index of the given value in the dates array, taking into account
      * the final page's missing dates
      */
     private int indexOf(int value) {
         if (totalPages > 1 && remainingDates > 0 && currentPage == totalPages)
-            value -= remainingDates;
+            if (remainingDates != dates.size()) value -= remainingDates;
 
         return value;
     }
