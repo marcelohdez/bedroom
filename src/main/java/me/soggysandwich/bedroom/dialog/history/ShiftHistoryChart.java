@@ -294,7 +294,7 @@ public class ShiftHistoryChart extends JPanel {
         updateAllInfo();
     }
 
-    public void setPointsAmountToAll() {
+    public void showAll() {
         pointsAmount = dates.size();
         updateAllInfo();
     }
