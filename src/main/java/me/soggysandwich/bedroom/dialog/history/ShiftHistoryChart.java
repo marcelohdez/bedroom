@@ -51,8 +51,8 @@ public class ShiftHistoryChart extends JPanel {
                 }
             }
             noHistory = !(newList.size() > 0);
-        }
-        if (canShowToday) newList.add(LocalDate.MAX); // LocalDate.MAX represents today's date
+            if (canShowToday) newList.add(LocalDate.MAX); // LocalDate.MAX represents today's date
+        } else noHistory = true;
 
         return newList;
     }
@@ -85,7 +85,6 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     private void updateAllInfo() {
-        System.out.println("iran");
         totalPages = getPageAmount();
         range = getValueRange();
         remainingDates = pointsAmount - (dates.size() % pointsAmount);
