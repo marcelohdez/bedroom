@@ -104,7 +104,6 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             } catch (Exception ex) { ex.printStackTrace(); }
         }));
         deleteDate.addActionListener(e -> {
-            System.out.println(clickedDateIndex);
             if (clickedDateIndex >= 0) {
                 if (new YesNoDialog(this, """
                         Are you sure you want to

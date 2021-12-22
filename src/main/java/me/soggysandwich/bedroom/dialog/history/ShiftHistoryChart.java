@@ -61,7 +61,7 @@ public class ShiftHistoryChart extends JPanel {
     private int getPageAmount() {
         int pageAmount = (int) Math.ceil((double) totalDates() / (double) pointsAmount);
         currentPage = pageAmount;
-        if (Main.clockInTimePassed()) canShowToday = true;
+        canShowToday = Main.clockInTimePassed();
 
         return pageAmount;
     }
@@ -135,7 +135,11 @@ public class ShiftHistoryChart extends JPanel {
 
             int index = indexOf(pointsAmount * (currentPage - 1) + bar);
             boolean onToday = canShowToday && index == dates.size() - 1;
-            float value = !onToday ? Main.getShiftHistory().get(dates.get(index)) : todayOrdersPerHr();
+
+            float value;
+            if (index < dates.size()) {
+                value = !onToday ? Main.getShiftHistory().get(dates.get(index)) : todayOrdersPerHr();
+            } else break;
 
             int top = (int) (getHeight() - (getHeight() / range) * value); // Top of current bar
             int x = rangeTextSpacing + (barSpacing * bar);
@@ -143,28 +147,32 @@ public class ShiftHistoryChart extends JPanel {
             g.setColor(barColor); // Bar is colored same as Theme's text color
             g.fillRect(x, top, (barSpacing - 1), getHeight() - top); // Draw bar
 
-            boolean newMonth = barSpacing > g.getFont().getSize() * 1.5 &&
-                    (onToday || bar == 0 || dates.get(index).getMonth() != dates.get(index - 1).getMonth());
-            drawBarValue(g,
-                    newMonth,
-                    value,
-                    x,
-                    top,
-                    barColor,
-                    contrastColor,
-                    onToday ? "NOW" : dates.get(index).getMonth().toString().substring(0, 3)
-            );
-            drawDate(g,
-                    onToday ? LocalDate.now().getDayOfMonth() : dates.get(index).getDayOfMonth(),
-                    x,
-                    newMonth,
-                    onToday ? "NOW" : dates.get(index).getMonth().toString().substring(0, 3),
-                    barColor,
-                    contrastColor
-            );
-
-            if (onToday) break;
+            drawBarInfo(g, onToday, bar, index, value, x, top, barColor, contrastColor);
         }
+    }
+
+    private void drawBarInfo(Graphics2D g, boolean onToday, int bar, int index, float value,
+                             int x, int top, Color barColor, Color contrastColor) {
+        boolean newMonth = barSpacing > g.getFont().getSize() * 1.5 &&
+                (onToday || bar == 0 || dates.get(index).getMonth() != dates.get(index - 1).getMonth());
+
+        drawBarValue(g,
+                newMonth,
+                value,
+                x,
+                top,
+                barColor,
+                contrastColor,
+                onToday ? "NOW" : dates.get(index).getMonth().toString().substring(0, 3)
+        );
+        drawDate(g,
+                onToday ? LocalDate.now().getDayOfMonth() : dates.get(index).getDayOfMonth(),
+                x,
+                newMonth,
+                onToday ? "NOW" : dates.get(index).getMonth().toString().substring(0, 3),
+                barColor,
+                contrastColor
+        );
     }
 
     /** Draw the bar's day of the month at the bottom */
@@ -273,7 +281,7 @@ public class ShiftHistoryChart extends JPanel {
 
             int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
             if (dates.size() < pointsAmount) {
-                shown = dates.size() - 1;
+                shown = dates.size();
             }
 
             if (!canShowToday) {
