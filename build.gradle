@@ -13,11 +13,11 @@ repositories {
 }
 
 application {
-    mainClass = 'me.soggysandwich.bedroom.Main'
+    mainClass = 'me.soggysandwich.bedroom.Bedroom'
 }
 
 jar {
     manifest {
-        attributes "Main-Class": 'me.soggysandwich.bedroom.Main'
+        attributes "Main-Class": 'me.soggysandwich.bedroom.Bedroom'
     }
 }
