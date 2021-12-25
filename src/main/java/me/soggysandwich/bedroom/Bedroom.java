@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-public class Main {
+public class Bedroom {
 
     // ======= Global Variables =======
     public static final String VERSION = "3.1.3-DEV";
@@ -63,8 +63,8 @@ public class Main {
         Theme.setColors(); // Set extra color accents through UIManager
         init();
         SwingUtilities.invokeLater(() -> {
-            Main.openStartupItems();
-            Main.loadShiftHistory();
+            Bedroom.openStartupItems();
+            Bedroom.loadShiftHistory();
         });
 
         // Create a timer to run every second, updating the time

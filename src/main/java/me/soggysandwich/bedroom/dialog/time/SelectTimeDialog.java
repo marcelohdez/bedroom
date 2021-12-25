@@ -3,7 +3,7 @@ package me.soggysandwich.bedroom.dialog.time;
 import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
 import me.soggysandwich.bedroom.main.BedroomWindow;
 import me.soggysandwich.bedroom.util.Reloadable;
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
 import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.util.Settings;
@@ -77,7 +77,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
 
     public void close() {
         switch (type) {
-            case CLOCK_IN -> Main.exit();
+            case CLOCK_IN -> Bedroom.exit();
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
                 lastDialog.setVisible(true);

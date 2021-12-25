@@ -3,7 +3,7 @@ package me.soggysandwich.bedroom.dialog.settings;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.util.Ops;
 import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.dialog.FloatingSpinner;
 import me.soggysandwich.bedroom.util.Settings;
 
@@ -21,7 +21,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB; // Component color values
     private int currentlyColoring = // Component(s) currently being colored,
             // 0 = text, 1 = buttonText, 2 = buttons, 3 = background
-            Main.userPrefs.getInt("lastColoring", 0);
+            Bedroom.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
     public int changeCount = 0; // Amount of color changes, (2 are done on startup, so 3 means colors have changed)
@@ -63,9 +63,9 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
 
         // Add rows
         createLabelRow("Colors");
-        createListBoxRow("Preset:", themeListBox, Main.userPrefs.getInt("lastTheme", 0));
+        createListBoxRow("Preset:", themeListBox, Bedroom.userPrefs.getInt("lastTheme", 0));
         createColoringPanel();
-        createListBoxRow("Currently editing:", coloringListBox, Main.userPrefs.getInt("lastColoring", 0));
+        createListBoxRow("Currently editing:", coloringListBox, Bedroom.userPrefs.getInt("lastColoring", 0));
         createLabelRow("Misc.");
         createCheckBoxRow(alwaysOnTop, recoverCrash);
         createCheckBoxRow(askBeforeEarlyClose);
@@ -85,24 +85,24 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
 
         // Get already set RGB values
         textRGB = new int[] { // Get text RGB values
-                Main.userPrefs.getInt("textRed", 240),
-                Main.userPrefs.getInt("textGreen", 240),
-                Main.userPrefs.getInt("textBlue", 240)};
+                Bedroom.userPrefs.getInt("textRed", 240),
+                Bedroom.userPrefs.getInt("textGreen", 240),
+                Bedroom.userPrefs.getInt("textBlue", 240)};
 
         buttonTextRGB = new int[] { // Get button text RGB values
-                Main.userPrefs.getInt("buttonTextRed", 240),
-                Main.userPrefs.getInt("buttonTextGreen", 240),
-                Main.userPrefs.getInt("buttonTextBlue", 240)};
+                Bedroom.userPrefs.getInt("buttonTextRed", 240),
+                Bedroom.userPrefs.getInt("buttonTextGreen", 240),
+                Bedroom.userPrefs.getInt("buttonTextBlue", 240)};
 
         buttonRGB = new int[] { // Get button RGB values
-                Main.userPrefs.getInt("buttonRed", 80),
-                Main.userPrefs.getInt("buttonGreen", 80),
-                Main.userPrefs.getInt("buttonBlue", 80)};
+                Bedroom.userPrefs.getInt("buttonRed", 80),
+                Bedroom.userPrefs.getInt("buttonGreen", 80),
+                Bedroom.userPrefs.getInt("buttonBlue", 80)};
 
         bgRGB = new int[] { // Get background RGB values
-                Main.userPrefs.getInt("bgRed", 64),
-                Main.userPrefs.getInt("bgGreen", 64),
-                Main.userPrefs.getInt("bgBlue", 64)};
+                Bedroom.userPrefs.getInt("bgRed", 64),
+                Bedroom.userPrefs.getInt("bgGreen", 64),
+                Bedroom.userPrefs.getInt("bgBlue", 64)};
 
     }
 
@@ -358,7 +358,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         currentlyColoring = index;
         showColorValues = false;
         updateColorSliders();
-        Main.userPrefs.putInt("lastColoring", index);
+        Bedroom.userPrefs.putInt("lastColoring", index);
 
     }
 
@@ -429,7 +429,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         bgRGB = newBgRGB;
         updateColorSliders();
 
-        Main.userPrefs.putInt("lastTheme", index);
+        Bedroom.userPrefs.putInt("lastTheme", index);
 
     }
 
@@ -465,7 +465,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
             parent.getReloadableComponent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
                                                         // its settings too
 
-        Main.updateSettings();
+        Bedroom.updateSettings();
 
     }
 

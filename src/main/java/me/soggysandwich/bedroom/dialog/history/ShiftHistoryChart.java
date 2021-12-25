@@ -1,6 +1,6 @@
 package me.soggysandwich.bedroom.dialog.history;
 
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class ShiftHistoryChart extends JPanel {
 
     private boolean noHistory = false;
-    private boolean canShowToday = Main.clockInTimePassed(); // If we're currently clocked in
+    private boolean canShowToday = Bedroom.clockInTimePassed(); // If we're currently clocked in
 
     private final ArrayList<LocalDate> dates = getDates();
     private int pointsAmount = 8;
@@ -44,9 +44,9 @@ public class ShiftHistoryChart extends JPanel {
     private ArrayList<LocalDate> getDates() {
         ArrayList<LocalDate> newList = new ArrayList<>();
 
-        if (Main.getShiftHistory() != null) { // Add existing shift history:
-            for (LocalDate key : Main.getShiftHistory().keySet()) {
-                if (Main.getShiftHistory().get(key) != null && !Main.getShiftHistory().get(key).isNaN()) {
+        if (Bedroom.getShiftHistory() != null) { // Add existing shift history:
+            for (LocalDate key : Bedroom.getShiftHistory().keySet()) {
+                if (Bedroom.getShiftHistory().get(key) != null && !Bedroom.getShiftHistory().get(key).isNaN()) {
                     newList.add(key);
                 }
             }
@@ -61,7 +61,7 @@ public class ShiftHistoryChart extends JPanel {
     private int getPageAmount() {
         int pageAmount = (int) Math.ceil((double) totalDates() / (double) pointsAmount);
         currentPage = pageAmount;
-        canShowToday = Main.clockInTimePassed();
+        canShowToday = Bedroom.clockInTimePassed();
 
         return pageAmount;
     }
@@ -73,8 +73,8 @@ public class ShiftHistoryChart extends JPanel {
             int index = indexOf(i + pointsAmount * (currentPage - 1)); // Get its index
             float valueToCheck = 0;
 
-            if (index < dates.size() - (Main.clockInTimePassed() ? 1 : 0)) {
-                valueToCheck = Main.getShiftHistory().get(dates.get(index));
+            if (index < dates.size() - (Bedroom.clockInTimePassed() ? 1 : 0)) {
+                valueToCheck = Bedroom.getShiftHistory().get(dates.get(index));
             } else if (canShowToday)
                 valueToCheck = todayOrdersPerHr();
 
@@ -138,7 +138,7 @@ public class ShiftHistoryChart extends JPanel {
 
             float value;
             if (index < dates.size()) {
-                value = !onToday ? Main.getShiftHistory().get(dates.get(index)) : todayOrdersPerHr();
+                value = !onToday ? Bedroom.getShiftHistory().get(dates.get(index)) : todayOrdersPerHr();
             } else break;
 
             int top = (int) (getHeight() - (getHeight() / range) * value); // Top of current bar
@@ -208,7 +208,7 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     private float todayOrdersPerHr() {
-        String text = Main.getOrdersPerHour();
+        String text = Bedroom.getOrdersPerHour();
         return Float.parseFloat(text.substring(0, text.length() - 3));
     }
 
@@ -310,7 +310,7 @@ public class ShiftHistoryChart extends JPanel {
     public void nextPage() {
         if (currentPage < totalPages) {
             currentPage++;
-            canShowToday = Main.clockInTimePassed() && currentPage == totalPages;
+            canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
             range = getValueRange();
             repaint();
         }
@@ -319,7 +319,7 @@ public class ShiftHistoryChart extends JPanel {
     public void prevPage() {
         if (currentPage > 1) {
             currentPage--;
-            canShowToday = Main.clockInTimePassed() && currentPage == totalPages;
+            canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
             range = getValueRange();
             repaint();
         }
@@ -339,7 +339,7 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     public void deleteDateAt(int index) {
-        Main.getShiftHistory().remove(dates.get(index));
+        Bedroom.getShiftHistory().remove(dates.get(index));
         dates.remove(index);
         updateAllInfo();
         repaint();

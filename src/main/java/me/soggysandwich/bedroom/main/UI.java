@@ -1,6 +1,6 @@
 package me.soggysandwich.bedroom.main;
 
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.dialog.FloatingSpinner;
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.util.Ops;
@@ -37,12 +37,12 @@ public class UI extends JPanel {
         statsPopup.add(editOrders);
 
         copyOrdersInfo.addActionListener((e -> {
-            StringSelection ordersPerHr = new StringSelection(Main.getOrdersPerHour());
+            StringSelection ordersPerHr = new StringSelection(Bedroom.getOrdersPerHour());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ordersPerHr, ordersPerHr);
         }));
         editOrders.addActionListener((e) -> {
-            if (Main.getOrders() < 999) {
-                Main.setOrders(new FloatingSpinner(Main.getOrders(),
+            if (Bedroom.getOrders() < 999) {
+                Bedroom.setOrders(new FloatingSpinner(Bedroom.getOrders(),
                         0, 999).showSelf(), true);
                 parent.pack(); // Update UI and window size for new number
             } else new AlertDialog(parent, """
@@ -57,7 +57,7 @@ public class UI extends JPanel {
         stats.addKeyListener(parent);
         stats.setComponentPopupMenu(statsPopup);
         addOrder.addKeyListener(parent);
-        addOrder.addActionListener((e) -> Main.setOrders(Main.getOrders() + 1, true)); // Add an order
+        addOrder.addActionListener((e) -> Bedroom.setOrders(Bedroom.getOrders() + 1, true)); // Add an order
         addOrder.setMargin(new Insets(17, 24, 17, 24));
         breakButton.addKeyListener(parent);
         breakButton.addActionListener((e) -> parent.enterBreak());
@@ -82,10 +82,10 @@ public class UI extends JPanel {
 
     private void setAddOrderToolTip() {
 
-        if (Main.getOrdersLeftForTarget() > 0) { // Tell us how many orders we need to reach our target
+        if (Bedroom.getOrdersLeftForTarget() > 0) { // Tell us how many orders we need to reach our target
             addOrder.setToolTipText("<html><b>You are $n orders behind your hourly target."
-                    .replace("$n", String.valueOf(Main.getOrdersLeftForTarget())));
-        } else if (Main.getOrders() > Main.getOrdersNeeded()) {
+                    .replace("$n", String.valueOf(Bedroom.getOrdersLeftForTarget())));
+        } else if (Bedroom.getOrders() > Bedroom.getOrdersNeeded()) {
             addOrder.setToolTipText("<html><b>You are done for the day!</b></html>");
         } else { // If we have gotten all the orders needed for our shift.
             addOrder.setToolTipText("<html><b>You are on track with your hourly target</b></html>");
@@ -95,24 +95,24 @@ public class UI extends JPanel {
 
     private void setBreakButtonToolTip() {
 
-        if (Main.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
+        if (Bedroom.breakTimesChosen()) { // If we have chosen break times, change the tooltip to them.
             breakButton.setToolTipText("<html><b>Current break: $s-$e</b></html>"
                     // Start time:
-                    .replace("$s", (Main.isOvernightShift() ?
-                            Main.getBreakStart().getDayOfWeek().toString().substring(0, 3) : "") +
-                            Time.makeTime12Hour(Main.getBreakStart().toLocalTime()))
+                    .replace("$s", (Bedroom.isOvernightShift() ?
+                            Bedroom.getBreakStart().getDayOfWeek().toString().substring(0, 3) : "") +
+                            Time.makeTime12Hour(Bedroom.getBreakStart().toLocalTime()))
                     // End time:
-                    .replace("$e", (Main.isOvernightShift() ?
-                            Main.getBreakEnd().getDayOfWeek().toString().substring(0, 3) : "") +
-                            Time.makeTime12Hour(Main.getBreakEnd().toLocalTime())));
+                    .replace("$e", (Bedroom.isOvernightShift() ?
+                            Bedroom.getBreakEnd().getDayOfWeek().toString().substring(0, 3) : "") +
+                            Time.makeTime12Hour(Bedroom.getBreakEnd().toLocalTime())));
         }
 
     }
 
     private void setStatsToolTip() {
 
-        if (Main.getLastOrderChange() > 0) {
-            long secondsSince = (System.currentTimeMillis() - Main.getLastOrderChange()) / 1000;
+        if (Bedroom.getLastOrderChange() > 0) {
+            long secondsSince = (System.currentTimeMillis() - Bedroom.getLastOrderChange()) / 1000;
 
             stats.setToolTipText("<html><b>Last order change was $ts ago</b></html>"
                     .replace("$t", Time.secondsToTime(secondsSince)));

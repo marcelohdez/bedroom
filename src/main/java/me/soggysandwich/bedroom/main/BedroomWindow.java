@@ -1,6 +1,6 @@
 package me.soggysandwich.bedroom.main;
 
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
 import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
@@ -21,7 +21,7 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
     public BedroomWindow() {
 
-        setTitle("Bedroom " + Main.VERSION);
+        setTitle("Bedroom " + Bedroom.VERSION);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         reloadAlwaysOnTop();
@@ -66,9 +66,9 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
     public void keyPressed(KeyEvent e) {
         // ======= Shortcuts =======
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_DOWN -> Main.setOrders(Main.getOrders() - 1, true); // Remove orders
+            case KeyEvent.VK_DOWN -> Bedroom.setOrders(Bedroom.getOrders() - 1, true); // Remove orders
             case KeyEvent.VK_0 -> enterBreak();             // Set break times
-            case KeyEvent.VK_UP -> Main.setOrders(Main.getOrders() + 1, true); // Add orders
+            case KeyEvent.VK_UP -> Bedroom.setOrders(Bedroom.getOrders() + 1, true); // Add orders
             case KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE ->
                     new SettingsDialog(this);  // Open settings with Delete or Backspace keys
             case KeyEvent.VK_BACK_SLASH -> new ShiftHistoryWindow(this);
@@ -79,8 +79,8 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
     public void windowClosing(WindowEvent e) {
 
         // If we are currently in our shift:
-        if (LocalDateTime.now().isAfter(Main.getClockInTime()) &&
-                LocalDateTime.now().isBefore(Main.getClockOutTime())) {
+        if (LocalDateTime.now().isAfter(Bedroom.getClockInTime()) &&
+                LocalDateTime.now().isBefore(Bedroom.getClockOutTime())) {
 
             // Clock out early
             if (Settings.getAskBeforeEarlyClose()) {
@@ -89,13 +89,13 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
                 // If we do not have the option selected, just clock out early at
                 // the current time down to the minute
-            } else Main.clockOut(LocalDateTime.parse(LocalDateTime.now().toString().substring(0, 16)));
+            } else Bedroom.clockOut(LocalDateTime.parse(LocalDateTime.now().toString().substring(0, 16)));
 
-        } else if (LocalDateTime.now().isBefore(Main.getClockInTime())) { // If we have not clocked in:
+        } else if (LocalDateTime.now().isBefore(Bedroom.getClockInTime())) { // If we have not clocked in:
 
-            Main.exit(); // Just exit
+            Bedroom.exit(); // Just exit
 
-        } else Main.clockOut(Main.getClockOutTime()); // If our shift has ended, just clock out with original times.
+        } else Bedroom.clockOut(Bedroom.getClockOutTime()); // If our shift has ended, just clock out with original times.
 
     }
 

@@ -1,6 +1,6 @@
 package me.soggysandwich.bedroom.util;
 
-import me.soggysandwich.bedroom.Main;
+import me.soggysandwich.bedroom.Bedroom;
 
 import javax.swing.*;
 import java.awt.*;
@@ -204,9 +204,9 @@ public final class Theme {
      */
     private static Color loadColorOf(String colorKey, int def) {
 
-        return new Color(Main.userPrefs.getInt(colorKey + "Red", def),
-                Main.userPrefs.getInt(colorKey + "Green", def),
-                Main.userPrefs.getInt(colorKey + "Blue", def));
+        return new Color(Bedroom.userPrefs.getInt(colorKey + "Red", def),
+                Bedroom.userPrefs.getInt(colorKey + "Green", def),
+                Bedroom.userPrefs.getInt(colorKey + "Blue", def));
 
     }
 
