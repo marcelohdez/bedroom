@@ -20,8 +20,8 @@ public class ShiftHistoryChart extends JPanel {
     private int pointsAmount = 8;
     private int currentPage;
     private int totalPages = getPageAmount();
-    // Remaining dates to fill last page
-    private int remainingDates = pointsAmount - (dates.size() % pointsAmount);
+    // Missing dates to fill last page
+    private int missingDates = dates.size() % pointsAmount;
 
     // Values to use when drawing:
     private float range = getValueRange(); // For range lines
@@ -87,7 +87,7 @@ public class ShiftHistoryChart extends JPanel {
     private void updateAllInfo() {
         totalPages = getPageAmount();
         range = getValueRange();
-        remainingDates = pointsAmount - (dates.size() % pointsAmount);
+        missingDates = dates.size() % pointsAmount;
     }
 
     private void drawChart(Graphics2D g, Color barColor, Color contrastColor) {
@@ -253,8 +253,10 @@ public class ShiftHistoryChart extends JPanel {
      * the final page's missing dates
      */
     private int indexOf(int value) {
-        if (totalPages > 1 && remainingDates > 0 && currentPage == totalPages)
-            if (remainingDates != dates.size()) value -= remainingDates;
+        if (currentPage == totalPages && totalPages > 1 && missingDates > 0) {
+            if (pointsAmount - missingDates != dates.size())
+                value -= pointsAmount - missingDates;
+        }
 
         return value;
     }
