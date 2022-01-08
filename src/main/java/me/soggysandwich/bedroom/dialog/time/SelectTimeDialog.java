@@ -67,6 +67,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
 
         setLocationRelativeTo(initParent); // Center on initial parent
+        setModalityType(ModalityType.APPLICATION_MODAL);
         setVisible(true); // Show self
 
     }
