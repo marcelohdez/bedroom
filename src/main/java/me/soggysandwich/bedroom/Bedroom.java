@@ -54,10 +54,8 @@ public class Bedroom {
 
         try { // Set cross-platform look and feel, fixes macOS buttons having a white background
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            // Also, if on Windows--IDK the property to any other OS--check for high contrast and enable if true
-            if (System.getProperty("os.name").contains("Windows"))
-                if (Toolkit.getDefaultToolkit().getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE))
-                    Settings.setHighContrastTo(true);
+            // If we have not checked before, check OS property and enable high contrast if true
+            if (userPrefs.getBoolean("firstTimeHCCHeck", true)) setHighContrast();
         } catch(Exception e) { e.printStackTrace(); }
 
         Theme.setColors(); // Set extra color accents through UIManager
@@ -70,6 +68,17 @@ public class Bedroom {
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
 
+    }
+
+    private static void setHighContrast() {
+        if (System.getProperty("os.name").contains("Windows")) {
+            if (Toolkit.getDefaultToolkit()
+                    .getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE)) {
+                Settings.setHighContrastTo(true);
+            }
+        }
+
+        userPrefs.putBoolean("firstTimeHCCHeck", false);
     }
 
     private static void init() {
