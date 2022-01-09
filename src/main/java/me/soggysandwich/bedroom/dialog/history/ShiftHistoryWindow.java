@@ -21,19 +21,19 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final Component parent;
     private final ShiftHistoryChart chart = new ShiftHistoryChart();
 
-    private final JPanel topRow = new JPanel();
-    private final JLabel showingLabel = new JLabel("Data points to show:");
-    private final JComboBox<String> ptsAmount = new JComboBox<>(getAllowedAmounts());
     private final JLabel datesShown = new JLabel("None");
+    private final JButton firstButton = new JButton("|<<");
     private final JButton leftButton = new JButton("<");
     private final JLabel pagesLabel = new JLabel("Page 1/1");
     private final JButton rightButton = new JButton(">");
+    private final JButton lastButton = new JButton(">>|");
 
     private final JPanel botRow = new JPanel(); // Bottom row panel
 
     private int clickedDateIndex = -1;
 
     public ShiftHistoryWindow(Component parent) {
+
         this.parent = parent;
         if (parent instanceof JDialog &&
                 ((JDialog) parent).getModalityType() == Dialog.ModalityType.APPLICATION_MODAL) {
@@ -50,7 +50,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
-        setMinimumSize(new Dimension((int) (getWidth()*1.1), (int) (getWidth()/1.4)));
+        setMinimumSize(new Dimension((int) (getWidth()*1.05), (int) (getWidth()/1.5)));
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setLocationRelativeTo(parent); // Center on parent window
@@ -59,8 +59,8 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     }
 
     private String[] getAllowedAmounts() {
-
         ArrayList<String> amounts = new ArrayList<>();
+
         amounts.add("8"); // View of 8 will always be available
         if (chart.totalDates() > 8) {
             if (chart.totalDates() > 16) {
@@ -73,17 +73,19 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         }
 
         return amounts.toArray(new String[0]);
-
     }
 
     private void init() {
+        JPanel topRow = new JPanel();
+
+        JComboBox<String> ptsAmount = new JComboBox<>(getAllowedAmounts());
         JButton historyFolderButton = new JButton("Open history directory");
         // Right-click menu stuffs:
         JPopupMenu delMenu = new JPopupMenu();
         JMenuItem deleteDate = new JMenuItem("Delete");
 
         // Apply listeners to needed components
-        ptsAmount.addItemListener((e) -> {
+        ptsAmount.addItemListener(e -> {
             if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
                 chart.showAll();
             } else if (ptsAmount.getSelectedItem() != null)
@@ -93,19 +95,14 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             updatePageInfo();
         });
 
-        leftButton.addActionListener((e) -> {
-            chart.prevPage();
-            updatePageInfo();
-        });
-        rightButton.addActionListener((e) -> {
-            chart.nextPage();
-            updatePageInfo();
-        });
+        initPageButtons();
+
         historyFolderButton.addActionListener((e) -> SwingUtilities.invokeLater(() -> {
             try {
                 openHistoryDirectory();
             } catch (Exception ex) { ex.printStackTrace(); }
         }));
+
         deleteDate.addActionListener(e -> {
             if (clickedDateIndex >= 0) {
                 if (new YesNoDialog(this, """
@@ -125,12 +122,16 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         // Add to their respective places
         delMenu.add(deleteDate);
         chart.setComponentPopupMenu(delMenu);
-        topRow.add(showingLabel);
+        topRow.add(new JLabel("Data points to show:"));
         topRow.add(ptsAmount);
         topRow.add(datesShown);
+
+        topRow.add(firstButton);
         topRow.add(leftButton);
         topRow.add(pagesLabel);
         topRow.add(rightButton);
+        topRow.add(lastButton);
+
         botRow.add(historyFolderButton);
         add(topRow, BorderLayout.NORTH);
         add(chart, BorderLayout.CENTER);
@@ -141,11 +142,35 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     }
 
+    /** Adds action listeners to page changing buttons */
+    private void initPageButtons() {
+        firstButton.addActionListener(e -> {
+            chart.goToFirstPage();
+            updatePageInfo();
+        });
+        leftButton.addActionListener(e -> {
+            chart.prevPage();
+            updatePageInfo();
+        });
+        rightButton.addActionListener(e -> {
+            chart.nextPage();
+            updatePageInfo();
+        });
+        lastButton.addActionListener(e -> {
+            chart.goToLastPage();
+            updatePageInfo();
+        });
+    }
+
     public void updatePageInfo() {
 
         pagesLabel.setText("Page " + chart.page() + "/" + chart.totalPages());
-        leftButton.setEnabled(chart.page() != 1); // Disable left button if on first page
-        rightButton.setEnabled(chart.page() != chart.totalPages()); // Disable right button if on last page
+        // Disable previous-page-going buttons if on first page
+        firstButton.setEnabled(chart.page() != 1);
+        leftButton.setEnabled(chart.page() != 1);
+        // Disable next-page-going buttons if on last page
+        rightButton.setEnabled(chart.page() != chart.totalPages());
+        lastButton.setEnabled(chart.page() != chart.totalPages());
         datesShown.setText(chart.pageDateRange());
 
     }

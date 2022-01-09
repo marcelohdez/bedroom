@@ -309,6 +309,13 @@ public class ShiftHistoryChart extends JPanel {
         updateAllInfo();
     }
 
+    public void goToLastPage() {
+        currentPage = totalPages;
+        canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
+        range = getValueRange();
+        repaint();
+    }
+
     public void nextPage() {
         if (currentPage < totalPages) {
             currentPage++;
@@ -325,6 +332,13 @@ public class ShiftHistoryChart extends JPanel {
             range = getValueRange();
             repaint();
         }
+    }
+
+    public void goToFirstPage() {
+        currentPage = 1;
+        canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
+        range = getValueRange();
+        repaint();
     }
 
     /** Returns index of date of bar at given X coordinate */
