@@ -59,7 +59,10 @@ public class ShiftHistoryChart extends JPanel {
 
     /** Returns the total amount of pages */
     private int getPageAmount() {
-        int pageAmount = (int) Math.ceil((double) totalDates() / (double) pointsAmount);
+        int pageAmount = 1;
+        if (!noHistory) {
+            pageAmount = (int) Math.ceil((double) totalDates() / (double) pointsAmount);
+        }
         currentPage = pageAmount;
         canShowToday = Bedroom.clockInTimePassed();
 
