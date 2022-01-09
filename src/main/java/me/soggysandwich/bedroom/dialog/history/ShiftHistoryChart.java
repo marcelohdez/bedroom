@@ -69,17 +69,19 @@ public class ShiftHistoryChart extends JPanel {
     /** Returns the highest value on current page to draw background lines accordingly */
     private int getValueRange() {
         int max = 0; // Reset range value
-        for (int i = 0; i < pointsAmount; i++) {
-            int index = indexOf(i + pointsAmount * (currentPage - 1)); // Get its index
-            float valueToCheck = 0;
+        if (!noHistory) {
+            for (int i = 0; i < pointsAmount; i++) {
+                int index = indexOf(i + pointsAmount * (currentPage - 1)); // Get its index
+                float valueToCheck = 0;
 
-            if (index < dates.size() - (Bedroom.clockInTimePassed() ? 1 : 0)) {
-                valueToCheck = Bedroom.getShiftHistory().get(dates.get(index));
-            } else if (canShowToday)
-                valueToCheck = todayOrdersPerHr();
+                if (index < dates.size() - (Bedroom.clockInTimePassed() ? 1 : 0)) {
+                    valueToCheck = Bedroom.getShiftHistory().get(dates.get(index));
+                } else if (canShowToday)
+                    valueToCheck = todayOrdersPerHr();
 
-            // If value
-            if (valueToCheck > max) max = (int) Math.ceil( valueToCheck );
+                // If value
+                if (valueToCheck > max) max = (int) Math.ceil(valueToCheck);
+            }
         }
         return max;
     }
