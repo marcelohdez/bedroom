@@ -104,7 +104,7 @@ public class ShiftHistoryChart extends JPanel {
             drawBars(g, barSpacing, barColor, contrastColor);
 
         } else { // Show message:
-            String textToShow = "No data to show.";
+            String textToShow = "No history to show.";
             if (!Settings.isDoneLoadingShiftHistory()) textToShow = "Still loading, please reopen me.";
 
             int textWidth = g.getFontMetrics().stringWidth(textToShow);
