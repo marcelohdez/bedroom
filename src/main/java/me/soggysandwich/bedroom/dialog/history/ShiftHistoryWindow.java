@@ -35,7 +35,10 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
-        parent.setEnabled(false); // Disable parent window
+        if (parent instanceof JDialog &&
+                ((JDialog) parent).getModalityType() == Dialog.ModalityType.APPLICATION_MODAL) {
+            parent.setVisible(false);
+        } else parent.setEnabled(false); // Disable parent window
         chart.addMouseListener(this);
 
         // Set window properties
@@ -147,9 +150,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     }
 
-    /**
-     * Open working directory in system's explorer
-     */
+    /** Open working directory in system's explorer */
     private void openHistoryDirectory() throws IOException {
         try {
             // Create instance of history file to select it in explorer
@@ -192,7 +193,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     @Override
     public void windowClosed(WindowEvent e) {
-        parent.setEnabled(true); // Re-enable the summoner window
+        if (!parent.isVisible()) {
+            parent.setVisible(true);
+        } else parent.setEnabled(true); // Re-enable the summoner window
         parent.requestFocus();
     }
 
