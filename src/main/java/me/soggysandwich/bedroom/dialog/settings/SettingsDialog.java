@@ -1,5 +1,6 @@
 package me.soggysandwich.bedroom.dialog.settings;
 
+import me.soggysandwich.bedroom.Bedroom;
 import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
 import me.soggysandwich.bedroom.util.Reloadable;
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
@@ -68,11 +69,16 @@ public class SettingsDialog extends JDialog implements WindowListener, KeyListen
 
     private void alertLAFChange() {
         if (isSystemLAFEnabled != Settings.isSystemLAFEnabled()) {
-            new AlertDialog(this, """
-                    Changing to and from the system's
-                    theme requires a restart so please
-                    reopen me as I will now close.""");
-            System.exit(0);
+            if (!Settings.isSystemLAFEnabled()) {
+                Bedroom.restart();
+            } else {
+                new AlertDialog(this, """
+                        Changing from the system's theme
+                        to a colored one requires a restart
+                        so please reopen me as I will now
+                        close.""");
+                System.exit(0);
+            }
         }
     }
 

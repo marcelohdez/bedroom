@@ -34,6 +34,10 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
         setLocationRelativeTo(null);
         setVisible(true);
 
+        if (!Bedroom.timesChosen()) {
+            new SelectTimeDialog(this, TimeWindowType.CLOCK_IN); // Create clock in window
+        }
+
     }
 
     public void display(String text) {
@@ -77,6 +81,7 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
     @Override
     public void windowClosing(WindowEvent e) {
+        System.out.println("bruh");
 
         // If we are currently in our shift:
         if (LocalDateTime.now().isAfter(Bedroom.getClockInTime()) &&

@@ -2,8 +2,6 @@ package me.soggysandwich.bedroom;
 
 import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
 import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.util.TimeWindowType;
 import me.soggysandwich.bedroom.main.BedroomWindow;
 import me.soggysandwich.bedroom.util.Settings;
 import me.soggysandwich.bedroom.util.Theme;
@@ -52,6 +50,19 @@ public class Bedroom {
 
     public static void main(String[] args) {
 
+        doLAFStuff();
+        init();
+        SwingUtilities.invokeLater(() -> {
+            Bedroom.openStartupItems();
+            Bedroom.loadShiftHistory();
+        });
+
+        // Create a timer to run every second, updating the time
+        new Timer(1000, e -> update()).start();
+
+    }
+
+    private static void doLAFStuff() {
         if (userPrefs.getBoolean("firstLAFCheck", true)) {
             checkForSystemLAF();
         }
@@ -71,15 +82,6 @@ public class Bedroom {
         }
 
         Theme.setColors(); // Set extra color accents through UIManager
-        init();
-        SwingUtilities.invokeLater(() -> {
-            Bedroom.openStartupItems();
-            Bedroom.loadShiftHistory();
-        });
-
-        // Create a timer to run every second, updating the time
-        new Timer(1000, e -> update()).start();
-
     }
 
     private static void checkForSystemLAF() {
@@ -117,24 +119,24 @@ public class Bedroom {
     }
 
     private static void init() {
+        if ((Settings.isCrashRecoveryEnabled() && isInSavedShift())) { // Recover from crash
+            recoverShift();
+        }
 
-        wnd = new BedroomWindow(); // Create  window
+        wnd = new BedroomWindow(); // Create window
+    }
 
-        if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) { // Recover from crash
+    private static void recoverShift() {
+        setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
+                LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
+        setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
+        setOrders(userPrefs.getInt("orders", 0), false);   // Set orders to saved value
 
-            setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
-                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
-            setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
-            setOrders(userPrefs.getInt("orders", 0), false);   // Set orders to saved value
-
-            if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
-                setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
+        if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
+            setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
                     LocalDateTime.parse(userPrefs.get("breakEnd", "")));
 
-            update(); // Update stats etc
-
-        } else new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
-
+        update(); // Update stats etc
     }
 
     private static boolean isInSavedShift() {
@@ -215,6 +217,12 @@ public class Bedroom {
         }
     }
 
+    public static void restart() {
+        wnd.dispose();
+        doLAFStuff();
+        wnd = new BedroomWindow();
+    }
+
     public static void updateSettings() {
         Theme.reloadColors();
         wnd.reloadSettings();
@@ -222,7 +230,7 @@ public class Bedroom {
 
     public static void update() {
 
-        if (timesChosen()) { // Have we chosen clock in and out times?
+        if (wnd != null && timesChosen()) { // Have we chosen clock in and out times?
 
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
@@ -394,10 +402,9 @@ public class Bedroom {
     public static void setBreak(LocalDateTime start, LocalDateTime end) {
         breakInTime = start;
         breakOutTime = end;
-        if (Settings.isCrashRecoveryEnabled()) {
-            userPrefs.put("breakStart", start.toString());
-            userPrefs.put("breakEnd", end.toString());
-        }
+        // Save break times in preferences for crash recovery
+        userPrefs.put("breakStart", start.toString());
+        userPrefs.put("breakEnd", end.toString());
     }
 
     public static LocalDateTime getClockInTime() {
@@ -414,10 +421,9 @@ public class Bedroom {
 
         clockInTime = start;
         clockOutTime = end;
-        if (Settings.isCrashRecoveryEnabled()) {
-            userPrefs.put("shiftStart", start.toString());
-            userPrefs.put("shiftEnd", end.toString());
-        }
+        // Save shift times in preferences for crash recovery
+        userPrefs.put("shiftStart", start.toString());
+        userPrefs.put("shiftEnd", end.toString());
     }
 
     public static void clockOut(LocalDateTime time) {
