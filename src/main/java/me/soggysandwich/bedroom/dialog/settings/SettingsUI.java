@@ -207,7 +207,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         defTargetListBox.setToolTipText(boldString("Default target value in clock out time dialog"));
         askBeforeEarlyClose.setToolTipText(boldString("Show a dialog if closing Bedroom before<br>the clock out time"));
         showMoreShiftInfo.setToolTipText(boldString("Show extra shift information in the main window"));
-        systemLAFCheckBox.setToolTipText(boldString("Requires restart"));
+        systemLAFCheckBox.setToolTipText(boldString("Switching to system theme requires a restart"));
     }
 
     private String boldString(String str) {
