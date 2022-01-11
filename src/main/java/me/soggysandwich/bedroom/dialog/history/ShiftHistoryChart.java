@@ -348,11 +348,13 @@ public class ShiftHistoryChart extends JPanel {
 
     /** Returns index of date of bar at given X coordinate */
     public int getDateFromBarAt(int x) {
-        int index = indexOf(pointsAmount * (currentPage - 1) + (x - rangeTextSpacing)/barSpacing);
+        if (!noHistory) {
+            int index = indexOf(pointsAmount * (currentPage - 1) + (x - rangeTextSpacing) / barSpacing);
 
-        if (index < dates.size() - 1) { // If a date exists at X return its index
-            return index;
-        } else return -1; // Else return -1
+            if (index < dates.size() - 1) { // If a date exists at X return its index
+                return index;
+            } else return -1; // Else return -1
+        } else return -1;
     }
 
     public LocalDate getDateAt(int index) {
