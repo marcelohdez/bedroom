@@ -31,6 +31,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final JPanel botRow = new JPanel(); // Bottom row panel
 
     private int clickedDateIndex = -1;
+    private int lastKeyPressed = -1;
 
     public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
@@ -145,25 +146,18 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     /** Adds action listeners to page changing buttons */
     private void initPageButtons() {
         firstButton.addKeyListener(this);
-        firstButton.addActionListener(e -> {
-            chart.goToFirstPage();
-            updatePageInfo();
-        });
+        firstButton.addActionListener(e -> doJobThenUpdate(chart::oldestPage));
         leftButton.addKeyListener(this);
-        leftButton.addActionListener(e -> {
-            chart.prevPage();
-            updatePageInfo();
-        });
+        leftButton.addActionListener(e -> doJobThenUpdate(chart::prevPage));
         rightButton.addKeyListener(this);
-        rightButton.addActionListener(e -> {
-            chart.nextPage();
-            updatePageInfo();
-        });
+        rightButton.addActionListener(e -> doJobThenUpdate(chart::nextPage));
         lastButton.addKeyListener(this);
-        lastButton.addActionListener(e -> {
-            chart.goToLastPage();
-            updatePageInfo();
-        });
+        lastButton.addActionListener(e -> doJobThenUpdate(chart::newestPage));
+    }
+
+    private void doJobThenUpdate(Runnable job) {
+        job.run();
+        updatePageInfo();
     }
 
     public void updatePageInfo() {
@@ -217,7 +211,20 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) dispose(); // Close self with Escape
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE -> dispose();
+            case KeyEvent.VK_LEFT -> {
+                if (lastKeyPressed == KeyEvent.VK_SHIFT) {
+                    doJobThenUpdate(chart::oldestPage);
+                } else doJobThenUpdate(chart::prevPage);
+            }
+            case KeyEvent.VK_RIGHT -> {
+                if (lastKeyPressed == KeyEvent.VK_SHIFT) {
+                    doJobThenUpdate(chart::newestPage);
+                } else doJobThenUpdate(chart::nextPage);
+            }
+        }
+        lastKeyPressed = e.getKeyCode();
     }
 
     @Override

@@ -314,7 +314,7 @@ public class ShiftHistoryChart extends JPanel {
         updateAllInfo();
     }
 
-    public void goToLastPage() {
+    public void newestPage() {
         currentPage = totalPages;
         canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
         range = getValueRange();
@@ -339,7 +339,7 @@ public class ShiftHistoryChart extends JPanel {
         }
     }
 
-    public void goToFirstPage() {
+    public void oldestPage() {
         currentPage = 1;
         canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
         range = getValueRange();
