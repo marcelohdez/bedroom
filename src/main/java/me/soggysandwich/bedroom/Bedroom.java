@@ -52,11 +52,23 @@ public class Bedroom {
 
     public static void main(String[] args) {
 
-        try { // Set cross-platform look and feel, fixes macOS buttons having a white background
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        if (userPrefs.getBoolean("firstLAFCheck", true)) {
+            checkForSystemLAF();
+        }
+
+        try { // Set look and feel
+            if (Settings.isSystemLAFEnabled()) {
+                trySettingSystemLAF();
+            } else {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            }
             // If we have not checked before, check OS property and enable high contrast if true
             if (userPrefs.getBoolean("firstTimeHCCHeck", true)) setHighContrast();
-        } catch(Exception e) { e.printStackTrace(); }
+        } catch(Exception e) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }
 
         Theme.setColors(); // Set extra color accents through UIManager
         init();
@@ -70,11 +82,34 @@ public class Bedroom {
 
     }
 
+    private static void checkForSystemLAF() {
+        try {
+            String systemLAF = UIManager.getSystemLookAndFeelClassName();
+            if (systemLAF.equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+                Settings.enableSystemLAF(false); // Disable system look and feel as it is not available
+                System.out.println("No system look and feel found! Defaulting to cross-platform LAF.");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+
+        userPrefs.putBoolean("firstLAFCheck", false);
+    }
+
+    private static void trySettingSystemLAF() throws Exception {
+        String systemLAF = UIManager.getSystemLookAndFeelClassName();
+
+        if (systemLAF.equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+            new AlertDialog(null, "This system's theme is not supported!");
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } else {
+            UIManager.setLookAndFeel(systemLAF);
+        }
+    }
+
     private static void setHighContrast() {
         if (System.getProperty("os.name").contains("Windows")) {
             if (Toolkit.getDefaultToolkit()
                     .getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE)) {
-                Settings.setHighContrastTo(true);
+                Settings.enableHighContrast(true);
             }
         }
 

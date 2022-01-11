@@ -4,6 +4,7 @@ import me.soggysandwich.bedroom.Bedroom;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 /**
  * A class for some coloring/theming methods as well as holding the current theme's color values
@@ -28,17 +29,17 @@ public final class Theme {
      * @param comps Components to color
      */
     public static void color(JComponent... comps) {
-
-        for (JComponent c : comps) {
-            if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
-                c.setBackground(getButtonColor());
-                c.setForeground(getButtonTextColor());
-            } else {
-                c.setBackground(getBgColor());
-                c.setForeground(getTextColor());
+        if (!Settings.isSystemLAFEnabled()) {
+            for (JComponent c : comps) {
+                if (c instanceof JButton || c instanceof JList || c instanceof JComboBox) {
+                    c.setBackground(getButtonColor());
+                    c.setForeground(getButtonTextColor());
+                } else {
+                    c.setBackground(getBgColor());
+                    c.setForeground(getTextColor());
+                }
             }
         }
-
     }
 
     /**
@@ -100,28 +101,30 @@ public final class Theme {
      */
     public static void setColors() {
 
-        Color c = contrastWithShade(buttonColor, Settings.isContrastEnabled() ? 240 : 30);
-        UIManager.put("Button.select", c);
-        UIManager.put("Button.background", getButtonColor());
-        UIManager.put("Button.foreground", getButtonTextColor());
-        UIManager.put("Panel.background", getBgColor());
-        UIManager.put("TextArea.background", getBgColor());
-        UIManager.put("TextArea.foreground", getTextColor());
-        UIManager.put("Label.foreground", getTextColor());
-        UIManager.put("ComboBox.background", getButtonColor());
-        UIManager.put("ComboBox.foreground", getButtonTextColor());
-        UIManager.put("Button.focus", c);
-        UIManager.put("ComboBox.selectionBackground", c);
-        UIManager.put("ComboBox.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
-        UIManager.put("List.background", getBgColor());
-        UIManager.put("List.foreground", getTextColor());
-        UIManager.put("CheckBox.background", getBgColor());
-        UIManager.put("CheckBox.foreground", getTextColor());
-        UIManager.put("Slider.background", getBgColor());
-        UIManager.put("List.selectionBackground", c);
-        UIManager.put("List.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
-        UIManager.put("ScrollBar.background", bg);
-        UIManager.put("ToolTip.background", Color.WHITE);
+        if (!Settings.isSystemLAFEnabled()) {
+            Color c = contrastWithShade(buttonColor, Settings.isContrastEnabled() ? 240 : 30);
+            UIManager.put("Button.select", c);
+            UIManager.put("Button.background", getButtonColor());
+            UIManager.put("Button.foreground", getButtonTextColor());
+            UIManager.put("Panel.background", getBgColor());
+            UIManager.put("TextArea.background", getBgColor());
+            UIManager.put("TextArea.foreground", getTextColor());
+            UIManager.put("Label.foreground", getTextColor());
+            UIManager.put("ComboBox.background", getButtonColor());
+            UIManager.put("ComboBox.foreground", getButtonTextColor());
+            UIManager.put("Button.focus", c);
+            UIManager.put("ComboBox.selectionBackground", c);
+            UIManager.put("ComboBox.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
+            UIManager.put("List.background", getBgColor());
+            UIManager.put("List.foreground", getTextColor());
+            UIManager.put("CheckBox.background", getBgColor());
+            UIManager.put("CheckBox.foreground", getTextColor());
+            UIManager.put("Slider.background", getBgColor());
+            UIManager.put("List.selectionBackground", c);
+            UIManager.put("List.selectionForeground", Settings.isContrastEnabled() ? contrastWithBnW(c) : buttonTextColor);
+            UIManager.put("ScrollBar.background", bg);
+            UIManager.put("ToolTip.background", Color.WHITE);
+        }
 
     }
 
@@ -149,7 +152,8 @@ public final class Theme {
      * @return The text color
      */
     public static Color getTextColor() {
-        return textColor;
+        if (!Settings.isSystemLAFEnabled()) return textColor;
+        return UIManager.getColor("Label.foreground");
     }
 
     /**
@@ -158,7 +162,8 @@ public final class Theme {
      * @return The button text color
      */
     public static Color getButtonTextColor() {
-        return buttonTextColor;
+        if (!Settings.isSystemLAFEnabled()) return buttonTextColor;
+        return UIManager.getColor("Button.foreground");
     }
 
     /**
@@ -167,7 +172,8 @@ public final class Theme {
      * @return The button color
      */
     public static Color getButtonColor() {
-        return buttonColor;
+        if (!Settings.isSystemLAFEnabled()) return buttonColor;
+        return UIManager.getColor("Button.background");
     }
 
     /**
@@ -176,7 +182,8 @@ public final class Theme {
      * @return The bg color
      */
     public static Color getBgColor() {
-        return bg;
+        if (!Settings.isSystemLAFEnabled()) return bg;
+        return UIManager.getColor("Panel.background");
     }
 
     /**

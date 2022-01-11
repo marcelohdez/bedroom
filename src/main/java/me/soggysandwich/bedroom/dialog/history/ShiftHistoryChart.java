@@ -110,8 +110,8 @@ public class ShiftHistoryChart extends JPanel {
             int textWidth = g.getFontMetrics().stringWidth(textToShow);
             g.setColor(Theme.getTextColor());
             g.drawString(textToShow,
-                    (getWidth() / 2) - textWidth/2, // Center on width
-                    (getHeight() / 2) + g.getFont().getSize()/2); // Center on height
+                    (getWidth() / 2) - textWidth / 2, // Center on width
+                    (getHeight() / 2) + g.getFont().getSize() / 2); // Center on height
         }
     }
 

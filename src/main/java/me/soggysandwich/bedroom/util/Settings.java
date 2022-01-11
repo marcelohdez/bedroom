@@ -18,7 +18,9 @@ public final class Settings {
 
     private static boolean isDoneLoadingShiftHistory = false;
 
-    // Settings variables, to return when called on methods, instead of doing storage reads every time.
+    // Settings variables, to return when called on methods.
+    private static boolean useSystemLAF = Bedroom.userPrefs.getBoolean("useSystemLAF", true);
+
     private static boolean alwaysOnTop = Bedroom.userPrefs.getBoolean("alwaysOnTop", true);
     private static boolean recoverFromCrashes = Bedroom.userPrefs.getBoolean("recoverFromCrashes", true);
     private static boolean askBeforeEarlyClose = Bedroom.userPrefs.getBoolean("askBeforeEarlyClose", true);
@@ -67,44 +69,76 @@ public final class Settings {
 
     }
 
-    /**
-     * Save a boolean to highContrast key
-     *
-     * @param highContrast new highContrast value
-     */
-    public static void setHighContrastTo(boolean highContrast) {
-        Bedroom.userPrefs.putBoolean("highContrast", highContrast); // Save new value
-        if (highContrast) { // If it is true, set to high contrast theme
+    public static void enableHighContrast(boolean enable) {
+        if (enable) { // Set theme to high contrast values
+            useSystemLAF = false; // Disable System LAF to not clash with colors
             int[] textRGB = new int[]{255, 255, 255};
             int[] buttonTextRGB = new int[]{255, 255, 255};
             int[] buttonRGB = new int[]{0, 0, 0};
             int[] bgRGB = new int[]{0, 0, 0};
             saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         }
+        Bedroom.userPrefs.putBoolean("highContrast", enable); // Save new value
     }
 
-    /**
-     * Saves Misc. settings
-     *
-     * @param stayOnTop Make window always stay on top
-     */
-    public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength,
-                                boolean crashRecovery, int defTarget, boolean showMoreShiftInfo) {
+    public static void setAlwaysOnTop(boolean alwaysOnTop) {
+        Settings.alwaysOnTop = alwaysOnTop;
+        Bedroom.userPrefs.putBoolean("askBeforeEarlyClose", alwaysOnTop);
+    }
 
-        Bedroom.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
-        Bedroom.userPrefs.putBoolean("recoverFromCrashes", crashRecovery);
-        Bedroom.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
-        Bedroom.userPrefs.putBoolean("showMoreShiftInfo", showMoreShiftInfo);
-        Bedroom.userPrefs.putInt("defaultShiftLength", defShiftLength);
-        Bedroom.userPrefs.putInt("defaultTarget", defTarget);
+    public static void setAskBeforeEarlyClose(boolean ask) {
+        askBeforeEarlyClose = ask;
+        Bedroom.userPrefs.putBoolean("alwaysOnTop", ask);
+    }
 
-        alwaysOnTop = Bedroom.userPrefs.getBoolean("alwaysOnTop", true);
-        recoverFromCrashes = Bedroom.userPrefs.getBoolean("recoverFromCrashes", true);
-        Settings.askBeforeEarlyClose = Bedroom.userPrefs.getBoolean("askBeforeEarlyClose", true);
-        Settings.showMoreShiftInfo = Bedroom.userPrefs.getBoolean("showMoreShiftInfo", false);
-        Settings.defaultShiftLength = Bedroom.userPrefs.getInt("defaultShiftLength", 4);
-        defaultTarget = Bedroom.userPrefs.getInt("defaultTarget", 9);
+    public static void setDefaultShiftLength(int newDefault) {
+        defaultShiftLength = newDefault;
+        Bedroom.userPrefs.putInt("defaultShiftLength", newDefault);
+    }
 
+    public static void setDefaultTarget(int newDefault) {
+        defaultTarget = newDefault;
+        Bedroom.userPrefs.putInt("defaultTarget", newDefault);
+    }
+
+    public static void enableCrashRecovery(boolean enable) {
+        recoverFromCrashes = enable;
+        Bedroom.userPrefs.putBoolean("recoverFromCrashes", enable);
+    }
+
+    public static void enableExtraShiftInfo(boolean enable) {
+        showMoreShiftInfo = enable;
+        Bedroom.userPrefs.putBoolean("showMoreShiftInfo", enable);
+    }
+
+    public static void enableSystemLAF(boolean enable) {
+        useSystemLAF = enable;
+        Bedroom.userPrefs.putBoolean("useSystemLAF", enable);
+        if (enable) {
+            removeColors();
+        }
+    }
+
+    private static void removeColors() {
+        // text colors
+        Bedroom.userPrefs.remove("textRed");
+        Bedroom.userPrefs.remove("textGreen");
+        Bedroom.userPrefs.remove("textBlue");
+
+        // button text colors
+        Bedroom.userPrefs.remove("buttonTextRed");
+        Bedroom.userPrefs.remove("buttonTextGreen");
+        Bedroom.userPrefs.remove("buttonTextBlue");
+
+        // button colors
+        Bedroom.userPrefs.remove("buttonRed");
+        Bedroom.userPrefs.remove("buttonGreen");
+        Bedroom.userPrefs.remove("buttonBlue");
+
+        // background colors
+        Bedroom.userPrefs.remove("bgRed");
+        Bedroom.userPrefs.remove("bgGreen");
+        Bedroom.userPrefs.remove("bgBlue");
     }
 
     /**
@@ -123,6 +157,10 @@ public final class Settings {
      */
     public static String getWorkingDir() {
         return workingDir;
+    }
+
+    public static boolean isSystemLAFEnabled() {
+        return useSystemLAF;
     }
 
     /**

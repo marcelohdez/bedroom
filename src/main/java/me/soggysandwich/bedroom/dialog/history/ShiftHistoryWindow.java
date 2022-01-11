@@ -138,7 +138,9 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         add(botRow, BorderLayout.SOUTH);
 
         // Color bottom row a bit brighter than the background:
-        botRow.setBackground(Theme.contrastWithShade(Theme.getBgColor(), Settings.isContrastEnabled() ? 200 : 20));
+        if (!Settings.isSystemLAFEnabled())
+            botRow.setBackground(Theme.contrastWithShade(
+                    Theme.getBgColor(), Settings.isContrastEnabled() ? 200 : 20));
 
     }
 
