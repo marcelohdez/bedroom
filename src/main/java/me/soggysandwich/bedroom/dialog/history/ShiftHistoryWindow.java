@@ -33,7 +33,6 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private int clickedDateIndex = -1;
 
     public ShiftHistoryWindow(Component parent) {
-
         this.parent = parent;
         if (parent instanceof JDialog &&
                 ((JDialog) parent).getModalityType() == Dialog.ModalityType.APPLICATION_MODAL) {
@@ -55,7 +54,6 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setLocationRelativeTo(parent); // Center on parent window
         setVisible(true); // Show dialog
-
     }
 
     private String[] getAllowedAmounts() {
@@ -85,6 +83,8 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         JMenuItem deleteDate = new JMenuItem("Delete");
 
         // Apply listeners to needed components
+        initPageButtons();
+        ptsAmount.addKeyListener(this);
         ptsAmount.addItemListener(e -> {
             if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
                 chart.showAll();
@@ -94,15 +94,13 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             chart.repaint();
             updatePageInfo();
         });
-
-        initPageButtons();
-
+        historyFolderButton.addKeyListener(this);
         historyFolderButton.addActionListener((e) -> SwingUtilities.invokeLater(() -> {
             try {
                 openHistoryDirectory();
             } catch (Exception ex) { ex.printStackTrace(); }
         }));
-
+        deleteDate.addKeyListener(this);
         deleteDate.addActionListener(e -> {
             if (clickedDateIndex >= 0) {
                 if (new YesNoDialog(this, """
@@ -146,18 +144,22 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     /** Adds action listeners to page changing buttons */
     private void initPageButtons() {
+        firstButton.addKeyListener(this);
         firstButton.addActionListener(e -> {
             chart.goToFirstPage();
             updatePageInfo();
         });
+        leftButton.addKeyListener(this);
         leftButton.addActionListener(e -> {
             chart.prevPage();
             updatePageInfo();
         });
+        rightButton.addKeyListener(this);
         rightButton.addActionListener(e -> {
             chart.nextPage();
             updatePageInfo();
         });
+        lastButton.addKeyListener(this);
         lastButton.addActionListener(e -> {
             chart.goToLastPage();
             updatePageInfo();
