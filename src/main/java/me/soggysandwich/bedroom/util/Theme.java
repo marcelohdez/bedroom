@@ -107,8 +107,6 @@ public final class Theme {
             UIManager.put("Button.background", getButtonColor());
             UIManager.put("Button.foreground", getButtonTextColor());
             UIManager.put("Panel.background", getBgColor());
-            UIManager.put("TextArea.background", getBgColor());
-            UIManager.put("TextArea.foreground", getTextColor());
             UIManager.put("Label.foreground", getTextColor());
             UIManager.put("ComboBox.background", getButtonColor());
             UIManager.put("ComboBox.foreground", getButtonTextColor());
@@ -125,6 +123,9 @@ public final class Theme {
             UIManager.put("ScrollBar.background", bg);
             UIManager.put("ToolTip.background", Color.WHITE);
         }
+
+        UIManager.put("TextArea.background", UIManager.getColor("Panel.background"));
+        UIManager.put("TextArea.foreground", UIManager.getColor("Label.foreground"));
 
     }
 
