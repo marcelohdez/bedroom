@@ -50,11 +50,29 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         init(); // Initialize everything
         updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
-        setMinimumSize(new Dimension((int) (getWidth()*1.05), (int) (getWidth()/1.5)));
+        setResponsiveSizes();
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setLocationRelativeTo(parent); // Center on parent window
         setVisible(true); // Show dialog
+    }
+
+    private void setResponsiveSizes() {
+        Dimension minSize = new Dimension((getWidth() - firstButton.getWidth() - lastButton.getWidth()),
+                (int) (getWidth()/1.7));
+        Dimension minComfortableSize = new Dimension((int) (getWidth()*1.05), (int) (getWidth()/1.5));
+        setMinimumSize(minSize);
+        setSize(minComfortableSize);
+
+        addComponentListener(new ComponentAdapter() { // Check for window resizing
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                // Hide first and last page buttons when they do not fit.
+                firstButton.setVisible(!(getWidth() < minComfortableSize.getWidth()));
+                lastButton.setVisible(!(getWidth() < minComfortableSize.getWidth()));
+            }
+        });
     }
 
     private String[] getAllowedAmounts() {
