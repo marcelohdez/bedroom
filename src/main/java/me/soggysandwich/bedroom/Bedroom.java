@@ -121,9 +121,12 @@ public class Bedroom {
     private static void init() {
         if ((Settings.isCrashRecoveryEnabled() && isInSavedShift())) { // Recover from crash
             recoverShift();
+            // Update now to not wait for next second as it is updated at the end of the update method
+            secondsWorked = secondsWorkedBy(LocalDateTime.now());
         }
 
         wnd = new BedroomWindow(); // Create window
+        update(); // Update stats etc
     }
 
     private static void recoverShift() {
@@ -135,8 +138,6 @@ public class Bedroom {
         if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
             setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
                     LocalDateTime.parse(userPrefs.get("breakEnd", "")));
-
-        update(); // Update stats etc
     }
 
     private static boolean isInSavedShift() {
@@ -221,6 +222,7 @@ public class Bedroom {
         wnd.dispose();
         doLAFStuff();
         wnd = new BedroomWindow();
+        update();
     }
 
     public static void updateSettings() {
@@ -229,7 +231,6 @@ public class Bedroom {
     }
 
     public static void update() {
-
         if (wnd != null && timesChosen()) { // Have we chosen clock in and out times?
 
             // Has our clock in time passed?
@@ -245,7 +246,6 @@ public class Bedroom {
             wnd.pack();
 
         }
-
     }
 
     public static boolean timesChosen() {
