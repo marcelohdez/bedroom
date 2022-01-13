@@ -31,7 +31,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final JPanel botRow = new JPanel(); // Bottom row panel
 
     private int clickedDateIndex = -1;
-    private int lastKeyPressed = -1;
+    private boolean isShifting = false;
 
     public ShiftHistoryWindow(Component parent) {
         this.parent = parent;
@@ -230,19 +230,24 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
+            case KeyEvent.VK_SHIFT -> isShifting = true;
             case KeyEvent.VK_ESCAPE -> dispose();
             case KeyEvent.VK_LEFT -> {
-                if (lastKeyPressed == KeyEvent.VK_SHIFT) {
+                if (isShifting) {
                     doJobThenUpdate(chart::oldestPage);
                 } else doJobThenUpdate(chart::prevPage);
             }
             case KeyEvent.VK_RIGHT -> {
-                if (lastKeyPressed == KeyEvent.VK_SHIFT) {
+                if (isShifting) {
                     doJobThenUpdate(chart::newestPage);
                 } else doJobThenUpdate(chart::nextPage);
             }
         }
-        lastKeyPressed = e.getKeyCode();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) isShifting = false;
     }
 
     @Override
