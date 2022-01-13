@@ -13,9 +13,6 @@ import java.util.TreeMap;
 
 public final class Settings {
 
-    private static final String workingDir =  // Current working directory, to store shift history files etc.
-            FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
-
     private static boolean isDoneLoadingShiftHistory = false;
 
     // Settings variables, to return when called on methods.
@@ -27,6 +24,10 @@ public final class Settings {
     private static boolean showMoreShiftInfo = Bedroom.userPrefs.getBoolean("showMoreShiftInfo", false);
     private static int defaultShiftLength = Bedroom.userPrefs.getInt("defaultShiftLength", 4);
     private static int defaultTarget = Bedroom.userPrefs.getInt("defaultTarget", 9);
+
+    // Current working directory, to store shift history files etc.
+    private static final String workingDir =
+            FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
 
     /**
      * Check if highContrast is enabled in user preferences

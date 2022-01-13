@@ -10,8 +10,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import javax.swing.Timer;
 
 public class ShiftHistoryChart extends JPanel {
+
+    private final ShiftHistoryWindow owner;
 
     private boolean noHistory = false;
     private boolean canShowToday = Bedroom.clockInTimePassed(); // If we're currently clocked in
@@ -28,6 +31,10 @@ public class ShiftHistoryChart extends JPanel {
     // Updated every draw call:
     private int rangeTextSpacing;
     private float barSpacing;
+
+    public ShiftHistoryChart(ShiftHistoryWindow owner) {
+        this.owner = owner;
+    }
 
     @Override
     public void paintComponent(Graphics gfx) { // Run on every draw call
@@ -92,8 +99,8 @@ public class ShiftHistoryChart extends JPanel {
 
     private void updateAllInfo() {
         totalPages = getPageAmount();
-        range = getRange();
         missingDates = (int) (dates.size() % pointsAmount);
+        range = getRange();
     }
 
     private void drawChart(Graphics2D g, Color barColor, Color contrastColor) {
@@ -105,8 +112,24 @@ public class ShiftHistoryChart extends JPanel {
             drawBars(g, barSpacing, barColor, contrastColor);
 
         } else { // Show message:
-            String textToShow = "No history to show.";
-            if (!Settings.isDoneLoadingShiftHistory()) textToShow = "Still loading, please reopen me.";
+            String textToShow;
+            if (Settings.isDoneLoadingShiftHistory()) {
+                textToShow = "No history to show.";
+            } else {
+                textToShow = "Still loading, please wait.";
+
+                new Timer(500, e -> {
+                    dates.clear();
+                    dates.addAll(getDates());
+
+                    updateAllInfo();
+                    repaint();
+                    if (Settings.isDoneLoadingShiftHistory()) {
+                        owner.updateAndPack();
+                        ((Timer) e.getSource()).stop();
+                    }
+                }).start();
+            }
 
             int textWidth = g.getFontMetrics().stringWidth(textToShow);
             g.setColor(Theme.getTextColor());

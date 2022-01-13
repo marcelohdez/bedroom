@@ -19,7 +19,7 @@ import java.util.Locale;
 public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowListener, MouseListener {
 
     private final Component parent;
-    private final ShiftHistoryChart chart = new ShiftHistoryChart();
+    private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
     private final JLabel datesShown = new JLabel("None");
     private final JButton firstButton = new JButton("|<<");
@@ -178,7 +178,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         updatePageInfo();
     }
 
-    public void updatePageInfo() {
+    private void updatePageInfo() {
 
         pagesLabel.setText("Page " + chart.page() + "/" + chart.totalPages());
         // Disable previous-page-going buttons if on first page
@@ -189,6 +189,12 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         lastButton.setEnabled(chart.page() != chart.totalPages());
         datesShown.setText(chart.pageDateRange());
 
+    }
+
+    protected void updateAndPack() {
+        updatePageInfo();
+        pack();
+        setResponsiveSizes();
     }
 
     /** Open working directory in system's explorer */
@@ -271,8 +277,6 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     // Unused
     @Override
     public void keyTyped(KeyEvent e) {}
-    @Override
-    public void keyReleased(KeyEvent e) {}
     @Override
     public void windowOpened(WindowEvent e) {}
     @Override
