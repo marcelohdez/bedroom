@@ -17,17 +17,17 @@ public class ShiftHistoryChart extends JPanel {
     private boolean canShowToday = Bedroom.clockInTimePassed(); // If we're currently clocked in
 
     private final ArrayList<LocalDate> dates = getDates();
-    private int pointsAmount = 8;
+    private float pointsAmount = 8f;
     private int currentPage;
     private int totalPages = getPageAmount();
     // Missing dates to fill last page
-    private int missingDates = dates.size() % pointsAmount;
+    private int missingDates = (int) (dates.size() % pointsAmount);
 
     // Values to use when drawing:
     private float range = getRange(); // For range lines
     // Updated every draw call:
     private int rangeTextSpacing;
-    private int barSpacing;
+    private float barSpacing;
 
     @Override
     public void paintComponent(Graphics gfx) { // Run on every draw call
@@ -74,7 +74,7 @@ public class ShiftHistoryChart extends JPanel {
         int max = 0; // Reset range value
         if (!noHistory) {
             for (int i = 0; i < pointsAmount; i++) {
-                int index = indexOf(i + pointsAmount * (currentPage - 1)); // Get its index
+                int index = indexOf((int) (i + pointsAmount * (currentPage - 1))); // Get its index
                 float valueToCheck = 0;
 
                 if (index < dates.size() - (Bedroom.clockInTimePassed() ? 1 : 0)) {
@@ -85,7 +85,7 @@ public class ShiftHistoryChart extends JPanel {
                 // If value
                 if (valueToCheck > max) max = (int) Math.ceil(valueToCheck);
             }
-            if (max % 2 != 0) max++;
+            if (max % 2 != 0) max++; // Make max even
         }
         return max;
     }
@@ -93,7 +93,7 @@ public class ShiftHistoryChart extends JPanel {
     private void updateAllInfo() {
         totalPages = getPageAmount();
         range = getRange();
-        missingDates = dates.size() % pointsAmount;
+        missingDates = (int) (dates.size() % pointsAmount);
     }
 
     private void drawChart(Graphics2D g, Color barColor, Color contrastColor) {
@@ -136,10 +136,10 @@ public class ShiftHistoryChart extends JPanel {
         }
     }
 
-    private void drawBars(Graphics2D g, int barSpacing, Color barColor, Color contrastColor) {
+    private void drawBars(Graphics2D g, float barSpacing, Color barColor, Color contrastColor) {
         for (int bar = 0; bar < pointsAmount; bar++) {
 
-            int index = indexOf(pointsAmount * (currentPage - 1) + bar);
+            int index = indexOf((int) (pointsAmount * (currentPage - 1) + bar));
             boolean onToday = canShowToday && index == dates.size() - 1;
 
             float value;
@@ -148,12 +148,12 @@ public class ShiftHistoryChart extends JPanel {
             } else break;
 
             int top = (int) (getHeight() - (getHeight() / range) * value); // Top of current bar
-            int x = rangeTextSpacing + (barSpacing * bar);
+            float x = rangeTextSpacing + (barSpacing * bar);
 
             g.setColor(barColor); // Bar is colored same as Theme's text color
-            g.fillRect(x, top, (barSpacing - 1), getHeight() - top); // Draw bar
+            g.fillRect((int) x, top, (int) (barSpacing - 1), getHeight() - top); // Draw bar
 
-            drawBarInfo(g, onToday, bar, index, value, x, top, barColor, contrastColor);
+            drawBarInfo(g, onToday, bar, index, value, (int) x, top, barColor, contrastColor);
         }
     }
 
@@ -285,9 +285,9 @@ public class ShiftHistoryChart extends JPanel {
     /** Return's current page's viewed dates range (first bar and last bar's date) */
     public String pageDateRange() {
         if (!noHistory) { // If there is history to show, get first and last dates currently shown:
-            int start = indexOf(pointsAmount * (currentPage - 1)); // Get the true starting index
+            int start = indexOf((int) (pointsAmount * (currentPage - 1))); // Get the true starting index
 
-            int shown = pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
+            int shown = (int) pointsAmount; // Default to pointsAmount since we always show this amount unless we have less:
             if (dates.size() < pointsAmount) {
                 shown = dates.size();
             }
@@ -305,7 +305,7 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     /** Sets the amount of bars to show per page to the given integer */
-    public void show(int amount) {
+    public void showAmount(float amount) {
         pointsAmount = amount;
         updateAllInfo();
     }
@@ -350,7 +350,7 @@ public class ShiftHistoryChart extends JPanel {
     /** Returns index of date of bar at given X coordinate */
     public int getDateFromBarAt(int x) {
         if (!noHistory) {
-            int index = indexOf(pointsAmount * (currentPage - 1) + (x - rangeTextSpacing) / barSpacing);
+            int index = indexOf((int) (pointsAmount * (currentPage - 1) + (x - rangeTextSpacing) / barSpacing));
 
             if (index < dates.size() - 1) { // If a date exists at X return its index
                 return index;

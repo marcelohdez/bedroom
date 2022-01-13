@@ -108,7 +108,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
             if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
                 chart.showAll();
             } else if (ptsAmount.getSelectedItem() != null)
-                chart.show(Integer.parseInt((String) ptsAmount.getSelectedItem()));
+                chart.showAmount(Float.parseFloat((String) ptsAmount.getSelectedItem()));
 
             chart.repaint();
             updatePageInfo();
