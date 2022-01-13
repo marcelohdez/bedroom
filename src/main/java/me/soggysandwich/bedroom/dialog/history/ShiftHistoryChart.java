@@ -24,7 +24,7 @@ public class ShiftHistoryChart extends JPanel {
     private int missingDates = dates.size() % pointsAmount;
 
     // Values to use when drawing:
-    private float range = getValueRange(); // For range lines
+    private float range = getRange(); // For range lines
     // Updated every draw call:
     private int rangeTextSpacing;
     private int barSpacing;
@@ -70,7 +70,7 @@ public class ShiftHistoryChart extends JPanel {
     }
 
     /** Returns the highest value on current page to draw background lines accordingly */
-    private int getValueRange() {
+    private int getRange() {
         int max = 0; // Reset range value
         if (!noHistory) {
             for (int i = 0; i < pointsAmount; i++) {
@@ -85,13 +85,14 @@ public class ShiftHistoryChart extends JPanel {
                 // If value
                 if (valueToCheck > max) max = (int) Math.ceil(valueToCheck);
             }
+            if (max % 2 != 0) max++;
         }
         return max;
     }
 
     private void updateAllInfo() {
         totalPages = getPageAmount();
-        range = getValueRange();
+        range = getRange();
         missingDates = dates.size() % pointsAmount;
     }
 
@@ -317,7 +318,7 @@ public class ShiftHistoryChart extends JPanel {
     public void newestPage() {
         currentPage = totalPages;
         canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
-        range = getValueRange();
+        range = getRange();
         repaint();
     }
 
@@ -325,7 +326,7 @@ public class ShiftHistoryChart extends JPanel {
         if (currentPage < totalPages) {
             currentPage++;
             canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
-            range = getValueRange();
+            range = getRange();
             repaint();
         }
     }
@@ -334,7 +335,7 @@ public class ShiftHistoryChart extends JPanel {
         if (currentPage > 1) {
             currentPage--;
             canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
-            range = getValueRange();
+            range = getRange();
             repaint();
         }
     }
@@ -342,7 +343,7 @@ public class ShiftHistoryChart extends JPanel {
     public void oldestPage() {
         currentPage = 1;
         canShowToday = Bedroom.clockInTimePassed() && currentPage == totalPages;
-        range = getValueRange();
+        range = getRange();
         repaint();
     }
 
