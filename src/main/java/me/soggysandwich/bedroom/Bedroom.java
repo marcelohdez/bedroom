@@ -491,7 +491,9 @@ public class Bedroom {
         File path = new File(Settings.getWorkingDir()); // Make the directory into a File
 
         if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
-            createHistoryFileAt(path.toPath()); // Create the file
+            if (Settings.isDoneLoadingShiftHistory()) {
+                createHistoryFileAt(path.toPath()); // Create history file with data
+            }
         } else { // If the directory does not exist and cannot be made:
             new AlertDialog(wnd, "Unable to save shift history");
         }
