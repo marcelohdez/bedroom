@@ -133,14 +133,16 @@ public class ShiftHistoryChart extends JPanel {
     private void retryForHistory() {
         if (retryTimer == null) {
             retryTimer = new Timer(500, e -> {
-                dates.clear();
-                dates.addAll(getDates());
-
-                updateAllInfo();
-                repaint();
                 if (Settings.isDoneLoadingShiftHistory()) {
-                    owner.updateAndPack();
-                    ((Timer) e.getSource()).stop();
+                    dates.clear();
+                    dates.addAll(getDates());
+
+                    updateAllInfo();
+                    repaint();
+
+                    owner.reset();
+                    retryTimer.stop();
+                    retryTimer = null; // Set to null for the GC to get rid of that timer object
                 }
             });
             retryTimer.start();

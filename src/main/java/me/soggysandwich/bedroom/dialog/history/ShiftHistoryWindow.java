@@ -21,6 +21,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private final Component parent;
     private final ShiftHistoryChart chart = new ShiftHistoryChart(this);
 
+    private final JComboBox<String> ptsAmount = new JComboBox<>();
     private final JLabel datesShown = new JLabel("None");
     private final JButton firstButton = new JButton("|<<");
     private final JButton leftButton = new JButton("<");
@@ -48,9 +49,7 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         addWindowListener(this);
         addKeyListener(this);
         init(); // Initialize everything
-        updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
-        pack();
-        setResponsiveSizes();
+        reset();
 
         Ops.setHandCursorOnCompsFrom(getContentPane()); // Add hand cursor to needed components
         setLocationRelativeTo(parent); // Center on parent window
@@ -95,7 +94,6 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
     private void init() {
         JPanel topRow = new JPanel();
 
-        JComboBox<String> ptsAmount = new JComboBox<>(getAllowedAmounts());
         JButton historyFolderButton = new JButton("Open history directory");
         // Right-click menu stuffs:
         JPopupMenu delMenu = new JPopupMenu();
@@ -105,7 +103,8 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
         initPageButtons();
         ptsAmount.addKeyListener(this);
         ptsAmount.addItemListener(e -> {
-            if (ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) { // "All" is always last item on list
+            if (ptsAmount.getItemCount() > 1 && ptsAmount.getSelectedIndex() == (ptsAmount.getItemCount() - 1)) {
+                // "All" is always last item on list unless there are less than 8 dates shown, as 8 is the only option
                 chart.showAll();
             } else if (ptsAmount.getSelectedItem() != null)
                 chart.showAmount(Float.parseFloat((String) ptsAmount.getSelectedItem()));
@@ -191,8 +190,12 @@ public class ShiftHistoryWindow extends JFrame implements KeyListener, WindowLis
 
     }
 
-    protected void updateAndPack() {
-        updatePageInfo();
+    protected void reset() {
+        ptsAmount.removeAllItems();
+        for (String s : getAllowedAmounts())
+            ptsAmount.addItem(s);
+
+        updatePageInfo(); // Get correct page numbers and disable left/right buttons as needed
         pack();
         setResponsiveSizes();
     }
