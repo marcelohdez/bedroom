@@ -15,6 +15,7 @@ import javax.swing.Timer;
 public class ShiftHistoryChart extends JPanel {
 
     private final ShiftHistoryWindow owner;
+    private Timer retryTimer; // Retry for shift history if not done loading
 
     private boolean noHistory = false;
     private boolean canShowToday = Bedroom.clockInTimePassed(); // If we're currently clocked in
@@ -118,17 +119,7 @@ public class ShiftHistoryChart extends JPanel {
             } else {
                 textToShow = "Still loading, please wait.";
 
-                new Timer(500, e -> {
-                    dates.clear();
-                    dates.addAll(getDates());
-
-                    updateAllInfo();
-                    repaint();
-                    if (Settings.isDoneLoadingShiftHistory()) {
-                        owner.updateAndPack();
-                        ((Timer) e.getSource()).stop();
-                    }
-                }).start();
+                retryForHistory();
             }
 
             int textWidth = g.getFontMetrics().stringWidth(textToShow);
@@ -136,6 +127,23 @@ public class ShiftHistoryChart extends JPanel {
             g.drawString(textToShow,
                     (getWidth() / 2) - textWidth / 2, // Center on width
                     (getHeight() / 2) + g.getFont().getSize() / 2); // Center on height
+        }
+    }
+
+    private void retryForHistory() {
+        if (retryTimer == null) {
+            retryTimer = new Timer(500, e -> {
+                dates.clear();
+                dates.addAll(getDates());
+
+                updateAllInfo();
+                repaint();
+                if (Settings.isDoneLoadingShiftHistory()) {
+                    owner.updateAndPack();
+                    ((Timer) e.getSource()).stop();
+                }
+            });
+            retryTimer.start();
         }
     }
 
