@@ -21,12 +21,13 @@ public class StartupItemsManager extends JDialog implements WindowListener {
     private final DefaultListModel<String> itemNames = new DefaultListModel<>(); // List of startup items' names
     private JList<String> list; // The JList to be displayed
 
+    private JFileChooser jfc; // File chooser for startup programs
+
     public StartupItemsManager(SettingsDialog parent) {
         this.parent = parent;
 
         setTitle("Startup Items");
         addWindowListener(this);
-        setModalityType(ModalityType.APPLICATION_MODAL);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setAlwaysOnTop(Settings.getAlwaysOnTop());
         setResizable(false);
@@ -42,6 +43,8 @@ public class StartupItemsManager extends JDialog implements WindowListener {
         add(content);
         pack();
 
+        SwingUtilities.invokeLater(() -> jfc = new JFileChooser());
+        setModalityType(ModalityType.APPLICATION_MODAL);
         setLocationRelativeTo(parent); // Center on parent window
         setVisible(true);
 
@@ -105,16 +108,15 @@ public class StartupItemsManager extends JDialog implements WindowListener {
 
         if (itemNames.getSize() < 7) { // Add an item if under limit
 
-            JFileChooser fc = new JFileChooser();
-            fc.setFileFilter(new FileNameExtensionFilter(
+            jfc.setFileFilter(new FileNameExtensionFilter(
                     // Set a filter of apps and text files (for scripts)
                     "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf"));
-            fc.setApproveButtonText("Add");
-            int returnVal = fc.showOpenDialog(this);
+            jfc.setApproveButtonText("Add");
+            int returnVal = jfc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                itemNames.addElement(fc.getSelectedFile().getName()); // Add name of app
-                itemDirs.add(fc.getSelectedFile().toString()); // Add its directory
+                itemNames.addElement(jfc.getSelectedFile().getName()); // Add name of app
+                itemDirs.add(jfc.getSelectedFile().toString()); // Add its directory
             }
 
 
