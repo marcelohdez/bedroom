@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class BedroomWindow extends JFrame implements Reloadable, WindowListener, KeyListener {
 
     private final UI ui = new UI(this);
+    private SelectTimeDialog clockInDialog;
 
     public BedroomWindow() {
 
@@ -35,7 +36,10 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
         setVisible(true);
 
         if (!Bedroom.timesChosen()) {
-            new SelectTimeDialog(this, TimeWindowType.CLOCK_IN); // Create clock in window
+            SwingUtilities.invokeLater(() -> {
+                clockInDialog = new SelectTimeDialog(this, TimeWindowType.CLOCK_IN);
+                clockInDialog.showSelf();
+            });
         }
 
     }
@@ -49,7 +53,7 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
     }
 
     public void enterBreak() {
-        new SelectTimeDialog(this, TimeWindowType.START_BREAK);
+        new SelectTimeDialog(this, TimeWindowType.START_BREAK).showSelf();
     }
 
     public void enableButtons() {
@@ -81,7 +85,6 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
     @Override
     public void windowClosing(WindowEvent e) {
-        System.out.println("bruh");
 
         // If we are currently in our shift:
         if (LocalDateTime.now().isAfter(Bedroom.getClockInTime()) &&
@@ -90,7 +93,7 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
             // Clock out early
             if (Settings.getAskBeforeEarlyClose()) {
                 // If we have the option selected, show a dialog for confirmation
-                new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT);
+                new SelectTimeDialog(this, TimeWindowType.EARLY_CLOCK_OUT).showSelf();
 
                 // If we do not have the option selected, just clock out early at
                 // the current time down to the minute
@@ -104,11 +107,17 @@ public class BedroomWindow extends JFrame implements Reloadable, WindowListener,
 
     }
 
+    @Override
+    public void windowClosed(WindowEvent e) {
+        if (clockInDialog != null) {
+            clockInDialog.dispose();
+            clockInDialog = null;
+        }
+    }
+
     // Unused
     @Override
     public void windowOpened(WindowEvent e) {}
-    @Override
-    public void windowClosed(WindowEvent e) {}
     @Override
     public void windowIconified(WindowEvent e) {}
     @Override

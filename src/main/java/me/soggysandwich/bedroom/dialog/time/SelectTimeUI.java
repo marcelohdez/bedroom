@@ -312,7 +312,7 @@ public class SelectTimeUI extends JPanel {
     private void proceedWith(TimeWindowType newType, LocalDateTime chosenTime) {
 
         dialog.setVisible(false);
-        new SelectTimeDialog(dialog, newType, chosenTime);
+        new SelectTimeDialog(dialog, newType, chosenTime).showSelf();
 
     }
 
