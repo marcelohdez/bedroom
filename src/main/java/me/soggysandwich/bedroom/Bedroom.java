@@ -51,11 +51,9 @@ public class Bedroom {
     public static void main(String[] args) {
 
         doLAFStuff();
+        SwingUtilities.invokeLater(Bedroom::openStartupItems);
+        SwingUtilities.invokeLater(Bedroom::loadShiftHistory);
         init();
-        SwingUtilities.invokeLater(() -> {
-            Bedroom.openStartupItems();
-            Bedroom.loadShiftHistory();
-        });
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
