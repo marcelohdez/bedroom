@@ -107,19 +107,18 @@ public class StartupItemsManager extends JDialog implements WindowListener {
     private void addAnApp() {
 
         if (itemNames.getSize() < 7) { // Add an item if under limit
+            if (jfc != null) {
+                jfc.setFileFilter(new FileNameExtensionFilter(
+                        // Set a filter of apps and text files (for scripts)
+                        "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf"));
+                jfc.setApproveButtonText("Add");
+                int returnVal = jfc.showOpenDialog(this);
 
-            jfc.setFileFilter(new FileNameExtensionFilter(
-                    // Set a filter of apps and text files (for scripts)
-                    "Programs/Scripts", "exe", "app", "lnk", "txt", "docx", "odt", "rtf"));
-            jfc.setApproveButtonText("Add");
-            int returnVal = jfc.showOpenDialog(this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                itemNames.addElement(jfc.getSelectedFile().getName()); // Add name of app
-                itemDirs.add(jfc.getSelectedFile().toString()); // Add its directory
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    itemNames.addElement(jfc.getSelectedFile().getName()); // Add name of app
+                    itemDirs.add(jfc.getSelectedFile().toString()); // Add its directory
+                }
             }
-
-
         } else {
             new AlertDialog(parent, """
                         You can not add any more
