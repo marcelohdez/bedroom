@@ -1,10 +1,10 @@
-package me.soggysandwich.bedroom.dialog.history;
+package me.marcelohdez.bedroom.dialog.history;
 
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.util.Ops;
-import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.Theme;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
+import me.marcelohdez.bedroom.dialog.alert.YesNoDialog;
+import me.marcelohdez.bedroom.util.Ops;
+import me.marcelohdez.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;

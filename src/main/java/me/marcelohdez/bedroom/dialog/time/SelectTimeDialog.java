@@ -1,12 +1,12 @@
-package me.soggysandwich.bedroom.dialog.time;
+package me.marcelohdez.bedroom.dialog.time;
 
-import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
-import me.soggysandwich.bedroom.main.BedroomWindow;
-import me.soggysandwich.bedroom.util.Reloadable;
-import me.soggysandwich.bedroom.Bedroom;
-import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
-import me.soggysandwich.bedroom.util.TimeWindowType;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.history.ShiftHistoryWindow;
+import me.marcelohdez.bedroom.dialog.settings.SettingsDialog;
+import me.marcelohdez.bedroom.main.BedroomWindow;
+import me.marcelohdez.bedroom.util.Reloadable;
+import me.marcelohdez.bedroom.util.TimeWindowType;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;

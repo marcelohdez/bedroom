@@ -1,8 +1,8 @@
-package me.soggysandwich.bedroom.dialog.history;
+package me.marcelohdez.bedroom.dialog.history;
 
-import me.soggysandwich.bedroom.Bedroom;
-import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.Theme;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
 
 import javax.swing.*;
 import java.awt.*;

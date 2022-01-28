@@ -1,11 +1,11 @@
-package me.soggysandwich.bedroom.dialog.settings;
+package me.marcelohdez.bedroom.dialog.settings;
 
-import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.util.Ops;
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.Bedroom;
-import me.soggysandwich.bedroom.dialog.FloatingSpinner;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.time.SelectTimeDialog;
+import me.marcelohdez.bedroom.util.Ops;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.dialog.FloatingSpinner;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

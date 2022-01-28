@@ -1,12 +1,12 @@
-package me.soggysandwich.bedroom;
+package me.marcelohdez.bedroom;
 
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.main.BedroomWindow;
-import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.Time;
-import me.soggysandwich.bedroom.main.UI;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
+import me.marcelohdez.bedroom.dialog.alert.YesNoDialog;
+import me.marcelohdez.bedroom.main.BedroomWindow;
+import me.marcelohdez.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.util.Time;
+import me.marcelohdez.bedroom.main.UI;
 
 import javax.swing.*;
 import java.awt.*;

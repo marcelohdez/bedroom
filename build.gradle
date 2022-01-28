@@ -2,7 +2,7 @@ plugins {
     id 'application'
 }
 
-group 'me.soggysandwich'
+group 'me.marcelohdez'
 version '3.2-DEV'
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -13,11 +13,11 @@ repositories {
 }
 
 application {
-    mainClass = 'me.soggysandwich.bedroom.Bedroom'
+    mainClass = 'me.marcelohdez.bedroom.Bedroom'
 }
 
 jar {
     manifest {
-        attributes "Main-Class": 'me.soggysandwich.bedroom.Bedroom'
+        attributes "Main-Class": 'me.marcelohdez.bedroom.Bedroom'
     }
 }

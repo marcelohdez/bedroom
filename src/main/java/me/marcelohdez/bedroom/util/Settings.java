@@ -1,7 +1,7 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.Bedroom;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;

@@ -1,4 +1,4 @@
-package me.soggysandwich.bedroom.dialog.alert;
+package me.marcelohdez.bedroom.dialog.alert;
 
 import javax.swing.*;
 import java.awt.*;

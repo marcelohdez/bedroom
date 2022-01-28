@@ -1,4 +1,4 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
 import javax.swing.*;
 import java.awt.*;

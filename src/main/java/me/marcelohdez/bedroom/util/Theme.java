@@ -1,10 +1,9 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
-import me.soggysandwich.bedroom.Bedroom;
+import me.marcelohdez.bedroom.Bedroom;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
 /**
  * A class for some coloring/theming methods as well as holding the current theme's color values

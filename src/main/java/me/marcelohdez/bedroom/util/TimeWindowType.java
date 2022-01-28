@@ -1,4 +1,4 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
 public enum TimeWindowType { // Types of select time windows
 
