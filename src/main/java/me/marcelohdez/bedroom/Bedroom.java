@@ -1,12 +1,11 @@
-package me.marcelohdez.bedroom;
+package me.soggysandwich.bedroom;
 
-import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
-import me.marcelohdez.bedroom.dialog.alert.YesNoDialog;
-import me.marcelohdez.bedroom.main.BedroomWindow;
-import me.marcelohdez.bedroom.util.Settings;
-import me.marcelohdez.bedroom.util.Theme;
-import me.marcelohdez.bedroom.util.Time;
-import me.marcelohdez.bedroom.main.UI;
+import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
+import me.soggysandwich.bedroom.main.BedroomWindow;
+import me.soggysandwich.bedroom.util.Settings;
+import me.soggysandwich.bedroom.util.Theme;
+import me.soggysandwich.bedroom.util.Time;
+import me.soggysandwich.bedroom.main.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
@@ -51,7 +49,6 @@ public class Bedroom {
     public static void main(String[] args) {
 
         doLAFStuff();
-        SwingUtilities.invokeLater(Bedroom::openStartupItems);
         SwingUtilities.invokeLater(Bedroom::loadShiftHistory);
         init();
 
@@ -178,41 +175,6 @@ public class Bedroom {
                     a character loaded was not
                     a number. Please check
                     your history file.""");
-        }
-    }
-
-    private static void openStartupItems() {
-        String[] list = Settings.getStartupItemsList();
-
-        for (String location : list) {
-            if (!location.isEmpty()) {
-                openItem(location);
-            }
-        }
-    }
-
-    private static void openItem(String loc) {
-        File workApp = new File(loc);
-        if (!loc.toLowerCase(Locale.ROOT).endsWith(".jar") || new YesNoDialog(null, """
-                        For safety reasons, Bedroom does not
-                        automatically open .jar files so users
-                        do not create an endless loop of
-                        Bedroom processes, is this startup item
-                        ok to run?:
-                        
-                        """ + workApp.getName()).accepted()) {
-
-            if (workApp.exists()) {
-                try {
-                    Desktop.getDesktop().open(workApp);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else new AlertDialog(wnd, """
-                    One of your startup items was
-                    not able to be started as it
-                    no longer exists. Please go to
-                    Settings > Manage Startup Items.""");
         }
     }
 

@@ -143,17 +143,6 @@ public final class Settings {
     }
 
     /**
-     * Saves the list of startup item directories into Preferences
-     *
-     * @param items The list of directories. In format: "[C:\User\Desktop\Item1, C:\StartupItems\Item2]"
-     */
-    public static void saveStartupItems(String items) {
-        // The Startup Items feature was originally called Work Apps,
-        // hence, the preferences key is still workApps to not lose beta tester's data
-        Bedroom.userPrefs.put("workApps", items);
-    }
-
-    /**
      * @return Path to working directory (where non preference data should be stored) as a String
      */
     public static String getWorkingDir() {
@@ -208,35 +197,6 @@ public final class Settings {
 
     public static boolean isDoneLoadingShiftHistory() {
         return isDoneLoadingShiftHistory;
-    }
-
-    /**
-     * Returns an ArrayList<String> from the String of startup items saved in preferences.
-     *
-     * @return an ArrayList of the String's items
-     */
-    public static String[] getStartupItemsList() {
-
-        ArrayList<String> list = new ArrayList<>();
-        String str = Bedroom.userPrefs.get("workApps", "[]");
-
-        int start = 1; // Start 1 character ahead to avoid the beginning bracket
-        int end = start;
-        for (int i = 1; i < str.length() - 1; i++) { // -1 character from the end to avoid ending bracket
-
-            if (str.charAt(i) != 44) { // If it is not a comma, extend end point
-                end++;
-            } else { // Else return the string we have
-                if (!str.substring(start,end).isBlank()) list.add(str.substring(start, end));
-                start = i+2; // Go 2 characters ahead to avoid the space in between items.
-                end = i+1;
-            }
-
-        }
-        if (!str.substring(start, end).isBlank()) list.add(str.substring(start, end));
-
-        return list.toArray(new String[0]);
-
     }
 
     /**

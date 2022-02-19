@@ -75,10 +75,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         createCheckBoxRow(showMoreShiftInfo);
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
-        createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.",
-                e -> new StartupItemsManager(window));
-        createButtonRow("Set Defaults", "Reset Misc. options, excluding startup items.",
-                e -> setDefaultMisc());
+        createDefaultsButton();
 
         Ops.setHandCursorOnCompsFrom(this); // Set hand cursor on needed components
 
@@ -261,14 +258,13 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         add(row);
     }
 
-    private void createButtonRow(String buttonText, String toolTip, ActionListener al) {
+    private void createDefaultsButton() {
         // Create the components
         JPanel row = new JPanel();
-        JButton button = new JButton(buttonText);
-
+        JButton button = new JButton("Set Defaults");
         // Customize them
-        button.setToolTipText("<html><b>" + toolTip + "</b></html>");
-        button.addActionListener(al);
+        button.setToolTipText("<html><b>Reset Misc. options</b></html>");
+        button.addActionListener(e -> setDefaultMisc());
         button.addKeyListener(window); // Add KeyListener for when it retains focus on user click
 
         // Add to row
