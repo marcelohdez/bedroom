@@ -1,13 +1,12 @@
-package me.soggysandwich.bedroom;
+package me.marcelohdez.bedroom;
 
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.util.TimeWindowType;
-import me.soggysandwich.bedroom.main.BedroomWindow;
-import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.Time;
-import me.soggysandwich.bedroom.main.UI;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
+import me.marcelohdez.bedroom.dialog.alert.YesNoDialog;
+import me.marcelohdez.bedroom.main.BedroomWindow;
+import me.marcelohdez.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.util.Time;
+import me.marcelohdez.bedroom.main.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,13 +19,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.prefs.Preferences;
 
-public class Main {
+public class Bedroom {
 
     // ======= Global Variables =======
-    public static final String VERSION = "3.1.1";
+    public static final String VERSION = "3.2-DEV";
     public static final Preferences userPrefs = Preferences.userRoot(); // User preferences directory
 
     // ======= Variables =======
@@ -50,58 +50,92 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try { // Set cross-platform look and feel, fixes macOS buttons having a white background
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            // Also, if on Windows--IDK the property to any other OS--check for high contrast and enable if true
-            if (System.getProperty("os.name").contains("Windows"))
-                if (Toolkit.getDefaultToolkit().getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE))
-                    Settings.setHighContrastTo(true);
-        } catch(Exception e) { e.printStackTrace(); }
-
-        Theme.setColors(); // Set extra color accents through UIManager
+        doLAFStuff();
+        SwingUtilities.invokeLater(Bedroom::openStartupItems);
+        SwingUtilities.invokeLater(Bedroom::loadShiftHistory);
         init();
-        SwingUtilities.invokeLater(() -> {
-
-            Main.openStartupItems();
-
-            try { // Try to load shift history
-                shiftHistory = Settings.loadShiftHistory();
-            } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
-                new AlertDialog(null, """
-                    Bedroom was unable to load
-                    your past shift history as
-                    a character loaded was not
-                    a number. Please check
-                    your history file.""");
-            }
-
-        });
 
         // Create a timer to run every second, updating the time
         new Timer(1000, e -> update()).start();
-        System.out.println(LocalDateTime.now().toString().substring(0, 16));
 
     }
 
+    private static void doLAFStuff() {
+        if (userPrefs.getBoolean("firstLAFCheck", true)) {
+            checkForSystemLAF();
+        }
+
+        try { // Set look and feel
+            if (Settings.isSystemLAFEnabled()) {
+                trySettingSystemLAF();
+            } else {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            }
+            // If we have not checked before, check OS property and enable high contrast if true
+            if (userPrefs.getBoolean("firstTimeHCCHeck", true)) setHighContrast();
+        } catch(Exception e) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }
+
+        Theme.setColors(); // Set extra color accents through UIManager
+    }
+
+    private static void checkForSystemLAF() {
+        try {
+            String systemLAF = UIManager.getSystemLookAndFeelClassName();
+            if (systemLAF.equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+                Settings.enableSystemLAF(false); // Disable system look and feel as it is not available
+                System.out.println("No system look and feel found! Defaulting to cross-platform LAF.");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+
+        userPrefs.putBoolean("firstLAFCheck", false);
+    }
+
+    private static void trySettingSystemLAF() throws Exception {
+        String systemLAF = UIManager.getSystemLookAndFeelClassName();
+
+        if (systemLAF.equals(UIManager.getCrossPlatformLookAndFeelClassName())) {
+            new AlertDialog(null, "This system's theme is not supported!");
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } else {
+            UIManager.setLookAndFeel(systemLAF);
+        }
+    }
+
+    private static void setHighContrast() {
+        if (System.getProperty("os.name").contains("Windows")) {
+            if (Toolkit.getDefaultToolkit()
+                    .getDesktopProperty("win.highContrast.on").equals(Boolean.TRUE)) {
+                Settings.enableHighContrast(true);
+            }
+        }
+
+        userPrefs.putBoolean("firstTimeHCCHeck", false);
+    }
+
     private static void init() {
+        if ((Settings.isCrashRecoveryEnabled() && isInSavedShift())) { // Recover from crash
+            recoverShift();
+            // Update now to not wait for next second as it is updated at the end of the update method
+            secondsWorked = secondsWorkedBy(LocalDateTime.now());
+        }
 
-        wnd = new BedroomWindow(); // Create  window
+        wnd = new BedroomWindow(); // Create window
+        update(); // Update stats etc
+    }
 
-        if (Settings.isCrashRecoveryEnabled() && isInSavedShift()) { // Recover from crash
+    private static void recoverShift() {
+        setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
+                LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
+        setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
+        setOrders(userPrefs.getInt("orders", 0), false);   // Set orders to saved value
 
-            setShift(LocalDateTime.parse(userPrefs.get("shiftStart", "")),  // Set shift times to last saved
-                    LocalDateTime.parse(userPrefs.get("shiftEnd", "")));
-            setTarget(userPrefs.getInt("target", Settings.getDefaultTarget()));   // Set target to saved value
-            setOrders(userPrefs.getInt("orders", 0), false);   // Set orders to saved value
-
-            if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
-                setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
+        if (lastSavedBreakIsInShift()) // If our last saved break is inside our shift:
+            setBreak(LocalDateTime.parse(userPrefs.get("breakStart", "")),
                     LocalDateTime.parse(userPrefs.get("breakEnd", "")));
-
-            update(); // Update stats etc
-
-        } else new SelectTimeDialog(wnd, TimeWindowType.CLOCK_IN); // Create clock in window
-
     }
 
     private static boolean isInSavedShift() {
@@ -134,33 +168,59 @@ public class Main {
 
     }
 
-    private static void openStartupItems() {
-
-        for (String location : Settings.getStartupItemsList()) {
-
-            if (!location.equals("")) {
-
-                File workApp = new File(location);
-                if (workApp.exists()) {
-
-                    try {
-                        Desktop.getDesktop().open(workApp);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    new AlertDialog(wnd, """
-                        One of your startup items was
-                        not able to be started as it
-                        no longer exists. Please go to
-                        Settings > Manage Startup Items.""");
-                }
-
-            }
-
+    private static void loadShiftHistory() {
+        try { // Try to load shift history
+            shiftHistory = Settings.loadShiftHistory();
+        } catch (NumberFormatException e) { // If unable to load due to NumberFormatException show error:
+            new AlertDialog(null, """
+                    Bedroom was unable to load
+                    your past shift history as
+                    a character loaded was not
+                    a number. Please check
+                    your history file.""");
         }
+    }
 
+    private static void openStartupItems() {
+        String[] list = Settings.getStartupItemsList();
+
+        for (String location : list) {
+            if (!location.isEmpty()) {
+                openItem(location);
+            }
+        }
+    }
+
+    private static void openItem(String loc) {
+        File workApp = new File(loc);
+        if (!loc.toLowerCase(Locale.ROOT).endsWith(".jar") || new YesNoDialog(null, """
+                        For safety reasons, Bedroom does not
+                        automatically open .jar files so users
+                        do not create an endless loop of
+                        Bedroom processes, is this startup item
+                        ok to run?:
+                        
+                        """ + workApp.getName()).accepted()) {
+
+            if (workApp.exists()) {
+                try {
+                    Desktop.getDesktop().open(workApp);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else new AlertDialog(wnd, """
+                    One of your startup items was
+                    not able to be started as it
+                    no longer exists. Please go to
+                    Settings > Manage Startup Items.""");
+        }
+    }
+
+    public static void restart() {
+        wnd.dispose();
+        doLAFStuff();
+        wnd = new BedroomWindow();
+        update();
     }
 
     public static void updateSettings() {
@@ -169,8 +229,7 @@ public class Main {
     }
 
     public static void update() {
-
-        if (timesChosen()) { // Have we chosen clock in and out times?
+        if (wnd != null && timesChosen()) { // Have we chosen clock in and out times?
 
             // Has our clock in time passed?
             if (LocalDateTime.now().isAfter(clockInTime)) {
@@ -185,7 +244,6 @@ public class Main {
             wnd.pack();
 
         }
-
     }
 
     public static boolean timesChosen() {
@@ -257,7 +315,7 @@ public class Main {
     }
 
     private static String getUntilTargetText() {
-        int ordersNeeded = getOrdersNeededForTarget();
+        int ordersNeeded = getOrdersLeftForTarget();
 
         if (ordersNeeded > 0) {
             return "$u until target of $t/hr"
@@ -268,8 +326,8 @@ public class Main {
         }
     }
 
-    // Tell us how many orders we need to reach our target
-    public static int getOrdersNeededForTarget() {
+    /** Returns how many orders user has left to reach their target */
+    public static int getOrdersLeftForTarget() {
 
         double neededForTarget = (double) secondsWorked/3600 * target;
         if (neededForTarget > orders) {
@@ -342,10 +400,9 @@ public class Main {
     public static void setBreak(LocalDateTime start, LocalDateTime end) {
         breakInTime = start;
         breakOutTime = end;
-        if (Settings.isCrashRecoveryEnabled()) {
-            userPrefs.put("breakStart", start.toString());
-            userPrefs.put("breakEnd", end.toString());
-        }
+        // Save break times in preferences for crash recovery
+        userPrefs.put("breakStart", start.toString());
+        userPrefs.put("breakEnd", end.toString());
     }
 
     public static LocalDateTime getClockInTime() {
@@ -362,14 +419,9 @@ public class Main {
 
         clockInTime = start;
         clockOutTime = end;
-        if (Settings.isCrashRecoveryEnabled()) {
-            userPrefs.put("shiftStart", start.toString());
-            userPrefs.put("shiftEnd", end.toString());
-        }
-    }
-
-    public static void removeFromHistory(LocalDate date) {
-        shiftHistory.remove(date);
+        // Save shift times in preferences for crash recovery
+        userPrefs.put("shiftStart", start.toString());
+        userPrefs.put("shiftEnd", end.toString());
     }
 
     public static void clockOut(LocalDateTime time) {
@@ -437,7 +489,9 @@ public class Main {
         File path = new File(Settings.getWorkingDir()); // Make the directory into a File
 
         if (path.exists() || path.mkdirs()) { // If the directory exists or if it can be made:
-            createHistoryFileAt(path.toPath()); // Create the file
+            if (Settings.isDoneLoadingShiftHistory()) {
+                createHistoryFileAt(path.toPath()); // Create history file with data
+            }
         } else { // If the directory does not exist and cannot be made:
             new AlertDialog(wnd, "Unable to save shift history");
         }
@@ -455,26 +509,19 @@ public class Main {
 
         try {
 
-            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it:
+            if (shiftHistoryFile.createNewFile()) { // If the file does not exist attempt to make it
+                try (FileWriter writer = new FileWriter(shiftHistoryFile)) {
+                    if (shiftHistory != null) {
 
-                FileWriter writer = new FileWriter(shiftHistoryFile);
+                        writer.write(shiftHistory.toString()); // Write history
 
-                if (shiftHistory != null) {
-
-                    writer.write(shiftHistory.toString()); // Write history
-
-                } else writer.write("{}"); // If history is null, just write empty brackets
-
-                writer.close();
-
-            // Else if it exists, attempt to delete and remake it:
-            } else if (shiftHistoryFile.delete()) saveHistoryToFile();
+                    } else writer.write("{}"); // If history is null, just write empty brackets
+                }
+            } else if (shiftHistoryFile.delete()) saveHistoryToFile(); // delete and remake it if it does exists
 
         } catch (Exception e) {
-
             e.printStackTrace();
             new AlertDialog(wnd, "Unable to save history to file.");
-
         }
 
     }

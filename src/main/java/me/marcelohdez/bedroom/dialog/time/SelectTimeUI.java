@@ -1,13 +1,13 @@
-package me.soggysandwich.bedroom.dialog.time;
+package me.marcelohdez.bedroom.dialog.time;
 
-import me.soggysandwich.bedroom.Main;
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.dialog.alert.YesNoDialog;
-import me.soggysandwich.bedroom.util.TimeWindowType;
-import me.soggysandwich.bedroom.util.Ops;
-import me.soggysandwich.bedroom.util.Settings;
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.Time;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
+import me.marcelohdez.bedroom.dialog.alert.YesNoDialog;
+import me.marcelohdez.bedroom.util.TimeWindowType;
+import me.marcelohdez.bedroom.util.Ops;
+import me.marcelohdez.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.util.Time;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,7 +127,7 @@ public class SelectTimeUI extends JPanel {
             case CLOCK_IN, START_BREAK, EARLY_CLOCK_OUT -> minBox.setSelectedIndex(LocalTime.now().getMinute());
 
             case CLOCK_OUT -> { // Set to chosen default hour value after clock in time
-                hour = lastTime.getHour() + Main.userPrefs.getInt("defaultShiftLength", 4);
+                hour = lastTime.getHour() + Bedroom.userPrefs.getInt("defaultShiftLength", 4);
                 if (hour >= 24) hour -= 24;     // If it's over 24 now, loop it
                 minBox.setSelectedIndex(lastTime.getMinute()); // Set minBox to clock in time's minute
             }
@@ -199,10 +199,10 @@ public class SelectTimeUI extends JPanel {
 
         if (time.isAfter(lastTime)) {
 
-            Main.setShift(lastTime, time);          // Set new shift times
-            Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
-            Main.update();
+            Bedroom.setShift(lastTime, time);          // Set new shift times
+            Bedroom.setTarget(targetBox.getSelectedIndex() + 1); // Set target
+            Bedroom.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
+            Bedroom.update();
             finishSet();
 
         } else if (new YesNoDialog(dialog, """
@@ -212,11 +212,11 @@ public class SelectTimeUI extends JPanel {
                 an overnight shift?""").accepted()) {
 
             // Now parse the new date with our date format:
-            Main.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
+            Bedroom.setShift(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
-            Main.setTarget(targetBox.getSelectedIndex() + 1); // Set target
-            Main.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
-            Main.update();
+            Bedroom.setTarget(targetBox.getSelectedIndex() + 1); // Set target
+            Bedroom.setOrders(0, false); // Set orders to 0 manually, so it gets saved into preferences in case of crash.
+            Bedroom.update();
             finishSet();
 
         }
@@ -226,12 +226,12 @@ public class SelectTimeUI extends JPanel {
     private void setBreakStartTime(LocalDateTime time) {
 
         // Make sure time chosen is inside of shift
-        if (time.isAfter(Main.getClockInTime()) && time.isBefore(Main.getClockOutTime())) {
+        if (time.isAfter(Bedroom.getClockInTime()) && time.isBefore(Bedroom.getClockOutTime())) {
             // Open end break window with chosen time
             proceedWith(TimeWindowType.END_BREAK, time);
 
-        } else if (time.plusDays(1).isAfter(Main.getClockInTime()) && // If not, check if user meant tomorrow's date
-                time.plusDays(1).isBefore(Main.getClockOutTime())) {
+        } else if (time.plusDays(1).isAfter(Bedroom.getClockInTime()) && // If not, check if user meant tomorrow's date
+                time.plusDays(1).isBefore(Bedroom.getClockOutTime())) {
             // Open end break window with chosen time
             proceedWith(TimeWindowType.END_BREAK, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
@@ -242,35 +242,35 @@ public class SelectTimeUI extends JPanel {
     }
 
     private String getBreakOutOfShiftMsg() {
-        if (!Main.isOvernightShift()) {
+        if (!Bedroom.isOvernightShift()) {
             return """
                             Breaks may only start or end
                             inside of shifts. Current
                             shift is:
                             $s-$e"""
-                    .replace("$s", Time.makeTime12Hour(Main.getClockInTime().toLocalTime()))
-                    .replace("$e", Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
+                    .replace("$s", Time.makeTime12Hour(Bedroom.getClockInTime().toLocalTime()))
+                    .replace("$e", Time.makeTime12Hour(Bedroom.getClockOutTime().toLocalTime()));
         } else return """
                             Breaks may only start or end
                             inside of shifts. Current
                             shift is:
                             $sDay $sTime-$eDay $eTime"""
-                .replace("$sDay", Main.getClockInTime().getDayOfWeek().toString().substring(0,3))
-                .replace("$sTime", Time.makeTime12Hour(Main.getClockInTime().toLocalTime()))
-                .replace("$eDay", Main.getClockOutTime().getDayOfWeek().toString().substring(0,3))
-                .replace("$eTime", Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
+                .replace("$sDay", Bedroom.getClockInTime().getDayOfWeek().toString().substring(0,3))
+                .replace("$sTime", Time.makeTime12Hour(Bedroom.getClockInTime().toLocalTime()))
+                .replace("$eDay", Bedroom.getClockOutTime().getDayOfWeek().toString().substring(0,3))
+                .replace("$eTime", Time.makeTime12Hour(Bedroom.getClockOutTime().toLocalTime()));
     }
 
     private void setBreakEndTime(LocalDateTime time) {
 
-        if (time.isAfter(lastTime) && time.isBefore(Main.getClockOutTime())) {
+        if (time.isAfter(lastTime) && time.isBefore(Bedroom.getClockOutTime())) {
 
-            Main.setBreak(lastTime, time);      // Set new break times
+            Bedroom.setBreak(lastTime, time);      // Set new break times
             finishSet();
 
-        } else if (time.plusDays(1).isAfter(lastTime) && time.plusDays(1).isBefore(Main.getClockOutTime())) {
+        } else if (time.plusDays(1).isAfter(lastTime) && time.plusDays(1).isBefore(Bedroom.getClockOutTime())) {
 
-            Main.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
+            Bedroom.setBreak(lastTime, LocalDateTime.parse(time.plusDays(1).format(dtf)));
 
         } else {
             new AlertDialog(dialog, """
@@ -283,23 +283,23 @@ public class SelectTimeUI extends JPanel {
 
     private void clockOutEarly(LocalDateTime time) {
 
-        if (time.isAfter(Main.getClockInTime())) {
+        if (time.isAfter(Bedroom.getClockInTime())) {
 
-            if (time.isBefore(Main.getClockOutTime())) {
-                Main.clockOut(time); // Save this shift's performance and close application
+            if (time.isBefore(Bedroom.getClockOutTime())) {
+                Bedroom.clockOut(time); // Save this shift's performance and close application
             } else new AlertDialog(dialog, """
                         Early clock outs must be
                         before original clock out
                         time. Your current clock
                         out time:\040""" +
-                    Time.makeTime12Hour(Main.getClockOutTime().toLocalTime()));
+                    Time.makeTime12Hour(Bedroom.getClockOutTime().toLocalTime()));
 
         } else new AlertDialog(dialog, """
                         Clock out time has to be
                         after your clock in time.
                         Current clock in time:
                         """ +
-                Time.makeTime12Hour(Main.getClockInTime().toLocalTime()));
+                Time.makeTime12Hour(Bedroom.getClockInTime().toLocalTime()));
 
     }
 
@@ -312,7 +312,7 @@ public class SelectTimeUI extends JPanel {
     private void proceedWith(TimeWindowType newType, LocalDateTime chosenTime) {
 
         dialog.setVisible(false);
-        new SelectTimeDialog(dialog, newType, chosenTime);
+        new SelectTimeDialog(dialog, newType, chosenTime).showSelf();
 
     }
 

@@ -1,6 +1,6 @@
-package me.soggysandwich.bedroom.dialog;
+package me.marcelohdez.bedroom.dialog;
 
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

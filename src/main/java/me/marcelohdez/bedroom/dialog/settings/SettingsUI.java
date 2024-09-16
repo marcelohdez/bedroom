@@ -1,11 +1,11 @@
-package me.soggysandwich.bedroom.dialog.settings;
+package me.marcelohdez.bedroom.dialog.settings;
 
-import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.util.Ops;
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.Main;
-import me.soggysandwich.bedroom.dialog.FloatingSpinner;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.time.SelectTimeDialog;
+import me.marcelohdez.bedroom.util.Ops;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.dialog.FloatingSpinner;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -16,12 +16,12 @@ import java.util.Objects;
 
 public class SettingsUI extends JPanel implements ChangeListener, ItemListener, MouseListener {
 
-    private final SettingsDialog parent;
+    private final SettingsDialog window;
 
     public int[] textRGB, buttonTextRGB, buttonRGB, bgRGB; // Component color values
     private int currentlyColoring = // Component(s) currently being colored,
             // 0 = text, 1 = buttonText, 2 = buttons, 3 = background
-            Main.userPrefs.getInt("lastColoring", 0);
+            Bedroom.userPrefs.getInt("lastColoring", 0);
 
     private JSlider redSlider, greenSlider, blueSlider; // Color sliders
     public int changeCount = 0; // Amount of color changes, (2 are done on startup, so 3 means colors have changed)
@@ -32,11 +32,13 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
 
     // ======= Combo Boxes: =======
     // Components we can color
-    private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{"Text", "Button Text", "Buttons",
-            "Background"});
+    private final JComboBox<String> coloringListBox = new JComboBox<>(new String[]{
+            "Text", "Button Text", "Buttons", "Background"
+    });
     // Themes
-    private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{"Dark", "Contrast",
-            "Jelly Sandwich", "Midnight", "Light", "Pink+White"});
+    private final JComboBox<String> themeListBox = new JComboBox<>(new String[]{
+            "Dark", "Contrast", "Jelly Sandwich", "Midnight", "Light", "Pink+White"
+    });
     // Default shift length in hours.
     private final JComboBox<String> shiftLengthListBox =
             new JComboBox<>(Ops.createNumberList(false, 1, 12, "h "));
@@ -44,28 +46,29 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
             new JComboBox<>(Ops.createNumberList(false, 1, 24, "   "));
 
     // ======= Checkboxes =======
+    private final JCheckBox systemLAFCheckBox = new JCheckBox("Use system theme");
     private final JCheckBox alwaysOnTop = new JCheckBox("Stay on top");
     private final JCheckBox recoverCrash = new JCheckBox("Crash recovery");
     private final JCheckBox askBeforeEarlyClose = new JCheckBox("Ask before clocking out early");
     private final JCheckBox showMoreShiftInfo = new JCheckBox("Show more shift info");
 
-    public SettingsUI(SettingsDialog parent) { // Settings UI constructor
-        this.parent = parent;
+    public SettingsUI(SettingsDialog window) { // Settings UI constructor
+        this.window = window;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        addKeyListener(parent);
+        addKeyListener(window);
 
         loadRGBValues();
         // Creates misc. checkboxes and sets their default values. must be done before createColorSliders as
         // that checks if these checkboxes are selected by calling updateValues.
-        createMiscOptions();
-        createColorSliders();
+        initOptions();
 
         // Add rows
         createLabelRow("Colors");
-        createListBoxRow("Preset:", themeListBox, Main.userPrefs.getInt("lastTheme", 0));
+        createListBoxRow("Preset:", themeListBox, "lastTheme");
         createColoringPanel();
-        createListBoxRow("Currently editing:", coloringListBox, Main.userPrefs.getInt("lastColoring", 0));
+        createListBoxRow("Currently editing:", coloringListBox, "lastColoring");
+        createCheckBoxRow(systemLAFCheckBox);
         createLabelRow("Misc.");
         createCheckBoxRow(alwaysOnTop, recoverCrash);
         createCheckBoxRow(askBeforeEarlyClose);
@@ -73,7 +76,7 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         createListBoxRow("Default shift length:", shiftLengthListBox);
         createListBoxRow("Default target:", defTargetListBox);
         createButtonRow("Manage Startup Items", "Startup items open along with Bedroom.",
-                e -> new StartupItemsManager(parent));
+                e -> new StartupItemsManager(window));
         createButtonRow("Set Defaults", "Reset Misc. options, excluding startup items.",
                 e -> setDefaultMisc());
 
@@ -85,43 +88,40 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
 
         // Get already set RGB values
         textRGB = new int[] { // Get text RGB values
-                Main.userPrefs.getInt("textRed", 240),
-                Main.userPrefs.getInt("textGreen", 240),
-                Main.userPrefs.getInt("textBlue", 240)};
+                Bedroom.userPrefs.getInt("textRed", 240),
+                Bedroom.userPrefs.getInt("textGreen", 240),
+                Bedroom.userPrefs.getInt("textBlue", 240)};
 
         buttonTextRGB = new int[] { // Get button text RGB values
-                Main.userPrefs.getInt("buttonTextRed", 240),
-                Main.userPrefs.getInt("buttonTextGreen", 240),
-                Main.userPrefs.getInt("buttonTextBlue", 240)};
+                Bedroom.userPrefs.getInt("buttonTextRed", 240),
+                Bedroom.userPrefs.getInt("buttonTextGreen", 240),
+                Bedroom.userPrefs.getInt("buttonTextBlue", 240)};
 
         buttonRGB = new int[] { // Get button RGB values
-                Main.userPrefs.getInt("buttonRed", 80),
-                Main.userPrefs.getInt("buttonGreen", 80),
-                Main.userPrefs.getInt("buttonBlue", 80)};
+                Bedroom.userPrefs.getInt("buttonRed", 80),
+                Bedroom.userPrefs.getInt("buttonGreen", 80),
+                Bedroom.userPrefs.getInt("buttonBlue", 80)};
 
         bgRGB = new int[] { // Get background RGB values
-                Main.userPrefs.getInt("bgRed", 64),
-                Main.userPrefs.getInt("bgGreen", 64),
-                Main.userPrefs.getInt("bgBlue", 64)};
+                Bedroom.userPrefs.getInt("bgRed", 64),
+                Bedroom.userPrefs.getInt("bgGreen", 64),
+                Bedroom.userPrefs.getInt("bgBlue", 64)};
 
     }
 
     private void createColorSliders() {
-
-        // Create color sliders
         redSlider = new JSlider(0, 255);
         greenSlider = new JSlider(0, 255);
         blueSlider = new JSlider(0, 255);
 
         redSlider.addMouseListener(this);
-        redSlider.addKeyListener(parent);
+        redSlider.addKeyListener(window);
         greenSlider.addMouseListener(this);
-        greenSlider.addKeyListener(parent);
+        greenSlider.addKeyListener(window);
         blueSlider.addMouseListener(this);
-        blueSlider.addKeyListener(parent);
+        blueSlider.addKeyListener(window);
 
         updateColorSliders(); // Set their values
-
     }
 
     private void updateColorSliders() {
@@ -163,47 +163,55 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
     }
 
     private void addSlidersChangeListener() {
-
         redSlider.addChangeListener(this);
         greenSlider.addChangeListener(this);
         blueSlider.addChangeListener(this);
-
     }
 
     private void removeSlidersChangeListener() {
-
         redSlider.removeChangeListener(this);
         greenSlider.removeChangeListener(this);
         blueSlider.removeChangeListener(this);
-
     }
 
-    private void createMiscOptions() {
+    /** Enables or disables color options depending on if the system LAF is chosen */
+    private void enableOrDisableColors() {
+        boolean enable = !(Settings.isSystemLAFEnabled() || systemLAFCheckBox.isSelected());
+        redSlider.setEnabled(enable);
+        greenSlider.setEnabled(enable);
+        blueSlider.setEnabled(enable);
+        themeListBox.setEnabled(enable);
+        coloringListBox.setEnabled(enable);
+    }
 
-        alwaysOnTop.setToolTipText("<html><b>Keep windows on top even after losing focus.</html></b>");
+    private void initOptions() {
         alwaysOnTop.setSelected(Settings.getAlwaysOnTop());
-
-        recoverCrash.setToolTipText("<html><b>Load last shift if currently in it if Bedroom wasn't able<br>" +
-                "to clock out</html></b>");
         recoverCrash.setSelected(Settings.isCrashRecoveryEnabled());
-
         shiftLengthListBox.setSelectedIndex(Math.min(Settings.getDefaultShiftLength() - 1, defTargetListBox.getItemCount()));
-        shiftLengthListBox.setToolTipText("<html><b>Default amount of hours after clock in time to set<br>" +
-                "clock out time.<br></b></html>");
-
         defTargetListBox.setSelectedIndex(Math.min(Settings.getDefaultTarget() - 1, defTargetListBox.getItemCount()));
-        defTargetListBox.setToolTipText("<html><b>Default target value in clock out time dialog</b></html>");
-
-        askBeforeEarlyClose.setToolTipText("<html><b>When closing Bedroom before your shift ends,<br>" +
-                "a dialog asks to input new clock out time</b></html>");
         askBeforeEarlyClose.setSelected(Settings.getAskBeforeEarlyClose());
-
-        showMoreShiftInfo.setToolTipText("<html><b>Show more information about the current shift in main window<br></b>" +
-                "Like how many orders are left until you reach your target<br>" +
-                "orders/hr, which can always be seen by hovering over the<br>" +
-                "Add Order button.</html>");
         showMoreShiftInfo.setSelected(Settings.showMoreShiftInfo());
+        systemLAFCheckBox.setSelected(Settings.isSystemLAFEnabled());
+        systemLAFCheckBox.addActionListener(e -> enableOrDisableColors());
 
+        setToolTips();
+        createColorSliders();
+        enableOrDisableColors();
+    }
+
+    private void setToolTips() {
+        alwaysOnTop.setToolTipText(boldString("Keep windows on top even after losing focus."));
+        recoverCrash.setToolTipText(boldString("Load current shift upon reopening if Bedroom<br>closed unexpectedly"));
+        shiftLengthListBox
+                .setToolTipText(boldString("Default amount of hours after clock in time to set<br>clock out time"));
+        defTargetListBox.setToolTipText(boldString("Default target value in clock out time dialog"));
+        askBeforeEarlyClose.setToolTipText(boldString("Show a dialog if closing Bedroom before<br>the clock out time"));
+        showMoreShiftInfo.setToolTipText(boldString("Show extra shift information in the main window"));
+        systemLAFCheckBox.setToolTipText(boldString("Switching to system theme requires a restart"));
+    }
+
+    private String boldString(String str) {
+        return "<html><b>#</b></html>".replace("#", str);
     }
 
     private void createColoringPanel() {
@@ -241,7 +249,6 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
     }
 
     private void createLabelRow(String labelText) {
-
         JPanel row = new JPanel();
         JLabel colorLabel = new JLabel(labelText);
 
@@ -252,11 +259,9 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         colorLabel.setForeground(Theme.contrastWithBnW(row.getBackground()));
 
         add(row);
-
     }
 
     private void createButtonRow(String buttonText, String toolTip, ActionListener al) {
-
         // Create the components
         JPanel row = new JPanel();
         JButton button = new JButton(buttonText);
@@ -264,77 +269,67 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         // Customize them
         button.setToolTipText("<html><b>" + toolTip + "</b></html>");
         button.addActionListener(al);
-        button.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
+        button.addKeyListener(window); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(button);
 
         add(row);
-
     }
 
-    private void createListBoxRow(String labelText, JComboBox<?> listBox, int selected) {
-
+    private void createListBoxRow(String labelText, JComboBox<?> listBox, String setting) {
         // Create the components
         JPanel row = new JPanel();
         JLabel label = new JLabel(labelText);
 
         // For list boxes not already initialized: make sure the index we want to select is available
-        listBox.setSelectedIndex(Math.min(selected, listBox.getItemCount() - 1));
+        int lastSelected = Bedroom.userPrefs.getInt(setting, 0);
+        listBox.setSelectedIndex(Math.min(lastSelected, listBox.getItemCount() - 1));
         listBox.addItemListener(this);
-        listBox.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
+        listBox.addKeyListener(window); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(label);
         row.add(listBox);
 
         add(row);
-
     }
 
     private void createListBoxRow(String labelText, JComboBox<?> listBox) {
-
         // Create the components
         JPanel row = new JPanel();
         JLabel label = new JLabel(labelText);
 
         // Customize them
         listBox.addItemListener(this);
-        listBox.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
+        listBox.addKeyListener(window); // Add KeyListener for when it retains focus on user click
 
         // Add to row
         row.add(label);
         row.add(listBox);
 
         add(row);
-
     }
 
     private void createCheckBoxRow(JCheckBox... comps) { // Creates a row with 1 or more checkboxes
-
         // Create panel
         JPanel row = new JPanel();
-
         for (JCheckBox c : comps) {
             // Add to panel
-            c.addKeyListener(parent); // Add KeyListener for when it retains focus on user click
+            c.addKeyListener(window); // Add KeyListener for when it retains focus on user click
             row.add(c);
         }
 
         add(row);
-
     }
 
     private void setColorSliderToolTips() {
-
         redSlider.setToolTipText("<html><b>" + redSlider.getValue() + "</b></html>");
         greenSlider.setToolTipText("<html><b>" + greenSlider.getValue() + "</b></html>");
         blueSlider.setToolTipText("<html><b>" + blueSlider.getValue() + "</b></html>");
-
     }
 
     private void setColorLabelsToValues() {
-
         if (showColorValues) {
 
             if (redLabel != null) redLabel.setText(Integer.toString(redSlider.getValue()));
@@ -342,45 +337,42 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
             if (blueLabel != null) blueLabel.setText(Integer.toString(blueSlider.getValue()));
 
         }
-
     }
 
     private void resetColorLabels() {
-
         if (redLabel != null) redLabel.setText("Red:");
         if (greenLabel != null) greenLabel.setText("Green:");
         if (blueLabel != null) blueLabel.setText("Blue:");
-
     }
 
     private void setColoringTo(int index) {
-
         currentlyColoring = index;
         showColorValues = false;
         updateColorSliders();
-        Main.userPrefs.putInt("lastColoring", index);
-
+        Bedroom.userPrefs.putInt("lastColoring", index);
     }
 
     private void setCustomSliderValue(MouseEvent e) {
-
         JSlider source = (JSlider) e.getSource();
         source.setValue(
                 new FloatingSpinner(source.getValue(), source.getMinimum(),
                         source.getMaximum()).showSelf());
-
     }
 
-    private void equalizeSliders(ChangeEvent e) { // Make sliders same value as e
-
+    /** Make sliders same value as the e slider */
+    private void equalizeSliders(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource();
+
         redSlider.setValue(source.getValue());
         greenSlider.setValue(source.getValue());
         blueSlider.setValue(source.getValue());
-
     }
 
-    private void setTheme(String theme, int index) {
+    public boolean isSystemLAFChosen() {
+        return systemLAFCheckBox.isSelected();
+    }
+
+    private void setTheme(String theme) {
 
         showColorValues = false;
         int[] newTextRGB = new int[3];
@@ -427,9 +419,6 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
         buttonTextRGB = newButtonTextRGB;
         buttonRGB = newButtonRGB;
         bgRGB = newBgRGB;
-        updateColorSliders();
-
-        Main.userPrefs.putInt("lastTheme", index);
 
     }
 
@@ -453,42 +442,54 @@ public class SettingsUI extends JPanel implements ChangeListener, ItemListener, 
             case 3 -> bgRGB = newRGB;
         }
 
-        // Save settings
-        Settings.saveMisc(alwaysOnTop.isSelected(), askBeforeEarlyClose.isSelected(),
-                shiftLengthListBox.getSelectedIndex() + 1, recoverCrash.isSelected(),
-                defTargetListBox.getSelectedIndex() + 1, showMoreShiftInfo.isSelected());
-        Settings.setHighContrastTo(highContrast);
-        // Since high contrast overwrites colors anyways, only do this if it is false
-        if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
+        // Saving color stuffs
+        if (!Settings.isSystemLAFEnabled()) {
+            Settings.enableHighContrast(highContrast);
+            // Since high contrast overwrites colors anyway, only do this if it is false
+            if (!highContrast) Settings.saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
 
-        if (parent.getReloadableComponent() instanceof SelectTimeDialog)
-            parent.getReloadableComponent().reloadSettings();  // If parent window is a SelectTimeDialog, reload
-                                                        // its settings too
+            if (window.getSummoner() instanceof SelectTimeDialog) {
+                window.getSummoner().reloadSettings();  // Reload SelectTimeDialog's settings if it is the summoner
+            }
+        }
 
-        Main.updateSettings();
+        // Save misc. settings
+        Settings.setAlwaysOnTop(alwaysOnTop.isSelected());
+        Settings.setAskBeforeEarlyClose(askBeforeEarlyClose.isSelected());
+        Settings.setDefaultShiftLength(shiftLengthListBox.getSelectedIndex() + 1);
+        Settings.enableCrashRecovery(recoverCrash.isSelected());
+        Settings.setDefaultTarget(defTargetListBox.getSelectedIndex() + 1);
+        Settings.enableExtraShiftInfo(showMoreShiftInfo.isSelected());
+
+        Bedroom.updateSettings();
 
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
         changeCount++;
         updateValues();
 
         if (e.getSource() instanceof JSlider) {
             setColorLabelsToValues();
-            if (parent.isShifting()) equalizeSliders(e); // Make all sliders same value if shifting
+            if (window.isShifting()) equalizeSliders(e); // Make all sliders same value if shifting
         }
-
     }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if (e.getSource() == themeListBox) // If theme list box changed, update theme
-            setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString(),
-                    themeListBox.getSelectedIndex());
-        if (e.getSource() == coloringListBox) // If coloring list box changed, update sliders for current component
+        if (e.getSource().equals(themeListBox)) {// If theme list box changed, update theme
+
+            if (!Settings.isSystemLAFEnabled()) {
+                setTheme(Objects.requireNonNull(themeListBox.getSelectedItem()).toString());
+            }
+            updateColorSliders();
+            Bedroom.userPrefs.putInt("lastTheme", themeListBox.getSelectedIndex());
+
+        } else if (e.getSource().equals(coloringListBox)) {
+            // If coloring list box changed, update sliders for current component
             setColoringTo(coloringListBox.getSelectedIndex());
+        }
     }
 
     @Override

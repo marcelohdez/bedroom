@@ -1,12 +1,12 @@
-package me.soggysandwich.bedroom.dialog.time;
+package me.marcelohdez.bedroom.dialog.time;
 
-import me.soggysandwich.bedroom.dialog.history.ShiftHistoryWindow;
-import me.soggysandwich.bedroom.main.BedroomWindow;
-import me.soggysandwich.bedroom.util.Reloadable;
-import me.soggysandwich.bedroom.Main;
-import me.soggysandwich.bedroom.dialog.settings.SettingsDialog;
-import me.soggysandwich.bedroom.util.TimeWindowType;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.history.ShiftHistoryWindow;
+import me.marcelohdez.bedroom.dialog.settings.SettingsDialog;
+import me.marcelohdez.bedroom.main.BedroomWindow;
+import me.marcelohdez.bedroom.util.Reloadable;
+import me.marcelohdez.bedroom.util.TimeWindowType;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +33,10 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         init();
     }
 
-    // Creates a continued select time dialog , given a parent and window type, plus the last selected time
-    // and the original parent of this group of select time dialogs
+    /**
+     * Creates a continued select time dialog , given a parent and window type, plus the last selected time
+     * and the original parent of this group of select time dialogs
+     */
     public SelectTimeDialog(SelectTimeDialog parent, TimeWindowType type, LocalDateTime lastTime) {
         this.type = type;
         initParent = parent.getInitParent();
@@ -64,9 +66,12 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         pack();
         setMinimumSize(new Dimension((int)(getWidth()*1.4), (int)(getHeight()*1.2)));
 
-        setLocationRelativeTo(initParent); // Center on initial parent
-        setVisible(true); // Show self
+    }
 
+    public void showSelf() {
+        setLocationRelativeTo(initParent); // Center on initial parent
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setVisible(true); // Show self
     }
 
     public void reloadAlwaysOnTop() {
@@ -75,7 +80,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
 
     public void close() {
         switch (type) {
-            case CLOCK_IN -> Main.exit();
+            case CLOCK_IN -> Bedroom.exit();
             case CLOCK_OUT, END_BREAK -> {  // Go back to previous window
                 dispose();
                 lastDialog.setVisible(true);
@@ -87,9 +92,7 @@ public class SelectTimeDialog extends JDialog implements WindowListener, Reloada
         } else initParent.setEnabled(true); // Re-enable parent
     }
 
-    /**
-     * Dispose this window and its parent, to finish this set and clear up memory
-     */
+    /** Dispose this window and its parent, to finish this set and clear up memory */
     protected void finish() {
         if (lastDialog != null) lastDialog.dispose();
         dispose();

@@ -1,4 +1,4 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +37,7 @@ public final class Ops { // Operations
         return (number < 10) ? "0" + number : String.valueOf(number);
     }
 
-    /**
-     * Sets hand cursor on the needed components in the given JPanel
-     */
+    /** Sets hand cursor on the needed components in the given JPanel */
     public static void setHandCursorOnCompsFrom(Container container) {
 
         for (Component c : container.getComponents()) { // Go through the component list of this container

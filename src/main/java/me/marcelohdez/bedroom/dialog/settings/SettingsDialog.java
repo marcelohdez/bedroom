@@ -1,9 +1,10 @@
-package me.soggysandwich.bedroom.dialog.settings;
+package me.marcelohdez.bedroom.dialog.settings;
 
-import me.soggysandwich.bedroom.dialog.time.SelectTimeDialog;
-import me.soggysandwich.bedroom.util.Reloadable;
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.time.SelectTimeDialog;
+import me.marcelohdez.bedroom.util.Reloadable;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +16,12 @@ import java.awt.event.WindowListener;
 public class SettingsDialog extends JDialog implements WindowListener, KeyListener {
 
     private final SettingsUI sui;
-    private final Component parent;
+    private final Reloadable summoner;
     private boolean shifting = false;
+    private final boolean isSystemLAFEnabled = Settings.isSystemLAFEnabled(); // Check for change upon closing
 
-    public SettingsDialog(Component parent) {
-        this.parent = parent;
+    public SettingsDialog(Reloadable summoner) {
+        this.summoner = summoner;
 
         setTitle("Settings");
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -32,29 +34,52 @@ public class SettingsDialog extends JDialog implements WindowListener, KeyListen
         add(sui);
 
         pack();
-        setLocationRelativeTo(parent); // Center on parent window
+        if (summoner instanceof Component) {
+            setLocationRelativeTo((Component) summoner); // Center on parent window
+        }
         setVisible(true); // Show
 
     }
 
-    Reloadable getReloadableComponent() {
-        return (Reloadable) parent;
+    Reloadable getSummoner() {
+        return summoner;
     }
 
     public boolean isShifting() {
         return shifting;
     }
 
-    public void save() {
-
+    public void saveChanges() {
         sui.updateValues();
-        if (sui.changeCount > 2 && parent instanceof SelectTimeDialog)
-            new AlertDialog(this, // If colors were changed, create an alert
+        Settings.enableSystemLAF(sui.isSystemLAFChosen());
+        alertSelectTimeDialogColorChange();
+        alertLAFChange();
+    }
+
+    private void alertSelectTimeDialogColorChange() {
+        if (sui.changeCount > 2 && summoner instanceof SelectTimeDialog) {
+            // If colors were changed, create an alert
+            new AlertDialog(this,
                     """
                     Some colors may not change
                     until the select time
                     dialog is reopened.""");
+        }
+    }
 
+    private void alertLAFChange() {
+        if (isSystemLAFEnabled != Settings.isSystemLAFEnabled()) {
+            if (!Settings.isSystemLAFEnabled()) {
+                Bedroom.restart();
+            } else {
+                new AlertDialog(this, """
+                        Changing from the system's theme
+                        to a colored one requires a restart
+                        so please reopen me as I will now
+                        close.""");
+                System.exit(0);
+            }
+        }
     }
 
     @Override
@@ -62,7 +87,7 @@ public class SettingsDialog extends JDialog implements WindowListener, KeyListen
         switch (e.getKeyCode()) {
             case KeyEvent.VK_SHIFT -> shifting = true; // If shift is pressed, we are shifting
             case KeyEvent.VK_ESCAPE -> {
-                save();  // Save changes
+                saveChanges();  // Save changes
                 dispose(); // If escape is pressed, close window
             }
         }
@@ -75,7 +100,7 @@ public class SettingsDialog extends JDialog implements WindowListener, KeyListen
 
     @Override
     public void windowClosing(WindowEvent e) { // Save settings upon exiting
-        save();
+        saveChanges();
     }
 
     // ======= Currently unused interface methods =======

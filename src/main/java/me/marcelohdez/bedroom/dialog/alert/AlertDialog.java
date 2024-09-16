@@ -1,8 +1,7 @@
-package me.soggysandwich.bedroom.dialog.alert;
+package me.marcelohdez.bedroom.dialog.alert;
 
-import me.soggysandwich.bedroom.util.Theme;
-import me.soggysandwich.bedroom.util.Reloadable;
-import me.soggysandwich.bedroom.util.Settings;
+import me.marcelohdez.bedroom.util.Theme;
+import me.marcelohdez.bedroom.util.Settings;
 
 import javax.swing.*;
 import java.awt.*;

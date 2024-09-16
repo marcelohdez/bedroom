@@ -1,7 +1,7 @@
-package me.soggysandwich.bedroom.util;
+package me.marcelohdez.bedroom.util;
 
-import me.soggysandwich.bedroom.dialog.alert.AlertDialog;
-import me.soggysandwich.bedroom.Main;
+import me.marcelohdez.bedroom.Bedroom;
+import me.marcelohdez.bedroom.dialog.alert.AlertDialog;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -13,18 +13,21 @@ import java.util.TreeMap;
 
 public final class Settings {
 
-    private static final String workingDir =  // Current working directory, to store shift history files etc.
-            FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
-
     private static boolean isDoneLoadingShiftHistory = false;
 
-    // Settings variables, to return when called on methods, instead of doing storage reads every time.
-    private static boolean alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
-    private static boolean recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
-    private static boolean askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
-    private static boolean showMoreShiftInfo = Main.userPrefs.getBoolean("showMoreShiftInfo", false);
-    private static int defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
-    private static int defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
+    // Settings variables, to return when called on methods.
+    private static boolean useSystemLAF = Bedroom.userPrefs.getBoolean("useSystemLAF", true);
+
+    private static boolean alwaysOnTop = Bedroom.userPrefs.getBoolean("alwaysOnTop", true);
+    private static boolean recoverFromCrashes = Bedroom.userPrefs.getBoolean("recoverFromCrashes", true);
+    private static boolean askBeforeEarlyClose = Bedroom.userPrefs.getBoolean("askBeforeEarlyClose", true);
+    private static boolean showMoreShiftInfo = Bedroom.userPrefs.getBoolean("showMoreShiftInfo", false);
+    private static int defaultShiftLength = Bedroom.userPrefs.getInt("defaultShiftLength", 4);
+    private static int defaultTarget = Bedroom.userPrefs.getInt("defaultTarget", 9);
+
+    // Current working directory, to store shift history files etc.
+    private static final String workingDir =
+            FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + File.separator + "bedroom-data";
 
     /**
      * Check if highContrast is enabled in user preferences
@@ -32,7 +35,7 @@ public final class Settings {
      * @return highContrast boolean value
      */
     public static boolean isContrastEnabled() {
-        return Main.userPrefs.getBoolean("highContrast", false);
+        return Bedroom.userPrefs.getBoolean("highContrast", false);
     }
 
     /**
@@ -46,65 +49,97 @@ public final class Settings {
     public static void saveColors(int[] textRGB, int[] buttonTextRGB, int[] buttonRGB, int[] bgRGB) {
 
         // text colors
-        Main.userPrefs.putInt("textRed", textRGB[0]);
-        Main.userPrefs.putInt("textGreen", textRGB[1]);
-        Main.userPrefs.putInt("textBlue", textRGB[2]);
+        Bedroom.userPrefs.putInt("textRed", textRGB[0]);
+        Bedroom.userPrefs.putInt("textGreen", textRGB[1]);
+        Bedroom.userPrefs.putInt("textBlue", textRGB[2]);
 
         // button text colors
-        Main.userPrefs.putInt("buttonTextRed", buttonTextRGB[0]);
-        Main.userPrefs.putInt("buttonTextGreen", buttonTextRGB[1]);
-        Main.userPrefs.putInt("buttonTextBlue", buttonTextRGB[2]);
+        Bedroom.userPrefs.putInt("buttonTextRed", buttonTextRGB[0]);
+        Bedroom.userPrefs.putInt("buttonTextGreen", buttonTextRGB[1]);
+        Bedroom.userPrefs.putInt("buttonTextBlue", buttonTextRGB[2]);
 
         // button colors
-        Main.userPrefs.putInt("buttonRed", buttonRGB[0]);
-        Main.userPrefs.putInt("buttonGreen", buttonRGB[1]);
-        Main.userPrefs.putInt("buttonBlue", buttonRGB[2]);
+        Bedroom.userPrefs.putInt("buttonRed", buttonRGB[0]);
+        Bedroom.userPrefs.putInt("buttonGreen", buttonRGB[1]);
+        Bedroom.userPrefs.putInt("buttonBlue", buttonRGB[2]);
 
         // background colors
-        Main.userPrefs.putInt("bgRed", bgRGB[0]);
-        Main.userPrefs.putInt("bgGreen", bgRGB[1]);
-        Main.userPrefs.putInt("bgBlue", bgRGB[2]);
+        Bedroom.userPrefs.putInt("bgRed", bgRGB[0]);
+        Bedroom.userPrefs.putInt("bgGreen", bgRGB[1]);
+        Bedroom.userPrefs.putInt("bgBlue", bgRGB[2]);
 
     }
 
-    /**
-     * Save a boolean to highContrast key
-     *
-     * @param highContrast new highContrast value
-     */
-    public static void setHighContrastTo(boolean highContrast) {
-        Main.userPrefs.putBoolean("highContrast", highContrast); // Save new value
-        if (highContrast) { // If it is true, set to high contrast theme
+    public static void enableHighContrast(boolean enable) {
+        if (enable) { // Set theme to high contrast values
+            useSystemLAF = false; // Disable System LAF to not clash with colors
             int[] textRGB = new int[]{255, 255, 255};
             int[] buttonTextRGB = new int[]{255, 255, 255};
             int[] buttonRGB = new int[]{0, 0, 0};
             int[] bgRGB = new int[]{0, 0, 0};
             saveColors(textRGB, buttonTextRGB, buttonRGB, bgRGB);
         }
+        Bedroom.userPrefs.putBoolean("highContrast", enable); // Save new value
     }
 
-    /**
-     * Saves Misc. settings
-     *
-     * @param stayOnTop Make window always stay on top
-     */
-    public static void saveMisc(boolean stayOnTop, boolean askBeforeEarlyClose, int defShiftLength,
-                                boolean crashRecovery, int defTarget, boolean showMoreShiftInfo) {
+    public static void setAlwaysOnTop(boolean alwaysOnTop) {
+        Settings.alwaysOnTop = alwaysOnTop;
+        Bedroom.userPrefs.putBoolean("askBeforeEarlyClose", alwaysOnTop);
+    }
 
-        Main.userPrefs.putBoolean("alwaysOnTop", stayOnTop);
-        Main.userPrefs.putBoolean("recoverFromCrashes", crashRecovery);
-        Main.userPrefs.putBoolean("askBeforeEarlyClose", askBeforeEarlyClose);
-        Main.userPrefs.putBoolean("showMoreShiftInfo", showMoreShiftInfo);
-        Main.userPrefs.putInt("defaultShiftLength", defShiftLength);
-        Main.userPrefs.putInt("defaultTarget", defTarget);
+    public static void setAskBeforeEarlyClose(boolean ask) {
+        askBeforeEarlyClose = ask;
+        Bedroom.userPrefs.putBoolean("alwaysOnTop", ask);
+    }
 
-        alwaysOnTop = Main.userPrefs.getBoolean("alwaysOnTop", true);
-        recoverFromCrashes = Main.userPrefs.getBoolean("recoverFromCrashes", true);
-        Settings.askBeforeEarlyClose = Main.userPrefs.getBoolean("askBeforeEarlyClose", true);
-        Settings.showMoreShiftInfo = Main.userPrefs.getBoolean("showMoreShiftInfo", false);
-        Settings.defaultShiftLength = Main.userPrefs.getInt("defaultShiftLength", 4);
-        defaultTarget = Main.userPrefs.getInt("defaultTarget", 9);
+    public static void setDefaultShiftLength(int newDefault) {
+        defaultShiftLength = newDefault;
+        Bedroom.userPrefs.putInt("defaultShiftLength", newDefault);
+    }
 
+    public static void setDefaultTarget(int newDefault) {
+        defaultTarget = newDefault;
+        Bedroom.userPrefs.putInt("defaultTarget", newDefault);
+    }
+
+    public static void enableCrashRecovery(boolean enable) {
+        recoverFromCrashes = enable;
+        Bedroom.userPrefs.putBoolean("recoverFromCrashes", enable);
+    }
+
+    public static void enableExtraShiftInfo(boolean enable) {
+        showMoreShiftInfo = enable;
+        Bedroom.userPrefs.putBoolean("showMoreShiftInfo", enable);
+    }
+
+    public static void enableSystemLAF(boolean enable) {
+        useSystemLAF = enable;
+        Bedroom.userPrefs.putBoolean("useSystemLAF", enable);
+        if (enable) {
+            removeColors();
+        }
+    }
+
+    private static void removeColors() {
+        // text colors
+        Bedroom.userPrefs.remove("textRed");
+        Bedroom.userPrefs.remove("textGreen");
+        Bedroom.userPrefs.remove("textBlue");
+
+        // button text colors
+        Bedroom.userPrefs.remove("buttonTextRed");
+        Bedroom.userPrefs.remove("buttonTextGreen");
+        Bedroom.userPrefs.remove("buttonTextBlue");
+
+        // button colors
+        Bedroom.userPrefs.remove("buttonRed");
+        Bedroom.userPrefs.remove("buttonGreen");
+        Bedroom.userPrefs.remove("buttonBlue");
+
+        // background colors
+        Bedroom.userPrefs.remove("bgRed");
+        Bedroom.userPrefs.remove("bgGreen");
+        Bedroom.userPrefs.remove("bgBlue");
     }
 
     /**
@@ -115,7 +150,7 @@ public final class Settings {
     public static void saveStartupItems(String items) {
         // The Startup Items feature was originally called Work Apps,
         // hence, the preferences key is still workApps to not lose beta tester's data
-        Main.userPrefs.put("workApps", items);
+        Bedroom.userPrefs.put("workApps", items);
     }
 
     /**
@@ -123,6 +158,10 @@ public final class Settings {
      */
     public static String getWorkingDir() {
         return workingDir;
+    }
+
+    public static boolean isSystemLAFEnabled() {
+        return useSystemLAF;
     }
 
     /**
@@ -176,10 +215,10 @@ public final class Settings {
      *
      * @return an ArrayList of the String's items
      */
-    public static ArrayList<String> getStartupItemsList() {
+    public static String[] getStartupItemsList() {
 
         ArrayList<String> list = new ArrayList<>();
-        String str = Main.userPrefs.get("workApps", "[]");
+        String str = Bedroom.userPrefs.get("workApps", "[]");
 
         int start = 1; // Start 1 character ahead to avoid the beginning bracket
         int end = start;
@@ -188,15 +227,15 @@ public final class Settings {
             if (str.charAt(i) != 44) { // If it is not a comma, extend end point
                 end++;
             } else { // Else return the string we have
-                list.add(str.substring(start, end));
+                if (!str.substring(start,end).isBlank()) list.add(str.substring(start, end));
                 start = i+2; // Go 2 characters ahead to avoid the space in between items.
                 end = i+1;
             }
 
         }
-        list.add(str.substring(start, end));
+        if (!str.substring(start, end).isBlank()) list.add(str.substring(start, end));
 
-        return list;
+        return list.toArray(new String[0]);
 
     }
 
@@ -272,11 +311,10 @@ public final class Settings {
         File file = new File(Settings.getWorkingDir() + File.separator + "shift.history"); // Get file
 
         if (file.exists()) {
-            try {
+            try (Scanner reader = new Scanner(file)) {
 
-                Scanner reader = new Scanner(file); // Make a new scanner
-                if (reader.hasNextLine()) // If there is a line to read:
-                    return reader.nextLine(); // Read line of data
+                if (reader.hasNextLine()) // Read the next line (we only save history in a single line)
+                    return reader.nextLine();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
